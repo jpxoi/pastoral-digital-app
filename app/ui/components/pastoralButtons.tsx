@@ -60,7 +60,7 @@ export default function PastoralButtons() {
         id="download"
         ref={downloadRef}
         onClick={handleDownload}
-        className="bg-blue-500 hover:bg-blue-700 text-white cursor-pointer w-96 p-3 rounded-lg border-none transition-colors duration-300 disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer w-96 p-3 rounded-lg border-none transition-colors duration-300 disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Descargar
       </button>

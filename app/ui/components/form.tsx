@@ -102,7 +102,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
           toggleSubmitButton(e);
         }}
         placeholder="Introduce tu correo electrónico"
-        className="text-center border w-full mx-0 my-2 p-2 rounded-md border-solid border-blue-500 focus:border-blue-700 focus:invalid:border-[#dc3545] focus:valid:border-[#28a745] valid:border-[#28a745] focus:outline-none transition-colors duration-150"
+        className="text-center border w-full mx-0 my-2 p-2 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-150"
         required
       />
       <button
@@ -110,7 +110,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         ref={buttonRef}
         disabled
         type="submit"
-        className="w-full bg-blue-500 hover:bg-blue-700 text-white cursor-pointer p-3 rounded-md border-none disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+        className="w-full bg-blue-500 hover:bg-blue-600 text-white cursor-pointer p-3 rounded-md border-none disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
       >
         Generar Pastoral Digital ID
       </button>
