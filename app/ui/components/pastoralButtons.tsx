@@ -46,13 +46,13 @@ export default function PastoralButtons() {
   return (
     <div
       id="buttons"
-      className="flex flex-row justify-between gap-4 mx-auto my-2 max-w-xs sm:max-w-sm"
+      className="flex flex-row justify-between gap-4 mx-auto my-2 max-w-xs sm:max-w-sm transition-all duration-300"
     >
       <button
         id="limpiar"
         ref={cleanRef}
         onClick={handleClear}
-        className="bg-red-500 hover:bg-red-700 text-white cursor-pointer w-96 p-3 rounded-lg border-none transition-colors duration-300 disabled:hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="border border-red-600 hover:bg-red-600 text-red-700 hover:text-white cursor-pointer w-96 p-3 rounded-lg transition-colors duration-300 disabled:hover:bg-transparent disabled:hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Salir
       </button>
