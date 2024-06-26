@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-export default function PastoralButtons() {
+export default function SignOutButton() {
   const router = useRouter();
 
   const handleClear = () => {
@@ -13,13 +13,13 @@ export default function PastoralButtons() {
   return (
     <>
       <button
-        className="text-red-600 hover:text-red-800 hover:bg-red-50 px-4 py-2 rounded-md text-sm transition-colors duration-300 hidden sm:block"
+        className="text-red-600 bg-red-50 hover:text-white hover:bg-red-600 px-4 py-2 rounded-md text-sm transition-colors duration-300 hidden sm:block"
         onClick={handleClear}
       >
         Cerrar Sesión
       </button>
       <button
-        className="text-red-600 hover:text-red-800 hover:bg-red-50 px-4 py-2 rounded-md text-sm transition-colors duration-300 sm:hidden"
+        className="text-red-600 hover:text-red-800 px-1 py-2 rounded-md text-sm transition-colors duration-300 sm:hidden"
         onClick={handleClear}
       >
         <svg
