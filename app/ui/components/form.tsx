@@ -135,6 +135,9 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       >
         Iniciar Sesión
       </button>
+      <a href="https://wa.me/51941952314" target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 mt-2 cursor-pointer">
+        ¿Olvidaste tu correo electrónico?
+      </a>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex flex-row justify-center mt-2">
           <span className="flex items-center">
