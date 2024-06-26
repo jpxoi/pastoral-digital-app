@@ -8,8 +8,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Pastoral Digital ID | Pastoral Mariana",
-  description: "Genera tu Pastoral Digital ID para acceder a los servicios de Pastoral Mariana.",
+  title: "Pastoral Digital Services | Pastoral Mariana",
+  description: "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
 };
 
 export default function RootLayout({
