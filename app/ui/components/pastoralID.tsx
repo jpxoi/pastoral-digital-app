@@ -66,7 +66,7 @@ export default function PastoralID() {
           loader={imageLoader}
           src={`${userID}.png`}
           placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAANCAMAAACn6Q83AAAAllBMVEX////8/P0IMJsFLpv5+fjGxsb3+fvo7/vu8vazusehqrr5+/709vrx8fHr7O3H0ekcXtPf2tCosb8iT7SHkqYWPKILNaD3+fzw9fzc5/jr8fbq7fXN2/Xq7/S7z/LA0fDk5OXi4uNwmuNqluJdjN9BeNqVpdO8w84VVMiiq7sTS7sZTrqbpbZLaLaSnK8aRqx5hZx0gZgP+QB5AAAAbUlEQVQI1zXKBQ7EMBADQGc3l6Qp4zEzFf7/ubIlS2PJUEbGxih9i7Bdyni/8aAvUJiy6uovuvjDFMH5FIiRTmmdie8ms+7IpM6S+fCzz56hByGlgKuR/x/hcbc+XO9gprxK0+8rAhFxQczFpwV7YwYZ+QFudAAAAABJRU5ErkJggg=="
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
           onError={handleImageError}
           alt="Pastoral ID"
           width="900"
