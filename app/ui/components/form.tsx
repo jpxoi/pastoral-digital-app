@@ -67,11 +67,11 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
     const dataItem = data.find((item: any) => item.Email === email);
 
     if (!dataItem) {
-      throw new Error("No se encontró el correo electrónico.");
+      throw new Error("Este correo electrónico no está registrado.");
     }
 
     if (dataItem.Token === null) {
-      throw new Error("No existe un token asociado a este correo electrónico.");
+      throw new Error("Tu acceso aún no ha sido aprobado.");
     }
 
     if (!dataItem.Acceso) {
