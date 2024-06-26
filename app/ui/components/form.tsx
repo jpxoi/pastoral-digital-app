@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import ErrorIcon from "./errorIcon";
 
 export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
     const idPattern = /^[A-Za-z]{2}-\d{3}$/;
 
     if (savedID && idPattern.test(savedID)) {
-      router.push("/generate");
+      router.push("/dashboard");
       return;
     }
   }, [router]);
@@ -117,13 +118,12 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         Iniciar Sesión
       </button>
       {error && (
-        <p
-          id="error-message"
-          className="w-full text-center text-red-800 py-2 px-4 bg-red-200 rounded-md mt-2"
-        >
-          <strong>Error: </strong>
-          {error}
-        </p>
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex flex-row justify-center mt-2">
+        <span className="flex items-center">
+          <ErrorIcon />
+        </span>
+        <p className="inline ml-2">{error}</p>
+      </div>
       )}
       {
         warning && (
