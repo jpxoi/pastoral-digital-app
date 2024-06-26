@@ -6,9 +6,7 @@ export default function PastoralButtons() {
   const router = useRouter();
 
   const handleClear = () => {
-    localStorage.removeItem("id");
-    localStorage.removeItem("token");
-    localStorage.removeItem("full-name");
+    localStorage.clear();
     router.push("/");
   };
 

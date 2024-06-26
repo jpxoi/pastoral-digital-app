@@ -19,9 +19,14 @@ export default function PastoralID() {
 
   useEffect(() => {
     const savedID = localStorage.getItem("id");
+    const expiryDate = localStorage.getItem("expiryDate");
     const idPattern = /^[A-Za-zÑñ]{2}-\d{3}$/;
 
-    if (!savedID || !idPattern.test(savedID)) {
+    const currentDate = new Date();
+    const expiry = new Date(expiryDate as string);
+
+    if (!savedID || !idPattern.test(savedID) || expiry < currentDate) {
+      localStorage.clear();
       router.push("/");
     } else {
       setUserID(savedID);

@@ -8,19 +8,33 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [warning, setWarning] = useState<string | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   let data: any = null;
 
   useEffect(() => {
     const savedID = localStorage.getItem("id");
+    const savedToken = localStorage.getItem("token");
+    const suspended = localStorage.getItem("suspended");
+    const expiryDate = localStorage.getItem("expiryDate");
+
     const idPattern = /^[A-Za-z]{2}-\d{3}$/;
 
-    if (savedID && idPattern.test(savedID)) {
+    const currentDate = new Date();
+    const expiry = new Date(expiryDate as string);
+
+    if (
+      expiry > currentDate &&
+      savedID &&
+      idPattern.test(savedID) &&
+      savedToken &&
+      suspended
+    ) {
       router.push("/dashboard");
       return;
     }
+
+    localStorage.clear();
   }, [router]);
 
   const toggleSubmitButton = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +59,8 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       const dataItem = checkAnswer(email.toLowerCase());
       localStorage.setItem("id", dataItem.ID);
       localStorage.setItem("token", dataItem.Token);
+      localStorage.setItem("suspended", dataItem.Acceso ? "false" : "true");
+      localStorage.setItem("expiryDate", calculateExpiryDate());
       router.push("/dashboard");
     } catch (error) {
       if (buttonRef.current) {
@@ -55,6 +71,12 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       setError((error as Error).message);
     }
   };
+
+  function calculateExpiryDate() {
+    const currentDate = new Date();
+    currentDate.setHours(currentDate.getHours() + 72);
+    return currentDate.toISOString();
+  }
 
   async function fetchData() {
     try {
@@ -75,10 +97,6 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
 
     if (dataItem.Token === null) {
       throw new Error("Tu acceso aún no ha sido aprobado.");
-    }
-
-    if (!dataItem.Acceso) {
-      alert("Estás suspendido de las actividades de la Pastoral Mariana. Aún puedes generar tu Pastoral Digital ID y consultar tu registro de asistencia, pero no podrás acceder a las actividades.");
     }
 
     return dataItem;
@@ -119,23 +137,12 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       </button>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex flex-row justify-center mt-2">
-        <span className="flex items-center">
-          <ErrorIcon />
-        </span>
-        <p className="inline ml-2">{error}</p>
-      </div>
+          <span className="flex items-center">
+            <ErrorIcon />
+          </span>
+          <p className="inline ml-2">{error}</p>
+        </div>
       )}
-      {
-        warning && (
-          <p
-            id="warning-message"
-            className="w-full text-center text-yellow-800 py-2 px-4 bg-yellow-200 rounded-md mt-2"
-          >
-            <strong>Advertencia: </strong>
-            {warning}
-          </p>
-        )
-      }
     </form>
   );
 }

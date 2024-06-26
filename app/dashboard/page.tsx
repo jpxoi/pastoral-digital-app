@@ -2,6 +2,7 @@ import PastoralID from "../ui/components/pastoralID";
 import PastoralButtons from "../ui/components/pastoralButtons";
 import AttendanceSection from "../ui/components/attendance";
 import LogoImage from "../ui/components/logoImage";
+import WarningSuspended from "../ui/components/warningSuspended";
 
 export default function PastoralDigitalPage() {
   return (
@@ -13,6 +14,7 @@ export default function PastoralDigitalPage() {
         </div>
         <PastoralButtons />
       </nav>
+      <WarningSuspended />
       <main className="flex w-full flex-col justify-center lg:flex-row items-center lg:justify-evenly px-4 xl:px-0 mt-4 lg:mt-8">
         <div className="flex flex-col items-center justify-center gap-4">
           <PastoralID />
@@ -22,6 +24,5 @@ export default function PastoralDigitalPage() {
         </div>
       </main>
     </div>
-    
   );
 }
