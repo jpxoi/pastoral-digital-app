@@ -9,11 +9,21 @@ export default function PastoralButtons() {
   const downloadRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClear = () => {
+    if (cleanRef.current) {
+      cleanRef.current.disabled = true;
+      cleanRef.current.textContent = "Saliendo...";
+    }
+
     localStorage.removeItem("id");
     router.push("/");
   };
 
   const handleDownload = () => {
+    if (downloadRef.current) {
+      downloadRef.current.disabled = true;
+      downloadRef.current.textContent = "Descargando...";
+    }
+
     const userID = localStorage.getItem("id");
     if (userID) {
       const a = document.createElement("a");
@@ -32,7 +42,7 @@ export default function PastoralButtons() {
         id="limpiar"
         ref={cleanRef}
         onClick={handleClear}
-        className="bg-red-500 hover:bg-red-700 text-white cursor-pointer w-96 p-2 rounded-lg border-none transition-colors duration-300"
+        className="bg-red-500 hover:bg-red-700 text-white cursor-pointer w-96 p-3 rounded-lg border-none transition-colors duration-300 disabled:hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Salir
       </button>
@@ -40,7 +50,7 @@ export default function PastoralButtons() {
         id="download"
         ref={downloadRef}
         onClick={handleDownload}
-        className="bg-blue-500 hover:bg-blue-700 text-white cursor-pointer w-96 p-2 rounded-lg border-none transition-colors duration-300"
+        className="bg-blue-500 hover:bg-blue-700 text-white cursor-pointer w-96 p-3 rounded-lg border-none transition-colors duration-300 disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Descargar
       </button>

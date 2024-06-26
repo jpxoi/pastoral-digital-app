@@ -110,7 +110,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         ref={buttonRef}
         disabled
         type="submit"
-        className="w-full bg-blue-500 text-[white] cursor-pointer p-[0.8rem] rounded-md border-[none] hover:bg-blue-700 disabled:bg-[#ccc] disabled:text-[#666] disabled:cursor-not-allowed transition-colors duration-300"
+        className="w-full bg-blue-500 hover:bg-blue-700 text-white cursor-pointer p-3 rounded-md border-none disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
       >
         Generar Pastoral Digital ID
       </button>
