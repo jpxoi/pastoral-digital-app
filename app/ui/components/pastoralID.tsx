@@ -47,7 +47,7 @@ export default function PastoralID() {
   return (
     <div
       id="pastoral_id"
-      className="pass-front w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg"
+      className="pass-front w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
     >
       {
         error && (
