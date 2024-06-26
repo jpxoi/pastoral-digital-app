@@ -45,7 +45,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       const dataItem = checkAnswer(email.toLowerCase());
       localStorage.setItem("id", dataItem.ID);
       localStorage.setItem("token", dataItem.Token);
-      router.push("/generate");
+      router.push("/dashboard");
     } catch (error) {
       if (buttonRef.current) {
         buttonRef.current.textContent = "Iniciar Sesión";
