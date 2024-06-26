@@ -1,4 +1,4 @@
-export default function LogoImage() {
+export default function LogoImage({ width = 100, height = 100 }) {
   return (
     <picture className="flex justify-center">
       <source srcSet="/pastoral_logo.avif" type="image/avif" />
@@ -7,8 +7,8 @@ export default function LogoImage() {
         src="/pastoral_logo.webp"
         alt="Pastoral Logo"
         className="logo"
-        width="100"
-        height="100"
+        width={width}
+        height={height}
       />
     </picture>
   );
