@@ -12,7 +12,7 @@ export default function PastoralID() {
   const imageRef = useRef<HTMLImageElement>(null);
 
   const imageLoader = ({ src } : { src: string }) => {
-    return `https://static.jpxoi.com/media/pastoralid/${src}`;
+    return `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${src}`;
   }
 
   useEffect(() => {
