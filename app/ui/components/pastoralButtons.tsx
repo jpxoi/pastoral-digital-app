@@ -16,6 +16,11 @@ export default function PastoralButtons() {
 
     localStorage.removeItem("id");
     router.push("/");
+
+    if (cleanRef.current) {
+      cleanRef.current.disabled = false;
+      cleanRef.current.textContent = "Salir";
+    }
   };
 
   const handleDownload = () => {
@@ -30,6 +35,11 @@ export default function PastoralButtons() {
       a.href = `https://static.jpxoi.com/media/pastoralid/${userID}.png?download`;
       a.download = `PastoralID-${userID}.png`;
       a.click();
+    }
+
+    if (downloadRef.current) {
+      downloadRef.current.disabled = false;
+      downloadRef.current.textContent = "Descargar";
     }
   };
 
