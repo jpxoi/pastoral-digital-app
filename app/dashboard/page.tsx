@@ -8,9 +8,9 @@ import Footer from "../ui/components/footer";
 export default function PastoralDigitalPage() {
   return (
     <div className="min-h-screen">
-      <nav className="flex justify-between items-center p-2 sm:p-4 bg-white shadow-md transition-all duration-300">
+      <nav className="flex justify-between items-center px-2 py-1 sm:px-4 sm:py-2 bg-white shadow-md transition-all duration-300">
         <div className="flex items-center gap-2">
-          <LogoImage width={32} height={32} />
+          <LogoImage width={38.4} height={48} />
           <h1 className="text-xl sm:text-2xl font-bold">Pastoral Digital</h1>
         </div>
         <PastoralButtons />
