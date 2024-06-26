@@ -8,7 +8,7 @@ export default function AttendanceSection() {
       </h1>
 
       <AttendanceTable />
-      <p className="text-sm text-gray-600 mt-4">
+      <p className="text-sm text-gray-600 mt-4 max-w-xs sm:max-w-full">
         Las faltas no se registran en la tabla. No obstante, cualquier fecha sin
         registro válido, se considera falta.
       </p>

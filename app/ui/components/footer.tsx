@@ -1,8 +1,8 @@
 export default function Footer() {
   return (
-    <footer className="flex flex-col items-center justify-center my-2">
-      <p id="developer">
-        Desarrollado por{" "}
+    <footer className="flex flex-col items-center justify-center my-4">
+      <p className="text-sm">
+        Desarrollado con ❤️ por{" "}
         <a
           className="font-semibold text-blue-900 hover:text-blue-600 transition-colors duration-300"
           href="https://jpxoi.com"
