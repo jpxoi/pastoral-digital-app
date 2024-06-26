@@ -13,7 +13,8 @@ export default function FormContainer() {
           src="/pastoral_logo.webp"
           alt="Pastoral Logo"
           className="logo"
-          width="100rem"
+          width="100"
+          height="100"
         />
       </picture>
       <h1 className="text-2xl font-bold text-center mt-4 mb-4">
