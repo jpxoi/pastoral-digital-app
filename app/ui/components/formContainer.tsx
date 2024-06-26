@@ -4,7 +4,7 @@ export default function FormContainer() {
   return (
     <div
       id="form_container"
-      className="max-w-xs sm:max-w-sm bg-white shadow-md mx-auto my-2 p-8 rounded-xl"
+      className="max-w-xs sm:max-w-sm bg-white shadow-md mx-auto my-2 p-8 rounded-xl transition-all duration-300"
     >
       <picture className="flex justify-center">
         <source srcSet="/pastoral_logo.avif" type="image/avif" />
