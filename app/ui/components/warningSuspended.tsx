@@ -24,7 +24,7 @@ export default function WarningSuspended() {
           </span>
           <p className="text-sm sm:text-base ml-4">
             Por disposición del equipo de coordinación de la Pastoral, estás
-            suspendido de los encuentros de los días sábados hasta nuevo aviso.
+            suspendido de los encuentros de los días sábados temporalmente.
           </p>
         </div>
       ) : (
