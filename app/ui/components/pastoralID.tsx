@@ -9,6 +9,7 @@ export default function PastoralID() {
   const router = useRouter()
   const [userID, setUserID] = useState<string | null>(null);
   const [countdown, setCountdown] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const imageRef = useRef<HTMLImageElement>(null);
 
   const imageLoader = ({ src } : { src: string }) => {
@@ -23,6 +24,7 @@ export default function PastoralID() {
       router.push('/');
     } else {
       setUserID(savedID);
+      setLoading(false);
     }
   }, [router]);
 
@@ -33,6 +35,7 @@ export default function PastoralID() {
     setTimeout(() => {
       setUserID(null);
       localStorage.removeItem("id");
+      localStorage.removeItem("token");
       router.push('/');
       setCountdown(null);
     }, 5000);
@@ -47,7 +50,7 @@ export default function PastoralID() {
   return (
     <div
       id="pastoral_id"
-      className="pass-front w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
+      className="pass-front min-w-[20rem] sm:min-w-[24rem] max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
     >
       {
         countdown && (
@@ -57,7 +60,7 @@ export default function PastoralID() {
         )
       }
       {
-        userID ? (
+        !loading ? (
           <Image
             id="pastoral_id_img"
             ref={imageRef}

@@ -1,69 +1,44 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
 
 export default function PastoralButtons() {
   const router = useRouter();
-  const cleanRef = useRef<HTMLButtonElement | null>(null);
-  const downloadRef = useRef<HTMLButtonElement | null>(null);
 
   const handleClear = () => {
-    if (cleanRef.current) {
-      cleanRef.current.disabled = true;
-      cleanRef.current.textContent = "Saliendo...";
-    }
-
     localStorage.removeItem("id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("full-name");
     router.push("/");
-
-    if (cleanRef.current) {
-      cleanRef.current.disabled = false;
-      cleanRef.current.textContent = "Salir";
-    }
-  };
-
-  const handleDownload = () => {
-    if (downloadRef.current) {
-      downloadRef.current.disabled = true;
-      downloadRef.current.textContent = "Descargando...";
-    }
-
-    const userID = localStorage.getItem("id");
-    if (userID) {
-      const a = document.createElement("a");
-      a.href = `https://static.jpxoi.com/media/pastoralid/${userID}.png?download`;
-      a.download = `PastoralID-${userID}.png`;
-      a.click();
-    }
-
-    if (downloadRef.current) {
-      downloadRef.current.disabled = false;
-      downloadRef.current.textContent = "Descargar";
-    }
   };
 
   return (
-    <div
-      id="buttons"
-      className="flex flex-row justify-between gap-4 mx-auto my-2 max-w-xs sm:max-w-sm transition-all duration-300"
-    >
+    <>
       <button
-        id="limpiar"
-        ref={cleanRef}
+        className="text-red-600 hover:text-red-800 hover:bg-red-50 px-4 py-2 rounded-md text-sm transition-colors duration-300 hidden sm:block"
         onClick={handleClear}
-        className="border border-red-600 hover:bg-red-600 text-red-700 hover:text-white cursor-pointer w-96 p-3 rounded-lg transition-colors duration-300 disabled:hover:bg-transparent disabled:hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Salir
+        Cerrar Sesión
       </button>
       <button
-        id="download"
-        ref={downloadRef}
-        onClick={handleDownload}
-        className="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer w-96 p-3 rounded-lg border-none transition-colors duration-300 disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-red-600 hover:text-red-800 hover:bg-red-50 px-4 py-2 rounded-md text-sm transition-colors duration-300 sm:hidden"
+        onClick={handleClear}
       >
-        Descargar
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
+          />
+        </svg>
       </button>
-    </div>
+    </>
   );
 }

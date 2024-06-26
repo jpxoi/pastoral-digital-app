@@ -7,6 +7,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   let data: any = null;
@@ -42,10 +43,11 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       await fetchData();
       const dataItem = checkAnswer(email.toLowerCase());
       localStorage.setItem("id", dataItem.ID);
+      localStorage.setItem("token", dataItem.Token);
       router.push("/generate");
     } catch (error) {
       if (buttonRef.current) {
-        buttonRef.current.textContent = "Generar Pastoral Digital ID";
+        buttonRef.current.textContent = "Iniciar Sesión";
         buttonRef.current.disabled = false;
       }
 
@@ -75,7 +77,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
     }
 
     if (!dataItem.Acceso) {
-      throw new Error("Tu acceso ha sido revocado.");
+      alert("Estás suspendido de las actividades de la Pastoral Mariana. Aún puedes generar tu Pastoral Digital ID y consultar tu registro de asistencia, pero no podrás acceder a las actividades.");
     }
 
     return dataItem;
@@ -112,7 +114,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         type="submit"
         className="w-full bg-blue-500 hover:bg-blue-600 text-white cursor-pointer p-3 rounded-md border-none disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
       >
-        Generar Pastoral Digital ID
+        Iniciar Sesión
       </button>
       {error && (
         <p
@@ -123,6 +125,17 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
           {error}
         </p>
       )}
+      {
+        warning && (
+          <p
+            id="warning-message"
+            className="w-full text-center text-yellow-800 py-2 px-4 bg-yellow-200 rounded-md mt-2"
+          >
+            <strong>Advertencia: </strong>
+            {warning}
+          </p>
+        )
+      }
     </form>
   );
 }
