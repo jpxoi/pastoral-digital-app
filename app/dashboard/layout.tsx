@@ -17,7 +17,7 @@ export default function Layout({
     <>
     <AppHeader />
     {children}
-    <Footer />
+    <Footer mt={4} mb={8} />
     </>
   );
 }
