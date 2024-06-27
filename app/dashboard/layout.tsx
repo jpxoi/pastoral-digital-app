@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import AppHeader from "../ui/components/appHeader";
+import Footer from "../ui/components/footer";
 
 export const metadata: Metadata = {
   title: "Dashboard | Pastoral Digital Services",
@@ -13,7 +15,9 @@ export default function Layout({
 }>) {
   return (
     <>
+    <AppHeader />
     {children}
+    <Footer />
     </>
   );
 }

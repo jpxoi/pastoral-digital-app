@@ -1,22 +1,12 @@
 import PastoralID from "../ui/components/pastoralID";
-import PastoralButtons from "../ui/components/signOutButton";
 import AttendanceSection from "../ui/components/attendance";
-import LogoImage from "../ui/components/logoImage";
 import WarningSuspended from "../ui/components/warningSuspended";
-import Footer from "../ui/components/footer";
 
 export default function PastoralDigitalPage() {
   return (
-    <div className="min-h-screen">
-      <nav className="flex justify-between items-center px-2 py-1 sm:px-4 sm:py-2 bg-white shadow-md transition-all duration-300">
-        <div className="flex items-center gap-2">
-          <LogoImage width={38.4} height={48} />
-          <h1 className="text-xl sm:text-2xl font-bold">Pastoral Digital</h1>
-        </div>
-        <PastoralButtons />
-      </nav>
+    <>
       <WarningSuspended />
-      <main className="flex w-full flex-col justify-center lg:flex-row items-center lg:items-start lg:justify-evenly lg:min-h-[80vh] lg:max-h-[80vh] px-4 xl:px-0 mt-4 lg:mt-8 mb-8">
+      <main className="flex w-full flex-col justify-center lg:flex-row items-center lg:items-start lg:justify-evenly min-h-[80vh] lg:max-h-[80vh] px-4 xl:px-0 mt-4 lg:mt-8 mb-8">
         <div className="flex flex-col items-center justify-start gap-4">
           <PastoralID />
         </div>
@@ -24,7 +14,6 @@ export default function PastoralDigitalPage() {
           <AttendanceSection />
         </div>
       </main>
-      <Footer />
-    </div>
+    </>
   );
 }
