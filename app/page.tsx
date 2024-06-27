@@ -3,9 +3,9 @@ import FormContainer from "./ui/components/formContainer";
 
 export default function Home() {
   return (
-    <main className="flex min-h-[100dvh] w-full flex-col items-center justify-center">
+    <main className="flex h-dvh w-full flex-col items-center justify-center">
       <FormContainer />
-      <Footer />
+      <Footer mt={4} mb={0} />
     </main>
   );
 }

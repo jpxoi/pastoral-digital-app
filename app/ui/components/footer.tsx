@@ -1,6 +1,6 @@
-export default function Footer() {
+export default function Footer({mt, mb} : {mt: number, mb: number}) {
   return (
-    <footer className="flex flex-col items-center justify-center my-4">
+    <footer className={`flex flex-col items-center justify-center mt-${mt} mb-${mb}`}>
       <p className="text-sm">
         Desarrollado con ❤️ por{" "}
         <a
