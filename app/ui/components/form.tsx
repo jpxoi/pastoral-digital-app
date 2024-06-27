@@ -33,8 +33,6 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       router.push("/dashboard");
       return;
     }
-
-    localStorage.clear();
   }, [router]);
 
   const toggleSubmitButton = (e: ChangeEvent<HTMLInputElement>) => {
