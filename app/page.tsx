@@ -5,7 +5,9 @@ export default function Home() {
   return (
     <main className="flex h-dvh w-full flex-col items-center justify-center">
       <FormContainer />
-      <Footer mt={4} mb={0} />
+      <footer className="hidden sm:block">
+        <Footer mt={4} mb={0} />
+      </footer>
     </main>
   );
 }
