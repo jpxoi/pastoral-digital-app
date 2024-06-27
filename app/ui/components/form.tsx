@@ -129,7 +129,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         />
         <label
           htmlFor="email"
-          className="absolute text-sm text-gray-400 duration-200 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:peer-invalid:text-red-600 peer-focus:peer-valid:text-green-600 peer-valid:text-green-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:-translate-y-3 peer-focus:top-2 peer-focus:scale-75 start-1"
+          className="absolute text-sm text-gray-400 duration-200 transform -translate-y-3.5 scale-75 top-2 z-10 origin-[0] bg-white rounded-xl px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:peer-invalid:text-red-600 peer-focus:peer-valid:text-green-600 peer-valid:text-green-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:-translate-y-3.5 peer-focus:top-2 peer-focus:scale-75 start-1"
         >
           Correo Electrónico
         </label>
