@@ -4,7 +4,7 @@ import Image from "next/image";
 import PicSkeleton from "./picSkeleton";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
-import ErrorIcon from "./errorIcon";
+import { ExclamationTriangle } from "../icons/icons24";
 
 export default function PastoralID() {
   const router = useRouter();
@@ -12,10 +12,6 @@ export default function PastoralID() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const imageRef = useRef<HTMLImageElement>(null);
-
-  const imageLoader = ({ src }: { src: string }) => {
-    return `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${src}`;
-  };
 
   useEffect(() => {
     const savedID = localStorage.getItem("id");
@@ -53,7 +49,7 @@ export default function PastoralID() {
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
           <span>
-            <ErrorIcon />
+            <ExclamationTriangle />
           </span>
           <p className="inline ml-2">{error}</p>
         </div>
@@ -63,8 +59,7 @@ export default function PastoralID() {
           id="pastoral_id_img"
           ref={imageRef}
           className="bg-white shadow-md mx-auto my-2 w-full h-auto m-0 p-0 rounded-lg max-w-sm"
-          loader={imageLoader}
-          src={`${userID}.png`}
+          src={`${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`}
           placeholder="blur"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
           onError={handleImageError}

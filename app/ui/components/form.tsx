@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import ErrorIcon from "./errorIcon";
+import { ExclamationTriangle } from "../icons/icons24";
 
 export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
   const router = useRouter();
@@ -58,6 +58,10 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       localStorage.setItem("id", dataItem.ID);
       localStorage.setItem("token", dataItem.Token);
       localStorage.setItem("suspended", dataItem.Acceso ? "false" : "true");
+      localStorage.setItem("avatarURL", dataItem["Foto de Perfil"]);
+      localStorage.setItem("firstName", dataItem["Nombres"]);
+      localStorage.setItem("lastName", dataItem["Apellidos"]);
+      localStorage.setItem("email", dataItem.Email);
       localStorage.setItem("expiryDate", calculateExpiryDate());
       router.push("/dashboard");
     } catch (error) {
@@ -104,42 +108,53 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
     <form
       id="qrForm"
       ref={formRef}
-      className="flex flex-col items-center"
+      className="flex flex-col items-center mt-4"
       onSubmit={(e) => {
         handleSubmit(e);
       }}
     >
-      <label htmlFor="codigo" className="mt-4">
-        Correo Electrónico:
-      </label>
-      <input
-        type="email"
-        name="email"
-        id="codigo"
-        value={email}
-        onChange={(e) => {
-          toggleSubmitButton(e);
-        }}
-        placeholder="Introduce tu correo electrónico"
-        className="text-center border w-full mx-0 my-2 p-2 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-150"
-        required
-      />
+      {/* Label superuesto */}
+      <div className="relative w-full">
+        <input
+          type="email"
+          name="email"
+          id="email"
+          value={email}
+          onChange={(e) => {
+            toggleSubmitButton(e);
+          }}
+          placeholder=" "
+          className="peer text-left border w-full mx-0 my-1 p-3 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-200"
+          required
+        />
+        <label
+          htmlFor="email"
+          className="absolute text-sm text-gray-400 duration-200 transform -translate-y-3 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:peer-invalid:text-red-600 peer-focus:peer-valid:text-green-600 peer-valid:text-green-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:-translate-y-3 peer-focus:top-2 peer-focus:scale-75 start-1"
+        >
+          Correo Electrónico
+        </label>
+      </div>
+      <a
+        href="https://wa.me/51941952314"
+        target="_blank"
+        rel="noreferrer"
+        className="text-xs text-right w-full text-blue-500 hover:text-blue-700 cursor-pointer"
+      >
+        ¿Olvidaste tu correo electrónico?
+      </a>
       <button
         id="generar-pase"
         ref={buttonRef}
         disabled
         type="submit"
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white cursor-pointer p-3 rounded-md border-none disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
+        className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white cursor-pointer p-3 rounded-md border-none disabled:hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
       >
         Iniciar Sesión
       </button>
-      <a href="https://wa.me/51941952314" target="_blank" rel="noreferrer" className="text-sm text-blue-600 hover:text-blue-800 mt-2 cursor-pointer">
-        ¿Olvidaste tu correo electrónico?
-      </a>
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex flex-row justify-center mt-2">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg flex flex-row justify-center mt-4">
           <span className="flex items-center">
-            <ErrorIcon />
+            <ExclamationTriangle />
           </span>
           <p className="inline ml-2">{error}</p>
         </div>

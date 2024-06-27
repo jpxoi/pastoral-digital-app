@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import ErrorIcon from "./errorIcon";
+import { ExclamationTriangle } from "../icons/icons24";
 
 export default function WarningSuspended() {
   const [suspended, setSuspended] = useState(false);
@@ -20,7 +20,7 @@ export default function WarningSuspended() {
           className="flex justify-center bg-red-100 text-red-700 my-4 mx-8 p-4 rounded-lg shadow-md transition-all duration-300"
         >
           <span className="flex items-center">
-            <ErrorIcon />
+            <ExclamationTriangle />
           </span>
           <p className="text-sm sm:text-base ml-4">
             Por disposición del equipo de coordinación de la Pastoral, estás
