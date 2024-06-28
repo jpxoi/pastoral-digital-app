@@ -15,9 +15,11 @@ export default function Layout({
 }>) {
   return (
     <>
-    <AppHeader />
-    {children}
-    <Footer mt={4} mb={8} />
+      <AppHeader />
+      {children}
+      <footer className="mt-8 pb-8">
+        <Footer />
+      </footer>
     </>
   );
 }

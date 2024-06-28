@@ -25,8 +25,8 @@ export default function FormContainer() {
         <p className="text-center">Introduce tu correo para continuar</p>
         <Form dataEndpoint={process.env.DATA_ENDPOINT as string} />
       </div>
-      <div className="block sm:hidden">
-        <Footer mt={8} mb={8} />
+      <div className="block sm:hidden mb-8">
+        <Footer />
       </div>
     </div>
   );
