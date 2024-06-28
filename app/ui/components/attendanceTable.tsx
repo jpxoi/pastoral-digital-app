@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RowSkeleton from "./rowSkeleton";
+import RowSkeleton from "../skeletons/rowSkeleton";
 import TableHeader from "./tableHeader";
 import { useRouter } from "next/navigation";
 import TableRow from "./tableRow";

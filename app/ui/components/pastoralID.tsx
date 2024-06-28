@@ -1,10 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import PicSkeleton from "./picSkeleton";
+import PastoralIDSkeleton from "../skeletons/pastoralIDSkeleton";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { ExclamationTriangle } from "../icons/icons24";
+import {
+  clearLocalStorage,
+  getLocalStorageItem,
+} from "@/app/utils/localStorageUtils";
 
 export default function PastoralID() {
   const router = useRouter();
@@ -14,15 +18,15 @@ export default function PastoralID() {
   const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const savedID = localStorage.getItem("id");
-    const expiryDate = localStorage.getItem("expiryDate");
+    const savedID = getLocalStorageItem("id");
+    const expiryDate = getLocalStorageItem("expiryDate");
     const idPattern = /^[A-Za-zÑñ]{2}-\d{3}$/;
 
     const currentDate = new Date();
     const expiry = new Date(expiryDate as string);
 
     if (!savedID || !idPattern.test(savedID) || expiry < currentDate) {
-      localStorage.clear();
+      clearLocalStorage();
       router.push("/");
     } else {
       setUserID(savedID);
@@ -68,7 +72,7 @@ export default function PastoralID() {
           height="1150"
         />
       ) : (
-        <PicSkeleton />
+        <PastoralIDSkeleton />
       )}
     </div>
   );

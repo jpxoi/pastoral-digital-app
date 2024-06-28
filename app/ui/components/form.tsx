@@ -3,35 +3,23 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ExclamationTriangle } from "../icons/icons24";
+import { setLocalStorageItems } from "@/app/utils/localStorageUtils";
+import { calculateExpiryDate, checkUserLoggedIn } from "@/app/utils/authUtils";
+import FormSkeleton from "../skeletons/formSkeleton";
 
 export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   let data: any = null;
 
   useEffect(() => {
-    const savedID = localStorage.getItem("id");
-    const savedToken = localStorage.getItem("token");
-    const suspended = localStorage.getItem("suspended");
-    const expiryDate = localStorage.getItem("expiryDate");
-
-    const idPattern = /^[A-Za-z]{2}-\d{3}$/;
-
-    const currentDate = new Date();
-    const expiry = new Date(expiryDate as string);
-
-    if (
-      expiry > currentDate &&
-      savedID &&
-      idPattern.test(savedID) &&
-      savedToken &&
-      suspended
-    ) {
+    setLoading(false);
+    if (checkUserLoggedIn()) {
       router.push("/dashboard");
-      return;
     }
   }, [router]);
 
@@ -55,15 +43,17 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
     try {
       await fetchData();
       const dataItem = checkAnswer(email.toLowerCase());
-      localStorage.setItem("id", dataItem.ID);
-      localStorage.setItem("token", dataItem.Token);
-      localStorage.setItem("suspended", dataItem.Acceso ? "false" : "true");
-      localStorage.setItem("avatarURL", dataItem["Foto de Perfil"]);
-      localStorage.setItem("firstName", dataItem["Nombres"]);
-      localStorage.setItem("lastName", dataItem["Apellidos"]);
-      localStorage.setItem("email", dataItem.Email);
-      localStorage.setItem("customAvatar", dataItem["Custom Avatar"])
-      localStorage.setItem("expiryDate", calculateExpiryDate());
+      setLocalStorageItems({
+        id: dataItem.ID,
+        token: dataItem.Token,
+        suspended: dataItem.Acceso ? "false" : "true",
+        avatarURL: dataItem["Foto de Perfil"],
+        firstName: dataItem["Nombres"],
+        lastName: dataItem["Apellidos"],
+        email: dataItem.Email,
+        customAvatar: dataItem["Custom Avatar"],
+        expiryDate: calculateExpiryDate(),
+      });
       router.push("/dashboard");
     } catch (error) {
       if (buttonRef.current) {
@@ -74,12 +64,6 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       setError((error as Error).message);
     }
   };
-
-  function calculateExpiryDate() {
-    const currentDate = new Date();
-    currentDate.setHours(currentDate.getHours() + 72);
-    return currentDate.toISOString();
-  }
 
   async function fetchData() {
     try {
@@ -103,6 +87,10 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
     }
 
     return dataItem;
+  }
+
+  if (loading) {
+    return <FormSkeleton />;
   }
 
   return (
@@ -135,14 +123,14 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         </label>
       </div>
       <div className="flex flex-row justify-end items-center w-full">
-      <a
-        href="https://wa.me/51941952314"
-        target="_blank"
-        rel="noreferrer"
-        className="text-xs text-right text-blue-500 hover:text-blue-700 cursor-pointer"
-      >
-        ¿Olvidaste tu correo electrónico?
-      </a>
+        <a
+          href="https://wa.me/51941952314"
+          target="_blank"
+          rel="noreferrer"
+          className="text-xs text-right text-blue-500 hover:text-blue-700 cursor-pointer"
+        >
+          ¿Olvidaste tu correo electrónico?
+        </a>
       </div>
       <button
         id="generar-pase"
