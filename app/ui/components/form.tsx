@@ -124,7 +124,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       </div>
       <div className="flex flex-row justify-end items-center w-full">
         <a
-          href="https://wa.me/51941952314"
+          href="https://api.whatsapp.com/send/?phone=51941952314&text=Hola+Irvin%2C+olvidé+cual+es+mi+correo+de+Pastoral+😞"
           target="_blank"
           rel="noreferrer"
           className="text-xs text-right text-blue-500 hover:text-blue-700 cursor-pointer"

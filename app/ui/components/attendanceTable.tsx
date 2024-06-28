@@ -59,7 +59,7 @@ export default function AttendanceTable() {
 
   return (
     <>
-      <div className="flex flex-row items-center justify-center lg:justify-end gap-4 mb-2 w-full max-w-xs sm:max-w-screen-sm md:max-w-screen-md">
+      <div className="flex flex-row items-center justify-center lg:justify-end gap-4 mb-2 w-full sm:max-w-screen-sm md:max-w-screen-md">
         <button
           onClick={refreshTable}
           className="text-sm text-blue-500 hover:text-blue-700 disabled:text-gray-300 disabled:hover:text-gray-300 disabled:cursor-not-allowed flex flex-row items-center gap-1"
@@ -71,7 +71,7 @@ export default function AttendanceTable() {
           <span>{refreshButtonText}</span>
         </button>
       </div>
-      <div className="relative overflow-x-auto shadow-md w-full max-w-xs sm:max-w-screen-sm md:max-w-screen-md rounded-md">
+      <div className="relative overflow-x-auto shadow-md w-full sm:max-w-screen-sm md:max-w-screen-md rounded-md">
         <table className="text-sm text-left rtl:text-right text-gray-500 w-full">
           <TableHeader />
           <tbody className="text-center">

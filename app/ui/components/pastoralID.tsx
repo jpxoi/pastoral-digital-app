@@ -25,7 +25,7 @@ export default function PastoralID() {
       setLoading(false);
       return;
     }
-    
+
     clearLocalStorage();
     router.push("/");
   }, [router]);
@@ -41,25 +41,36 @@ export default function PastoralID() {
     }
   };
 
+  const downloadImage = () => {
+    const a = document.createElement("a");
+    a.href = `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`;
+    a.target = "_blank";
+    a.referrerPolicy = "no-referrer";
+    a.download = "PastoralID.png";
+    a.click();
+  }
+
   return (
     <div
       id="pastoral_id"
-      className="pass-front min-w-[20rem] sm:min-w-[24rem] max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
+      className="pass-front min-w-80 sm:min-w-96 sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
     >
-      {error && (
+      {loading ? (
+        <PastoralIDSkeleton />
+      ) : error ? (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
           <span>
             <ExclamationTriangle />
           </span>
           <p className="inline ml-2">{error}</p>
         </div>
-      )}
-      {!loading ? (
+      ) : (
         <Image
           id="pastoral_id_img"
           ref={imageRef}
-          className="bg-white shadow-md mx-auto my-2 w-full h-auto m-0 p-0 rounded-lg max-w-sm"
+          className="bg-white shadow-md mx-auto w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg cursor-pointer"
           src={`${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`}
+          onClick={downloadImage}
           placeholder="blur"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
           onError={handleImageError}
@@ -67,8 +78,7 @@ export default function PastoralID() {
           width="450"
           height="575"
         />
-      ) : (
-        <PastoralIDSkeleton />
+        
       )}
     </div>
   );

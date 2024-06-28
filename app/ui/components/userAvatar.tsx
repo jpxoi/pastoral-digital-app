@@ -72,14 +72,14 @@ export default function UserAvatar() {
         onClick={toggleDropdown}
       >
         {userInfo.avatarURL ? (
-          <div className="w-8 h-8 sm:w-10 sm:h-10 p-0.5 rounded-full ring-2 ring-blue-300">
-            <picture className="w-full h-full bg-blue-300 rounded-full">
+          <div className="w-8 h-8 sm:w-10 sm:h-10 p-0.5 rounded-full ring-2 ring-blue-100">
+            <picture className="w-full h-full bg-blue-100 rounded-full">
               <source srcSet={`${userInfo.avatarURL}`} type="image/webp" />
               <source srcSet={`${userInfo.fallbackAvatar}`} type="image/png" />
               <img
                 src={`${userInfo.fallbackAvatar}`}
                 alt="Avatar Profile Picture"
-                className="w-full h-full bg-blue-300 rounded-full"
+                className="w-full h-full bg-blue-100 rounded-full"
               />
             </picture>
           </div>
@@ -89,7 +89,7 @@ export default function UserAvatar() {
       </div>
       <div
         ref={dropdown}
-        className="flex flex-col gap-2 absolute top-16 right-0 w-dvw sm:w-auto sm:right-4 sm:top-20 xl:right-[5vw] 2xl:right-[10vw] bg-white shadow-md sm:shadow-lg sm:rounded-md p-2 transition-all duration-300 transform-gpu hidden z-50"
+        className="flex flex-col gap-3 absolute top-20 right-4 w-auto xl:right-[5vw] 2xl:right-[10vw] bg-white shadow-lg rounded-md p-2 transition-all duration-300 transform-gpu hidden z-50"
       >
         <UserInfo
           firstName={userInfo.firstName}
@@ -97,7 +97,26 @@ export default function UserAvatar() {
           email={userInfo.email}
           userID={userInfo.userID}
         />
-        <div className="border-t border-gray-200"></div>
+        <div id="user-options" className="flex flex-col gap-1">
+          <a
+            className="text-base text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-100 rounded-md"
+            href={`https://api.whatsapp.com/send/?phone=447787024710&text=Hola+JP%2C+soy+${userInfo.firstName}+${userInfo.lastName}+y+mi+ID+de+Catequista+es+${userInfo.userID}.+Te+escribo+para+modificar+mi+foto+de+perfil+📸`}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => toggleDropdown()}
+          >
+            Modificar Foto de Perfil
+          </a>
+          <a
+            className="text-base text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-100 rounded-md"
+            href="https://forms.gle/Ro3FXViPPCXeEFV49"
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => toggleDropdown()}
+          >
+            Justificar Inasistencia
+          </a>
+        </div>
         <button
           className="text-base text-red-500 hover:text-red-700 p-2 hover:bg-red-100 rounded-md"
           ref={logOutButton}
