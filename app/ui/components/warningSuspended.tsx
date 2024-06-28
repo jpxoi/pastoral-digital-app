@@ -13,6 +13,7 @@ export default function WarningSuspended() {
       setSuspended(true);
     }
   }, []);
+
   return (
     <>
       {suspended ? (
