@@ -112,7 +112,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
             toggleSubmitButton(e);
           }}
           placeholder=" "
-          className="peer text-left border w-full mx-0 my-1 p-3 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-200 select-none"
+          className="peer text-left border w-full mx-0 my-1 p-3 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-200"
           required
         />
         <label
