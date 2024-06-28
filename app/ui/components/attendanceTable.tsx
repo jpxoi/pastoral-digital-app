@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import TableRow from "./tableRow";
 import ErrorRow from "./errorRow";
 import { RefreshIconMicro } from "../icons/icons16";
+import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 
 export default function AttendanceTable() {
   const [data, setData] = useState([]);
@@ -43,7 +44,7 @@ export default function AttendanceTable() {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    if (!getLocalStorageItem("token")) {
       router.push("/");
       return;
     }

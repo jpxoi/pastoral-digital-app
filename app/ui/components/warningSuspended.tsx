@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { ExclamationTriangle } from "../icons/icons24";
+import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 
 export default function WarningSuspended() {
   const [suspended, setSuspended] = useState(false);
 
   useEffect(() => {
-    const suspended = localStorage.getItem("suspended");
+    const suspended = getLocalStorageItem("suspended")
     if (suspended && suspended === "true") {
       setSuspended(true);
     }

@@ -9,6 +9,7 @@ import {
   clearLocalStorage,
   getLocalStorageItem,
 } from "@/app/utils/localStorageUtils";
+import { checkUserLoggedIn } from "@/app/utils/authUtils";
 
 export default function PastoralID() {
   const router = useRouter();
@@ -19,19 +20,14 @@ export default function PastoralID() {
 
   useEffect(() => {
     const savedID = getLocalStorageItem("id");
-    const expiryDate = getLocalStorageItem("expiryDate");
-    const idPattern = /^[A-Za-zÑñ]{2}-\d{3}$/;
-
-    const currentDate = new Date();
-    const expiry = new Date(expiryDate as string);
-
-    if (!savedID || !idPattern.test(savedID) || expiry < currentDate) {
-      clearLocalStorage();
-      router.push("/");
-    } else {
+    if (checkUserLoggedIn()) {
       setUserID(savedID);
       setLoading(false);
     }
+    
+    clearLocalStorage();
+    router.push("/");
+    return;
   }, [router]);
 
   const handleImageError = () => {
