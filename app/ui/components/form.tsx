@@ -62,6 +62,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
       localStorage.setItem("firstName", dataItem["Nombres"]);
       localStorage.setItem("lastName", dataItem["Apellidos"]);
       localStorage.setItem("email", dataItem.Email);
+      localStorage.setItem("customAvatar", dataItem["Custom Avatar"])
       localStorage.setItem("expiryDate", calculateExpiryDate());
       router.push("/dashboard");
     } catch (error) {
@@ -113,7 +114,6 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
         handleSubmit(e);
       }}
     >
-      {/* Label superuesto */}
       <div className="relative w-full">
         <input
           type="email"
@@ -124,7 +124,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
             toggleSubmitButton(e);
           }}
           placeholder=" "
-          className="peer text-left border w-full mx-0 my-1 p-3 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-200"
+          className="peer text-left border w-full mx-0 my-1 p-3 rounded-md border-solid border-blue-500 focus:border-blue-600 focus:invalid:border-red-600 focus:valid:border-green-600 valid:border-green-600 focus:outline-none transition-colors duration-200 select-none"
           required
         />
         <label
@@ -134,14 +134,16 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
           Correo Electrónico
         </label>
       </div>
+      <div className="flex flex-row justify-end items-center w-full">
       <a
         href="https://wa.me/51941952314"
         target="_blank"
         rel="noreferrer"
-        className="text-xs text-right w-full text-blue-500 hover:text-blue-700 cursor-pointer"
+        className="text-xs text-right text-blue-500 hover:text-blue-700 cursor-pointer"
       >
         ¿Olvidaste tu correo electrónico?
       </a>
+      </div>
       <button
         id="generar-pase"
         ref={buttonRef}

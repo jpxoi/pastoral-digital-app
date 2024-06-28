@@ -6,7 +6,6 @@ export default function LogoImage({ width = 80, height = 100 }) {
       <img
         src="/pastoral_logo.webp"
         alt="Pastoral Logo"
-        className="logo"
         width={width}
         height={height}
       />
