@@ -8,7 +8,7 @@ export default function FormContainer() {
       id="form_container"
       className="flex flex-col justify-between w-screen h-dvh sm:h-auto sm:rounded-xl sm:shadow-md sm:max-w-sm bg-white mx-auto sm:bg-white"
     >
-      <div className="sm:rounded-t-xl w-full h-full sm:aspect-[2/1] bg-[url(/graphics/bg-wave.svg)] bg-cover sm:bg-center">
+      <div className="sm:rounded-t-xl w-full h-full bg-[url(/graphics/bg-wave.svg)] bg-cover sm:bg-center">
         <h1 className="text-4xl text-white font-bold text-center leading-normal p-8 py-12 sm:py-8 select-none">
           Bienvenido a
           <br />
