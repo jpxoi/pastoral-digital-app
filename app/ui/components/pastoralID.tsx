@@ -23,11 +23,11 @@ export default function PastoralID() {
     if (checkUserLoggedIn()) {
       setUserID(savedID);
       setLoading(false);
+      return;
     }
     
     clearLocalStorage();
     router.push("/");
-    return;
   }, [router]);
 
   const handleImageError = () => {
