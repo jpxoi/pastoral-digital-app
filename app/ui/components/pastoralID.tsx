@@ -64,8 +64,8 @@ export default function PastoralID() {
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
           onError={handleImageError}
           alt="Pastoral ID"
-          width="900"
-          height="1150"
+          width="450"
+          height="575"
         />
       ) : (
         <PastoralIDSkeleton />
