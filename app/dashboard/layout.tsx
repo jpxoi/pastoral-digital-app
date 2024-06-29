@@ -17,7 +17,7 @@ export default function Layout({
     <>
       <AppHeader />
       {children}
-      <footer className="mt-8 pb-8">
+      <footer className="mt-8 pb-8 lg:pb-4">
         <Footer />
       </footer>
     </>
