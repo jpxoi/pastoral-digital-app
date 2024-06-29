@@ -10,6 +10,7 @@ export default function ChangeProfilePic() {
   const router = useRouter();
   const submitButton = useRef<HTMLButtonElement | null>(null);
   const [userID, setUserID] = useState("");
+  const [formToken, setFormToken] = useState("");
   const [avatarURL, setAvatarURL] = useState("");
   const [tmpAvatarURL, setTmpAvatarURL] = useState("");
   const [newAvatarURL, setNewAvatarURL] = useState("");
@@ -40,6 +41,7 @@ export default function ChangeProfilePic() {
     };
 
     const { userID, avatarURL } = getUserInfoFromLocalStorage();
+    setFormToken(process.env.NEXT_PUBLIC_FORM_TOKEN as string);
     setAvatarURL(avatarURL as string);
     setNewAvatarURL(avatarURL as string);
     setUserID(userID as string);
@@ -56,7 +58,7 @@ export default function ChangeProfilePic() {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        access_key: "2a91bec6-75a9-4b49-a056-5947abfe4de3",
+        access_key: formToken,
         new_avatar: newAvatarURL,
         user_id: userID,
       }),
