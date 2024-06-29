@@ -1,16 +1,17 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { ExclamationTriangle } from "../icons/icons24";
 import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 
 export default function WarningSuspended() {
-  const [suspended, setSuspended] = useState(false);
+  const [suspended, setSuspended] = useState<boolean>(false);
 
   useEffect(() => {
-    const suspended = getLocalStorageItem("suspended")
-    if (suspended && suspended === "true") {
+    const suspended = getLocalStorageItem("suspended");
+    if (suspended === "true") {
       setSuspended(true);
+      return;
     }
   }, []);
 
@@ -24,7 +25,7 @@ export default function WarningSuspended() {
           <span className="flex items-center">
             <ExclamationTriangle />
           </span>
-          <p className="text-sm sm:text-base ml-4">
+          <p className="text-sm sm:text-base ml-4 text-left md:text-center">
             Por disposición del equipo de coordinación de la Pastoral, estás
             suspendido de los encuentros de los días sábados temporalmente.
           </p>

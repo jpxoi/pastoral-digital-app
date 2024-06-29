@@ -7,7 +7,7 @@ import { setLocalStorageItems } from "@/app/utils/localStorageUtils";
 import { calculateExpiryDate, checkUserLoggedIn } from "@/app/utils/authUtils";
 import FormSkeleton from "../skeletons/formSkeleton";
 
-export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
+export default function Form() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -15,6 +15,7 @@ export default function Form({ dataEndpoint }: { dataEndpoint: string }) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
   let data: any = null;
+  const dataEndpoint = process.env.NEXT_PUBLIC_DATA_ENDPOINT as string;
 
   useEffect(() => {
     setLoading(false);

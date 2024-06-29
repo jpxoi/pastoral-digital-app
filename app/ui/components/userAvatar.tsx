@@ -5,7 +5,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import UserInfo from "./userInfo";
 import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 import { logOut } from "@/app/utils/authUtils";
-import AvatarSkeleton from "../skeletons/avatarSkeleton";
+import Avatar from "./avatar";
+import { JustifyIcon, LogOutIcon } from "../icons/icons24";
 
 export default function UserAvatar() {
   const router = useRouter();
@@ -68,62 +69,48 @@ export default function UserAvatar() {
     <>
       <div
         id="avatar"
-        className="flex items-center gap-2 cursor-pointer"
+        className="flex items-center cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
         onClick={toggleDropdown}
       >
-        {userInfo.avatarURL ? (
-          <div className="w-8 h-8 sm:w-10 sm:h-10 p-0.5 rounded-full ring-2 ring-blue-100">
-            <picture className="w-full h-full bg-blue-100 rounded-full">
-              <source srcSet={`${userInfo.avatarURL}`} type="image/webp" />
-              <source srcSet={`${userInfo.fallbackAvatar}`} type="image/png" />
-              <img
-                src={`${userInfo.fallbackAvatar}`}
-                alt="Avatar Profile Picture"
-                className="w-full h-full bg-blue-100 rounded-full"
-              />
-            </picture>
-          </div>
-        ) : (
-          <AvatarSkeleton />
-        )}
+        <Avatar
+          avatarURL={userInfo.avatarURL}
+          fallbackAvatar={userInfo.fallbackAvatar || ""}
+          bg="100"
+        />
       </div>
       <div
         ref={dropdown}
-        className="flex flex-col gap-3 absolute top-20 right-4 w-auto xl:right-[5vw] 2xl:right-[10vw] bg-white shadow-lg rounded-md p-2 transition-all duration-300 transform-gpu hidden z-50"
+        className="flex flex-col gap-6 absolute top-20 right-4 w-auto xl:right-[5vw] 2xl:right-[10vw] bg-[#e9eef6] shadow-lg rounded-lg p-3 pt-2 transition-all duration-300 transform-gpu hidden z-50"
       >
         <UserInfo
           firstName={userInfo.firstName}
           lastName={userInfo.lastName}
           email={userInfo.email}
           userID={userInfo.userID}
+          avatarURL={userInfo.avatarURL}
+          fallbackAvatar={userInfo.fallbackAvatar}
+          dropdown={dropdown}
         />
-        <div id="user-options" className="flex flex-col gap-1">
+        <div className="grid grid-cols-2 gap-2">
           <a
-            className="text-base text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-100 rounded-md"
-            href={`https://api.whatsapp.com/send/?phone=447787024710&text=Hola+JP%2C+soy+${userInfo.firstName}+${userInfo.lastName}+y+mi+ID+de+Catequista+es+${userInfo.userID}.+Te+escribo+para+modificar+mi+foto+de+perfil+📸`}
+            className="text-sm text-blue-500 hover:text-blue-800 py-3 px-2 bg-white hover:bg-blue-100 flex flex-row justify-center items-center gap-1 rounded-lg"
+            href={`https://docs.google.com/forms/d/e/1FAIpQLSd_iJ7BJaofM-yQUFNa9tDImNrdRVY0JoXqbLgpjmUxrFEIuA/viewform?usp=pp_url&entry.1528530871=${userInfo.userID}&entry.858990924=${userInfo.firstName}+${userInfo.lastName}`}
             target="_blank"
             rel="noreferrer"
             onClick={() => toggleDropdown()}
           >
-            Modificar Foto de Perfil
+            <JustifyIcon />
+            Justificar Falta
           </a>
-          <a
-            className="text-base text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-100 rounded-md"
-            href="https://forms.gle/Ro3FXViPPCXeEFV49"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => toggleDropdown()}
+          <button
+            className="text-sm text-red-500 hover:text-red-800 py-3 px-2 bg-white hover:bg-red-100 flex flex-row justify-center items-center gap-1 rounded-lg"
+            ref={logOutButton}
+            onClick={handleLogOut}
           >
-            Justificar Inasistencia
-          </a>
+            <LogOutIcon />
+            {buttonString}
+          </button>
         </div>
-        <button
-          className="text-base text-red-500 hover:text-red-700 p-2 hover:bg-red-100 rounded-md"
-          ref={logOutButton}
-          onClick={handleLogOut}
-        >
-          {buttonString}
-        </button>
       </div>
     </>
   );

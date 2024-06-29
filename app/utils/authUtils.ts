@@ -6,7 +6,7 @@ export function checkExpiryDate(expiryDate: string): boolean {
 
 export function calculateExpiryDate(): string {
   const date = new Date();
-  date.setDate(date.getDate() + 1);
+  date.setDate(date.getDate() + 7);
   return date.toISOString();
 }
 

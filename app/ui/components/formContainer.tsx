@@ -23,7 +23,7 @@ export default function FormContainer() {
           Iniciar Sesión
         </h2>
         <p className="text-center">Introduce tu correo para continuar</p>
-        <Form dataEndpoint={process.env.DATA_ENDPOINT as string} />
+        <Form />
       </div>
       <div className="block sm:hidden mb-8">
         <Footer />
