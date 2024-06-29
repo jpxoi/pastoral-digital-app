@@ -63,7 +63,7 @@ export default function UserInfo({
           <b>ID: </b>
           {userID}
         </p>
-        <Link href="/dashboard/settings" onClick={toggleDropdown} className="text-sm text-blue-600 hover:text-blue-800 py-2 px-4 hover:bg-blue-100 border border-blue-800 rounded-full w-fit self-center mt-3">
+        <Link href="/dashboard/settings" onClick={toggleDropdown} className="text-sm text-blue-600 hover:text-blue-800 py-2 px-4 hover:bg-blue-100 border border-blue-800 rounded-full w-fit self-center mt-3 hidden">
           Gestionar tu Pastoral Digital
         </Link>
       </div>
