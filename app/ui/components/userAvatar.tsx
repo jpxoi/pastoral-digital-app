@@ -6,7 +6,7 @@ import UserInfo from "./userInfo";
 import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 import { logOut } from "@/app/utils/authUtils";
 import Avatar from "./avatar";
-import { BirthdayCakeIcon, JustifyIcon, LogOutIcon } from "../icons/icons24";
+import { JustifyIcon, LogOutIcon } from "../icons/icons24";
 
 export default function UserAvatar() {
   const router = useRouter();
