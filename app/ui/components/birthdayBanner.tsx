@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BirthdayCakeIcon } from "../icons/icons24";
 import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 
 export default function BirthdayBanner() {
@@ -28,20 +27,22 @@ export default function BirthdayBanner() {
 
   return (
     <>
-      {!loading ? (
-        <div id="birthday" className="flex justify-center items-center">
-          <div className="flex justify-center bg-yellow-100 text-yellow-700 p-4 rounded-lg shadow-md transition-all duration-300">
-            <span className="flex items-center">
-              <BirthdayCakeIcon />
-            </span>
-            <p className="text-sm sm:text-base ml-4 text-left md:text-center hidden md:block">
-              {birthdayMessage} Sabemos que hoy es un día especial para ti, y queremos desearte lo mejor en tu día.
-            </p>
-            <p className="text-sm sm:text-base ml-4 text-left md:text-center block md:hidden">
-              {birthdayMessage}
-            </p>
-          </div>
+      {loading ? (
+        <div className="card h-[85vh] w-[85vw] lg:h-[70vh] lg:w-[60vw] flex flex-col justify-evenly lg:justify-center items-center text-center lg:flex-row-reverse bg-[#fdfdfd] rounded-xl shadow-lg p-4 overflow-hidden">
+        <img
+          src="/birthday.svg"
+          alt="birthday"
+          className="birthday w-full max-h-[40vh]"
+        />
+        <div className="text p-4">
+          <h1 className="text-3xl">{birthdayMessage}</h1>
+          <p className="text-lg mt-4">
+            ¡Hoy es un día especial para ti! Queremos desearte lo mejor en tu
+            día. Que Dios te bendiga y te llene de amor y felicidad.
+          </p>
+          <p className="text-md text-opacity-80 mt-2">~ El Equipo de Pastoral</p>
         </div>
+      </div>
       ) : (
         <></>
       )}

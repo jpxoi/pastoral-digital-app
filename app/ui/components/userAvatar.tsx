@@ -6,7 +6,7 @@ import UserInfo from "./userInfo";
 import { getLocalStorageItem } from "@/app/utils/localStorageUtils";
 import { logOut } from "@/app/utils/authUtils";
 import Avatar from "./avatar";
-import { JustifyIcon, LogOutIcon } from "../icons/icons24";
+import { BirthdayCakeIcon, JustifyIcon, LogOutIcon } from "../icons/icons24";
 
 export default function UserAvatar() {
   const router = useRouter();
@@ -67,17 +67,20 @@ export default function UserAvatar() {
 
   return (
     <>
-      <div
-        id="avatar"
-        className="flex items-center cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
-        onClick={toggleDropdown}
-      >
-        <Avatar
-          avatarURL={userInfo.avatarURL}
-          fallbackAvatar={userInfo.fallbackAvatar || ""}
-          bg="100"
-        />
+      <div className="flex justify-between items-center">
+        <div
+          id="avatar"
+          className="flex items-center cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
+          onClick={toggleDropdown}
+        >
+          <Avatar
+            avatarURL={userInfo.avatarURL}
+            fallbackAvatar={userInfo.fallbackAvatar || ""}
+            bg="100"
+          />
+        </div>
       </div>
+
       <div
         ref={dropdown}
         className="flex flex-col gap-6 absolute top-20 right-4 w-auto xl:right-[5vw] 2xl:right-[10vw] bg-[#e9eef6] shadow-lg rounded-lg p-3 pt-2 transition-all duration-300 transform-gpu hidden z-50"
