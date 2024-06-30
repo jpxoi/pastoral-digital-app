@@ -42,7 +42,10 @@ export default function UserInfo({
         </button>
       </div>
       <div className="relative self-center h-32 w-32">
-        <DarkAvatar userID={userID as string}/>
+        <DarkAvatar
+          avatarURL={avatarURL as string}
+          fallbackAvatar={fallbackAvatar as string}
+        />
         <Link
           className="flex justify-center items-center relative rounded-full bg-white text-gray-700 w-6 h-6 -top-8 left-24 cursor-pointer hover:bg-blue-100 hover:text-blue-800"
           href="/dashboard/settings"
