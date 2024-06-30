@@ -4,7 +4,7 @@ import NotificationDismissButton from "./notificationdismiss";
 export default function Notification() {
   const notification =
     "¡Hola! Bienvenido a Pastoral Digital. Recuerda que mañana tenemos nuestra Misa mensual en la Parroquia Alta Gracia a las 10:00 a.m. ¡No faltes!";
-  const show = true;
+  const show = false;
 
   return (
     <>
