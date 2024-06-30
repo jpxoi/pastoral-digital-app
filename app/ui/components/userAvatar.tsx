@@ -91,9 +91,9 @@ export default function UserAvatar() {
           fallbackAvatar={userInfo.fallbackAvatar}
           dropdown={dropdown}
         />
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1">
           <a
-            className="text-sm text-blue-500 hover:text-blue-800 py-3 px-2 bg-white hover:bg-blue-100 flex flex-row justify-center items-center gap-1 rounded-lg"
+            className="text-sm text-blue-500 hover:text-blue-800 py-3 px-2 bg-white hover:bg-blue-100 flex flex-row justify-center items-center gap-1 rounded-3xl rounded-r-md"
             href={`https://docs.google.com/forms/d/e/1FAIpQLSd_iJ7BJaofM-yQUFNa9tDImNrdRVY0JoXqbLgpjmUxrFEIuA/viewform?usp=pp_url&entry.1528530871=${userInfo.userID}&entry.858990924=${userInfo.firstName}+${userInfo.lastName}`}
             target="_blank"
             rel="noreferrer"
@@ -103,7 +103,7 @@ export default function UserAvatar() {
             Justificar Falta
           </a>
           <button
-            className="text-sm text-red-500 hover:text-red-800 py-3 px-2 bg-white hover:bg-red-100 flex flex-row justify-center items-center gap-1 rounded-lg"
+            className="text-sm text-red-500 hover:text-red-800 py-3 px-2 bg-white hover:bg-red-100 flex flex-row justify-center items-center gap-1 rounded-3xl rounded-l-md"
             ref={logOutButton}
             onClick={handleLogOut}
           >
