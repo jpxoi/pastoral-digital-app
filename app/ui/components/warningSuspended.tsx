@@ -19,16 +19,18 @@ export default function WarningSuspended() {
     <>
       {suspended ? (
         <div
-          id="warning-banner"
-          className="flex justify-center bg-red-100 text-red-700 my-4 mx-8 p-4 rounded-lg shadow-md transition-all duration-300"
+          id="warning"
+          className="flex justify-center items-center"
         >
-          <span className="flex items-center">
-            <ExclamationTriangle />
-          </span>
-          <p className="text-sm sm:text-base ml-4 text-left md:text-center">
-            Por disposición del equipo de coordinación de la Pastoral, estás
-            suspendido de los encuentros de los días sábados temporalmente.
-          </p>
+          <div className="flex justify-center bg-red-100 text-red-700 p-4 rounded-lg shadow-md transition-all duration-300">
+            <span className="flex items-center">
+              <ExclamationTriangle />
+            </span>
+            <p className="text-sm sm:text-base ml-4 text-left md:text-center">
+              Por disposición del equipo de coordinación de la Pastoral, estás
+              suspendido de los encuentros de los días sábados temporalmente.
+            </p>
+          </div>
         </div>
       ) : (
         <></>
