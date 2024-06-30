@@ -26,6 +26,7 @@ export default function UserInfo({
       dropdown.current.classList.toggle("hidden");
     }
   };
+
   return (
     <div className="flex flex-col gap-4 min-w-80 rounded-md">
       <div className="flex justify-between items-center">
@@ -41,10 +42,7 @@ export default function UserInfo({
         </button>
       </div>
       <div className="relative self-center h-32 w-32">
-        <DarkAvatar
-          avatarURL={avatarURL}
-          fallbackAvatar={fallbackAvatar ?? ""}
-        />
+        <DarkAvatar userID={userID}/>
         <Link
           className="flex justify-center items-center relative rounded-full bg-white text-gray-700 w-6 h-6 -top-8 left-24 cursor-pointer hover:bg-blue-100 hover:text-blue-800"
           href="/dashboard/settings"
@@ -62,7 +60,11 @@ export default function UserInfo({
           <b>ID: </b>
           {userID}
         </p>
-        <Link href="/dashboard/settings" onClick={toggleDropdown} className="text-sm text-blue-600 hover:text-blue-800 py-2 px-4 hover:bg-blue-100 border border-blue-800 rounded-full w-fit self-center mt-3 hidden">
+        <Link
+          href="/dashboard/settings"
+          onClick={toggleDropdown}
+          className="text-sm text-blue-600 hover:text-blue-800 py-2 px-4 hover:bg-blue-100 border border-blue-800 rounded-full w-fit self-center mt-3 hidden"
+        >
           Gestionar tu Pastoral Digital
         </Link>
       </div>

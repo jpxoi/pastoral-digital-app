@@ -5,3 +5,11 @@ export default function AvatarSkeleton({ bg }: { bg: string }) {
     </div>
   );
 }
+
+export function BigAvatarSkeleton() {
+  return (
+    <div className={`w-full h-full p-0.5 rounded-full ring-2 ring-blue-200`}>
+      <div className={`w-full h-full bg-blue-200 animate-pulse rounded-full`}></div>
+    </div>
+  );
+}
