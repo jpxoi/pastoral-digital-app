@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -11,6 +11,10 @@ export const metadata: Metadata = {
   title: "Pastoral Digital Services | Pastoral Mariana",
   description: "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
 };
+
+export const viewport: Viewport = {
+  themeColor: "#07309B",
+}
 
 export default function RootLayout({
   children,
