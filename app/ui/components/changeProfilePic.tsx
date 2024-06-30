@@ -3,6 +3,7 @@
 import { setLocalStorageItem } from "@/app/utils/localStorageUtils";
 import { FileUploaderRegular } from "@uploadcare/react-uploader";
 import "@uploadcare/react-uploader/core.css";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -50,6 +51,7 @@ export default function ChangeProfilePic() {
 
   const handleSubmit = () => {
     submitButton.current?.setAttribute("disabled", "true");
+    setLoading(true);
 
     fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -66,10 +68,13 @@ export default function ChangeProfilePic() {
       .then((response) => response.json())
       .then((data) => console.log(data))
       .then(() => {
-        alert("¡Tu foto de perfil ha sido cambiada con éxito! Puede que tarde unos días en reflejarse en todas las plataformas.");
+        alert(
+          "¡Tu foto de perfil ha sido cambiada con éxito! Puede que tarde unos días en reflejarse en todas las plataformas."
+        );
         setLocalStorageItem("customAvatar", "false");
         setLocalStorageItem("avatarURL", newAvatarURL);
         setLocalStorageItem("fallbackAvatar", newAvatarURL);
+        setLoading(false);
         router.push("/dashboard");
       })
       .catch((error) => console.error(error));
@@ -85,8 +90,9 @@ export default function ChangeProfilePic() {
       {loading ? (
         <div className="w-52 h-52 animate-pulse bg-gray-200 rounded-full"></div>
       ) : (
-        <img
+        <Image
           src={newAvatarURL}
+          unoptimized={true}
           className="rounded-full bg-blue-200 w-52 h-52"
           width={200}
           height={200}
@@ -122,9 +128,7 @@ export default function ChangeProfilePic() {
             setNewAvatarURL(avatarURL);
           }}
         />
-        <div
-          className="flex items-center justify-center gap-2"
-        >
+        <div className="flex items-center justify-center gap-2">
           <input
             type="hidden"
             name="access_key"
