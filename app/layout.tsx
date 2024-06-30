@@ -8,6 +8,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://pastoralid.jpxoi.com'),
   title: "Pastoral Digital Services | Pastoral Mariana",
   description: "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
 };
