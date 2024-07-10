@@ -78,6 +78,7 @@ export default function ChangeProfilePic() {
       })
       .catch((error) => {
         console.error("Error:", error);
+        setNewAvatarURL(avatarURL);
         alert(
           "Hubo un problema al cambiar tu foto de perfil. Por favor, inténtalo de nuevo más tarde."
         );
