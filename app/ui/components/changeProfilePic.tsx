@@ -56,8 +56,7 @@ export default function ChangeProfilePic() {
     fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': "application/json",
       },
       body: JSON.stringify({
         access_key: formToken,
@@ -77,7 +76,13 @@ export default function ChangeProfilePic() {
         setLoading(false);
         router.push("/dashboard");
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error("Error:", error);
+        alert(
+          "Hubo un problema al cambiar tu foto de perfil. Por favor, inténtalo de nuevo más tarde."
+        );
+        setLoading(false);
+      });
   };
 
   return (
@@ -129,11 +134,6 @@ export default function ChangeProfilePic() {
           }}
         />
         <div className="flex items-center justify-center gap-2">
-          <input
-            type="hidden"
-            name="access_key"
-            value="2a91bec6-75a9-4b49-a056-5947abfe4de3"
-          />
           <button
             className="text-sm text-red-600 hover:text-red-800 py-2 px-4 hover:bg-red-100 border border-red-800 rounded-lg w-fit self-center"
             onClick={(e) => {
