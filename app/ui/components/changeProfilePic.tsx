@@ -1,7 +1,8 @@
 "use client";
 
 import { setLocalStorageItem } from "@/app/utils/localStorageUtils";
-import { FileUploaderRegular } from "@uploadcare/react-uploader";
+import { FileUploaderMinimal } from "@uploadcare/react-uploader";
+import es from "../locales/es.js"
 import "@uploadcare/react-uploader/core.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -58,11 +59,11 @@ export default function ChangeProfilePic() {
       last_name: localStorage.getItem("lastName"),
     };
 
-    fetch('https://formspree.io/f/mzzpzpbr', {
-      method: 'POST',
+    fetch("https://formspree.io/f/mzzpzpbr", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify(body),
     })
@@ -79,10 +80,16 @@ export default function ChangeProfilePic() {
           router.push("/dashboard");
         } else {
           response.json().then((data) => {
-            if (Object.hasOwn(data, 'errors')) {
-              throw new Error(data["errors"].map((error: { [x: string]: any; }) => error["message"]).join(", "));
+            if (Object.hasOwn(data, "errors")) {
+              throw new Error(
+                data["errors"]
+                  .map((error: { [x: string]: any }) => error["message"])
+                  .join(", ")
+              );
             } else {
-              throw new Error("Ha ocurrido un problema inesperado al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo.");
+              throw new Error(
+                "Ha ocurrido un problema inesperado al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo."
+              );
             }
           });
         }
@@ -125,25 +132,23 @@ export default function ChangeProfilePic() {
         <h5 className="text-base text-gray-800">
           Selecciona una nueva foto de perfil
         </h5>
-        <FileUploaderRegular
+        <FileUploaderMinimal
           pubkey="513b26950bebd4b01a4d"
           maxLocalFileSizeBytes={5000000}
           multiple={false}
           imgOnly={true}
-          sourceList="local, url, camera, instagram"
           classNameUploader="my-config uc-light"
+          localeDefinitionOverride={{
+            en: es,
+          }}
+          className="fileUploaderWrapper"
           onFileUploadSuccess={(fileInfo) => {
             setTmpAvatarURL(
               `${fileInfo.cdnUrl}/-/preview/-/scale_crop/512x512/smart`
             );
-          }}
-          onFileUrlChanged={(fileInfo) => {
-            setTmpAvatarURL(
+            setNewAvatarURL(
               `${fileInfo.cdnUrl}/-/preview/-/scale_crop/512x512/smart`
             );
-          }}
-          onDoneClick={() => {
-            setNewAvatarURL(tmpAvatarURL);
           }}
           onFileRemoved={() => {
             setTmpAvatarURL("");
