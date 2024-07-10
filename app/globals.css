@@ -24,4 +24,10 @@ body {
 .my-config {
   --uc-primary-oklch-dark: 69% 0.1768 258.4;
   --uc-primary-oklch-light: 59% 0.22 264;
+  --h-accent: 217;
+}
+
+/* Hide Powered by Uploadcare element */
+.my-config > lr-file-uploader-minimal > lr-start-from > lr-copyright {
+  display: none;
 }

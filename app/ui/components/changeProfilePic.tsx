@@ -2,7 +2,7 @@
 
 import { setLocalStorageItem } from "@/app/utils/localStorageUtils";
 import { FileUploaderMinimal } from "@uploadcare/react-uploader";
-import es from "../locales/es.js"
+import es from "../locale/es.js"
 import "@uploadcare/react-uploader/core.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -141,7 +141,6 @@ export default function ChangeProfilePic() {
           localeDefinitionOverride={{
             en: es,
           }}
-          className="fileUploaderWrapper"
           onFileUploadSuccess={(fileInfo) => {
             setTmpAvatarURL(
               `${fileInfo.cdnUrl}/-/preview/-/scale_crop/512x512/smart`
