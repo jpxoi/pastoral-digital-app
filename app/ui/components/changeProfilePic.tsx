@@ -11,7 +11,6 @@ export default function ChangeProfilePic() {
   const router = useRouter();
   const submitButton = useRef<HTMLButtonElement | null>(null);
   const [userID, setUserID] = useState("");
-  const [formToken, setFormToken] = useState("");
   const [avatarURL, setAvatarURL] = useState("");
   const [tmpAvatarURL, setTmpAvatarURL] = useState("");
   const [newAvatarURL, setNewAvatarURL] = useState("");
@@ -42,7 +41,6 @@ export default function ChangeProfilePic() {
     };
 
     const { userID, avatarURL } = getUserInfoFromLocalStorage();
-    setFormToken(process.env.NEXT_PUBLIC_FORM_TOKEN as string);
     setAvatarURL(avatarURL as string);
     setNewAvatarURL(avatarURL as string);
     setUserID(userID as string);
@@ -53,36 +51,54 @@ export default function ChangeProfilePic() {
     submitButton.current?.setAttribute("disabled", "true");
     setLoading(true);
 
-    fetch("https://api.web3forms.com/submit", {
-      method: "POST",
+    const body = {
+      new_avatar: newAvatarURL,
+      user_id: userID,
+      first_name: localStorage.getItem("firstName"),
+      last_name: localStorage.getItem("lastName"),
+    };
+
+    fetch('https://formspree.io/f/mzzpzpbr', {
+      method: 'POST',
       headers: {
-        'Content-Type': "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
       },
-      body: JSON.stringify({
-        access_key: formToken,
-        new_avatar: newAvatarURL,
-        user_id: userID,
-      }),
+      body: JSON.stringify(body),
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .then(() => {
-        alert(
-          "¡Tu foto de perfil ha sido cambiada con éxito! Puede que tarde unos días en reflejarse en todas las plataformas."
-        );
-        setLocalStorageItem("customAvatar", "false");
-        setLocalStorageItem("avatarURL", newAvatarURL);
-        setLocalStorageItem("fallbackAvatar", newAvatarURL);
-        setLoading(false);
-        router.push("/dashboard");
+      .then((response) => {
+        console.log(response);
+        if (response.ok) {
+          alert(
+            "¡Tu foto de perfil ha sido cambiada con éxito! Puede que tarde unos días en reflejarse en todas las plataformas."
+          );
+          setLocalStorageItem("customAvatar", "false");
+          setLocalStorageItem("avatarURL", newAvatarURL);
+          setLocalStorageItem("fallbackAvatar", newAvatarURL);
+          setLoading(false);
+          router.push("/dashboard");
+        } else {
+          response.json().then((data) => {
+            if (Object.hasOwn(data, 'errors')) {
+              throw new Error(data["errors"].map((error: { [x: string]: any; }) => error["message"]).join(", "));
+            } else {
+              throw new Error("Ha ocurrido un problema inesperado al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo.");
+            }
+          });
+        }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("Error:", error.message);
         setNewAvatarURL(avatarURL);
-        alert(
-          "Hubo un problema al cambiar tu foto de perfil. Por favor, inténtalo de nuevo más tarde."
-        );
+        if (error.message.includes("Failed to fetch")) {
+          alert(
+            "¡Oops! Parece que ha ocurrido un problema al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo."
+          );
+        } else {
+          alert(error.message);
+        }
         setLoading(false);
+        submitButton.current?.removeAttribute("disabled");
       });
   };
 

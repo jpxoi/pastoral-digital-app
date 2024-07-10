@@ -2,7 +2,6 @@ import PastoralID from "../ui/components/pastoralID";
 import AttendanceSection from "../ui/components/attendance";
 import WarningSuspended from "../ui/components/warningSuspended";
 import Notification from "../ui/components/notification";
-import BirthdayBanner from "../ui/components/birthdayBanner";
 
 export default function PastoralDigitalPage() {
   return (
