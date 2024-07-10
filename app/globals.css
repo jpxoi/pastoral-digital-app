@@ -28,6 +28,6 @@ body {
 }
 
 /* Hide Powered by Uploadcare element */
-.my-config > lr-file-uploader-minimal > lr-start-from > lr-copyright {
+.my-config > lr-start-from > .content > lr-copyright {
   display: none;
 }
