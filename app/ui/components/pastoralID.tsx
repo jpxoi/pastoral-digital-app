@@ -41,43 +41,41 @@ export default function PastoralID() {
     }
   };
 
-  const downloadImage = async () => {
-    /* Download the image with a.download */
-
+  const downloadImage = async (userID: string ) => {
     const url = `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`;
-
-    fetch(url, {
-      method: "GET"
-    })
-      .then((response) => {
-        console.log(response);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        console.log(blob);
-        const blobURL = URL.createObjectURL(blob);
-        console.log(blobURL);
-        const a = document.createElement("a");
-        a.href = blobURL;
-        a.setAttribute("style", "display: none");
-        a.download = "PastoralID.png";
-
-        if (blobURL === null) {
-          console.error("Blob URL is null");
-          throw new Error("Blob URL is null");
-        }
-
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      })
-      .catch((error) => {
-        console.error("Error downloading image:", error.message);
+  
+    try {
+      const response = await fetch(url, {
+        referrerPolicy: 'no-referrer'
       });
-  };
+  
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+  
+      const blob = await response.blob();
+      const blobURL = URL.createObjectURL(blob);
+  
+      if (!blobURL) {
+        throw new Error("Blob URL is null");
+      }
+  
+      const a = document.createElement("a");
+      a.href = blobURL;
+      a.setAttribute("style", "display: none");
+      a.download = "PastoralID.png";
+  
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+  
+      // Optionally, revoke the Blob URL after use
+      URL.revokeObjectURL(blobURL);
+  
+    } catch (error) {
+      console.error("Error downloading image:", error.message);
+    }
+  };  
 
   return (
     <div
@@ -99,7 +97,7 @@ export default function PastoralID() {
           ref={imageRef}
           className="bg-white shadow-md mx-auto w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg cursor-pointer"
           src={`${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`}
-          onClick={downloadImage}
+          onClick={() => downloadImage(userID as string)}
           placeholder="blur"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
           onError={handleImageError}
