@@ -64,18 +64,20 @@ export default function PastoralID() {
       a.href = blobURL;
       a.download = "PastoralID.png";
       a.click();
-      
+
       URL.revokeObjectURL(blobURL);
     } catch (error) {
       console.error("Error:", (error as Error).message);
-      alert("No se pudo descargar tu Pastoral ID. Por favor, intenta de nuevo más tarde.");
+      alert(
+        "No se pudo descargar tu Pastoral ID. Por favor, intenta de nuevo más tarde."
+      );
     }
   };
 
   return (
     <div
       id="pastoral_id"
-      className="pass-front min-w-80 sm:min-w-96 sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
+      className="group pass-front min-w-80 sm:min-w-96 sm:max-w-sm h-auto m-0 p-0 rounded-lg transition-all duration-300"
     >
       {loading ? (
         <PastoralIDSkeleton />
@@ -87,19 +89,22 @@ export default function PastoralID() {
           <p className="inline ml-2">{error}</p>
         </div>
       ) : (
-        <Image
-          id="pastoral_id_img"
-          ref={imageRef}
-          className="bg-white shadow-md mx-auto w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg cursor-pointer"
-          src={`${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`}
-          onClick={() => downloadImage(userID as string)}
-          placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
-          onError={handleImageError}
-          alt="Pastoral ID"
-          width="450"
-          height="575"
-        />
+        <div className="group flex justify-center items-center relative cursor-pointer overflow-hidden bg-white rounded-lg drop-shadow-md hover:drop-shadow-2xl transition-all duration-300">
+          <Image
+            id="pastoral_id_img"
+            ref={imageRef}
+            className="mx-auto w-full max-w-xs sm:max-w-sm h-auto m-0 p-0 rounded-lg"
+            src={`${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`}
+            onClick={() => downloadImage(userID as string)}
+            placeholder="blur"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8+vz1UwAJDgOebYQBlwAAAABJRU5ErkJggg=="
+            onError={handleImageError}
+            alt="Pastoral ID"
+            width="450"
+            height="575"
+          />
+          <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine" />
+        </div>
       )}
     </div>
   );
