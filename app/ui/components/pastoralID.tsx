@@ -45,19 +45,19 @@ export default function PastoralID() {
     /* Download the image with a.download */
 
     const url = `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`;
-    
-    fetch(url, { 
-      method: "GET",
+
+    fetch(url, {
+      method: "GET"
     })
-      .then(response => {
-        console.log(response)
+      .then((response) => {
+        console.log(response);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         return response.blob();
       })
-      .then(blob => {
-        console.log(blob)
+      .then((blob) => {
+        console.log(blob);
         const blobURL = URL.createObjectURL(blob);
         console.log(blobURL);
         const a = document.createElement("a");
@@ -77,7 +77,7 @@ export default function PastoralID() {
       .catch((error) => {
         console.error("Error downloading image:", error.message);
       });
-  }  
+  };
 
   return (
     <div
@@ -107,7 +107,6 @@ export default function PastoralID() {
           width="450"
           height="575"
         />
-        
       )}
     </div>
   );
