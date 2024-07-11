@@ -53,7 +53,10 @@ export default function PastoralID() {
       },
       mode: "no-cors",
     })
-      .then(response => response.blob())
+      .then(response => {
+        console.log(response)
+        return response.blob();
+      })
       .then(blob => {
         console.log(blob)
         const blobURL = URL.createObjectURL(blob);
