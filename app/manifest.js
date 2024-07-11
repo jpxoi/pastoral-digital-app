@@ -36,13 +36,13 @@ export default function manifest() {
     ],
     screenshots: [
       {
-        src: "/screenshots/mobile.png",
+        src: "/images/screenshots/mobile.png",
         sizes: "1170x2385",
         type: "image/png",
         form_factor: "narrow"
       },
       {
-        src: "/screenshots/desktop.png",
+        src: "/images/screenshots/desktop.png",
         sizes: "1920x1218",
         type: "image/png",
         form_factor: "wide"
