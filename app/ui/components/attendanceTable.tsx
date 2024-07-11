@@ -76,7 +76,7 @@ export default function AttendanceTable() {
           <TableHeader />
           <tbody className="text-center">
             {loading ? (
-              <RowSkeleton rows={7} />
+              <RowSkeleton rows={8} />
             ) : error ? (
               <ErrorRow message={error} />
             ) : (
