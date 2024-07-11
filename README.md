@@ -7,22 +7,21 @@
 
 <summary>📖 Tabla de Contenidos</summary>
 
-- [Descripción](#descripción)
-- [Características](#características)
-- [Novedades](#novedades)
-- [Primeros Pasos](#-primeros-pasos)
-- [Contribuir](#contribuir)
-- [Licencia](#licencia)
-- [Contacto](#contacto)
-- [Agradecimientos](#agradecimientos)
+- [📄 Descripción](#-descripción)
+- [✨ Características](#-características)
+- [🆕 Novedades](#-novedades)
+- [🚀 Primeros Pasos](#-primeros-pasos)
+- [🤝 Contribuir](#-contribuir)
+- [📜 Licencia](#-licencia)
+- [📞 Contacto](#-contacto)
 
 </details>
 
-## Descripción
+## 📄 Descripción
 
 Pastoral Digital App es una aplicación web que permite a los catequistas de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro acceder a un perfil digitial con información de sus asistencias a las reuniones de catequesis, así como también a su identificación digital para el acceso a las actividades de la Pastoral Mariana.
 
-## Características
+## ✨ Características
 
 Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 
@@ -35,7 +34,7 @@ Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 > [!IMPORTANT]
 > La opción de modificar la foto de perfil se encuentra en fase beta y puede no funcionar correctamente en todos los dispositivos.
 
-## Novedades
+## 🆕 Novedades
 
 La aplicación se encuentra en constante desarrollo, por lo que se irán añadiendo nuevas funcionalidades y mejoras en futuras versiones. Los *releases* de la aplicación se publican de forma mensual en nuestra página de [Release Notes](https://jpxoi.notion.site/Pastoral-Digital-Release-Notes-292bc69d40434537996829014d6e6cb2)
 
@@ -51,9 +50,16 @@ Esta aplicación es una *Progressive Web App* (PWA) y puede ser instalada en cua
 
 4. ¡Listo! Ahora podrás acceder a la aplicación desde tu pantalla de inicio y utilizarla como cualquier otra aplicación instalada en tu dispositivo.
 
-## Contribuir
+> [!TIP]
+> Recuerda tener conexión a Internet para utilizar la aplicación, ya que requiere una conexión activa para funcionar correctamente.
+
+Si tienes alguna pregunta o problema con la instalación de la aplicación, por favor envía un correo electrónico a [pastoral@ps.edu.pe](mailto:pastoral@ps.edu.pe) para recibir asistencia.
+
+## 🤝 Contribuir
 
 Las contribuciones a la aplicación son bienvenidas y pueden realizarse a través de *pull requests* en este repositorio.
+
+### ¿Cómo contribuir?
 
 Si tienes alguna sugerencia que podría mejorar el proyecto, por favor haz un [*fork*](https://github.com/jpxoi/pastoral-digital-app/fork) del repositorio y crea una [*pull request*](https://github.com/jpxoi/pastoral-digital-app/pulls). También puedes simplemente abrir un [*issue*](https://github.com/jpxoi/pastoral-digital-app/issues) con la etiqueta `enhancement`.
 
@@ -61,7 +67,7 @@ Si tienes alguna sugerencia que podría mejorar el proyecto, por favor haz un [*
 
 Si deseas ser parte del equipo de desarrollo de la aplicación, por favor envía un correo electrónico a [pastoral@ps.edu.pe](mailto:pastoral@ps.edu.pe) con el asunto "Quiero ser parte del equipo de desarrollo de la Pastoral Digital App" y cuéntanos un poco sobre ti y por qué te gustaría ser parte del equipo.
 
-## Licencia
+## 📜 Licencia
 
 Pastoral Digital App © 2024 por Jean Paul Fernandez está licenciado bajo Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International. Para ver una copia de esta licencia, visita [https://creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
@@ -73,10 +79,6 @@ Esta licencia permite a los reutilizadores distribuir, remezclar, adaptar y desa
 - **NC:** Sólo se permiten usos no comerciales de la obra.
 - **SA:** Las adaptaciones deben compartirse en los mismos términos.
 
-## Contacto
+## 📞 Contacto
 
 Si deseas contactar con el equipo de desarrollo de la aplicación, puedes hacerlo a través de la dirección de correo electrónico [pastoral@ps.edu.pe](mailto:pastoral@ps.edu.pe) incluyendo en el asunto del mensaje "Pastoral Digital App".
-
-## Agradecimientos
-
-Agradecemos a todas las personas que han contribuido a la aplicación, así como también a las instituciones que han hecho posible el desarrollo de la misma.
