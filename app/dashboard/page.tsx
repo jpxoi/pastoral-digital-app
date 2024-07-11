@@ -6,7 +6,7 @@ import Notification from "../ui/components/notification";
 export default function PastoralDigitalPage() {
   return (
     <>
-      <main className="flex w-full flex-col justify-start gap-4 min-h-[80vh] lg:max-h-[80vh] px-4 xl:px-0 mt-4 lg:mt-8 mb-8">
+      <main className="flex w-full flex-col justify-start gap-4 min-h-[78vh] lg:max-h-[80vh] px-4 xl:px-0 mt-4 lg:mt-8 mb-8">
         <WarningSuspended />
         <Notification />
         <div className="flex w-full flex-col justify-center lg:flex-row items-center lg:items-start lg:justify-evenly">

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AppHeader from "../ui/components/appHeader";
-import Footer from "../ui/components/footer";
+import { FooterLarge } from "../ui/components/footer";
 
 export const metadata: Metadata = {
   title: "Dashboard | Pastoral Digital Services",
@@ -18,7 +18,7 @@ export default function Layout({
       <AppHeader />
       {children}
       <footer className="mt-8 pb-8 lg:pb-4">
-        <Footer />
+        <FooterLarge />
       </footer>
     </>
   );
