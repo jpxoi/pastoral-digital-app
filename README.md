@@ -37,7 +37,7 @@ Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 
 ## Novedades
 
-La aplicación se encuentra en constante desarrollo, por lo que se irán añadiendo nuevas funcionalidades y mejoras en futuras versiones. Los *releases* de la aplicación se publican de forma mensual en nuestra página de [Release Notes]([https://](https://jpxoi.notion.site/Pastoral-Digital-Release-Notes-292bc69d40434537996829014d6e6cb2)
+La aplicación se encuentra en constante desarrollo, por lo que se irán añadiendo nuevas funcionalidades y mejoras en futuras versiones. Los *releases* de la aplicación se publican de forma mensual en nuestra página de [Release Notes](https://jpxoi.notion.site/Pastoral-Digital-Release-Notes-292bc69d40434537996829014d6e6cb2)
 
 ## 🚀 Primeros Pasos
 
