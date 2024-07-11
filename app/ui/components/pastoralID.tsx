@@ -47,6 +47,9 @@ export default function PastoralID() {
     try {
       const response = await fetch(url, {
         referrerPolicy: "no-referrer",
+        headers: {
+          "Content-Type": "image/png",
+        },
       });
 
       if (!response.ok) {
