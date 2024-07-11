@@ -42,24 +42,24 @@ export default function PastoralID() {
   };
 
   const downloadImage = async () => {
-    console.log(`Fetching image from ${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`, {
-        mode: 'cors' // Ensure CORS mode is enabled
+    /* Download the image with a.download */
+
+    const url = `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`;
+    
+    fetch(url, { 
+      mode: 'no-cors' 
+    })
+      .then(response => response.blob())
+      .then(blob => {
+        const blobURL = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobURL;
+        a.download = "PastoralID.png";
+        a.click();
+      })
+      .catch((error) => {
+        console.error("Error downloading image:", error);
       });
-      if (!response.ok) throw new Error('Network response was not ok');
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "PastoralID.png";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('Error downloading the image:', error);
-    }
   }  
 
   return (
