@@ -51,6 +51,7 @@ export default function PastoralID() {
       headers: {
         "Content-Type": "image/png",
       },
+      mode: "no-cors",
     })
       .then(response => response.blob())
       .then(blob => {
