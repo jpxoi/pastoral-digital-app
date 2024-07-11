@@ -41,41 +41,41 @@ export default function PastoralID() {
     }
   };
 
-  const downloadImage = async (userID: string ) => {
+  const downloadImage = async (userID: string) => {
     const url = `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`;
-  
+
     try {
       const response = await fetch(url, {
-        referrerPolicy: 'no-referrer'
+        referrerPolicy: "no-referrer",
       });
-  
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-  
+
       const blob = await response.blob();
       const blobURL = URL.createObjectURL(blob);
-  
+
       if (!blobURL) {
         throw new Error("Blob URL is null");
       }
-  
+
       const a = document.createElement("a");
       a.href = blobURL;
       a.setAttribute("style", "display: none");
       a.download = "PastoralID.png";
-  
+
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-  
+
       // Optionally, revoke the Blob URL after use
       URL.revokeObjectURL(blobURL);
-  
     } catch (error) {
-      console.error("Error downloading image:", error.message);
+      console.error("Error:", error.message);
+      alert("No se pudo descargar tu Pastoral ID. Por favor, intenta de nuevo más tarde.");
     }
-  };  
+  };
 
   return (
     <div
