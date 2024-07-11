@@ -71,7 +71,7 @@ export default function AttendanceTable() {
           <span>{refreshButtonText}</span>
         </button>
       </div>
-      <div className="relative overflow-x-auto shadow-md w-full sm:max-w-screen-sm md:max-w-screen-md rounded-md">
+      <div className="relative overflow-x-auto shadow-md w-full sm:max-w-screen-sm md:max-w-screen-md rounded-lg">
         <table className="text-sm text-left rtl:text-right text-gray-500 w-full">
           <TableHeader />
           <tbody className="text-center">

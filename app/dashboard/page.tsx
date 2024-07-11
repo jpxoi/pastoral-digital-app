@@ -13,7 +13,7 @@ export default function PastoralDigitalPage() {
           <div className="flex flex-col items-center justify-start gap-4">
             <PastoralID />
           </div>
-          <div className="flex flex-col items-center justify-start gap-4 mt-8 lg:mt-0 lg:ml-4 xl:ml-0 lg:max-h-[80vh] overflow-auto">
+          <div className="flex flex-col items-center justify-start gap-4 mt-8 lg:mt-0 lg:ml-4 xl:ml-0 lg:max-h-[80vh]">
             <AttendanceSection />
           </div>
         </div>
