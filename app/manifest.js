@@ -3,8 +3,9 @@ export default function manifest() {
     name: "Pastoral Digital App",
     short_name: "Pastoral Digital",
     description:
-      "Pastoral Digital App es una aplicación web que permite a los catequistas de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro acceder a un perfil digitial con información de sus asistencias a las reuniones de catequesis, así como también a su identificación digital para el acceso a las actividades de la Pastoral Mariana.",
+      "Pastoral Digital App permite a catequistas de la Pastoral Mariana acceder a su perfil e identificación digital para actividades y reuniones.",
     start_url: "/",
+    lang: "es",
     display: "standalone",
     background_color: "#fff",
     theme_color: "#07309B",
