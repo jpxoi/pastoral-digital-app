@@ -47,18 +47,32 @@ export default function PastoralID() {
     const url = `${process.env.NEXT_PUBLIC_CDN_URL}/media/pastoralid/${userID}.png`;
     
     fetch(url, { 
-      mode: 'no-cors' 
+      method: "GET",
+      headers: {
+        "Content-Type": "image/png",
+      },
     })
       .then(response => response.blob())
       .then(blob => {
+        console.log(blob)
         const blobURL = URL.createObjectURL(blob);
+        console.log(blobURL);
         const a = document.createElement("a");
         a.href = blobURL;
+        a.setAttribute("style", "display: none");
         a.download = "PastoralID.png";
+
+        if (blobURL === null) {
+          console.error("Blob URL is null");
+          throw new Error("Blob URL is null");
+        }
+
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
       })
       .catch((error) => {
-        console.error("Error downloading image:", error);
+        console.error("Error downloading image:", error.message);
       });
   }  
 
