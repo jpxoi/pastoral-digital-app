@@ -133,7 +133,7 @@ export default function ChangeProfilePic() {
           Selecciona una nueva foto de perfil
         </h5>
         <FileUploaderMinimal
-          pubkey="513b26950bebd4b01a4d"
+          pubkey={process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY}
           maxLocalFileSizeBytes={5000000}
           multiple={false}
           imgOnly={true}
