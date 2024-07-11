@@ -48,9 +48,6 @@ export default function PastoralID() {
     
     fetch(url, { 
       method: "GET",
-      headers: {
-        "Content-Type": "image/png",
-      },
       mode: "no-cors",
     })
       .then(response => {
