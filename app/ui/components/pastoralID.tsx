@@ -62,17 +62,12 @@ export default function PastoralID() {
 
       const a = document.createElement("a");
       a.href = blobURL;
-      a.setAttribute("style", "display: none");
       a.download = "PastoralID.png";
-
-      document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
-
-      // Optionally, revoke the Blob URL after use
+      
       URL.revokeObjectURL(blobURL);
     } catch (error) {
-      console.error("Error:", error.message);
+      console.error("Error:", (error as Error).message);
       alert("No se pudo descargar tu Pastoral ID. Por favor, intenta de nuevo más tarde.");
     }
   };
