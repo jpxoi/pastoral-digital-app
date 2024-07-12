@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     title: "Pastoral Digital",
     startupImage: [
+      "/images/splash/apple-launch-1242x2688.png",
       {
         url: "/images/splash/apple-launch-1242x2688.png",
         media: "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)",
