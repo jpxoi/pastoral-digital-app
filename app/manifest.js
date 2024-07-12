@@ -5,6 +5,7 @@ export default function manifest() {
     description:
       "Pastoral Digital App permite a catequistas de la Pastoral Mariana acceder a su perfil e identificación digital para actividades y reuniones.",
     start_url: "/",
+    id: "/",
     lang: "es",
     display: "standalone",
     background_color: "#fff",
