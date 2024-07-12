@@ -8,7 +8,7 @@ export default function manifest() {
     id: "/",
     lang: "es",
     display: "standalone",
-    background_color: "#fff",
+    background_color: "#ffffff",
     theme_color: "#07309B",
     orientation: "portrait",
     display_override: ["window-controls-overlay"],
@@ -38,13 +38,13 @@ export default function manifest() {
     ],
     screenshots: [
       {
-        src: "/images/screenshots/mobile.png",
+        src: "/screenshots/mobile.png",
         sizes: "1170x2385",
         type: "image/png",
         form_factor: "narrow"
       },
       {
-        src: "/images/screenshots/desktop.png",
+        src: "/screenshots/desktop.png",
         sizes: "1920x1218",
         type: "image/png",
         form_factor: "wide"

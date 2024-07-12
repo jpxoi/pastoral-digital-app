@@ -1,8 +1,10 @@
+import Image from "next/image";
+
 export default function Offline() {
   return (
     <div className="flex h-dvh w-full flex-col items-center justify-center px-4 gap-8">
       <div className="w-52 md:w-96">
-        <img src="/graphics/offline.svg" alt="Offline" />
+        <Image src="/graphics/offline.svg" alt="Offline" unoptimized={true} />
       </div>
       <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="text-2xl md:text-3xl font-bold text-balance">
