@@ -1,6 +1,8 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
+  cacheOnFrontendNav: false,
+  aggressiveFrontEndNavCaching: false,
   reloadOnOnline: true,
   cacheStartUrl: false,
   dynamicStartUrl: false,
