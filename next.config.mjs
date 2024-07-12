@@ -3,6 +3,7 @@ import withPWAInit from "@ducanh2912/next-pwa";
 const withPWA = withPWAInit({
   reloadOnOnline: true,
   cacheStartUrl: false,
+  dynamicStartUrl: false,
   swcMinify: true,
   dest: "public",
   fallbacks: {
