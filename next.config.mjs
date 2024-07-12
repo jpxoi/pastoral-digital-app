@@ -11,7 +11,7 @@ const withPWA = withPWAInit({
     document: "/fallback",
   },
   workboxOptions: {
-    disableDevLogs: false,
+    disableDevLogs: true,
   },
 });
 
