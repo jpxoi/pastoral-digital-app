@@ -27,10 +27,15 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* PWA */}
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+
         <link
           rel="apple-touch-startup-image"
           href="/images/splash/apple-launch-1242x2688.png"
         />
+
+        {/*
         <link
           rel="apple-touch-startup-image"
           media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
@@ -76,8 +81,7 @@ export default function RootLayout({
           media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)"
           href="/images/splash/apple-launch-1536x2048.png"
         />
-
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        */}
       </head>
       <body className={poppins.className}>{children}</body>
     </html>
