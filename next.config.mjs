@@ -1,10 +1,9 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
-  aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
+  cacheStartUrl: false,
   swcMinify: true,
-  dynamicStartUrl: false,
   dest: "public",
   fallbacks: {
     document: "/fallback",
