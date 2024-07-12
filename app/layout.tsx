@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
   appleWebApp: {
     title: "Pastoral Digital",
+    statusBarStyle: "black-translucent",
     startupImage: [
       {
         url: "/splash/apple-launch-750x1334.png",
