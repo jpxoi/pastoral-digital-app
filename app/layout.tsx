@@ -29,6 +29,10 @@ export default function RootLayout({
         {/* PWA */}
         <link
           rel="apple-touch-startup-image"
+          href="/images/splash/apple-launch-1242x2688.png"
+        />
+        <link
+          rel="apple-touch-startup-image"
           media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
           href="/images/splash/apple-launch-1242x2688.png"
         />
