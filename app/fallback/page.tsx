@@ -4,7 +4,7 @@ export default function Offline() {
   return (
     <div className="flex h-dvh w-full flex-col items-center justify-center px-4 gap-8">
       <div className="w-52 md:w-96">
-        <Image src="/graphics/offline.svg" alt="Offline" unoptimized={true} />
+        <Image src="/graphics/offline.svg" alt="Offline" unoptimized={true} width={384} height={208} />
       </div>
       <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="text-2xl md:text-3xl font-bold text-balance">
