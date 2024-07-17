@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1290 2796" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-9.09495e-13,-3200)">
+        <g id="iPhone-14-Pro-Max--15-Plus--15-Pro-Max--1290x2796-" serif:id="iPhone 14 Pro Max, 15 Plus, 15 Pro Max (1290x2796)" transform="matrix(1.11287,0,0,1.67318,9.09495e-13,-2728.07)">
+            <rect x="0" y="3543" width="1159.17" height="1671.07" style="fill:none;"/>
+            <clipPath id="_clip1">
+                <rect x="0" y="3543" width="1159.17" height="1671.07"/>
+            </clipPath>
+            <g clip-path="url(#_clip1)">
+                <g id="Back" transform="matrix(0.566,0,0,0.620762,0,3543)">
+                    <g transform="matrix(2.27556,0,0,5.28734,0,0)">
+                        <path d="M0,538L30,545.2C60,552.3 120,566.7 180,575.7C240,584.7 300,588.3 360,591C420,593.7 480,595.3 540,577C600,558.7 660,520.3 720,518.5C780,516.7 840,551.3 870,568.7L900,586L900,0L0,0L0,538Z" style="fill:rgb(29,95,211);fill-rule:nonzero;"/>
+                    </g>
+                    <g transform="matrix(2.27556,0,0,5.28734,0,0)">
+                        <path d="M0,285L30,287.7C60,290.3 120,295.7 180,290C240,284.3 300,267.7 360,263.7C420,259.7 480,268.3 540,264.5C600,260.7 660,244.3 720,249.8C780,255.3 840,282.7 870,296.3L900,310L900,0L0,0L0,285Z" style="fill:rgb(16,63,174);fill-rule:nonzero;"/>
+                    </g>
+                    <g transform="matrix(2.27556,0,0,5.28734,0,0)">
+                        <path d="M0,179L30,171.3C60,163.7 120,148.3 180,147C240,145.7 300,158.3 360,152.8C420,147.3 480,123.7 540,119.2C600,114.7 660,129.3 720,122.3C780,115.3 840,86.7 870,72.3L900,58L900,0L0,0L0,179Z" style="fill:rgb(7,48,155);fill-rule:nonzero;"/>
+                    </g>
+                </g>
+                <g id="Front" transform="matrix(1.28796,0,0,3.28218,0,3543)">
+                    <path d="M900,310L900,379L870,371.7C840,364.3 780,349.7 720,361.7C660,373.7 600,412.3 540,424.7C480,437 420,423 360,403.8C300,384.7 240,360.3 180,348.8C120,337.3 60,338.7 30,339.3L0,340L0,285L30,287.7C60,290.3 120,295.7 180,290C240,284.3 300,267.7 360,263.7C420,259.7 480,268.3 540,264.5C600,260.7 660,244.3 720,249.8C780,255.3 840,282.7 870,296.3L900,310Z" style="fill:rgb(23,79,192);"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
