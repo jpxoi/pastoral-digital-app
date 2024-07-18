@@ -5,6 +5,7 @@ import LoginPromptSkeleton from "@/components/home/loginPromptSkeleton";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import WelcomeBackPrompt from "@/components/home/welcomeBackPrompt";
 import ErrorMessage from "@/components/shared/errorMessage";
+import Link from "next/link";
 
 export default function LoginPrompt() {
   const { user, error, isLoading } = useUser();
@@ -43,12 +44,12 @@ export default function LoginPrompt() {
       >
         Iniciar Sesión
       </a>
-      <a
+      <Link
         href="/recover"
         className="w-full bg-transparent hover:bg-white hover:bg-opacity-10 sm:bg-white sm:hover:bg-gray-100 text-white sm:hover:text-blue-500 sm:text-blue-500 border border-white sm:border-blue-500 cursor-pointer p-3 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
       >
         Activar Cuenta
-      </a>
+      </Link>
     </div>
   );
 }
