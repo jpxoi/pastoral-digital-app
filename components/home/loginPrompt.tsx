@@ -19,13 +19,14 @@ export default function LoginPrompt() {
     window.addEventListener("offline", () => setOffline(true));
   }, [user, error]);
 
+  if (loading || isLoading) return <LoginPromptSkeleton />;
   if (offline)
     return (
       <div className="mt-6">
         <ErrorMessage message="No hay conexión a internet. Por favor, intenta más tarde." />
       </div>
-    );
-  if (loading || isLoading) return <LoginPromptSkeleton />;
+  );
+
   if (error) return <ErrorMessage message={error.message} />;
 
   if (user)
