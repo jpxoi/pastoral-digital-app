@@ -31,7 +31,13 @@ const nextConfig = {
             hostname: 'api.dicebear.com',
             port: '',
             pathname: '/**',
-          }
+          },
+          {
+            protocol: 'https',
+            hostname: 'ucarecdn.com',
+            port: '',
+            pathname: '/**',
+          },
         ],
       },
 };
