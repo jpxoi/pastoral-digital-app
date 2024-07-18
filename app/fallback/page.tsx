@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function Offline() {
+export default function Offline() {  
   return (
     <div className="flex h-dvh w-full flex-col items-center justify-center px-4 gap-8">
       <div className="w-52 md:w-96">

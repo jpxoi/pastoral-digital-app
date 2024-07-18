@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import AppHeader from "../ui/components/appHeader";
-import { FooterLarge } from "../ui/components/footer";
+import AppHeader from "@/components/dashboard/appHeader";
+import { Suspense } from "react";
+import AppHeaderSkeleton from "@/components/dashboard/appHeaderSkeleton";
+import { FooterWide } from "@/components/shared/footer";
 
 export const metadata: Metadata = {
   title: "Dashboard | Pastoral Digital Services",
@@ -15,10 +17,12 @@ export default function Layout({
 }>) {
   return (
     <>
-      <AppHeader />
+      <Suspense fallback={<AppHeaderSkeleton />}>
+        <AppHeader />
+      </Suspense>
       {children}
       <footer className="mt-8 pb-8 lg:pb-4">
-        <FooterLarge />
+        <FooterWide />
       </footer>
     </>
   );

@@ -1,6 +1,6 @@
 {
   "name": "pastoral-digital",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
     "@ducanh2912/next-pwa": "^10.2.7",
+    "@types/auth0-lock": "^11.27.9",
     "@uploadcare/react-uploader": "^0.5.5",
+    "auth0-lock": "^12.5.1",
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18"
