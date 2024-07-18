@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import SuccessMessage from "@/components/shared/successMessage";
 import ErrorMessage from "@/components/shared/errorMessage";
 import RecoverAccountPromptSkeleton from "./recoverAccountPromptSkeleton";
+import Link from "next/link";
 
 export default function RecoverAccountPrompt() {
   const [loading, setLoading] = useState(true);
@@ -88,7 +89,15 @@ export default function RecoverAccountPrompt() {
         </button>
       </form>
       {success && (
-        <SuccessMessage message="Si el correo ingresado está asociado a una cuenta, recibirás un mensaje con instrucciones para restablecer tu contraseña." />
+        <>
+          <SuccessMessage message="Si el correo ingresado está asociado a una cuenta, recibirás un mensaje con instrucciones para restablecer tu contraseña." />
+          <p className="flex flex-col text-center text-sm text-gray-600">
+            ¿Ya activaste tu cuenta?{" "}
+            <a href="/api/auth/login" className="text-base text-blue-500 hover:text-blue-600 hover:underline">
+              Inicia Sesión
+            </a>
+          </p>
+        </>
       )}
       {error && <ErrorMessage message={error} />}
     </>
