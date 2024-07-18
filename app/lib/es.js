@@ -1,4 +1,4 @@
-export default es = {
+const es = {
   'upload-file': 'Subir archivo',
   'upload-files': 'Subir archivos',
   'choose-file': 'Seleccionar archivo',
@@ -107,3 +107,5 @@ export default es = {
   'file-item-edit-button': 'Botón de edición',
   'file-item-remove-button': 'Botón de eliminación',
 }
+
+export default es
