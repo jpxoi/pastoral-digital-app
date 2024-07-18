@@ -8,6 +8,7 @@ import PastoralID from "@/components/dashboard/pastoralID";
 
 export default withPageAuthRequired(
   async function PastoralDigitalPage() {
+    
     return (
       <>
         <main className="flex w-full flex-col justify-start gap-4 min-h-[78vh] lg:max-h-[80vh] px-4 xl:px-0 mt-4 lg:mt-8 mb-8">

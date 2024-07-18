@@ -5,7 +5,7 @@ import AppHeaderSkeleton from "@/components/dashboard/appHeaderSkeleton";
 import { FooterWide } from "@/components/shared/footer";
 
 export const metadata: Metadata = {
-  title: "Dashboard | Pastoral Digital Services",
+  title: "Dashboard | Pastoral Digital App",
   description:
     "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
 };

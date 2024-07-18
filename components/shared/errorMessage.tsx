@@ -7,7 +7,7 @@ export default function ErrorMessage({ message }: { message: string }) {
         <span className="flex items-center">
           <ExclamationTriangle />
         </span>
-        <p className="inline ml-2">
+        <p className="inline ml-3 text-left">
           {message}
         </p>
       </div>
