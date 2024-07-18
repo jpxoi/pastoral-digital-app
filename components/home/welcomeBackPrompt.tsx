@@ -4,7 +4,7 @@ export default function WelcomeBackPrompt({ nickname }: { nickname: string }) {
   return (
     <div className='mt-6 flex flex-col items-center gap-4'>
       <div className='flex flex-col items-center gap-2'>
-        <h1 className='text-center text-2xl font-semibold sm:font-normal'>
+        <h1 className='text-center text-2xl font-medium sm:font-normal'>
           ¡Hola, {nickname}!
         </h1>
         <p className='text-center text-sm text-gray-200 sm:text-gray-500'>

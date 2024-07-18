@@ -16,8 +16,8 @@ export default function RecoverAccountScreen() {
           Volver
         </Link>
         <div className='flex w-full max-w-md flex-col items-center gap-4 rounded-xl bg-white p-6 md:p-8'>
-          <h1 className='text-center text-3xl font-bold'>Activar Cuenta</h1>
-          <p className='text-center'>
+          <h1 className='text-center text-2xl font-medium'>Activar Cuenta</h1>
+          <p className='text-center text-sm'>
             Ingresa el correo electrónico asociado a tu cuenta de Pastoral
             Digital para activarla.
           </p>

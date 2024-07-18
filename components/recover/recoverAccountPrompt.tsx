@@ -65,7 +65,7 @@ export default function RecoverAccountPrompt() {
         onSubmit={handleRecoverAccount}
       >
         <div className='flex w-full flex-col items-center justify-center gap-1'>
-          <label htmlFor='email' className='text-sm font-semibold'>
+          <label htmlFor='email' className='text-sm font-medium'>
             Correo Electrónico
           </label>
           <input
@@ -85,7 +85,7 @@ export default function RecoverAccountPrompt() {
           disabled={userEmail.length < 5 || success}
           className='w-full cursor-pointer rounded-md bg-blue-500 p-2 py-3 text-white transition-colors duration-200 hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-500'
         >
-          Activar Cuenta
+          Enviar Correo Electrónico
         </button>
       </form>
       {success && (

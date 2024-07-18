@@ -78,7 +78,7 @@ export default function ChangeProfilePic({
 
   return (
     <div className='mt-3 flex w-full flex-col items-center gap-6 rounded-xl bg-white p-8 shadow-md'>
-      <h5 className='text-lg text-gray-800'>Foto de Perfil</h5>
+      <h5 className='text-lg text-gray-800 font-medium'>Foto de Perfil</h5>
 
       <div className='flex w-full flex-row items-center justify-between gap-4'>
         {loading ? (

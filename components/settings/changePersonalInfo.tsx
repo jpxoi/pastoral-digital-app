@@ -9,7 +9,7 @@ export default function ChangePersonalInfo({
 }) {
   return (
     <div className='mt-3 flex w-full flex-col gap-6 rounded-xl bg-white px-8 py-8 shadow-md'>
-      <h5 className='text-lg text-gray-800'>Información Personal</h5>
+      <h5 className='text-lg text-gray-800 font-medium'>Información Personal</h5>
 
       <div className='flex flex-col gap-3'>
         <div className='grid grid-cols-2 gap-3'>

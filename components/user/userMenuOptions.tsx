@@ -1,6 +1,5 @@
 import { useUserMenu } from '@/app/context/userMenuContext'
 import { JustifyIcon, LogOutIcon } from '@/components/icons/icons24'
-import Link from 'next/link'
 
 export default function UserMenuOptions() {
   const { setIsOpen, userInfo, userSession } = useUserMenu()
@@ -16,13 +15,13 @@ export default function UserMenuOptions() {
         <JustifyIcon />
         Justificar Falta
       </a>
-      <Link
+      <a
         className='flex flex-row items-center justify-center gap-1 rounded-3xl rounded-l-md bg-white px-2 py-3 text-sm text-red-500 hover:bg-red-100 hover:text-red-800'
         href='/api/auth/logout'
       >
         <LogOutIcon />
         Cerrar Sesión
-      </Link>
+      </a>
     </div>
   )
 }
