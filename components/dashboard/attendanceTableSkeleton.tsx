@@ -10,7 +10,7 @@ export default async function AttendanceTableSkeleton() {
           className="text-sm text-blue-500 hover:text-blue-700 disabled:text-gray-300 disabled:hover:text-gray-300 disabled:cursor-not-allowed flex flex-row items-center gap-1"
           disabled
         >
-          <span>
+          <span className="animate-spin">
             <RefreshIconMicro />
           </span>
           <span>Cargando</span>
