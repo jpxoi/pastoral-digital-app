@@ -10,10 +10,10 @@ export default function AttendanceTableRefresh() {
   return (
     <button
       onClick={refreshTable}
-      className={`text-sm text-blue-500 hover:text-blue-700 disabled:text-gray-300 disabled:hover:text-gray-300 disabled:cursor-not-allowed flex flex-row items-center gap-1 ${loading ? 'cursor-not-allowed' : ''}`}
+      className={`text-sm text-blue-500 hover:text-blue-700 disabled:text-gray-300 disabled:hover:text-gray-300 disabled:cursor-not-allowed flex flex-row items-center gap-1 ${loading ? "cursor-not-allowed" : ""}`}
       disabled={loading}
     >
-      <span className={loading ? 'animate-spin' : ''}>
+      <span className={loading ? "animate-spin" : ""}>
         <RefreshIconMicro />
       </span>
       <span>{refreshButtonText}</span>

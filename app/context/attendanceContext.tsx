@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 const AttendanceContext = createContext<AttendanceContextProps>({
   data: [],
@@ -29,7 +35,7 @@ export const AttendanceProvider = ({
   const [error, setError] = useState<string | null>(null);
   const [refreshButtonText, setRefreshButtonText] = useState("Cargando");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch(
         process.env.NEXT_PUBLIC_ATTENDANCE_ENDPOINT as string
@@ -53,11 +59,11 @@ export const AttendanceProvider = ({
       setRefreshButtonText("Actualizar Registros");
       setLoading(false);
     }
-  };
+  }, [userToken]);
 
   useEffect(() => {
     fetchData();
-  }, [userToken]);
+  }, [fetchData, userToken]);
 
   const refreshTable = () => {
     setLoading(true);

@@ -1,4 +1,4 @@
-export default {
+export default es = {
   "upload-file": "Subir archivo",
   "upload-files": "Subir archivos",
   "choose-file": "Seleccionar archivo",
