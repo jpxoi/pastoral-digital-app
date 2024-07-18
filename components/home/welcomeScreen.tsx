@@ -1,19 +1,19 @@
 import {
   LogoImageWideLight,
   LogoImageWideDark,
-} from "@/components/shared/logoImage";
-import LoginPrompt from "@/components/home/loginPrompt";
-import { Suspense } from "react";
-import LoginPromptSkeleton from "@/components/home/loginPromptSkeleton";
+} from '@/components/shared/logoImage'
+import LoginPrompt from '@/components/home/loginPrompt'
+import { Suspense } from 'react'
+import LoginPromptSkeleton from '@/components/home/loginPromptSkeleton'
 
 export default function WelcomeScreen() {
   return (
     <div
-      id="form_container"
-      className="flex flex-col justify-between w-screen h-dvh sm:h-auto sm:rounded-xl sm:shadow-md sm:max-w-sm bg-white	mx-auto"
+      id='form_container'
+      className='mx-auto flex h-dvh w-screen flex-col justify-between bg-white sm:h-auto sm:max-w-sm sm:rounded-xl sm:shadow-md'
     >
-      <div className="flex flex-col sm:rounded-xl w-full h-full bg-[url(/graphics/narrow-wave.svg)] sm:bg-none bg-cover sm:bg-center justify-between">
-        <h1 className="text-[2.7rem] text-white text-left sm:hidden sm:text-black font-bold leading-normal p-8 select-none">
+      <div className='flex h-full w-full flex-col justify-between bg-[url(/graphics/narrow-wave.svg)] bg-cover sm:rounded-xl sm:bg-none sm:bg-center'>
+        <h1 className='select-none p-8 text-left text-[2.7rem] font-bold leading-normal text-white sm:hidden sm:text-black'>
           Pastoral
           <br />
           Digital
@@ -21,7 +21,7 @@ export default function WelcomeScreen() {
           App
         </h1>
 
-        <div className="p-8 pt-0 sm:pt-8 text-white sm:text-black">
+        <div className='p-8 pt-0 text-white sm:pt-8 sm:text-black'>
           <LogoImageWideLight />
           <LogoImageWideDark />
           <Suspense fallback={<LoginPromptSkeleton />}>
@@ -30,5 +30,5 @@ export default function WelcomeScreen() {
         </div>
       </div>
     </div>
-  );
+  )
 }

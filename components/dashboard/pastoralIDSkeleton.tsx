@@ -1,9 +1,9 @@
 export default function PastoralIDSkeleton() {
   return (
-    <div className="w-full sm:min-w-96 h-auto m-0 p-0 rounded-lg">
-      <div className="bg-white shadow-md mx-auto w-full h-auto m-0 p-0 rounded-lg max-w-sm animate-pulse">
-        <div className="w-full aspect-90/115 bg-gray-200 rounded-lg"></div>
+    <div className='m-0 h-auto w-full rounded-lg p-0 sm:min-w-96'>
+      <div className='m-0 mx-auto h-auto w-full max-w-sm animate-pulse rounded-lg bg-white p-0 shadow-md'>
+        <div className='aspect-90/115 w-full rounded-lg bg-gray-200'></div>
       </div>
     </div>
-  );
+  )
 }

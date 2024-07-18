@@ -1,9 +1,9 @@
 export default function LoginPromptSkeleton() {
   return (
-    <div id="form-sekeleton" className="flex flex-col items-center mt-6 gap-4">
-      <div className="animate-pulse w-64 h-6 bg-gray-200 rounded-md"></div>
-      <div className="animate-pulse w-full h-[3.125rem] bg-gray-200 rounded-md"></div>
-      <div className="animate-pulse w-full h-[3.125rem] bg-gray-200 rounded-md"></div>
+    <div id='form-sekeleton' className='mt-6 flex flex-col items-center gap-4'>
+      <div className='h-6 w-64 animate-pulse rounded-md bg-gray-200'></div>
+      <div className='h-[3.125rem] w-full animate-pulse rounded-md bg-gray-200'></div>
+      <div className='h-[3.125rem] w-full animate-pulse rounded-md bg-gray-200'></div>
     </div>
-  );
+  )
 }
