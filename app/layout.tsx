@@ -10,9 +10,16 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pastoralid.jpxoi.com"),
-  title: "Pastoral Digital App | Pastoral Mariana",
+  title: "Pastoral Digital App",
   description:
     "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
+  openGraph: {
+    title: "Pastoral Digital App",
+    description:
+      "Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro",
+    url: "https://pastoralid.jpxoi.com",
+    siteName: "Pastoral Digital App",
+  },
   appleWebApp: {
     title: "Pastoral Digital",
     statusBarStyle: "default",
@@ -102,9 +109,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-        <UserProvider>
-          <body className={poppins.className}>{children}</body>
-        </UserProvider>
+      <UserProvider>
+        <body className={poppins.className}>{children}</body>
+      </UserProvider>
     </html>
   );
 }

@@ -38,17 +38,35 @@ export default function manifest() {
     ],
     screenshots: [
       {
-        src: "/screenshots/mobile.png",
-        sizes: "1170x2385",
+        src: "/screenshots/mobile-1.png",
+        sizes: "1080x1920",
         type: "image/png",
         form_factor: "narrow"
       },
       {
-        src: "/screenshots/desktop.png",
+        src: "/screenshots/mobile-2.png",
+        sizes: "1080x1920",
+        type: "image/png",
+        form_factor: "narrow"
+      },
+      {
+        src: "/screenshots/mobile-3.png",
+        sizes: "1080x1920",
+        type: "image/png",
+        form_factor: "narrow"
+      },
+      {
+        src: "/screenshots/desktop-1.png",
         sizes: "1920x1218",
         type: "image/png",
         form_factor: "wide"
       },
+      {
+        src: "/screenshots/desktop-2.png",
+        sizes: "1920x1218",
+        type: "image/png",
+        form_factor: "wide"
+      }
     ],
   };
 }

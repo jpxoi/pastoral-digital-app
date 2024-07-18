@@ -6,7 +6,7 @@ import { Suspense } from "react";
 
 export default function RecoverAccountScreen() {
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-center bg-white bg-[url(/graphics/narrow-wave.svg)] sm:bg-[url(/graphics/wide-wave.svg)] bg-cover bg-center px-8 md:px-0">
+    <main className="flex h-dvh w-full flex-col items-center justify-center bg-white bg-[url(/graphics/narrow-wave.svg)] sm:bg-[url(/graphics/wide-wave.svg)] bg-cover bg-center px-8 md:px-0">
       <div className="flex flex-col items-center gap-2">
         <Link
           href="/"
@@ -26,6 +26,6 @@ export default function RecoverAccountScreen() {
           </Suspense>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
