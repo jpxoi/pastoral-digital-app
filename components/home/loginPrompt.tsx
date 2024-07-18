@@ -12,6 +12,7 @@ export default function LoginPrompt() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    localStorage.clear();
     setLoading(false);
     window.addEventListener("online", () => setOffline(false));
     window.addEventListener("offline", () => setOffline(true));
