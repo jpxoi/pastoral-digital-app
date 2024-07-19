@@ -1,7 +1,7 @@
 'use client'
 
 import { FileUploaderMinimal } from '@uploadcare/react-uploader'
-import es from '@/app/lib/es.js'
+import es from '@/lib/es.js'
 import '@uploadcare/react-uploader/core.css'
 import Image from 'next/image'
 import { useRef, useState } from 'react'

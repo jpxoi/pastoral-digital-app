@@ -5,7 +5,7 @@ import ChangePersonalInfo from '@/components/settings/changePersonalInfo'
 import Link from 'next/link'
 import ChangeProfilePic from '@/components/settings/changeProfilePic'
 import { UserInfoProps } from '@/types/interfaces'
-import { fetchUserInfoByEmail } from '@/app/utils/fetchUtils'
+import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import { ReturnIcon } from '@/components/icons/icons16'
 
 export default async function AccountSettings() {
