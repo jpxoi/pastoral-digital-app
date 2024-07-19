@@ -1,4 +1,4 @@
-import { UserInfoProps } from '../../types/interfaces'
+import { UserInfoProps } from '@/types/interfaces'
 
 export async function fetchUserInfoByEmailFromACR({
   email,
@@ -147,8 +147,7 @@ export async function fetchUserInfoByEmail({
   const res = await fetch(
     `${process.env.SUPABASE_REST_API_URL}/catequistas?${query}`,
     {
-      cache: 'force-cache',
-      next: { revalidate: 86400 },
+      next: { revalidate: 10800 },
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -157,7 +156,6 @@ export async function fetchUserInfoByEmail({
       },
     }
   ).catch((error) => {
-    console.error('Error:', error)
     throw new Error('No se pudo obtener tu información de usuario.')
   })
 
