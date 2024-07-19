@@ -6,7 +6,9 @@ export async function fetchUserInfoByEmailFromACR({
   email: string
 }): Promise<UserInfoProps> {
   console.log(email)
-  const res = await fetch(`${process.env.USERS_ENDPOINT}`)
+  const res = await fetch(`${process.env.USERS_ENDPOINT}`, {
+    cache: 'force-cache',
+  })
   const data = await res.json()
   const userData = data.filter(
     (row: { [x: string]: string }) => row['Email'] === email
@@ -40,6 +42,7 @@ export async function fetchUserInfoByEmaildFromAirtable({
   const res = await fetch(
     `${process.env.AIRTABLE_API_URL}?filterByFormula=%7BEmail%7D+%3D+%22${email}%22`,
     {
+      cache: 'force-cache',
       headers: {
         Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
       },
@@ -87,6 +90,7 @@ export async function fetchUserInfoByEmailFromNotion({
     `${process.env.NOTION_API_URL}/databases/${process.env.NOTION_DATABASE_ID}/query?${query}`,
     {
       method: 'POST',
+      cache: 'force-cache',
       headers: {
         Authorization: `Bearer ${process.env.NOTION_API_KEY}`,
         'Notion-Version': '2022-06-28',
@@ -133,23 +137,22 @@ export async function fetchUserInfoByEmailFromNotion({
   return userInfo
 }
 
-
 export async function fetchUserInfoByEmail({
   email,
 }: {
   email: string
 }): Promise<UserInfoProps> {
-  const query =
-    `email=eq.${email}&select=*`
+  const query = `email=eq.${email}&select=*`
 
   const res = await fetch(
     `${process.env.SUPABASE_REST_API_URL}/catequistas?${query}`,
     {
+      cache: 'force-cache',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        "apiKey": process.env.SUPABASE_ANON_KEY as string,
-        "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
+        apiKey: process.env.SUPABASE_ANON_KEY as string,
+        Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
       },
     }
   ).catch((error) => {
@@ -165,7 +168,7 @@ export async function fetchUserInfoByEmail({
 
   const userData = data[0]
 
-  const userToken : string = userData.token
+  const userToken: string = userData.token
   const userCustomAvatar = userData.custom_avatar
   const userProfilePicture = userData.profile_picture as string
   const userID = userData.id
