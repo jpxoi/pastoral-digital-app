@@ -148,6 +148,7 @@ export async function fetchUserInfoByEmail({
     `${process.env.SUPABASE_REST_API_URL}/catequistas?${query}`,
     {
       cache: 'force-cache',
+      next: { revalidate: 86400 },
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
