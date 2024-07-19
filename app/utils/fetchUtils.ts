@@ -1,6 +1,6 @@
 import { UserInfoProps } from '../../types/interfaces'
 
-export async function obtainUserInfoByEmail({
+export async function fetchUserInfoByEmailFromACR({
   email,
 }: {
   email: string
@@ -32,7 +32,7 @@ export async function obtainUserInfoByEmail({
   return userInfo
 }
 
-export async function getUserInfoByEmail({
+export async function fetchUserInfoByEmaildFromAirtable({
   email,
 }: {
   email: string
@@ -67,7 +67,7 @@ export async function getUserInfoByEmail({
   return userInfo
 }
 
-export async function fetchUserInfoByEmail({
+export async function fetchUserInfoByEmailFromNotion({
   email,
 }: {
   email: string
@@ -130,5 +130,58 @@ export async function fetchUserInfoByEmail({
   }
 
   console.log('Loaded user info from Notion for', email)
+  return userInfo
+}
+
+
+export async function fetchUserInfoByEmail({
+  email,
+}: {
+  email: string
+}): Promise<UserInfoProps> {
+  const query =
+    `email=eq.${email}&select=*`
+
+  const res = await fetch(
+    `${process.env.SUPABASE_REST_API_URL}/catequistas?${query}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        "apiKey": process.env.SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
+      },
+    }
+  ).catch((error) => {
+    console.error('Error:', error)
+    throw new Error('No se pudo obtener tu información de usuario.')
+  })
+
+  const data = await res.json()
+
+  if (data.length === 0) {
+    throw new Error('No se encontró tu información de usuario.')
+  }
+
+  const userData = data[0]
+
+  const userToken : string = userData.token
+  const userCustomAvatar = userData.custom_avatar
+  const userProfilePicture = userData.profile_picture as string
+  const userID = userData.id
+
+  const userInfo: UserInfoProps = {
+    avatarURL: userCustomAvatar
+      ? `${process.env.CDN_URL}/media/pastoral/profile/${userID}.webp`
+      : userProfilePicture,
+    fallbackAvatar: userCustomAvatar
+      ? `${process.env.CDN_URL}/media/pastoral/profile/${userID}.png`
+      : userProfilePicture,
+    userID: userID,
+    userToken: userToken,
+    userCustomAvatar: userCustomAvatar,
+  }
+
+  console.log('Loaded user info from Supabase for', email)
   return userInfo
 }
