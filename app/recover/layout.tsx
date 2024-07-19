@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: "Activar Cuenta | Pastoral Digital App",
-};
+  title: 'Activar Cuenta | Pastoral Digital App',
+}
 
 export default function Layout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-  return <>{children}</>;
+  return <>{children}</>
 }

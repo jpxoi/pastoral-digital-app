@@ -26,7 +26,7 @@ Pastoral Digital App es una aplicación web que permite a los catequistas de la 
 Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 
 - 📲 **Acceder a su Pastoral Digital ID.** Este es un identificador digital que les permite acceder a las actividades de la Pastoral Mariana escaneando un código QR generado por la aplicación.
-- 📅 **Ver su registro de asistencias.** Pueden ver la fecha, hora y *status* de sus asistencias, las cuales son registradas al escanear su Pastoral Digital ID en los encuentros de catequesis.
+- 📅 **Ver su registro de asistencias.** Pueden ver la fecha, hora y _status_ de sus asistencias, las cuales son registradas al escanear su Pastoral Digital ID en los encuentros de catequesis.
 - 📝 **Justificar inasistencias y tardanzas.** Pueden justificar sus inasistencias y tardanzas a los encuentros de catequesis, indicando el motivo mediante un formulario en la aplicación.
 - 👤 **Ver su perfil de catequista.** Pueden ver su perfil de catequista, el cual incluye su nombre, foto de perfil, correo electrónico e ID de catequista.
 - 📸 **Modificar su foto de perfil.** Pueden subir una nueva foto desde su dispositivo para cambiar su foto de perfil.
@@ -36,11 +36,11 @@ Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 
 ## 🆕 Novedades
 
-La aplicación se encuentra en constante desarrollo, por lo que se irán añadiendo nuevas funcionalidades y mejoras en futuras versiones. Los *releases* de la aplicación se publican de forma mensual en nuestra página de [Release Notes](https://jpxoi.notion.site/Pastoral-Digital-Release-Notes-292bc69d40434537996829014d6e6cb2)
+La aplicación se encuentra en constante desarrollo, por lo que se irán añadiendo nuevas funcionalidades y mejoras en futuras versiones. Los _releases_ de la aplicación se publican de forma mensual en nuestra página de [Release Notes](https://jpxoi.notion.site/Pastoral-Digital-Release-Notes-292bc69d40434537996829014d6e6cb2)
 
 ## 🚀 Primeros Pasos
 
-Esta aplicación es una *Progressive Web App* (PWA) y puede ser instalada en cualquier dispositivo con un navegador web moderno. Para instalar la aplicación en tu dispositivo, sigue los siguientes pasos:
+Esta aplicación es una _Progressive Web App_ (PWA) y puede ser instalada en cualquier dispositivo con un navegador web moderno. Para instalar la aplicación en tu dispositivo, sigue los siguientes pasos:
 
 1. Abre la aplicación en tu navegador web favorito ingresando a la siguiente URL: [https://pastoralid.jpxoi.com](https://pastoralid.jpxoi.com).
 
@@ -57,11 +57,11 @@ Si tienes alguna pregunta o problema con la instalación de la aplicación, por 
 
 ## 🤝 Contribuir
 
-Las contribuciones a la aplicación son bienvenidas y pueden realizarse a través de *pull requests* en este repositorio.
+Las contribuciones a la aplicación son bienvenidas y pueden realizarse a través de _pull requests_ en este repositorio.
 
 ### ¿Cómo contribuir?
 
-Si tienes alguna sugerencia que podría mejorar el proyecto, por favor haz un [*fork*](https://github.com/jpxoi/pastoral-digital-app/fork) del repositorio y crea una [*pull request*](https://github.com/jpxoi/pastoral-digital-app/pulls). También puedes simplemente abrir un [*issue*](https://github.com/jpxoi/pastoral-digital-app/issues) con la etiqueta `enhancement`.
+Si tienes alguna sugerencia que podría mejorar el proyecto, por favor haz un [_fork_](https://github.com/jpxoi/pastoral-digital-app/fork) del repositorio y crea una [_pull request_](https://github.com/jpxoi/pastoral-digital-app/pulls). También puedes simplemente abrir un [_issue_](https://github.com/jpxoi/pastoral-digital-app/issues) con la etiqueta `enhancement`.
 
 ### ¿Quiéres ser parte del equipo de desarrollo?
 

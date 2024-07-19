@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from 'react'
 
 const UserMenuContext = createContext<UserMenuContextProps>({
   isOpen: false,
@@ -24,26 +24,26 @@ const UserMenuContext = createContext<UserMenuContextProps>({
     userToken: null,
     userCustomAvatar: false,
   },
-});
+})
 
 export const useUserMenu = () => {
-  return useContext(UserMenuContext);
-};
+  return useContext(UserMenuContext)
+}
 
-import { ReactNode } from "react";
-import { UserInfoProps, UserMenuContextProps } from "../../types/interfaces";
-import { Session } from "@auth0/nextjs-auth0";
+import { ReactNode } from 'react'
+import { UserInfoProps, UserMenuContextProps } from '../../types/interfaces'
+import { Session } from '@auth0/nextjs-auth0'
 
 export const UserMenuProvider = ({
   children,
   userSession,
   userInfo,
 }: {
-  children: ReactNode;
-  userSession: Session["user"];
-  userInfo: UserInfoProps;
+  children: ReactNode
+  userSession: Session['user']
+  userInfo: UserInfoProps
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <UserMenuContext.Provider
@@ -51,5 +51,5 @@ export const UserMenuProvider = ({
     >
       {children}
     </UserMenuContext.Provider>
-  );
-};
+  )
+}

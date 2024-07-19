@@ -18,7 +18,7 @@ body {
 }
 
 .pass-front > * {
-  @apply flex items-center flex-row justify-between;
+  @apply flex flex-row items-center justify-between;
 }
 
 .my-config {
