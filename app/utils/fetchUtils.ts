@@ -148,7 +148,7 @@ export async function fetchUserInfoByEmail({
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        "apiKey": process.env.SUPABASE_ANON_KEY,
+        "apiKey": process.env.SUPABASE_ANON_KEY as string,
         "Authorization": `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`
       },
     }
