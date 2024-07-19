@@ -4,7 +4,6 @@ import { getSession, Session } from '@auth0/nextjs-auth0'
 import { UserInfoProps } from '@/types/interfaces'
 import { fetchUserInfoByEmail } from '@/app/utils/fetchUtils'
 import { UserMenuProvider } from '@/app/context/userMenuContext'
-import { LogoImageWideLight } from '../shared/logoImage'
 
 export default async function AppHeader() {
   const { user } = (await getSession()) as Session

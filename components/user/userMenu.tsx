@@ -6,7 +6,7 @@ import { useUserMenu } from '@/app/context/userMenuContext'
 import UserMenuOptions from './userMenuOptions'
 
 export default function UserMenu() {
-  const { userInfo, setIsOpen, isOpen } = useUserMenu()
+  const { setIsOpen, isOpen } = useUserMenu()
 
   return (
     <>
@@ -16,10 +16,7 @@ export default function UserMenu() {
           className='flex h-8 w-8 cursor-pointer items-center sm:h-10 sm:w-10'
           onClick={() => setIsOpen((prev) => !prev)}
         >
-          <UserAvatar
-            avatarURL={userInfo.avatarURL}
-            fallbackAvatar={userInfo.fallbackAvatar as string}
-          />
+          <UserAvatar />
         </div>
       </div>
 
