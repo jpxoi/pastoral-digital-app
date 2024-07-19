@@ -10,9 +10,9 @@ export default function WelcomeScreen() {
   return (
     <div
       id='form_container'
-      className='mx-auto flex h-dvh w-screen flex-col justify-between bg-white sm:h-auto sm:max-w-sm sm:rounded-xl sm:shadow-md'
+      className='mx-auto flex h-dvh w-screen flex-col justify-between sm:bg-white sm:h-auto sm:max-w-sm sm:rounded-xl sm:shadow-md'
     >
-      <div className='flex h-full w-full flex-col justify-between bg-[url(/graphics/narrow-wave.svg)] bg-cover sm:rounded-xl sm:bg-none sm:bg-center'>
+      <div className='flex h-full w-full flex-col justify-between bg-none sm:rounded-xl sm:bg-center'>
         <h1 className='select-none p-8 text-left text-[2.7rem] font-semibold leading-normal text-white sm:hidden sm:text-black'>
           Pastoral
           <br />

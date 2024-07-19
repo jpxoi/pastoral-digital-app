@@ -1,12 +1,14 @@
 import { ReturnIcon } from '@/components/icons/icons16'
 import RecoverAccountPrompt from '@/components/recover/recoverAccountPrompt'
 import RecoverAccountPromptSkeleton from '@/components/recover/recoverAccountPromptSkeleton'
+import Background from '@/components/shared/background'
 import Link from 'next/link'
 import { Suspense } from 'react'
 
 export default function RecoverAccountScreen() {
   return (
-    <main className='flex h-dvh w-full flex-col items-center justify-center bg-white bg-[url(/graphics/narrow-wave.svg)] bg-cover bg-center px-8 sm:bg-[url(/graphics/wide-wave.svg)] md:px-0'>
+    <main className='flex h-dvh w-full flex-col items-center justify-center px-8 md:px-0'>
+      <Background />
       <div className='flex flex-col items-center gap-2'>
         <Link
           href='/'
