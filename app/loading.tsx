@@ -1,9 +1,9 @@
-import Spinner from '@/components/shared/spinner'
+import { SpinnerLight } from '@/components/shared/spinner'
 
 export default function Loading() {
   return (
-    <div className='flex h-screen w-full flex-col items-center justify-center'>
-      <Spinner />
-    </div>
+    <main className='flex h-dvh w-full flex-col items-center justify-center bg-[url(/graphics/narrow-wave.svg)] bg-cover bg-center px-8 sm:bg-[url(/graphics/wide-wave.svg)] md:px-0'>
+      <SpinnerLight />
+    </main>
   )
 }

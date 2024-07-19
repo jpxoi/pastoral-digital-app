@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { UserProvider } from '@auth0/nextjs-auth0/client'
 import { Poppins } from 'next/font/google'
 import './globals.css'
+import { Suspense } from 'react'
 
 const poppins = Poppins({
   subsets: ['latin'],
