@@ -1,26 +1,22 @@
+import { useUserMenu } from '@/app/context/userMenuContext'
 import {
   UserAvatarSkeleton,
   LargeUserAvatarSkeleton,
 } from '@/components/user/userAvatarSkeleton'
 
-export function UserAvatar({
-  avatarURL,
-  fallbackAvatar,
-}: {
-  avatarURL: string | null
-  fallbackAvatar: string
-}) {
+export function UserAvatar() {
+  const { userInfo } = useUserMenu()
   return (
     <>
-      {avatarURL ? (
+      {userInfo ? (
         <div
           className={`h-full w-full rounded-full p-0.5 ring-2 ring-blue-100`}
         >
           <picture className={`h-full w-full rounded-full bg-blue-100`}>
-            <source srcSet={`${avatarURL}`} type='image/webp' />
-            <source srcSet={`${fallbackAvatar}`} type='image/png' />
+            <source srcSet={`${userInfo.avatarURL}`} type='image/webp' />
+            <source srcSet={`${userInfo.fallbackAvatar}`} type='image/png' />
             <img
-              src={`${fallbackAvatar}`}
+              src={`${userInfo.fallbackAvatar}`}
               alt='Avatar Profile Picture'
               className={`h-full w-full rounded-full bg-blue-100`}
             />
@@ -33,24 +29,19 @@ export function UserAvatar({
   )
 }
 
-export function DarkUserAvatar({
-  avatarURL,
-  fallbackAvatar,
-}: {
-  avatarURL: string | null
-  fallbackAvatar: string
-}) {
+export function DarkUserAvatar() {
+  const { userInfo } = useUserMenu()
   return (
     <>
-      {avatarURL ? (
+      {userInfo ? (
         <div
           className={`h-full w-full rounded-full p-0.5 ring-2 ring-blue-200`}
         >
           <picture className={`h-full w-full rounded-full bg-blue-200`}>
-            <source srcSet={`${avatarURL}`} type='image/webp' />
-            <source srcSet={`${fallbackAvatar}`} type='image/png' />
+            <source srcSet={`${userInfo.avatarURL}`} type='image/webp' />
+            <source srcSet={`${userInfo.fallbackAvatar}`} type='image/png' />
             <img
-              src={`${fallbackAvatar}`}
+              src={`${userInfo.fallbackAvatar}`}
               alt='Avatar Profile Picture'
               className={`h-full w-full rounded-full bg-blue-200`}
             />

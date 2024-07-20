@@ -21,10 +21,7 @@ export default function UserInfo() {
         </button>
       </div>
       <div className='relative h-32 w-32 self-center'>
-        <DarkUserAvatar
-          avatarURL={userInfo.avatarURL as string}
-          fallbackAvatar={userInfo.fallbackAvatar as string}
-        />
+        <DarkUserAvatar />
         <Link
           className='relative -top-8 left-24 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-white text-gray-700 hover:bg-blue-100 hover:text-blue-800'
           href='/dashboard/settings'

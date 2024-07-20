@@ -1,22 +1,38 @@
-import { InformationCircleIcon } from '@/components/icons/icons24'
-import NotificationDismissButton from '@/components/shared/notificationDismissButton'
+import { Toaster } from 'react-hot-toast'
 
-export default function Notification() {
-  const notification =
-    '¡Hola! Bienvenido a Pastoral Digital. Recuerda que mañana tenemos nuestra Misa mensual en la Parroquia Alta Gracia a las 10:00 a.m. ¡No faltes!'
-  const show = false
-
-  return show ? (
-    <div id='main-notification' className='flex items-center justify-center'>
-      <div className='flex justify-center rounded-lg border border-blue-700 bg-blue-100 p-4 text-blue-700 shadow-md transition-all duration-300'>
-        <span className='flex items-center'>
-          <InformationCircleIcon />
-        </span>
-        <p className='mx-4 text-left text-sm sm:text-base md:text-center'>
-          {notification}
-        </p>
-        <NotificationDismissButton />
-      </div>
-    </div>
-  ) : null
+export default function Notification({
+  position = 'top-right',
+  reverseOrder = true,
+}: {
+  position?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+  reverseOrder?: boolean
+}) {
+  return (
+    <Toaster
+      position={position}
+      reverseOrder={reverseOrder}
+      toastOptions={{
+        success: {
+          style: {
+            background: '#D1FAE5',
+            color: '#065F46',
+          },
+          iconTheme: {
+            primary: '#065F46',
+            secondary: '#D1FAE5',
+          },
+        },
+        error: {
+          style: {
+            background: '#fee2e2',
+            color: '#b91c1c',
+          },
+          iconTheme: {
+            primary: '#b91c1c',
+            secondary: '#FECACA',
+          },
+        },
+      }}
+    />
+  )
 }

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { getSession, Session } from '@auth0/nextjs-auth0'
 import { UserInfoProps } from '@/types/interfaces'
-import { fetchUserInfoByEmail } from '@/app/utils/fetchUtils'
+import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import PastoralIDDownloader from '@/components/dashboard/pastoralIDDownloader'
 
 export default async function PastoralID() {
