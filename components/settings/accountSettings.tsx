@@ -7,6 +7,7 @@ import ChangeProfilePic from '@/components/settings/changeProfilePic'
 import { UserInfoProps } from '@/types/interfaces'
 import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import { ReturnIcon } from '@/components/icons/icons16'
+import ChangePassword from './changePassword'
 
 export default async function AccountSettings() {
   const { user } = (await getSession()) as Session
@@ -32,27 +33,24 @@ export default async function AccountSettings() {
           height={150}
           alt='Avatar'
         />
-        <h1 className='text-2xl text-gray-800'>
-          ¡Bienvenido(a) {user.nickname}
-        </h1>
+        <h1 className='text-2xl text-gray-800'>¡Un gusto, {user.nickname}!</h1>
         <p className='text-sm text-gray-500'>
           Administra tu información, privacidad y seguridad para que la
           aplicación Pastoral Digital funcione mejor para ti.
         </p>
       </div>
 
-      <div className='grid-reverse grid-cols1 grid max-w-md gap-4 md:max-w-screen-lg md:grid-cols-2'>
-        <div className='flex md:flex-col'>
-          <ChangePersonalInfo user={user} />
-        </div>
+      <div className='mt-3 grid-reverse grid max-w-md grid-cols-1 gap-4 md:max-w-screen-lg md:grid-cols-2'>
+        <ChangePersonalInfo user={user} />
 
-        <div className='order-first flex md:order-last md:flex-col'>
-          <ChangeProfilePic
-            userID={userInfo.userID as string}
-            userFullName={user.name}
-            avatarURL={userInfo.avatarURL as string}
-          />
-        </div>
+        <ChangeProfilePic
+          userID={userInfo.userID as string}
+          userFullName={user.name}
+          avatarURL={userInfo.avatarURL as string}
+        />
+      </div>
+      <div className='flex w-full flex-col gap-4'>
+        <ChangePassword />
       </div>
     </div>
   )

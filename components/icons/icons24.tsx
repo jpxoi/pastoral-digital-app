@@ -25,7 +25,7 @@ export function InformationCircleIcon() {
       viewBox='0 0 24 24'
       strokeWidth={1.5}
       stroke='currentColor'
-      className='size-6'
+      className='size-6 min-h-6 min-w-6'
     >
       <path
         strokeLinecap='round'
@@ -130,3 +130,42 @@ export function BirthdayCakeIcon() {
     </svg>
   )
 }
+
+export function ShieldIcon() {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      fill='none'
+      viewBox='0 0 24 24'
+      strokeWidth={1.5}
+      stroke='currentColor'
+      className='size-6'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        d='M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z'
+      />
+    </svg>
+  )
+}
+
+export function HelpIcon() {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      fill='none'
+      viewBox='0 0 24 24'
+      strokeWidth={1.5}
+      stroke='currentColor'
+      className='size-6'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        d='M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z'
+      />
+    </svg>
+  )
+}
+

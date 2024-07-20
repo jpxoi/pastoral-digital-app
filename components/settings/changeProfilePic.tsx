@@ -5,7 +5,7 @@ import es from '@/lib/es.js'
 import '@uploadcare/react-uploader/core.css'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
-import ErrorMessage from '../shared/errorMessage'
+import toast from 'react-hot-toast'
 
 export default function ChangeProfilePic({
   userID,
@@ -19,12 +19,11 @@ export default function ChangeProfilePic({
   const submitButton = useRef<HTMLButtonElement | null>(null)
   const [newAvatarURL, setNewAvatarURL] = useState(avatarURL)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
 
   const handleSubmit = () => {
     submitButton.current?.setAttribute('disabled', 'true')
     setLoading(true)
+    toast.loading('Cambiando tu foto de perfil...')
 
     const body = {
       new_avatar: newAvatarURL,
@@ -43,7 +42,7 @@ export default function ChangeProfilePic({
       .then((response) => {
         console.log(response)
         if (response.ok) {
-          setSuccess(true)
+          toast.success('¡Tu foto de perfil ha sido cambiada exitosamente!')
           setLoading(false)
         } else {
           response.json().then((data) => {
@@ -65,11 +64,11 @@ export default function ChangeProfilePic({
         console.error('Error:', error.message)
         setNewAvatarURL(avatarURL)
         if (error.message.includes('Failed to fetch')) {
-          setError(
+          toast.error(
             '¡Oops! Parece que ha ocurrido un problema al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo.'
           )
         } else {
-          setError(error.message)
+          toast.error(error.message)
         }
         setLoading(false)
         submitButton.current?.removeAttribute('disabled')
@@ -77,12 +76,11 @@ export default function ChangeProfilePic({
   }
 
   return (
-    <div className='mt-3 flex w-full flex-col items-center gap-6 rounded-xl bg-white p-8 shadow-md'>
-      <h5 className='text-lg text-gray-800 font-medium'>Foto de Perfil</h5>
-
+    <div className='flex w-full flex-col items-start gap-6 rounded-xl bg-white p-8 shadow-md'>
+      <h5 className='text-xl font-medium text-gray-800'>Foto de Perfil</h5>
       <div className='flex w-full flex-row items-center justify-between gap-4'>
         {loading ? (
-          <div className='h-16 w-16 animate-pulse rounded-full bg-gray-200'></div>
+          <div className='h-16 min-h-16 w-16 min-w-16 animate-pulse rounded-full bg-gray-200'></div>
         ) : (
           <Image
             src={newAvatarURL}
@@ -93,7 +91,6 @@ export default function ChangeProfilePic({
             alt='Avatar'
           />
         )}
-
         <FileUploaderMinimal
           pubkey={process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY}
           maxLocalFileSizeBytes={5000000}
@@ -114,41 +111,23 @@ export default function ChangeProfilePic({
           }}
         />
       </div>
-      <div className='flex w-full flex-col items-center justify-center gap-2 md:flex-row'>
-        <button
-          className='w-full self-center rounded-lg border border-red-800 px-4 py-3 text-sm text-red-600 hover:bg-red-100 hover:text-red-800 md:w-fit'
-          onClick={(e) => {
-            e.preventDefault()
-            setNewAvatarURL(avatarURL)
-          }}
-        >
-          Descartar Cambios
-        </button>
+      <div className='flex w-full flex-col items-center justify-end gap-2 md:flex-row'>
         <button
           ref={submitButton}
           disabled={newAvatarURL === avatarURL}
           onClick={handleSubmit}
-          className='w-full self-center rounded-lg border border-blue-800 px-4 py-3 text-sm text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-blue-600 md:w-fit'
+          className='w-full rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-800 hover:border-blue-600 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-800 disabled:hover:bg-transparent disabled:hover:text-gray-800 md:w-fit'
         >
-          Cambiar Foto
+          Cambiar Foto de Perfil
         </button>
       </div>
-      <p id='disclaimer' className='text-xs text-gray-500'>
-        El cambio puede tardar unos días en reflejarse en todas las plataformas.
+      <p className='text-xs text-gray-500'>
+        El cambio de tu foto de perfil puede tardar unos días en reflejarse en
+        todas las plataformas de Pastoral Digital. Esto incluye el sistema de
+        asistencia (ACR) y la aplicación web. Te recomendamos subir una imagen
+        cuadrada en formato PNG o JPG para garantizar que tu foto de perfil se
+        vea correctamente en todas las plataformas.
       </p>
-      {error && <ErrorMessage message={error} />}
-      {success && (
-        <div className='flex flex-col items-center gap-4'>
-          <div className='flex flex-col justify-center rounded-lg border border-green-700 bg-green-100 p-4 text-green-700'>
-            <p className='inline'>
-              ¡Tu foto de perfil ha sido cambiada con éxito!
-            </p>
-            <p className='mt-0.5 text-xs text-gray-500'>
-              Puede tardar unos días en reflejarse en todas las plataformas.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
