@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { UserAvatarSkeleton } from '@/components/user/userAvatarSkeleton'
+import AppMenu from '@/components/header/appMenu'
 
 export default async function AppHeaderSkeleton() {
   return (
@@ -10,6 +11,8 @@ export default async function AppHeaderSkeleton() {
             Pastoral Digital
           </h1>
         </Link>
+        <div className='flex items-center gap-4'>
+          <AppMenu />
         <div className='flex items-center justify-between'>
           <div
             id='avatar'
@@ -17,6 +20,7 @@ export default async function AppHeaderSkeleton() {
           >
             <UserAvatarSkeleton />
           </div>
+        </div>
         </div>
       </nav>
     </header>

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import AppHeader from '@/components/dashboard/appHeader'
+import AppHeader from '@/components/header/appHeader'
 import { Suspense } from 'react'
-import AppHeaderSkeleton from '@/components/dashboard/appHeaderSkeleton'
+import AppHeaderSkeleton from '@/components/header/appHeaderSkeleton'
 import { FooterWide } from '@/components/shared/footer'
 
 export const metadata: Metadata = {
