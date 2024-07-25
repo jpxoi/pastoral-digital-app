@@ -1,13 +1,14 @@
 import { getSession, Session } from '@auth0/nextjs-auth0'
 import '@uploadcare/react-uploader/core.css'
 import Image from 'next/image'
-import ChangePersonalInfo from '@/components/settings/changePersonalInfo'
 import Link from 'next/link'
 import ChangeProfilePic from '@/components/settings/changeProfilePic'
 import { UserInfoProps } from '@/types/interfaces'
 import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import { ReturnIcon } from '@/components/icons/icons16'
-import ChangePassword from './changePassword'
+import PasswordSettings from '@/components/settings/passwordSettings'
+import PersonalInfoSettings from '@/components/settings/personalInfoSettings'
+import ProfilePicSettings from './ProfilePicSettings'
 
 export default async function AccountSettings() {
   const { user } = (await getSession()) as Session
@@ -40,17 +41,12 @@ export default async function AccountSettings() {
         </p>
       </div>
 
-      <div className='mt-3 grid-reverse grid max-w-md grid-cols-1 gap-4 md:max-w-screen-lg md:grid-cols-2'>
-        <ChangePersonalInfo user={user} />
-
-        <ChangeProfilePic
-          userID={userInfo.userID as string}
-          userFullName={user.name}
-          avatarURL={userInfo.avatarURL as string}
-        />
+      <div className='grid-reverse mt-3 grid max-w-md grid-cols-1 gap-4 md:max-w-screen-lg md:grid-cols-2'>
+        <PersonalInfoSettings />
+        <ProfilePicSettings />
       </div>
       <div className='flex w-full flex-col gap-4'>
-        <ChangePassword />
+        <PasswordSettings />
       </div>
     </div>
   )

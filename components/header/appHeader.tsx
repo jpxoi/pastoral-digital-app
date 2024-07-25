@@ -4,6 +4,7 @@ import { getSession, Session } from '@auth0/nextjs-auth0'
 import { UserInfoProps } from '@/types/interfaces'
 import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import { UserMenuProvider } from '@/app/context/userMenuContext'
+import AppMenu from '@/components/header/appMenu'
 
 export default async function AppHeader() {
   const { user } = (await getSession()) as Session
@@ -19,9 +20,12 @@ export default async function AppHeader() {
             Pastoral Digital
           </h1>
         </Link>
-        <UserMenuProvider userSession={user} userInfo={userInfo}>
-          <UserMenu />
-        </UserMenuProvider>
+        <div className='flex items-center gap-4'>
+          <AppMenu />
+          <UserMenuProvider userSession={user} userInfo={userInfo}>
+            <UserMenu />
+          </UserMenuProvider>
+        </div>
       </nav>
     </header>
   )

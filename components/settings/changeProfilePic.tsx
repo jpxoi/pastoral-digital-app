@@ -76,8 +76,7 @@ export default function ChangeProfilePic({
   }
 
   return (
-    <div className='flex w-full flex-col items-start gap-6 rounded-xl bg-white p-8 shadow-md'>
-      <h5 className='text-xl font-medium text-gray-800'>Foto de Perfil</h5>
+    <div className='flex w-full flex-col items-start gap-4'>
       <div className='flex w-full flex-row items-center justify-between gap-4'>
         {loading ? (
           <div className='h-16 min-h-16 w-16 min-w-16 animate-pulse rounded-full bg-gray-200'></div>
@@ -121,13 +120,6 @@ export default function ChangeProfilePic({
           Cambiar Foto de Perfil
         </button>
       </div>
-      <p className='text-xs text-gray-500'>
-        El cambio de tu foto de perfil puede tardar unos días en reflejarse en
-        todas las plataformas de Pastoral Digital. Esto incluye el sistema de
-        asistencia (ACR) y la aplicación web. Te recomendamos subir una imagen
-        cuadrada en formato PNG o JPG para garantizar que tu foto de perfil se
-        vea correctamente en todas las plataformas.
-      </p>
     </div>
   )
 }

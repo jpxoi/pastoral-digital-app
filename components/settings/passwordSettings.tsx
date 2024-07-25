@@ -2,7 +2,7 @@ import { ShieldIcon } from '@/components/icons/icons24'
 import ChangePasswordButton from '@/components/settings/changePasswordButton'
 import { getSession, Session } from '@auth0/nextjs-auth0'
 
-export default async function ChangePassword() {
+export default async function PasswordSettins() {
   const { user } = (await getSession()) as Session
 
   return (
