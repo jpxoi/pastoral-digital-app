@@ -10,7 +10,7 @@ export default async function AccountInfo() {
 
   return (
     <div className='flex w-full flex-col gap-4'>
-      <div className='flex w-full flex-col items-start justify-between gap-1 lg:flex-row lg:items-center'>
+      <div className='flex w-full flex-row flex-wrap items-center justify-between gap-1.5'>
         <div className='flex flex-col items-start justify-center'>
           <h5 className='text-xs font-medium text-gray-600'>
             Identificador de Cuenta
@@ -20,8 +20,8 @@ export default async function AccountInfo() {
         <CopyAccountIDButton accountID={user.sub as string} />
       </div>
 
-      <div className='flex w-full flex-col items-start justify-between gap-1 lg:flex-row lg:items-center'>
-        <div className='flex w-full flex-col items-start justify-center'>
+      <div className='flex w-full flex-row flex-wrap items-center justify-between gap-1.5'>
+        <div className='flex flex-col items-start justify-center'>
           <h5 className='text-xs font-medium text-gray-600'>
             Correo Electrónico
           </h5>

@@ -76,7 +76,7 @@ export default function ChangeProfilePic({
   }
 
   return (
-    <>
+    <div className='flex w-full flex-col items-start gap-4'>
       <div className='flex w-full flex-row items-center justify-between gap-4'>
         {loading ? (
           <div className='h-16 min-h-16 w-16 min-w-16 animate-pulse rounded-full bg-gray-200'></div>
@@ -120,6 +120,6 @@ export default function ChangeProfilePic({
           Cambiar Foto de Perfil
         </button>
       </div>
-    </>
+    </div>
   )
 }
