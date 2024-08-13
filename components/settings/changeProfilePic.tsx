@@ -42,6 +42,7 @@ export default function ChangeProfilePic({
       .then((response) => {
         console.log(response)
         if (response.ok) {
+          toast.remove()
           toast.success('¡Tu foto de perfil ha sido cambiada exitosamente!')
           setLoading(false)
         } else {
@@ -64,10 +65,12 @@ export default function ChangeProfilePic({
         console.error('Error:', error.message)
         setNewAvatarURL(avatarURL)
         if (error.message.includes('Failed to fetch')) {
+          toast.remove()
           toast.error(
             '¡Oops! Parece que ha ocurrido un problema al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo.'
           )
         } else {
+          toast.remove()
           toast.error(error.message)
         }
         setLoading(false)
