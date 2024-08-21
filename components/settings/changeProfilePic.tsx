@@ -120,7 +120,7 @@ export default function ChangeProfilePic({
           onClick={handleSubmit}
           className='w-full rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-800 hover:border-blue-600 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-800 disabled:hover:bg-transparent disabled:hover:text-gray-800 md:w-fit'
         >
-          Cambiar Foto de Perfil
+          Guardar Foto de Perfil
         </button>
       </div>
     </div>
