@@ -14,14 +14,10 @@ export default async function ProfilePicSettings() {
       <ChangeProfilePic
         userID={userInfo.userID as string}
         userFullName={user.name}
-        avatarURL={userInfo.avatarURL as string}
+        avatarURL={user.picture as string}
       />
       <p className='text-xs text-gray-500'>
-        El cambio de tu foto de perfil puede tardar unos días en reflejarse en
-        todas las plataformas de Pastoral Digital. Esto incluye el sistema de
-        asistencia (ACR) y la aplicación web. Te recomendamos subir una imagen
-        cuadrada en formato PNG o JPG para garantizar que tu foto de perfil se
-        vea correctamente en todas las plataformas.
+        Al cambiar tu foto de perfil, esta se actualizará en todos los dispositivos en los que hayas iniciado sesión. Si no ves los cambios, cierra sesión y vuelve a iniciarla.
       </p>
     </div>
   )

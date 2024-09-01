@@ -2,9 +2,6 @@ import { getSession, Session } from '@auth0/nextjs-auth0'
 import '@uploadcare/react-uploader/core.css'
 import Image from 'next/image'
 import Link from 'next/link'
-import ChangeProfilePic from '@/components/settings/changeProfilePic'
-import { UserInfoProps } from '@/types/interfaces'
-import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import { ReturnIcon } from '@/components/icons/icons16'
 import PasswordSettings from '@/components/settings/passwordSettings'
 import PersonalInfoSettings from '@/components/settings/personalInfoSettings'
@@ -12,9 +9,6 @@ import ProfilePicSettings from './ProfilePicSettings'
 
 export default async function AccountSettings() {
   const { user } = (await getSession()) as Session
-  const userInfo: UserInfoProps = await fetchUserInfoByEmail({
-    email: user.email,
-  })
 
   return (
     <div className='flex flex-col items-center justify-between gap-4'>
@@ -27,8 +21,7 @@ export default async function AccountSettings() {
           Volver
         </Link>
         <Image
-          src={userInfo.avatarURL as string}
-          unoptimized={true}
+          src={user.picture as string}
           className='h-28 w-28 rounded-full bg-blue-200'
           width={150}
           height={150}

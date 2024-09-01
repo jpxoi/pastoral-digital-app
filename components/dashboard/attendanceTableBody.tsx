@@ -11,7 +11,7 @@ export default function AttendanceTableBody() {
   return (
     <tbody className='text-center'>
       {loading ? (
-        <AttendanceTableRowSkeleton rows={10} />
+        <AttendanceTableRowSkeleton rows={12} />
       ) : error ? (
         <AttendanceErrorRow message={error} />
       ) : (

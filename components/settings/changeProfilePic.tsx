@@ -6,6 +6,7 @@ import '@uploadcare/react-uploader/core.css'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useUser } from '@auth0/nextjs-auth0/client'
 
 export default function ChangeProfilePic({
   userID,
@@ -16,112 +17,41 @@ export default function ChangeProfilePic({
   userFullName: string
   avatarURL: string
 }) {
-  const submitButton = useRef<HTMLButtonElement | null>(null)
-  const [newAvatarURL, setNewAvatarURL] = useState(avatarURL)
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = () => {
-    submitButton.current?.setAttribute('disabled', 'true')
-    setLoading(true)
-    toast.loading('Cambiando tu foto de perfil...')
-
-    const body = {
-      new_avatar: newAvatarURL,
-      user_id: userID,
-      name: userFullName,
-    }
-
-    fetch('https://formspree.io/f/mzzpzpbr', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => {
-        console.log(response)
-        if (response.ok) {
-          toast.remove()
-          toast.success('¡Tu foto de perfil ha sido cambiada exitosamente!')
-          setLoading(false)
-        } else {
-          response.json().then((data) => {
-            if (Object.hasOwn(data, 'errors')) {
-              throw new Error(
-                data['errors']
-                  .map((error: { [x: string]: any }) => error['message'])
-                  .join(', ')
-              )
-            } else {
-              throw new Error(
-                'Ha ocurrido un problema inesperado al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo.'
-              )
-            }
-          })
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error.message)
-        setNewAvatarURL(avatarURL)
-        if (error.message.includes('Failed to fetch')) {
-          toast.remove()
-          toast.error(
-            '¡Oops! Parece que ha ocurrido un problema al intentar cambiar tu foto de perfil. Por favor, intentalo de nuevo.'
-          )
-        } else {
-          toast.remove()
-          toast.error(error.message)
-        }
-        setLoading(false)
-        submitButton.current?.removeAttribute('disabled')
-      })
-  }
+  const { user, error, isLoading } = useUser();
 
   return (
     <div className='flex w-full flex-col items-start gap-4'>
-      <div className='flex w-full flex-row items-center justify-between gap-4'>
-        {loading ? (
+      <div className='flex w-full flex-row items-start justify-between gap-4'>
+        {isLoading ? (
           <div className='h-16 min-h-16 w-16 min-w-16 animate-pulse rounded-full bg-gray-200'></div>
         ) : (
           <Image
-            src={newAvatarURL}
-            unoptimized={true}
-            className='h-16 w-16 rounded-full bg-blue-200'
+            src={user?.picture as string}
+            className='h-16 w-16 lg:h-24 lg:w-24 rounded-full bg-blue-200'
             width={100}
             height={100}
             alt='Avatar'
           />
         )}
-        <FileUploaderMinimal
-          pubkey={process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY}
-          maxLocalFileSizeBytes={5000000}
-          multiple={false}
-          imgOnly={true}
-          classNameUploader='my-config uc-light'
-          className='w-full'
-          localeDefinitionOverride={{
-            en: es,
-          }}
-          onFileUploadSuccess={(fileInfo) => {
-            setNewAvatarURL(
-              `${fileInfo.cdnUrl}/-/preview/-/scale_crop/512x512/smart`
-            )
-          }}
-          onFileRemoved={() => {
-            setNewAvatarURL(avatarURL)
-          }}
-        />
-      </div>
-      <div className='flex w-full flex-col items-center justify-end gap-2 md:flex-row'>
-        <button
-          ref={submitButton}
-          disabled={newAvatarURL === avatarURL}
-          onClick={handleSubmit}
-          className='w-full rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-800 hover:border-blue-600 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-800 disabled:hover:bg-transparent disabled:hover:text-gray-800 md:w-fit'
-        >
-          Guardar Foto de Perfil
-        </button>
+        <div className='flex flex-col items-start gap-2'>
+          <p className='text-left text-xs text-gray-500 mb-2 md:mb-0'>
+            Usamos Gravatar para gestionar las fotos de perfil de nuestros
+            usuarios.
+          </p>
+          <p className='hidden md:block text-left text-xs text-gray-500 mb-2'>
+            Para cambiar tu foto de perfil, haz clic en el botón de abajo y
+            introduce el mismo correo electrónico que usas para iniciar sesión en
+            Pastoral Digital App. Luego, sigue las instrucciones en la página de
+            Gravatar.
+          </p>
+          <a
+            href='https://es.gravatar.com/profile'
+            target='_blank'
+            className='w-full rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-800 hover:border-blue-600 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-gray-800 disabled:hover:bg-transparent disabled:hover:text-gray-800 md:w-fit'
+          >
+            Cambiar Foto de Perfil en Gravatar
+          </a>
+        </div>
       </div>
     </div>
   )
