@@ -1,26 +1,27 @@
-import { useUserMenu } from '@/app/context/userMenuContext'
 import {
   UserAvatarSkeleton,
   LargeUserAvatarSkeleton,
 } from '@/components/user/userAvatarSkeleton'
+import Image from 'next/image'
+import { useUser } from '@auth0/nextjs-auth0/client';
+
+
 
 export function UserAvatar() {
-  const { userInfo } = useUserMenu()
+  const { user, error, isLoading } = useUser();
   return (
     <>
-      {userInfo ? (
+      {!isLoading ? (
         <div
           className={`h-full w-full rounded-full p-0.5 ring-2 ring-blue-100`}
         >
-          <picture className={`h-full w-full rounded-full bg-blue-100`}>
-            <source srcSet={`${userInfo.avatarURL}`} type='image/webp' />
-            <source srcSet={`${userInfo.fallbackAvatar}`} type='image/png' />
-            <img
-              src={`${userInfo.fallbackAvatar}`}
-              alt='Avatar Profile Picture'
-              className={`h-full w-full rounded-full bg-blue-100`}
-            />
-          </picture>
+          <Image
+            src={user?.picture as string}
+            className={`h-full w-full rounded-full bg-blue-100`}
+            width={100}
+            height={100}
+            alt='Avatar'
+          />
         </div>
       ) : (
         <UserAvatarSkeleton />
@@ -30,22 +31,20 @@ export function UserAvatar() {
 }
 
 export function DarkUserAvatar() {
-  const { userInfo } = useUserMenu()
+  const { user, error, isLoading } = useUser();
   return (
     <>
-      {userInfo ? (
+      {!isLoading ? (
         <div
-          className={`h-full w-full rounded-full p-0.5 ring-2 ring-blue-200`}
+          className={`h-full w-full rounded-full`}
         >
-          <picture className={`h-full w-full rounded-full bg-blue-200`}>
-            <source srcSet={`${userInfo.avatarURL}`} type='image/webp' />
-            <source srcSet={`${userInfo.fallbackAvatar}`} type='image/png' />
-            <img
-              src={`${userInfo.fallbackAvatar}`}
-              alt='Avatar Profile Picture'
-              className={`h-full w-full rounded-full bg-blue-200`}
-            />
-          </picture>
+          <Image
+            src={user?.picture as string}
+            className={`h-full w-full rounded-full bg-blue-200`}
+            width={100}
+            height={100}
+            alt='Avatar'
+          />
         </div>
       ) : (
         <LargeUserAvatarSkeleton />

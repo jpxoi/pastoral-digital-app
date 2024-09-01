@@ -11,6 +11,7 @@ export default function UserMenu() {
   const dropdown = useRef<HTMLDivElement>(null)
   const avatarImage = useRef<HTMLDivElement>(null)
 
+
   useEffect(() => {
     const handleEvent = (event: MouseEvent | KeyboardEvent) => {
       if (
