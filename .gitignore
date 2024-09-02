@@ -40,3 +40,4 @@ next-env.d.ts
 public/sw.js.map
 public/workbox-a5d17aea.js
 public/workbox-a5d17aea.js.map
+public/fallback-development.js
