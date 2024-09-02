@@ -11,21 +11,25 @@ export default async function AccountInfo() {
   return (
     <div className='flex w-full flex-col gap-4'>
       <div className='flex w-full flex-row flex-wrap items-center justify-between gap-1.5'>
-        <div className='flex flex-col items-start justify-center'>
+        <div className='flex max-w-full flex-col items-start justify-center'>
           <h5 className='text-xs font-medium text-gray-600'>
             Identificador de Cuenta
           </h5>
-          <p className='text-sm text-gray-800'>{user.sub as string}</p>
+          <p className='max-w-full truncate text-sm text-gray-800'>
+            {user.sub as string}
+          </p>
         </div>
         <CopyAccountIDButton accountID={user.sub as string} />
       </div>
 
       <div className='flex w-full flex-row flex-wrap items-center justify-between gap-1.5'>
-        <div className='flex flex-col items-start justify-center'>
+        <div className='flex max-w-full flex-col items-start justify-center'>
           <h5 className='text-xs font-medium text-gray-600'>
             Correo Electrónico
           </h5>
-          <p className='text-sm text-gray-800'>{user.email as string}</p>
+          <p className='max-w-full truncate text-sm text-gray-800'>
+            {user.email as string}
+          </p>
         </div>
         {user.email_verified ? <VerifiedEmailBadge /> : <PendingEmailBadge />}
       </div>
