@@ -37,3 +37,7 @@ next-env.d.ts
 
 # others
 *.afdesign
+public/sw.js.map
+public/workbox-a5d17aea.js
+public/workbox-a5d17aea.js.map
+public/fallback-development.js
