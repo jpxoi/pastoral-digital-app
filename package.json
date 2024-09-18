@@ -16,7 +16,7 @@
     "@types/auth0-lock": "^11.27.9",
     "@uploadcare/react-uploader": "^0.5.5",
     "auth0-lock": "^12.5.1",
-    "next": "14.2.4",
+    "next": "14.2.12",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1"
