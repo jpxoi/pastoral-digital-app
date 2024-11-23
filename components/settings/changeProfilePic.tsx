@@ -6,7 +6,7 @@ import '@uploadcare/react-uploader/core.css'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useUser } from '@auth0/nextjs-auth0/client'
+import { useAuth, useUser } from '@clerk/nextjs'
 
 export default function ChangeProfilePic({
   userID,
@@ -17,16 +17,16 @@ export default function ChangeProfilePic({
   userFullName: string
   avatarURL: string
 }) {
-  const { user, error, isLoading } = useUser();
+  const { isSignedIn, user } = useUser()
 
   return (
     <div className='flex w-full flex-col items-start gap-4'>
       <div className='flex w-full flex-row items-start justify-between gap-4'>
-        {isLoading ? (
+        {!user ? (
           <div className='h-16 min-h-16 w-16 min-w-16 animate-pulse rounded-full bg-gray-200'></div>
         ) : (
           <Image
-            src={user?.picture as string}
+            src={user?.imageUrl as string}
             className='h-16 w-16 lg:h-24 lg:w-24 rounded-full bg-blue-200'
             width={100}
             height={100}

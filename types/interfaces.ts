@@ -1,6 +1,3 @@
-import { Session } from '@auth0/nextjs-auth0'
-import { Dispatch, SetStateAction } from 'react'
-
 export interface UserInfoProps {
   avatarURL: string | null
   fallbackAvatar: string | null
@@ -25,11 +22,4 @@ export interface TableRow {
 
 export interface StatusLabel {
   status: string
-}
-
-export interface UserMenuContextProps {
-  isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
-  userSession: Session['user']
-  userInfo: UserInfoProps
 }

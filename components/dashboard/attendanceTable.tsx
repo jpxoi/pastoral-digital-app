@@ -1,15 +1,15 @@
 import AttendanceTableHeader from '@/components/dashboard/attendanceTableHeader'
 import AttendanceTableBody from '@/components/dashboard/attendanceTableBody'
 import { AttendanceProvider } from '@/app/context/attendanceContext'
-import { getSession, Session } from '@auth0/nextjs-auth0'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { UserInfoProps } from '@/types/interfaces'
 import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import AttendanceTableRefresh from '@/components/dashboard/attendanceTableRefresh'
 
 export default async function AttendanceTable() {
-  const { user } = (await getSession()) as Session
+  const user = await currentUser()
   const userInfo: UserInfoProps = await fetchUserInfoByEmail({
-    email: user.email,
+    email: user?.primaryEmailAddress?.emailAddress as string,
   })
 
   return (

@@ -1,3 +1,4 @@
+import { SignOutButton } from '@clerk/nextjs'
 import Link from 'next/link'
 
 export default function WelcomeBackPrompt({ nickname }: { nickname: string }) {
@@ -9,12 +10,11 @@ export default function WelcomeBackPrompt({ nickname }: { nickname: string }) {
         </h1>
         <p className='text-center text-sm text-gray-200 sm:text-gray-500'>
           ¿No eres {nickname}?{' '}
-          <a
-            href='/api/auth/logout'
-            className='text-gray-50 hover:text-white hover:underline sm:text-blue-500 sm:hover:text-blue-600'
-          >
-            Cerrar Sesión
-          </a>
+          <SignOutButton>
+            <span className='text-gray-50 hover:text-white hover:underline sm:text-blue-500 sm:hover:text-blue-600 cursor-pointer'>
+              Cerrar Sesión
+            </span>
+          </SignOutButton>
         </p>
       </div>
       <Link

@@ -1,9 +1,9 @@
 import { ShieldIcon } from '@/components/icons/icons24'
 import ChangePasswordButton from '@/components/settings/changePasswordButton'
-import { getSession, Session } from '@auth0/nextjs-auth0'
+import { auth, currentUser } from '@clerk/nextjs/server'
 
 export default async function PasswordSettins() {
-  const { user } = (await getSession()) as Session
+  const user = await currentUser()
 
   return (
     <div className='flex w-full flex-col items-start justify-between gap-6 rounded-xl bg-white px-8 py-8 shadow-md sm:flex-row sm:items-center'>
@@ -13,7 +13,7 @@ export default async function PasswordSettins() {
           Contraseña
         </h3>
       </div>
-      <ChangePasswordButton userEmail={user.email} />
+      <ChangePasswordButton userEmail={user?.primaryEmailAddress?.toString() || ''} />
     </div>
   )
 }

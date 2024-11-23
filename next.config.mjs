@@ -22,7 +22,7 @@ const nextConfig = {
         remotePatterns: [
           {
             protocol: 'https',
-            hostname: 'static.jpxoi.com',
+            hostname: 'cdn.jpxoi.com',
             port: '',
             pathname: '/media/**',
           },
@@ -41,6 +41,12 @@ const nextConfig = {
           {
             protocol: 'https',
             hostname: '*.gravatar.com',
+            port: '',
+            pathname: '/**',
+          },
+          {
+            protocol: 'https',
+            hostname: 'img.clerk.com',
             port: '',
             pathname: '/**',
           }

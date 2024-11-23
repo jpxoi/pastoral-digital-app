@@ -1,13 +1,13 @@
 import Image from 'next/image'
-import { getSession, Session } from '@auth0/nextjs-auth0'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { UserInfoProps } from '@/types/interfaces'
 import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import PastoralIDDownloader from '@/components/dashboard/pastoralIDDownloader'
 
 export default async function PastoralID() {
-  const { user } = (await getSession()) as Session
+  const user = await currentUser()
   const userInfo: UserInfoProps = await fetchUserInfoByEmail({
-    email: user.email,
+    email: user?.primaryEmailAddress?.emailAddress as string,
   })
 
   return (
