@@ -1,16 +1,16 @@
-import { useUserMenu } from '@/app/context/userMenuContext'
 import { JustifyIcon, LogOutIcon } from '@/components/icons/icons24'
+import { auth, currentUser } from '@clerk/nextjs/server'
 
-export default function UserMenuOptions() {
-  const { setIsOpen, userInfo, userSession } = useUserMenu()
+export default async function UserMenuOptions() {
+  const user = await currentUser()
+
   return (
     <div className='grid grid-cols-2 gap-1'>
       <a
         className='flex flex-row items-center justify-center gap-1 rounded-3xl rounded-r-md bg-white px-2 py-3 text-sm text-blue-500 hover:bg-blue-100 hover:text-blue-800'
-        href={`https://docs.google.com/forms/d/e/1FAIpQLSd_iJ7BJaofM-yQUFNa9tDImNrdRVY0JoXqbLgpjmUxrFEIuA/viewform?usp=pp_url&entry.1528530871=${userInfo.userID}&entry.858990924=${userSession.name}`}
+        href={`https://docs.google.com/forms/d/e/1FAIpQLSd_iJ7BJaofM-yQUFNa9tDImNrdRVY0JoXqbLgpjmUxrFEIuA/viewform?usp=pp_url&entry.1528530871=${user?.id}&entry.858990924=${user?.fullName}`}
         target='_blank'
         rel='noreferrer'
-        onClick={() => setIsOpen((prev) => !prev)}
       >
         <JustifyIcon />
         Justificar Falta

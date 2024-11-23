@@ -3,14 +3,12 @@ import {
   LogoImageWideDark,
 } from '@/components/shared/logoImage'
 import LoginPrompt from '@/components/home/loginPrompt'
-import { Suspense } from 'react'
-import LoginPromptSkeleton from '@/components/home/loginPromptSkeleton'
 
 export default function WelcomeScreen() {
   return (
     <div
       id='form_container'
-      className='mx-auto flex h-dvh w-screen flex-col justify-between sm:bg-white sm:h-auto sm:max-w-sm sm:rounded-xl sm:shadow-md'
+      className='mx-auto flex h-dvh w-screen flex-col justify-between sm:h-auto sm:max-w-sm sm:rounded-xl sm:bg-white sm:shadow-md'
     >
       <div className='flex h-full w-full flex-col justify-between bg-none sm:rounded-xl sm:bg-center'>
         <h1 className='select-none p-8 text-left text-[2.7rem] font-semibold leading-normal text-white sm:hidden sm:text-black'>
@@ -24,9 +22,7 @@ export default function WelcomeScreen() {
         <div className='p-8 pt-0 text-white sm:pt-8 sm:text-black'>
           <LogoImageWideLight />
           <LogoImageWideDark />
-          <Suspense fallback={<LoginPromptSkeleton />}>
-            <LoginPrompt />
-          </Suspense>
+          <LoginPrompt />
         </div>
       </div>
     </div>

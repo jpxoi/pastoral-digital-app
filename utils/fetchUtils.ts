@@ -70,7 +70,7 @@ export async function fetchUserInfoByEmaildFromAirtable({
   return userInfo
 }
 
-export async function fetchUserInfoByEmailFromNotion({
+export async function fetchUserInfoByEmail({
   email,
 }: {
   email: string
@@ -137,7 +137,7 @@ export async function fetchUserInfoByEmailFromNotion({
   return userInfo
 }
 
-export async function fetchUserInfoByEmail({
+export async function fetchUserInfoByEmailfromSupabase({
   email,
 }: {
   email: string

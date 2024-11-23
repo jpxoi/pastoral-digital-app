@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-import { UserProvider } from '@auth0/nextjs-auth0/client'
 import { Poppins } from 'next/font/google'
 import './globals.css'
-import { Suspense } from 'react'
+import { ClerkProvider } from '@clerk/nextjs'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -109,10 +108,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='es'>
-      <UserProvider>
+    <ClerkProvider>
+      <html lang='es'>
         <body className={poppins.className}>{children}</body>
-      </UserProvider>
-    </html>
+      </html>
+    </ClerkProvider>
   )
 }

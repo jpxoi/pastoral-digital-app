@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { UserAvatarSkeleton } from '@/components/user/userAvatarSkeleton'
 import AppMenu from '@/components/header/appMenu'
 
 export default async function AppHeaderSkeleton() {
@@ -13,14 +12,7 @@ export default async function AppHeaderSkeleton() {
         </Link>
         <div className='flex items-center gap-4'>
           <AppMenu />
-        <div className='flex items-center justify-between'>
-          <div
-            id='avatar'
-            className='flex h-8 w-8 cursor-pointer items-center sm:h-10 sm:w-10'
-          >
-            <UserAvatarSkeleton />
-          </div>
-        </div>
+          <div className='h-7 w-7 animate-pulse rounded-full bg-gray-100' />
         </div>
       </nav>
     </header>
