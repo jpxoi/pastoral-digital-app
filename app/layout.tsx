@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
+import { esMX } from '@clerk/localizations'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -108,7 +109,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider localization={esMX}>
       <html lang='es'>
         <body className={poppins.className}>{children}</body>
       </html>
