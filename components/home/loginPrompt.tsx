@@ -5,10 +5,7 @@ import LoginPromptSkeleton from '@/components/home/loginPromptSkeleton'
 import {
   ClerkLoaded,
   ClerkLoading,
-  SignedIn,
-  SignedOut,
   SignInButton,
-  useAuth,
   useUser,
 } from '@clerk/nextjs'
 import WelcomeBackPrompt from '@/components/home/welcomeBackPrompt'
