@@ -103,13 +103,19 @@ export const viewport: Viewport = {
   themeColor: '#07309B',
 }
 
+const clerkAppearance = {
+  variables: {
+    colorPrimary: "#3B82F6"
+  }
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider localization={esMX}>
+    <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
         <body className={poppins.className}>{children}</body>
       </html>
