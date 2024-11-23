@@ -1,6 +1,6 @@
 import Loading from '@/app/loading'
 import Background from '@/components/shared/background'
-import { ClerkLoaded, ClerkLoading, SignIn } from '@clerk/nextjs'
+import { ClerkLoaded, ClerkLoading, SignUp } from '@clerk/nextjs'
 
 export default function Page() {
   return (
@@ -10,7 +10,7 @@ export default function Page() {
         <Loading />
       </ClerkLoading>
       <ClerkLoaded>
-        <SignIn fallbackRedirectUrl="/dashboard" />
+        <SignUp fallbackRedirectUrl="/dashboard" />
       </ClerkLoaded>
     </main>
   )
