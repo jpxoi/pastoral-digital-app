@@ -14,7 +14,7 @@ export default async function PastoralID() {
         <div className='relative h-full w-full'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`https://quickchart.io/qr?text=${user?.id}&margin=2&size=300&format=svg&dark=001944`}
+            src={`https://quickchart.io/qr?text=${user?.id}&size=300&margin=2&dark=001944&ecLevel=H&format=svg`}
             className='m-0 mx-auto h-auto w-full max-w-xs rounded-lg p-0 sm:max-w-sm'
             width={300}
             height={300}
