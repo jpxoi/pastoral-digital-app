@@ -53,7 +53,9 @@ export default function TermsAndConditionsPage() {
             <span className='font-semibold text-blue-600'>
               Pastoral Digital App
             </span>
-            . Estos términos y condiciones establecen las reglas y regulaciones para el uso de nuestra aplicación. Al acceder y utilizar esta plataforma, aceptas cumplir y estar sujeto a estos términos.
+            . Estos términos y condiciones establecen las reglas y regulaciones
+            para el uso de nuestra aplicación. Al acceder y utilizar esta
+            plataforma, aceptas cumplir y estar sujeto a estos términos.
           </p>
 
           {/* Índice de contenidos */}
@@ -114,13 +116,20 @@ export default function TermsAndConditionsPage() {
               Aceptación de Términos
             </h2>
             <p className='mb-4 text-gray-700'>
-              Al acceder o utilizar la aplicación Pastoral Digital App ("la Aplicación"), usted reconoce que ha leído, entendido y acepta estar sujeto a estos Términos y Condiciones, junto con nuestra Política de Privacidad.
+              Al acceder o utilizar la aplicación Pastoral Digital App (&quot;la
+              Aplicación&quot;), usted reconoce que ha leído, entendido y acepta
+              estar sujeto a estos Términos y Condiciones, junto con nuestra
+              Política de Privacidad.
             </p>
             <p className='mb-4 text-gray-700'>
-              Si no está de acuerdo con alguna parte de estos términos, no podrá acceder ni utilizar nuestros servicios. El uso continuado de la Aplicación constituye la aceptación continua de estos términos.
+              Si no está de acuerdo con alguna parte de estos términos, no podrá
+              acceder ni utilizar nuestros servicios. El uso continuado de la
+              Aplicación constituye la aceptación continua de estos términos.
             </p>
             <p className='text-gray-700'>
-              Estos términos se aplican a todos los usuarios, incluidos sin limitación, usuarios que son navegadores, agentes pastorales, coordinadores, administradores, y/o contribuyentes de contenido.
+              Estos términos se aplican a todos los usuarios, incluidos sin
+              limitación, usuarios que son navegadores, agentes pastorales,
+              coordinadores, administradores, y/o contribuyentes de contenido.
             </p>
           </section>
 
@@ -138,20 +147,26 @@ export default function TermsAndConditionsPage() {
             </p>
             <ul className='list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>
-                Proporcionar información verdadera, precisa, actual y completa sobre usted
+                Proporcionar información verdadera, precisa, actual y completa
+                sobre usted
               </li>
               <li>
-                Mantener y actualizar prontamente sus datos para mantener la información verdadera, precisa, actual y completa
+                Mantener y actualizar prontamente sus datos para mantener la
+                información verdadera, precisa, actual y completa
               </li>
               <li>
-                Mantener la seguridad de su contraseña y ser responsable de todas las actividades realizadas con su cuenta
+                Mantener la seguridad de su contraseña y ser responsable de
+                todas las actividades realizadas con su cuenta
               </li>
               <li>
-                Notificar inmediatamente cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad
+                Notificar inmediatamente cualquier uso no autorizado de su
+                cuenta o cualquier otra violación de seguridad
               </li>
             </ul>
             <p className='mt-4 text-gray-700'>
-              Nos reservamos el derecho de suspender o terminar su cuenta si determinamos que ha proporcionado información falsa o que viola estos términos.
+              Nos reservamos el derecho de suspender o terminar su cuenta si
+              determinamos que ha proporcionado información falsa o que viola
+              estos términos.
             </p>
           </section>
 
@@ -165,13 +180,22 @@ export default function TermsAndConditionsPage() {
               Propiedad Intelectual
             </h2>
             <p className='mb-4 text-gray-700'>
-              El contenido de la Aplicación, incluyendo pero no limitado a textos, gráficos, logotipos, iconos, imágenes, clips de audio, descargas digitales, compilaciones de datos y software, es propiedad de Pastoral Mariana o de sus proveedores de contenido y está protegido por las leyes de propiedad intelectual.
+              El contenido de la Aplicación, incluyendo pero no limitado a
+              textos, gráficos, logotipos, iconos, imágenes, clips de audio,
+              descargas digitales, compilaciones de datos y software, es
+              propiedad de Pastoral Mariana o de sus proveedores de contenido y
+              está protegido por las leyes de propiedad intelectual.
             </p>
             <p className='mb-4 text-gray-700'>
-              No está permitido utilizar, reproducir, modificar, distribuir o mostrar ninguna parte del contenido sin nuestro permiso previo por escrito, excepto según lo permitido para el uso personal y no comercial relacionado con actividades pastorales.
+              No está permitido utilizar, reproducir, modificar, distribuir o
+              mostrar ninguna parte del contenido sin nuestro permiso previo por
+              escrito, excepto según lo permitido para el uso personal y no
+              comercial relacionado con actividades pastorales.
             </p>
             <p className='text-gray-700'>
-              Todas las marcas comerciales, marcas de servicio, nombres comerciales y logotipos utilizados en la Aplicación son propiedad de Pastoral Mariana o de sus respectivos propietarios.
+              Todas las marcas comerciales, marcas de servicio, nombres
+              comerciales y logotipos utilizados en la Aplicación son propiedad
+              de Pastoral Mariana o de sus respectivos propietarios.
             </p>
           </section>
 
@@ -189,16 +213,37 @@ export default function TermsAndConditionsPage() {
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>Violar cualquier ley, reglamento o normativa aplicable</li>
-              <li>Infringir los derechos de propiedad intelectual u otros derechos de terceros</li>
-              <li>Publicar o transmitir material obsceno, amenazante, difamatorio o ilegal</li>
-              <li>Utilizar la Aplicación para fines fraudulentos o engañosos</li>
-              <li>Interferir o interrumpir la integridad o el rendimiento de la Aplicación</li>
-              <li>Intentar obtener acceso no autorizado a los sistemas o redes relacionados</li>
-              <li>Recopilar o almacenar datos personales de otros usuarios sin su consentimiento</li>
-              <li>Utilizar la Aplicación de manera que pueda dañar, sobrecargar o deteriorar nuestros servicios</li>
+              <li>
+                Infringir los derechos de propiedad intelectual u otros derechos
+                de terceros
+              </li>
+              <li>
+                Publicar o transmitir material obsceno, amenazante, difamatorio
+                o ilegal
+              </li>
+              <li>
+                Utilizar la Aplicación para fines fraudulentos o engañosos
+              </li>
+              <li>
+                Interferir o interrumpir la integridad o el rendimiento de la
+                Aplicación
+              </li>
+              <li>
+                Intentar obtener acceso no autorizado a los sistemas o redes
+                relacionados
+              </li>
+              <li>
+                Recopilar o almacenar datos personales de otros usuarios sin su
+                consentimiento
+              </li>
+              <li>
+                Utilizar la Aplicación de manera que pueda dañar, sobrecargar o
+                deteriorar nuestros servicios
+              </li>
             </ul>
             <p className='text-gray-700'>
-              Nos reservamos el derecho de suspender o terminar el acceso a la Aplicación a cualquier usuario que incumpla estas restricciones.
+              Nos reservamos el derecho de suspender o terminar el acceso a la
+              Aplicación a cualquier usuario que incumpla estas restricciones.
             </p>
           </section>
 
@@ -212,16 +257,28 @@ export default function TermsAndConditionsPage() {
               Contenido del Usuario
             </h2>
             <p className='mb-4 text-gray-700'>
-              Al compartir, publicar o cargar contenido en nuestra Aplicación, usted:
+              Al compartir, publicar o cargar contenido en nuestra Aplicación,
+              usted:
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>Garantiza que tiene derecho a compartir dicho contenido</li>
-              <li>Otorga a Pastoral Mariana una licencia no exclusiva, mundial, libre de regalías, sublicenciable y transferible para usar, reproducir, distribuir y mostrar dicho contenido en relación con el funcionamiento de la Aplicación</li>
-              <li>Comprende que es responsable de cualquier contenido que publique</li>
-              <li>Acepta que podemos eliminar cualquier contenido que consideremos inapropiado o que viole estos términos</li>
+              <li>
+                Otorga a Pastoral Mariana una licencia no exclusiva, mundial,
+                libre de regalías, sublicenciable y transferible para usar,
+                reproducir, distribuir y mostrar dicho contenido en relación con
+                el funcionamiento de la Aplicación
+              </li>
+              <li>
+                Comprende que es responsable de cualquier contenido que publique
+              </li>
+              <li>
+                Acepta que podemos eliminar cualquier contenido que consideremos
+                inapropiado o que viole estos términos
+              </li>
             </ul>
             <p className='text-gray-700'>
-              Nos reservamos el derecho, pero no la obligación, de supervisar y moderar cualquier contenido publicado en la Aplicación.
+              Nos reservamos el derecho, pero no la obligación, de supervisar y
+              moderar cualquier contenido publicado en la Aplicación.
             </p>
           </section>
 
@@ -235,16 +292,30 @@ export default function TermsAndConditionsPage() {
               Limitación de Responsabilidad
             </h2>
             <p className='mb-4 text-gray-700'>
-              En la medida permitida por la ley aplicable, Pastoral Mariana y sus colaboradores:
+              En la medida permitida por la ley aplicable, Pastoral Mariana y
+              sus colaboradores:
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
-              <li>No serán responsables por daños indirectos, incidentales, especiales, consecuentes o punitivos</li>
-              <li>No garantizan que la Aplicación estará disponible de forma ininterrumpida, oportuna, segura o libre de errores</li>
-              <li>No garantizan que los resultados obtenidos del uso de la Aplicación serán precisos o confiables</li>
-              <li>Proveen la Aplicación "tal cual" y "según disponibilidad" sin garantías de ningún tipo</li>
+              <li>
+                No serán responsables por daños indirectos, incidentales,
+                especiales, consecuentes o punitivos
+              </li>
+              <li>
+                No garantizan que la Aplicación estará disponible de forma
+                ininterrumpida, oportuna, segura o libre de errores
+              </li>
+              <li>
+                No garantizan que los resultados obtenidos del uso de la
+                Aplicación serán precisos o confiables
+              </li>
+              <li>
+                Proveen la Aplicación &quot;tal cual&quot; y &quot;según disponibilidad&quot; sin
+                garantías de ningún tipo
+              </li>
             </ul>
             <p className='text-gray-700'>
-              El usuario acepta que utiliza la Aplicación bajo su propio riesgo y que asume la responsabilidad por su uso.
+              El usuario acepta que utiliza la Aplicación bajo su propio riesgo
+              y que asume la responsabilidad por su uso.
             </p>
           </section>
 
@@ -258,13 +329,20 @@ export default function TermsAndConditionsPage() {
               Enlaces a Terceros
             </h2>
             <p className='mb-4 text-gray-700'>
-              Nuestra Aplicación puede contener enlaces a sitios web o servicios de terceros que no son propiedad ni están controlados por Pastoral Mariana.
+              Nuestra Aplicación puede contener enlaces a sitios web o servicios
+              de terceros que no son propiedad ni están controlados por Pastoral
+              Mariana.
             </p>
             <p className='mb-4 text-gray-700'>
-              No tenemos control sobre el contenido, políticas de privacidad o prácticas de sitios o servicios de terceros y no asumimos ninguna responsabilidad por ellos. Recomendamos encarecidamente que revise los términos y políticas de cualquier sitio de terceros que visite.
+              No tenemos control sobre el contenido, políticas de privacidad o
+              prácticas de sitios o servicios de terceros y no asumimos ninguna
+              responsabilidad por ellos. Recomendamos encarecidamente que revise
+              los términos y políticas de cualquier sitio de terceros que
+              visite.
             </p>
             <p className='text-gray-700'>
-              La inclusión de cualquier enlace no implica aprobación, respaldo o recomendación por parte de Pastoral Mariana.
+              La inclusión de cualquier enlace no implica aprobación, respaldo o
+              recomendación por parte de Pastoral Mariana.
             </p>
           </section>
 
@@ -278,13 +356,22 @@ export default function TermsAndConditionsPage() {
               Terminación de Acceso
             </h2>
             <p className='mb-4 text-gray-700'>
-              Podemos terminar o suspender su acceso a la Aplicación inmediatamente, sin previo aviso o responsabilidad, por cualquier motivo, incluido, sin limitación, si incumple estos Términos y Condiciones.
+              Podemos terminar o suspender su acceso a la Aplicación
+              inmediatamente, sin previo aviso o responsabilidad, por cualquier
+              motivo, incluido, sin limitación, si incumple estos Términos y
+              Condiciones.
             </p>
             <p className='mb-4 text-gray-700'>
-              Tras la terminación, su derecho a utilizar la Aplicación cesará inmediatamente. Si desea terminar su cuenta, puede simplemente discontinuar el uso de la Aplicación o solicitar la eliminación de su cuenta.
+              Tras la terminación, su derecho a utilizar la Aplicación cesará
+              inmediatamente. Si desea terminar su cuenta, puede simplemente
+              discontinuar el uso de la Aplicación o solicitar la eliminación de
+              su cuenta.
             </p>
             <p className='text-gray-700'>
-              Todas las disposiciones de los Términos que por su naturaleza deban sobrevivir a la terminación seguirán vigentes, incluyendo, sin limitación, las disposiciones de propiedad, renuncias de garantía y limitaciones de responsabilidad.
+              Todas las disposiciones de los Términos que por su naturaleza
+              deban sobrevivir a la terminación seguirán vigentes, incluyendo,
+              sin limitación, las disposiciones de propiedad, renuncias de
+              garantía y limitaciones de responsabilidad.
             </p>
           </section>
 
@@ -298,18 +385,29 @@ export default function TermsAndConditionsPage() {
               Modificaciones
             </h2>
             <p className='mb-4 text-gray-700'>
-              Nos reservamos el derecho, a nuestra sola discreción, de modificar o reemplazar estos Términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en la Aplicación.
+              Nos reservamos el derecho, a nuestra sola discreción, de modificar
+              o reemplazar estos Términos en cualquier momento. Los cambios
+              entrarán en vigor inmediatamente después de su publicación en la
+              Aplicación.
             </p>
             <p className='mb-4 text-gray-700'>
               Si realizamos cambios materiales a estos Términos:
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>Publicaremos una notificación visible en la Aplicación</li>
-              <li>Actualizaremos la fecha de "última actualización" en estos Términos</li>
-              <li>Podemos enviar una notificación a través de la Aplicación o por correo electrónico</li>
+              <li>
+                Actualizaremos la fecha de &quot;última actualización&quot; en estos
+                Términos
+              </li>
+              <li>
+                Podemos enviar una notificación a través de la Aplicación o por
+                correo electrónico
+              </li>
             </ul>
             <p className='text-gray-700'>
-              Su uso continuado de la Aplicación después de la publicación de cualquier modificación constituye la aceptación de esos cambios. Es su responsabilidad revisar periódicamente estos Términos.
+              Su uso continuado de la Aplicación después de la publicación de
+              cualquier modificación constituye la aceptación de esos cambios.
+              Es su responsabilidad revisar periódicamente estos Términos.
             </p>
           </section>
 
@@ -323,13 +421,21 @@ export default function TermsAndConditionsPage() {
               Legislación Aplicable
             </h2>
             <p className='mb-4 text-gray-700'>
-              Estos Términos se regirán e interpretarán de acuerdo con las leyes de la República del Perú, sin tener en cuenta sus disposiciones sobre conflicto de leyes.
+              Estos Términos se regirán e interpretarán de acuerdo con las leyes
+              de la República del Perú, sin tener en cuenta sus disposiciones
+              sobre conflicto de leyes.
             </p>
             <p className='mb-4 text-gray-700'>
-              Nuestra falta de ejercicio o aplicación de cualquier derecho o disposición de estos Términos no constituirá una renuncia a tal derecho o disposición. Si alguna disposición de estos Términos es considerada inválida o inaplicable por un tribunal, las disposiciones restantes de estos Términos permanecerán en vigor.
+              Nuestra falta de ejercicio o aplicación de cualquier derecho o
+              disposición de estos Términos no constituirá una renuncia a tal
+              derecho o disposición. Si alguna disposición de estos Términos es
+              considerada inválida o inaplicable por un tribunal, las
+              disposiciones restantes de estos Términos permanecerán en vigor.
             </p>
             <p className='text-gray-700'>
-              Cualquier controversia que surja de estos Términos se resolverá mediante arbitraje en la ciudad de Trujillo, Perú, de conformidad con las reglas de la Cámara de Comercio de Lima.
+              Cualquier controversia que surja de estos Términos se resolverá
+              mediante arbitraje en la ciudad de Trujillo, Perú, de conformidad
+              con las reglas de la Cámara de Comercio de Lima.
             </p>
           </section>
         </div>
@@ -347,10 +453,7 @@ export default function TermsAndConditionsPage() {
             . Todos los derechos reservados.
           </p>
           <div className='mt-2'>
-            <Link
-              href='/'
-              className='mx-2 text-blue-600 hover:text-blue-800'
-            >
+            <Link href='/' className='mx-2 text-blue-600 hover:text-blue-800'>
               Inicio
             </Link>
             <Link
