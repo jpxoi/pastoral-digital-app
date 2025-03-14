@@ -6,11 +6,11 @@ import {
   ClerkLoaded,
   ClerkLoading,
   SignInButton,
+  SignUpButton,
   useUser,
 } from '@clerk/nextjs'
 import WelcomeBackPrompt from '@/components/home/welcomeBackPrompt'
 import ErrorMessage from '@/components/shared/errorMessage'
-import Link from 'next/link'
 
 export default function LoginPrompt() {
   const { isSignedIn, user } = useUser()
@@ -42,13 +42,19 @@ export default function LoginPrompt() {
       <div className='mt-6 flex flex-col items-center gap-4'>
         <ClerkLoading>
           <div className='h-[3.125rem] w-full animate-pulse rounded-md bg-gray-200'></div>
+          <div className='h-[3.125rem] w-full animate-pulse rounded-md bg-gray-200'></div>
         </ClerkLoading>
         <ClerkLoaded>
-          <SignInButton fallbackRedirectUrl={'/dashboard'}>
+          <SignInButton>
             <button className='w-full cursor-pointer rounded-md border border-white bg-white p-3 text-blue-500 transition-colors duration-200 hover:border-gray-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 sm:border-blue-500 sm:bg-blue-500 sm:text-white sm:hover:border-blue-600 sm:hover:bg-blue-600'>
               Iniciar sesión
             </button>
           </SignInButton>
+          <SignUpButton>
+            <button className='w-full cursor-pointer rounded-md border border-gray-300 p-3 text-white transition-colors duration-200 hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 sm:bg-white sm:text-gray-700'>
+              Registrarse
+            </button>
+          </SignUpButton>
         </ClerkLoaded>
       </div>
     </>
