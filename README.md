@@ -69,7 +69,7 @@ Si deseas ser parte del equipo de desarrollo de la aplicación, por favor envía
 
 ## 📜 Licencia
 
-Pastoral Digital App © 2024 por Jean Paul Fernandez está licenciado bajo Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International. Para ver una copia de esta licencia, visita [https://creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+Pastoral Digital App © 2025 por Jean Paul Fernandez está licenciado bajo Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International. Para ver una copia de esta licencia, visita [https://creativecommons.org/licenses/by-nc-sa/4.0/](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ![CC BY-NC-SA Badge](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)
 
