@@ -1,9 +1,5 @@
 import Image from 'next/image'
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { UserInfoProps } from '@/types/interfaces'
-import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
-import PastoralIDDownloader from '@/components/dashboard/pastoralIDDownloader'
-import Background from '../shared/background'
 
 export default async function PastoralID() {
   const user = await currentUser()
