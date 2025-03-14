@@ -30,6 +30,20 @@ export function FooterNarrow() {
         </a>
         .
       </p>
+      <div className="mt-3 flex space-x-4">
+        <a 
+          href="/privacy"
+          className="text-sm font-medium text-white transition-colors duration-300 hover:text-gray-200"
+        >
+          Política de Privacidad
+        </a>
+        <a 
+          href="/terms"
+          className="text-sm font-medium text-white transition-colors duration-300 hover:text-gray-200"
+        >
+          Términos y Condiciones
+        </a>
+      </div>
     </div>
   )
 }
@@ -66,6 +80,20 @@ export function FooterWide() {
         </a>
         .
       </p>
+      <div className="mt-3 flex space-x-4">
+        <a 
+          href="/privacy"
+          className="text-sm font-medium text-blue-900 transition-colors duration-300 hover:text-blue-600"
+        >
+          Política de Privacidad
+        </a>
+        <a 
+          href="/terms"
+          className="text-sm font-medium text-blue-900 transition-colors duration-300 hover:text-blue-600"
+        >
+          Términos y Condiciones
+        </a>
+      </div>
     </div>
   )
 }
