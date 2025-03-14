@@ -10,7 +10,7 @@ export default function Page() {
         <Loading />
       </ClerkLoading>
       <ClerkLoaded>
-        <SignIn fallbackRedirectUrl="/dashboard" />
+        <SignIn />
       </ClerkLoaded>
     </main>
   )
