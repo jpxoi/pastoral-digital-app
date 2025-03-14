@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import { currentUser } from '@clerk/nextjs/server'
-import { UserInfoProps } from '@/types/interfaces'
-import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
 import AppMenu from '@/components/header/appMenu'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
 
@@ -15,13 +13,6 @@ export default async function AppHeader() {
       </header>
     )
   }
-
-  const userInfo: UserInfoProps = await fetchUserInfoByEmail({
-    email:
-      typeof user.primaryEmailAddress === 'string'
-        ? user.primaryEmailAddress
-        : user.primaryEmailAddress?.emailAddress || '',
-  })
 
   return (
     <header className='sticky top-0 z-50 flex items-center justify-center bg-[#07309B] px-4 py-4 shadow-md'>
