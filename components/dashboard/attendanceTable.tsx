@@ -1,19 +1,14 @@
 import AttendanceTableHeader from '@/components/dashboard/attendanceTableHeader'
 import AttendanceTableBody from '@/components/dashboard/attendanceTableBody'
 import { AttendanceProvider } from '@/app/context/attendanceContext'
-import { auth, currentUser } from '@clerk/nextjs/server'
-import { UserInfoProps } from '@/types/interfaces'
-import { fetchUserInfoByEmail } from '@/utils/fetchUtils'
+import { currentUser } from '@clerk/nextjs/server'
 import AttendanceTableRefresh from '@/components/dashboard/attendanceTableRefresh'
 
 export default async function AttendanceTable() {
   const user = await currentUser()
-  const userInfo: UserInfoProps = await fetchUserInfoByEmail({
-    email: user?.primaryEmailAddress?.emailAddress as string,
-  })
 
   return (
-    <AttendanceProvider userToken={userInfo.userToken as string}>
+    <AttendanceProvider userToken={user?.id as string}>
       <div className='mb-2 flex w-full flex-row items-center justify-center gap-4 lg:justify-end'>
         <AttendanceTableRefresh />
       </div>
