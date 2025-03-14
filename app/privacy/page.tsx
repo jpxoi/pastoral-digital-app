@@ -18,12 +18,12 @@ import PrintButton from '@/components/shared/print-button'
 export const metadata: Metadata = {
   title: 'Política de Privacidad | Pastoral Mariana',
   description:
-    'Descubra cómo Pastoral Mariana recopila, utiliza y protege sus datos personales. Última actualización: 10 de marzo de 2025.',
+    'Descubra cómo Pastoral Mariana recopila, utiliza y protege sus datos personales. Última actualización: 14 de marzo de 2025.',
 }
 
 export default function PrivacyPolicyPage() {
   // Fecha de última actualización
-  const lastUpdated = '10 de marzo de 2025'
+  const lastUpdated = '14 de marzo de 2025'
 
   return (
     <div className='min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 print:bg-white'>
@@ -83,6 +83,7 @@ export default function PrivacyPolicyPage() {
                 'Seguridad',
                 'Cambios en la Política',
                 'Contacto',
+                'Cumplimiento de Normativas',
               ].map((section) => (
                 <li key={section}>
                   <a
@@ -99,7 +100,6 @@ export default function PrivacyPolicyPage() {
                 </li>
               ))}
             </ul>
-        
           </div>
         </div>
 
@@ -115,26 +115,24 @@ export default function PrivacyPolicyPage() {
               Recopilación de Datos
             </h2>
             <p className='mb-4 text-gray-700'>
-              Aunque no recopilamos directamente datos personales sensibles,
-              podemos almacenar:
+              Recopilamos información para proporcionar mejores servicios a todos nuestros usuarios. A continuación, detallamos los datos que podemos recopilar:
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>
-                Información básica de perfil (nombres, apellidos, fecha de nacimiento, etc.)
-              </li>
-              <li>Datos de contacto que usted proporcione voluntariamente</li>
-              <li>
-                Registros de actividad dentro de la aplicación para mejorar su
-                experiencia
+                <strong>Información que usted nos proporciona:</strong> Al registrarse, proporcionará información básica de perfil (nombres, apellidos, fecha de nacimiento, correo electrónico).
               </li>
               <li>
-                Información técnica como direcciones IP y tipo de dispositivo
+                <strong>Información que recopilamos cuando utiliza nuestros servicios:</strong>
+                <ul className='mt-2 ml-6 list-inside list-disc space-y-1 text-gray-700'>
+                  <li>Información del dispositivo (modelo de hardware, versión del sistema operativo)</li>
+                  <li>Registros de uso y actividad dentro de la aplicación</li>
+                  <li>Información de ubicación (si ha otorgado los permisos correspondientes)</li>
+                  <li>Dirección IP y otros identificadores únicos</li>
+                </ul>
               </li>
             </ul>
             <p className='text-gray-700'>
-              Todos los datos personales sensibles relacionados con
-              autenticación son gestionados de manera segura por Clerk, conforme
-              a sus políticas de privacidad y estándares de seguridad.
+              La autenticación y gestión de credenciales se realiza a través de Clerk, quien procesa y almacena datos de autenticación conforme a sus políticas de privacidad y estándares de seguridad.
             </p>
           </section>
 
@@ -148,27 +146,24 @@ export default function PrivacyPolicyPage() {
               Cookies y Tecnologías
             </h2>
             <p className='mb-4 text-gray-700'>
-              Nuestra aplicación utiliza cookies y tecnologías similares para
-              mejorar la experiencia del usuario:
+              Nuestra aplicación utiliza cookies y tecnologías similares para mejorar la experiencia del usuario:
             </p>
             <ul className='list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>
                 <span className='font-medium'>Cookies esenciales:</span>{' '}
-                Necesarias para el funcionamiento básico de la aplicación
+                Necesarias para el funcionamiento básico de la aplicación y no pueden ser desactivadas.
               </li>
               <li>
-                <span className='font-medium'>Cookies funcionales:</span> Para
-                recordar sus preferencias y personalizar su experiencia
+                <span className='font-medium'>Cookies funcionales:</span>{' '}
+                Para recordar sus preferencias y personalizar su experiencia.
               </li>
               <li>
-                <span className='font-medium'>Cookies analíticas:</span> Para
-                entender cómo se utiliza nuestra aplicación
+                <span className='font-medium'>Cookies analíticas:</span>{' '}
+                Para entender cómo se utiliza nuestra aplicación y mejorar nuestros servicios.
               </li>
             </ul>
             <p className='mt-4 text-gray-700'>
-              Puede configurar su navegador para rechazar todas o algunas
-              cookies, o para alertarle cuando los sitios web configuran o
-              acceden a las cookies.
+              Puede configurar su navegador para rechazar todas o algunas cookies, o para alertarle cuando los sitios web configuran o acceden a las cookies. Sin embargo, si desactiva o rechaza cookies, algunas partes de nuestra aplicación podrían no funcionar correctamente.
             </p>
           </section>
 
@@ -182,8 +177,7 @@ export default function PrivacyPolicyPage() {
               Servicios de Terceros
             </h2>
             <p className='mb-6 text-gray-700'>
-              Utilizamos los siguientes servicios de terceros para garantizar la
-              seguridad y funcionalidad de nuestra aplicación:
+              Utilizamos los siguientes servicios de terceros para garantizar la seguridad y funcionalidad de nuestra aplicación:
             </p>
             <div className='grid gap-6 md:grid-cols-2'>
               <div className='rounded-lg bg-gray-50 p-4'>
@@ -191,8 +185,7 @@ export default function PrivacyPolicyPage() {
                   Clerk
                 </h3>
                 <p className='mb-2 text-gray-700'>
-                  Gestiona la autenticación y los datos relacionados con el
-                  acceso de los usuarios.
+                  Gestiona la autenticación y los datos relacionados con el acceso de los usuarios. Clerk procesa datos personales como correos electrónicos y contraseñas.
                 </p>
                 <a
                   href='https://clerk.com/privacy'
@@ -209,8 +202,7 @@ export default function PrivacyPolicyPage() {
                   Supabase
                 </h3>
                 <p className='mb-2 text-gray-700'>
-                  Almacena información adicional de los usuarios, como datos no
-                  sensibles necesarios para el funcionamiento de la aplicación.
+                  Almacena información de los usuarios y datos de la aplicación. Supabase procesa datos como perfiles de usuario e información relacionada con las actividades pastorales.
                 </p>
                 <a
                   href='https://supabase.com/privacy'
@@ -223,6 +215,9 @@ export default function PrivacyPolicyPage() {
                 </a>
               </div>
             </div>
+            <p className='mt-4 text-gray-700'>
+              Cuando utilizamos proveedores de servicios externos, estos solo procesan su información en nuestro nombre y de conformidad con nuestras instrucciones y esta política de privacidad.
+            </p>
           </section>
 
           {/* Uso de la Información */}
@@ -239,8 +234,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>
-                Proporcionar, mantener y mejorar los servicios de Pastoral
-                Digital
+                Proporcionar, mantener y mejorar los servicios de Pastoral Mariana
               </li>
               <li>Personalizar su experiencia dentro de la aplicación</li>
               <li>Facilitar la comunicación entre miembros pastorales</li>
@@ -248,13 +242,17 @@ export default function PrivacyPolicyPage() {
                 Enviar notificaciones relevantes sobre actividades pastorales
               </li>
               <li>
-                Realizar análisis y estadísticas anónimas para mejorar la
-                aplicación
+                Realizar análisis y estadísticas anónimas para mejorar la aplicación
+              </li>
+              <li>
+                Detectar, investigar y prevenir actividades fraudulentas y abusos
+              </li>
+              <li>
+                Cumplir con obligaciones legales aplicables
               </li>
             </ul>
             <p className='text-gray-700'>
-              No vendemos, alquilamos ni compartimos su información personal con
-              terceros no afiliados para fines de marketing.
+              <strong>No vendemos ni alquilamos sus datos personales a terceros con fines comerciales o publicitarios.</strong> La información compartida con terceros se limita a lo necesario para proporcionar nuestros servicios y siempre bajo estrictas garantías de confidencialidad.
             </p>
           </section>
 
@@ -268,19 +266,19 @@ export default function PrivacyPolicyPage() {
               Derechos del Usuario
             </h2>
             <p className='mb-4 text-gray-700'>
-              Como usuario de Pastoral Digital, usted tiene derecho a:
+              Como usuario de Pastoral Mariana, usted tiene los siguientes derechos sobre sus datos personales:
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
-              <li>Acceder a sus datos personales almacenados</li>
-              <li>Rectificar información incorrecta</li>
-              <li>Solicitar la eliminación de sus datos (derecho al olvido)</li>
-              <li>Limitar el procesamiento de su información</li>
-              <li>Portabilidad de datos</li>
-              <li>Oponerse al procesamiento de sus datos</li>
+              <li><strong>Acceso:</strong> Derecho a solicitar copias de sus datos personales</li>
+              <li><strong>Rectificación:</strong> Derecho a solicitar la corrección de información inexacta</li>
+              <li><strong>Supresión:</strong> Derecho a solicitar la eliminación de sus datos (derecho al olvido)</li>
+              <li><strong>Limitación:</strong> Derecho a solicitar la restricción del procesamiento de sus datos</li>
+              <li><strong>Portabilidad:</strong> Derecho a solicitar la transferencia de sus datos a otra organización</li>
+              <li><strong>Oposición:</strong> Derecho a oponerse al procesamiento de sus datos</li>
+              <li><strong>Revocación del consentimiento:</strong> Derecho a retirar su consentimiento en cualquier momento</li>
             </ul>
             <p className='text-gray-700'>
-              Para ejercer cualquiera de estos derechos, por favor contáctenos a
-              través de los canales indicados en la sección de Contacto.
+              Para ejercer cualquiera de estos derechos, contáctenos a través del correo electrónico pastoral@ps.edu.pe. Responderemos a su solicitud dentro del plazo establecido por la ley aplicable, normalmente en un plazo máximo de 30 días.
             </p>
           </section>
 
@@ -294,15 +292,10 @@ export default function PrivacyPolicyPage() {
               Menores de Edad
             </h2>
             <p className='mb-4 text-gray-700'>
-              Pastoral Digital no está destinada a menores de 13 años. No
-              recopilamos intencionalmente información personal de menores. Si
-              es padre o tutor y cree que su hijo nos ha proporcionado
-              información personal, contáctenos para que podamos tomar las
-              medidas necesarias.
+              Pastoral Mariana no está destinada a menores de 13 años. No recopilamos intencionalmente información personal de niños menores de 13 años. Si detectamos que hemos recopilado datos personales de un niño menor de 13 años sin la verificación del consentimiento parental, tomaremos medidas para eliminar esa información lo antes posible.
             </p>
             <p className='text-gray-700'>
-              Para usuarios entre 13 y 18 años, requerimos el consentimiento de
-              un padre o tutor legal para el uso de nuestra aplicación.
+              Para usuarios entre 13 y 18 años, requerimos el consentimiento verificable de un padre o tutor legal para el uso de nuestra aplicación. Si es padre o tutor y cree que su hijo nos ha proporcionado información personal sin su consentimiento, contáctenos inmediatamente a pastoral@ps.edu.pe.
             </p>
           </section>
 
@@ -316,20 +309,19 @@ export default function PrivacyPolicyPage() {
               Seguridad
             </h2>
             <p className='mb-4 text-gray-700'>
-              La seguridad de sus datos es nuestra prioridad. Implementamos
-              medidas técnicas y organizativas para proteger su información:
+              La seguridad de sus datos es nuestra prioridad. Implementamos medidas técnicas y organizativas para proteger su información:
             </p>
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
-              <li>Encriptación de datos en tránsito y en reposo</li>
+              <li>Encriptación de datos en tránsito mediante protocolos SSL/TLS</li>
+              <li>Encriptación de datos en reposo en nuestras bases de datos</li>
               <li>Sistemas de autenticación robustos a través de Clerk</li>
-              <li>Auditorías regulares de seguridad</li>
-              <li>Acceso restringido a información personal</li>
-              <li>Protocolos de respuesta ante incidentes</li>
+              <li>Auditorías regulares de seguridad y pruebas de penetración</li>
+              <li>Acceso restringido a información personal basado en principios de necesidad de conocimiento</li>
+              <li>Protocolos de respuesta ante incidentes de seguridad</li>
+              <li>Formación regular del personal sobre prácticas de seguridad de datos</li>
             </ul>
             <p className='text-gray-700'>
-              Aunque nos esforzamos por proteger su información personal, ningún
-              método de transmisión por Internet o almacenamiento electrónico es
-              100% seguro.
+              Aunque implementamos salvaguardias diseñadas para proteger su información, ningún sistema de seguridad es impenetrable. No podemos garantizar que la información no será vista, divulgada, alterada o destruida por incumplimiento de cualquiera de nuestras salvaguardias físicas, técnicas o administrativas.
             </p>
           </section>
 
@@ -343,9 +335,7 @@ export default function PrivacyPolicyPage() {
               Cambios en la Política
             </h2>
             <p className='mb-4 text-gray-700'>
-              Nos reservamos el derecho de actualizar esta política de
-              privacidad periódicamente para reflejar cambios en nuestras
-              prácticas o por otros motivos operativos, legales o regulatorios.
+              Nos reservamos el derecho de actualizar esta política de privacidad periódicamente. Los cambios entrarán en vigor inmediatamente después de su publicación en la aplicación.
             </p>
             <p className='mb-4 text-gray-700'>
               Cuando realicemos cambios significativos en esta política:
@@ -355,17 +345,17 @@ export default function PrivacyPolicyPage() {
                 Mostraremos una notificación prominente dentro de la aplicación
               </li>
               <li>
-                Actualizaremos la fecha de &ldquo;última actualización&rdquo; en
-                la parte superior de esta política
+                Actualizaremos la fecha de &ldquo;última actualización&rdquo; en la parte superior de esta política
               </li>
               <li>
-                Podemos enviar un correo electrónico con los detalles de los
-                cambios importantes
+                Podemos enviar un correo electrónico con los detalles de los cambios importantes
+              </li>
+              <li>
+                Podemos solicitar que acepte activamente los nuevos términos antes de seguir utilizando nuestros servicios
               </li>
             </ul>
             <p className='text-gray-700'>
-              Le recomendamos revisar esta política periódicamente para estar
-              informado sobre cómo protegemos su información.
+              El uso continuado de nuestra aplicación después de la publicación de cambios constituye su aceptación de dichos cambios. Le recomendamos revisar esta política periódicamente para estar informado sobre cómo protegemos su información.
             </p>
           </section>
 
@@ -379,9 +369,7 @@ export default function PrivacyPolicyPage() {
               Contacto
             </h2>
             <p className='mb-6 text-gray-700'>
-              Si tiene alguna pregunta sobre esta política de privacidad o sobre
-              el tratamiento de sus datos personales, puede contactar a Pastoral
-              Mariana a través de:
+              Si tiene alguna pregunta sobre esta política de privacidad o sobre el tratamiento de sus datos personales, puede contactar a nuestro Responsable de Protección de Datos a través de:
             </p>
             <div className='rounded-lg bg-gray-50 p-5'>
               <p className='mb-3 text-gray-700'>
@@ -392,11 +380,43 @@ export default function PrivacyPolicyPage() {
                 <span className='font-medium'>Dirección postal:</span> Jr.
                 Haendel 118, Urbanización Primavera, Trujillo 13001, Perú
               </p>
+              <p className='mt-3 text-gray-700'>
+                <span className='font-medium'>Teléfono:</span> +51 941 952 314
+              </p>
             </div>
             <p className='mt-6 text-gray-700'>
-              Pastoral Mariana se compromete a resolver cualquier consulta o
-              preocupación que pueda tener sobre el uso de su información
-              personal.
+              Pastoral Mariana se compromete a resolver cualquier consulta o preocupación que pueda tener sobre el uso de su información personal. Si considera que no hemos abordado satisfactoriamente su preocupación, tiene derecho a presentar una reclamación ante la autoridad de protección de datos en Perú.
+            </p>
+          </section>
+
+          {/* Cumplimiento de Normativas */}
+          <section
+            id='cumplimiento-de-normativas'
+            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
+          >
+            <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
+              <Shield className='mr-2 h-6 w-6 text-indigo-500' />
+              Cumplimiento de Normativas
+            </h2>
+            <p className='mb-4 text-gray-700'>
+              Esta política de privacidad está diseñada para cumplir con las normativas aplicables en materia de protección de datos, incluyendo:
+            </p>
+            <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
+              <li>Ley de Protección de Datos Personales del Perú (Ley N° 29733)</li>
+              <li>Reglamento General de Protección de Datos de la UE (RGPD), cuando corresponda</li>
+              <li>Ley de Privacidad del Consumidor de California (CCPA), cuando corresponda</li>
+            </ul>
+            <p className='mb-4 text-gray-700'>
+              <strong>Base legal para el procesamiento:</strong> Procesamos sus datos personales bajo las siguientes bases legales:
+            </p>
+            <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
+              <li>Su consentimiento</li>
+              <li>La necesidad de ejecutar un contrato con usted</li>
+              <li>Nuestros intereses legítimos, siempre que no prevalezcan sobre sus derechos y libertades</li>
+              <li>El cumplimiento de obligaciones legales</li>
+            </ul>
+            <p className='text-gray-700'>
+              <strong>Transferencias internacionales de datos:</strong> Sus datos pueden ser transferidos y procesados en países fuera de Perú donde operan nuestros proveedores de servicios. En tales casos, aseguramos que existan medidas de protección adecuadas mediante cláusulas contractuales aprobadas u otros mecanismos legales reconocidos.
             </p>
           </section>
         </div>
