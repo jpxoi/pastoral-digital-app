@@ -18,7 +18,7 @@ export default async function PastoralID() {
           />
           <div className='flex h-full flex-col items-center justify-center bg-[#001944] p-2'>
             <p className='text-balance text-xs text-blue-50'>
-              Escanea este QR para acceder verificar tu identidad
+              Escanea este QR para verificar tu identidad
             </p>
           </div>
         </div>
