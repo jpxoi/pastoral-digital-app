@@ -12,7 +12,7 @@ export function FooterNarrow() {
         >
           Pastoral Digital
         </a>{' '}
-        &copy; 2025 por{' '}
+        &copy; {new Date().getFullYear()} por{' '}
         <a
           rel='cc:attributionURL dct:creator'
           className='font-medium text-white transition-colors duration-300 hover:text-gray-200'
@@ -52,7 +52,7 @@ export function FooterWide() {
         >
           Pastoral Digital App
         </a>{' '}
-        &copy; 2025 por{' '}
+        &copy; {new Date().getFullYear()} por{' '}
         <a
           rel='cc:attributionURL dct:creator'
           className='font-medium text-blue-900 transition-colors duration-300 hover:text-blue-600'
