@@ -1,5 +1,5 @@
 import {
-  boolean,
+  date,
   integer,
   pgTable,
   serial,
@@ -11,43 +11,52 @@ import {
 
 export const usersTable = pgTable('users', {
   id: text('id').primaryKey(),
-  first_name: text('first_name').notNull(),
-  last_name: text('last_name').notNull(),
+  firstName: text('first_name').notNull(),
+  lastName: text('last_name').notNull(),
   nickname: text('nickname'),
+  username: text('username').notNull().unique(),
   email: text('email').notNull().unique(),
-  phone_number: text('phone_number').notNull(),
-  date_of_birth: timestamp('date_of_birth').notNull(),
-  age: integer('age').notNull(),
-  user_type: text('user_type').notNull().default('student'),
-  student_code: text('student_code').unique(),
-  has_confirmed: boolean('has_confirmed').default(false),
-  created_at: timestamp('created_at').defaultNow(),
-  updated_at: timestamp('updated_at')
+  phoneNumber: text('phone_number').notNull(),
+  dateOfBirth: date('date_of_birth').notNull(),
+  category: text('category').notNull().default('student'),
+  studentCode: text('student_code').unique(),
+  role: text('role').notNull().default('member'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => new Date()),
+},
+(table) => {
+  return {
+    unq_student_code: uniqueIndex('unq_student_code').on(table.studentCode),
+  }
 })
 
 export const attendanceRecordsTable = pgTable(
   'attendance_records',
   {
-    id: uuid('id').primaryKey(),
-    user_id: text('user_id')
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id')
       .references(() => usersTable.id)
       .notNull(),
-    event_id: integer('event_id')
+    eventId: integer('event_id')
       .references(() => eventsTable.id)
       .notNull(),
-    check_in_time: timestamp('check_in_time').defaultNow(),
-    status: text('status').default('present').notNull(),
-    registered_by: text('registered_by')
+    checkInTime: timestamp('check_in_time').defaultNow(),
+    status: text('status').default('A TIEMPO').notNull(),
+    registeredBy: text('registered_by')
       .references(() => usersTable.id)
       .notNull(),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date()),
   },
   (table) => {
     return {
       unq_user_event: uniqueIndex('unq_user_event').on(
-        table.user_id,
-        table.event_id
+        table.userId,
+        table.eventId
       ),
     }
   }
@@ -58,9 +67,22 @@ export const eventsTable = pgTable('events', {
   name: text('name').notNull(),
   description: text('description'),
   date: timestamp('date').notNull(),
-  location: text('location'),
-  created_at: timestamp('created_at').defaultNow(),
-  updated_at: timestamp('updated_at')
+  locationId: serial('location_id')
+    .references(() => locationsTable.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+})
+
+export const locationsTable = pgTable('locations', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  capacity: integer('capacity').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => new Date()),
 })
@@ -73,3 +95,6 @@ export type SelectAttendance = typeof attendanceRecordsTable.$inferSelect
 
 export type InsertEvent = typeof eventsTable.$inferInsert
 export type SelectEvent = typeof eventsTable.$inferSelect
+
+export type InsertLocation = typeof locationsTable.$inferInsert
+export type SelectLocation = typeof locationsTable.$inferSelect
