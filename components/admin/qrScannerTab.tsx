@@ -9,23 +9,24 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
-import { getLastAttendanceRecord, getTodayEvent } from '@/queries/select'
+import { getTodayEvent } from '@/queries/select'
 import { SelectEvent } from '@/schema'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
-import { createAttendanceRecord } from '@/queries/insert'
-import { NeonDbError } from '@neondatabase/serverless'
+import { registerAttendanceRecord } from '@/actions/attendance'
+import { FetchAttendanceProps } from '@/types/interfaces'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [lastScanned, setLastScanned] = useState<any | null>(null)
   const [event, setEvent] = useState<SelectEvent | null>(null)
+  const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
 
@@ -49,30 +50,12 @@ export default function QrScannerTab() {
   }
 
   const handleError = (error: unknown) => {
-    toast.error('Ha ocurrido un error al activar el escáner')
+    showError('Ha ocurrido un error al activar el escáner')
     console.error(error)
   }
 
-  const handleDbError = (error: NeonDbError) => {
-    if (error.message.includes('unq_user_event')) {
-      toast.error('ERROR: El catequista ya ha sido registrado en este evento.')
-    } else if (
-      error.message.includes('attendance_records_user_id_users_id_fk')
-    ) {
-      toast.error('ERROR: El catequista no existe en la base de datos.')
-    } else if (
-      error.message.includes('attendance_records_event_id_events_id_fk')
-    ) {
-      toast.error('ERROR: El evento no existe en la base de datos.')
-    } else if (
-      error.message.includes('attendance_records_registered_by_users_id_fk')
-    ) {
-      toast.error(
-        'ERROR: El usuario que registra no existe en la base de datos.'
-      )
-    } else {
-      toast.error('Ha ocurrido un error al registrar la asistencia.')
-    }
+  const showError = (error: string) => {
+    toast.error(error)
 
     const audio = new Audio('/sounds/error.wav')
     audio.play()
@@ -80,41 +63,44 @@ export default function QrScannerTab() {
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes) {
-      try {
-        const userScannedId = detectedCodes[0].rawValue
+      const userScannedId = detectedCodes[0].rawValue
 
-        if (!event) {
-          toast.error('No hay un evento programado para hoy')
-          return
-        }
+      if (!event) {
+        toast.error('No hay un evento programado para hoy')
+        return
+      }
 
-        if (!user) {
-          toast.error('No se pudo obtener el usuario actual')
-          return
-        }
+      if (!user) {
+        toast.error('No se pudo obtener el usuario actual')
+        return
+      }
 
-        const newRecord = {
-          userId: userScannedId,
-          eventId: event.id as number,
-          checkInTime: new Date(),
-          status: calculateStatus(new Date(), event.date),
-          registeredBy: user.id as string,
-        }
+      const newRecord = {
+        userId: userScannedId,
+        eventId: event.id as number,
+        checkInTime: new Date(),
+        status: calculateStatus(new Date(), event.date),
+        registeredBy: user.id as string,
+      }
 
-        await createAttendanceRecord(newRecord)
-          .then(async () => {
-            toast.success('Registro de asistencia creado exitosamente')
-            const lastAttendanceRecord = await getLastAttendanceRecord()
-            setLastScanned(lastAttendanceRecord)
+      startTransition(() => {
+        registerAttendanceRecord(newRecord)
+          .then((data: { error?: string; success?: string; lastAttendanceRecord?: FetchAttendanceProps }) => {
+            if (data?.error) {
+              showError(data.error)
+              setLastScanned(null)
+            }
+
+            if (data?.success && data?.lastAttendanceRecord) {
+              toast.success(data.success)
+              setLastScanned(data.lastAttendanceRecord)
+            }
           })
           .catch((error) => {
-            handleDbError(error)
+            showError(error)
             setLastScanned(null)
           })
-      } catch (error) {
-        toast.error('Ha ocurrido un error al registrar la asistencia')
-        setLastScanned(null)
-      }
+      })
     }
   }
   return (
