@@ -1,14 +1,15 @@
 
 import { getUserRole } from '@/lib/auth'
+import { checkRole } from '@/lib/roles'
 import { ListCheckIcon, QrCodeIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function AppMenu() {
-  const role = await getUserRole()
+  const isAdmin = await checkRole('admin')
 
   return (
     <>
-      {role === 'admin' ? (
+      {isAdmin ? (
         <div className='flex items-center justify-center gap-3'>
           <Link
             href='/admin/records'
