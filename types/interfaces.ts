@@ -1,3 +1,5 @@
+import { SelectAttendance, SelectUser } from '@/schema'
+
 export interface UserInfoProps {
   avatarURL: string | null
   fallbackAvatar: string | null
@@ -22,4 +24,8 @@ export interface TableRow {
 
 export interface StatusLabel {
   status: string
+}
+
+export interface FetchAttendanceProps extends SelectAttendance {
+  user: SelectUser
 }
