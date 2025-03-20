@@ -106,8 +106,8 @@ export const viewport: Viewport = {
 
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#3B82F6"
-  }
+    colorPrimary: '#3B82F6',
+  },
 }
 
 export default function RootLayout({
@@ -119,8 +119,9 @@ export default function RootLayout({
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
         <body className={poppins.className}>
-        <Toaster richColors />
-        {children}</body>
+          <Toaster richColors />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   )
