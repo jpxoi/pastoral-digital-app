@@ -1,19 +1,9 @@
 import Link from 'next/link'
-import { currentUser } from '@clerk/nextjs/server'
 import AppMenu from '@/components/header/appMenu'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
+import { Suspense } from 'react'
 
-export default async function AppHeader() {
-  const user = await currentUser()
-
-  if (!user) {
-    return (
-      <header className='sticky top-0 z-50 flex items-center justify-center bg-[#07309B] px-4 py-4 shadow-md'>
-        <p className='text-white'>Cargando...</p>
-      </header>
-    )
-  }
-
+export default function AppHeader() {
   return (
     <header className='sticky top-0 z-50 flex items-center justify-center bg-[#07309B] px-4 py-4 shadow-md'>
       <nav className='flex w-screen max-w-screen-xl items-center justify-between'>
@@ -23,13 +13,18 @@ export default async function AppHeader() {
           </h1>
         </Link>
         <div className='flex items-center gap-4'>
-          <AppMenu />
+          <Suspense fallback={null}>
+            <AppMenu />
+          </Suspense>
           <ClerkLoading>
             <div className='h-7 w-7 animate-pulse rounded-full bg-gray-100' />
           </ClerkLoading>
           <ClerkLoaded>
             <div className='flex min-h-7 min-w-7 items-center'>
-              <UserButton />
+              <UserButton
+                userProfileMode='navigation'
+                userProfileUrl='/profile'
+              />
             </div>
           </ClerkLoaded>
         </div>
