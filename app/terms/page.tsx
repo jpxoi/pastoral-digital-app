@@ -309,8 +309,8 @@ export default function TermsAndConditionsPage() {
                 Aplicación serán precisos o confiables
               </li>
               <li>
-                Proveen la Aplicación &quot;tal cual&quot; y &quot;según disponibilidad&quot; sin
-                garantías de ningún tipo
+                Proveen la Aplicación &quot;tal cual&quot; y &quot;según
+                disponibilidad&quot; sin garantías de ningún tipo
               </li>
             </ul>
             <p className='text-gray-700'>
@@ -396,8 +396,8 @@ export default function TermsAndConditionsPage() {
             <ul className='mb-4 list-inside list-disc space-y-2 pl-4 text-gray-700'>
               <li>Publicaremos una notificación visible en la Aplicación</li>
               <li>
-                Actualizaremos la fecha de &quot;última actualización&quot; en estos
-                Términos
+                Actualizaremos la fecha de &quot;última actualización&quot; en
+                estos Términos
               </li>
               <li>
                 Podemos enviar una notificación a través de la Aplicación o por

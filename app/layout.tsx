@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
+import { Toaster } from '@/components/ui/sonner'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -105,8 +106,8 @@ export const viewport: Viewport = {
 
 const clerkAppearance = {
   variables: {
-    colorPrimary: "#3B82F6"
-  }
+    colorPrimary: '#3B82F6',
+  },
 }
 
 export default function RootLayout({
@@ -117,7 +118,10 @@ export default function RootLayout({
   return (
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
-        <body className={poppins.className}>{children}</body>
+        <body className={poppins.className}>
+          <Toaster richColors />
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   )
