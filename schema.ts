@@ -8,7 +8,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
-import { relations } from 'drizzle-orm';
+import { relations } from 'drizzle-orm'
 
 export const usersTable = pgTable('users', {
   id: text('id').primaryKey(),
@@ -84,18 +84,21 @@ export const locationsTable = pgTable('locations', {
     .$onUpdate(() => new Date()),
 })
 
-export const attendanceRecordsRelations = relations(attendanceRecordsTable, ({ one }) => {
-  return {
-    user: one(usersTable, {
-      fields: [attendanceRecordsTable.userId],
-      references: [usersTable.id],
-    }),
-    registeredBy: one(usersTable, {
-      fields: [attendanceRecordsTable.registeredBy],
-      references: [usersTable.id],
-    }),
-  };
-});
+export const attendanceRecordsRelations = relations(
+  attendanceRecordsTable,
+  ({ one }) => {
+    return {
+      user: one(usersTable, {
+        fields: [attendanceRecordsTable.userId],
+        references: [usersTable.id],
+      }),
+      registeredBy: one(usersTable, {
+        fields: [attendanceRecordsTable.registeredBy],
+        references: [usersTable.id],
+      }),
+    }
+  }
+)
 
 export type InsertUser = typeof usersTable.$inferInsert
 export type SelectUser = typeof usersTable.$inferSelect
