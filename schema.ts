@@ -8,6 +8,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm';
 
 export const usersTable = pgTable('users', {
   id: text('id').primaryKey(),
@@ -19,17 +20,12 @@ export const usersTable = pgTable('users', {
   phoneNumber: text('phone_number').notNull(),
   dateOfBirth: date('date_of_birth').notNull(),
   category: text('category').notNull().default('student'),
-  studentCode: text('student_code').unique(),
+  studentCode: text('student_code'),
   role: text('role').notNull().default('member'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => new Date()),
-},
-(table) => {
-  return {
-    unq_student_code: uniqueIndex('unq_student_code').on(table.studentCode),
-  }
 })
 
 export const attendanceRecordsTable = pgTable(
@@ -47,6 +43,7 @@ export const attendanceRecordsTable = pgTable(
     registeredBy: text('registered_by')
       .references(() => usersTable.id)
       .notNull(),
+    method: text('method').default('QR').notNull(),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at')
       .defaultNow()
@@ -86,6 +83,19 @@ export const locationsTable = pgTable('locations', {
     .defaultNow()
     .$onUpdate(() => new Date()),
 })
+
+export const attendanceRecordsRelations = relations(attendanceRecordsTable, ({ one }) => {
+  return {
+    user: one(usersTable, {
+      fields: [attendanceRecordsTable.userId],
+      references: [usersTable.id],
+    }),
+    registeredBy: one(usersTable, {
+      fields: [attendanceRecordsTable.registeredBy],
+      references: [usersTable.id],
+    }),
+  };
+});
 
 export type InsertUser = typeof usersTable.$inferInsert
 export type SelectUser = typeof usersTable.$inferSelect
