@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import AttendanceTable from '@/components/dashboard/attendanceTable'
 import AttendanceTableSkeleton from '@/components/dashboard/attendanceTableSkeleton'
+import { Card, CardHeader } from '../ui/card'
 
 export default function AttendanceSection() {
   return (
@@ -8,9 +9,11 @@ export default function AttendanceSection() {
       <h1 className='mb-4 text-xl font-bold sm:text-2xl'>
         Registro de Asistencias
       </h1>
-      <Suspense fallback={<AttendanceTableSkeleton />}>
-        <AttendanceTable />
-      </Suspense>
+      <Card className='relative w-full overflow-x-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-h-[65vh]'>
+        <Suspense fallback={<CardHeader>Cargando registros...</CardHeader>}>
+          <AttendanceTable />
+        </Suspense>
+      </Card>
       <p className='mt-4 w-full max-w-full text-sm text-gray-600 sm:max-w-screen-sm md:max-w-screen-md'>
         Las faltas no se registran en la tabla. No obstante, cualquier fecha sin
         registro válido, se considera falta.

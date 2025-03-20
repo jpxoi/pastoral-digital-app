@@ -12,7 +12,9 @@ export default async function ProfilePicSettings() {
         avatarURL={user?.imageUrl as string}
       />
       <p className='text-xs text-gray-500'>
-        Al cambiar tu foto de perfil, esta se actualizará en todos los dispositivos en los que hayas iniciado sesión. Si no ves los cambios, cierra sesión y vuelve a iniciarla.
+        Al cambiar tu foto de perfil, esta se actualizará en todos los
+        dispositivos en los que hayas iniciado sesión. Si no ves los cambios,
+        cierra sesión y vuelve a iniciarla.
       </p>
     </div>
   )

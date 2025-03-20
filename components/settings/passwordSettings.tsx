@@ -13,7 +13,9 @@ export default async function PasswordSettins() {
           Contraseña
         </h3>
       </div>
-      <ChangePasswordButton userEmail={user?.primaryEmailAddress?.toString() || ''} />
+      <ChangePasswordButton
+        userEmail={user?.primaryEmailAddress?.toString() || ''}
+      />
     </div>
   )
 }

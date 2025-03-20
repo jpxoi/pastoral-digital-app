@@ -121,7 +121,7 @@ export function MainFooter() {
           </div>
         </div>
         <div className='mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row'>
-          <p className='text-muted-foreground text-sm'>
+          <p className='text-sm text-muted-foreground'>
             © {new Date().getFullYear()} Pastoral Mariana. Todos los derechos
             reservados.
           </p>

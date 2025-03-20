@@ -11,7 +11,7 @@ export default function WelcomeBackPrompt({ nickname }: { nickname: string }) {
         <p className='text-center text-sm text-gray-200 sm:text-gray-500'>
           ¿No eres {nickname}?{' '}
           <SignOutButton>
-            <span className='text-gray-50 hover:text-white hover:underline sm:text-blue-500 sm:hover:text-blue-600 cursor-pointer'>
+            <span className='cursor-pointer text-gray-50 hover:text-white hover:underline sm:text-blue-500 sm:hover:text-blue-600'>
               Cerrar Sesión
             </span>
           </SignOutButton>

@@ -19,7 +19,9 @@ export default async function EditableAccountInfo() {
 
       <div className='flex flex-row items-center justify-between gap-1'>
         <div className='flex flex-col items-start justify-center'>
-          <h5 className='text-xs font-medium text-gray-600'>Nombre de Usuario</h5>
+          <h5 className='text-xs font-medium text-gray-600'>
+            Nombre de Usuario
+          </h5>
           <p className='text-sm text-gray-800'>{user?.username as string}</p>
         </div>
         <button

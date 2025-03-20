@@ -27,22 +27,22 @@ export default function ChangeProfilePic({
         ) : (
           <Image
             src={user?.imageUrl as string}
-            className='h-16 w-16 lg:h-24 lg:w-24 rounded-full bg-blue-200'
+            className='h-16 w-16 rounded-full bg-blue-200 lg:h-24 lg:w-24'
             width={100}
             height={100}
             alt='Avatar'
           />
         )}
         <div className='flex flex-col items-start gap-2'>
-          <p className='text-left text-xs text-gray-500 mb-2 md:mb-0'>
+          <p className='mb-2 text-left text-xs text-gray-500 md:mb-0'>
             Usamos Gravatar para gestionar las fotos de perfil de nuestros
             usuarios.
           </p>
-          <p className='hidden md:block text-left text-xs text-gray-500 mb-2'>
+          <p className='mb-2 hidden text-left text-xs text-gray-500 md:block'>
             Para cambiar tu foto de perfil, haz clic en el botón de abajo y
-            introduce el mismo correo electrónico que usas para iniciar sesión en
-            Pastoral Digital App. Luego, sigue las instrucciones en la página de
-            Gravatar.
+            introduce el mismo correo electrónico que usas para iniciar sesión
+            en Pastoral Digital App. Luego, sigue las instrucciones en la página
+            de Gravatar.
           </p>
           <a
             href='https://es.gravatar.com/profile'

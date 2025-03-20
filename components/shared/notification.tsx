@@ -4,7 +4,13 @@ export default function Notification({
   position = 'top-right',
   reverseOrder = true,
 }: {
-  position?: 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right'
+  position?:
+    | 'top-left'
+    | 'top-center'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right'
   reverseOrder?: boolean
 }) {
   return (

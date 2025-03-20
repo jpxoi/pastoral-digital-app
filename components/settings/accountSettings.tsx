@@ -27,7 +27,9 @@ export default async function AccountSettings() {
           height={150}
           alt='Avatar'
         />
-        <h1 className='text-2xl text-gray-800'>¡Un gusto, {user?.firstName}!</h1>
+        <h1 className='text-2xl text-gray-800'>
+          ¡Un gusto, {user?.firstName}!
+        </h1>
         <p className='text-sm text-gray-500'>
           Administra tu información, privacidad y seguridad para que la
           aplicación Pastoral Digital funcione mejor para ti.

@@ -12,10 +12,16 @@ export default async function AppMenu() {
     <>
       {role === 'admin' ? (
         <div className='flex items-center justify-center gap-3'>
-          <Link href='/admin/records' className='flex items-center gap-2 text-white'>
+          <Link
+            href='/admin/records'
+            className='flex items-center gap-2 text-white'
+          >
             <ListCheckIcon />
           </Link>
-          <Link href='/admin/scan' className='flex items-center gap-2 text-white'>
+          <Link
+            href='/admin/scan'
+            className='flex items-center gap-2 text-white'
+          >
             <QrCodeIcon />
           </Link>
         </div>
