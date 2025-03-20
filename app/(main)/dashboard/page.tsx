@@ -1,5 +1,5 @@
 import AttendanceSection from '@/components/dashboard/attendanceSection'
-import PastoralId from '@/components/dashboard/pastoralId'
+import PastoralId from '@/components/dashboard/pastoralID'
 import OfflineAlert from '@/components/shared/offlineAlert'
 
 export default function PastoralDigitalPage() {
