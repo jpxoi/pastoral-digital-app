@@ -26,7 +26,7 @@ export async function getAttendanceRecordsForLast24Hours() {
 export async function getAllAttendanceRecords() {
   // Wait 3 seconds
   await new Promise((resolve) => setTimeout(resolve, 3000))
-  
+
   return db.query.attendanceRecordsTable.findMany({
     with: {
       user: true,

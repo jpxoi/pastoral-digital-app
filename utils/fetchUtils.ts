@@ -33,4 +33,3 @@ export async function fetchUserInfoByEmailFromACR({
   console.log('Loaded user info from ACR_DBS (Google Sheets) for', email)
   return userInfo
 }
-
