@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import PastoralIdQRCode from './pastoraldQrCode'
 import { Suspense } from 'react'
 import { Skeleton } from '../ui/skeleton'
