@@ -1,8 +1,15 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import QrScannerTab from '@/components/admin/qrScannerTab'
+import { getUserRole } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
-export default function Page() {
+export default async function Page() {
+  const role = await getUserRole()
+
+  if (role !== 'admin') {
+    redirect('/dashboard')
+  }
   return (
     <div className='container mx-auto px-4 py-4'>
       <Tabs defaultValue='scan' className='w-full'>

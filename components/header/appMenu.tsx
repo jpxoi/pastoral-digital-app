@@ -1,12 +1,10 @@
-import { getUserById } from '@/queries/select'
-import { currentUser } from '@clerk/nextjs/server'
-import { ListCheckIcon, ListOrderedIcon, QrCodeIcon } from 'lucide-react'
+
+import { getUserRole } from '@/lib/auth'
+import { ListCheckIcon, QrCodeIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function AppMenu() {
-  const user = await currentUser()
-  const userDb = await getUserById(user?.id || '')
-  const { role } = userDb[0]
+  const role = await getUserRole()
 
   return (
     <>
@@ -25,16 +23,7 @@ export default async function AppMenu() {
             <QrCodeIcon />
           </Link>
         </div>
-      ) : (
-        <div className='flex items-center justify-center'>
-          <Link
-            href='#'
-            className='flex cursor-not-allowed items-center gap-2 text-white/50'
-          >
-            <QrCodeIcon />
-          </Link>
-        </div>
-      )}
+      ) : null}
     </>
   )
 }
