@@ -1,5 +1,4 @@
 
-import { getUserRole } from '@/lib/auth'
 import { checkRole } from '@/lib/roles'
 import { ListCheckIcon, QrCodeIcon } from 'lucide-react'
 import Link from 'next/link'
