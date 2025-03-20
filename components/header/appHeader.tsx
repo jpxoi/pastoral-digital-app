@@ -21,14 +21,11 @@ export default function AppHeader() {
           </ClerkLoading>
           <ClerkLoaded>
             <div className='flex min-h-7 min-w-7 items-center'>
-              <UserButton
-                userProfileMode='navigation'
-                userProfileUrl='/profile'
-              />
+              <UserButton />
             </div>
           </ClerkLoaded>
         </div>
       </nav>
     </header>
   )
-}
+} 
