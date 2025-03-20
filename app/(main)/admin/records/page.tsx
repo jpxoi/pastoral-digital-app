@@ -4,11 +4,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card'
 import AttendanceTable from '@/components/admin/attendanceTable'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Suspense } from 'react'
-import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
 
 export default async function Page() {
   return (
@@ -21,7 +20,7 @@ export default async function Page() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<AttendanceTableSkeleton />}>
+          <Suspense fallback={<Skeleton className='h-96 w-full bg-gray-100' />}>
             <AttendanceTable />
           </Suspense>
         </CardContent>

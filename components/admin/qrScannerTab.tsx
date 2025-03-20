@@ -56,9 +56,6 @@ export default function QrScannerTab() {
 
   const showError = (error: string) => {
     toast.error(error)
-
-    const audio = new Audio('/sounds/error.wav')
-    audio.play()
   }
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
@@ -84,22 +81,30 @@ export default function QrScannerTab() {
       }
 
       startTransition(() => {
-        registerAttendanceRecord(newRecord)
-          .then((data: { error?: string; success?: string; lastAttendanceRecord?: FetchAttendanceProps }) => {
+        toast.promise(registerAttendanceRecord(newRecord), {
+          loading: 'Registrando asistencia...',
+          success: (data: {
+            error?: string
+            success?: string
+            lastAttendanceRecord?: FetchAttendanceProps
+          }) => {
             if (data?.error) {
-              showError(data.error)
-              setLastScanned(null)
+              throw new Error(data.error)
             }
 
             if (data?.success && data?.lastAttendanceRecord) {
-              toast.success(data.success)
               setLastScanned(data.lastAttendanceRecord)
+              return data.success
             }
-          })
-          .catch((error) => {
-            showError(error)
+          },
+          error: (error) => {
             setLastScanned(null)
-          })
+            const audio = new Audio('/sounds/error.wav')
+            audio.play()
+
+            return error.message || 'Ha ocurrido un error al registrar la asistencia.'
+          },
+        })
       })
     }
   }
@@ -138,7 +143,7 @@ export default function QrScannerTab() {
           </CardContent>
           <CardFooter className='flex justify-between'>
             <Button
-              disabled={!event && !isLoaded}
+              disabled={!event && !isLoaded && !isRegistrationPending}
               variant='outline'
               onClick={() => setScanning(!scanning)}
             >
@@ -146,7 +151,7 @@ export default function QrScannerTab() {
             </Button>
             <Button
               variant='outline'
-              disabled={!event && !isLoaded}
+              disabled={!event && !isLoaded && !isRegistrationPending}
               onClick={() => {
                 setScanning(false)
                 setTimeout(() => setScanning(true), 100)
