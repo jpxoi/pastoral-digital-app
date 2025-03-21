@@ -25,14 +25,10 @@ Pastoral Digital App es una aplicación web que permite a los catequistas de la 
 
 Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 
-- 📲 **Acceder a su Pastoral Digital ID.** Este es un identificador digital que les permite acceder a las actividades de la Pastoral Mariana escaneando un código QR generado por la aplicación.
-- 📅 **Ver su registro de asistencias.** Pueden ver la fecha, hora y _status_ de sus asistencias, las cuales son registradas al escanear su Pastoral Digital ID en los encuentros de catequesis.
+- 📲 **Pastoral Digital ID.** Identificador digital con código QR para registrar tu asistencia.
+- 📅 **Registro de asistencias.** Visualización de fechas, horas y estado de asistencias.
 - 📝 **Justificar inasistencias y tardanzas.** Pueden justificar sus inasistencias y tardanzas a los encuentros de catequesis, indicando el motivo mediante un formulario en la aplicación.
-- 👤 **Ver su perfil de catequista.** Pueden ver su perfil de catequista, el cual incluye su nombre, foto de perfil, correo electrónico e ID de catequista.
-- 📸 **Modificar su foto de perfil.** Pueden subir una nueva foto desde su dispositivo para cambiar su foto de perfil.
-
-> [!IMPORTANT]
-> La opción de modificar la foto de perfil se encuentra en fase beta y puede no funcionar correctamente en todos los dispositivos.
+- 👤 **Perfil de catequista.** Información personal, incluyendo nombre, foto y correo.
 
 ## 🆕 Novedades
 
