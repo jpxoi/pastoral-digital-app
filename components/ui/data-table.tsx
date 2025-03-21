@@ -25,8 +25,8 @@ import { Button } from '@/components/ui/button'
 
 import { DataTablePagination } from './data-table-pagination'
 import { RefreshCcwIcon } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { revalidateAttendanceRecords } from '@/actions/attendance'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -39,8 +39,6 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState<any>([])
-
-  const router = useRouter()
 
   const table = useReactTable({
     data,
@@ -68,7 +66,7 @@ export function DataTable<TData, TValue>({
           }
           className='max-w-sm'
         />
-        <Button variant='ghost' onClick={() => router.refresh()}>
+        <Button variant='ghost' onClick={() => revalidateAttendanceRecords()}>
           <RefreshCcwIcon className='h-5 w-5' />
         </Button>
         
