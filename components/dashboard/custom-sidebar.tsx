@@ -1,34 +1,42 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from '../ui/sidebar'
-import { IconBrandTabler, IconListCheck, IconQrcode, IconUserBolt } from '@tabler/icons-react'
+import { IconBrandTabler, IconListCheck, IconQrcode } from '@tabler/icons-react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { ClerkLoaded, ClerkLoading, UserButton, useUser } from '@clerk/nextjs'
 import { Skeleton } from '../ui/skeleton'
+import { checkRole } from '@/lib/roles'
 
 export function CustomSidebar() {
   const { user } = useUser()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    checkRole('admin').then((result) => {
+      setIsAdmin(result)
+    })
+  }, [])
 
   const links = [
     {
       label: 'Inicio',
       href: '/dashboard',
       icon: <IconBrandTabler className='h-5 w-5 shrink-0 text-neutral-200' />,
-      role: 'member',
+      show: true,
     },
     {
       label: 'Escanear QR',
       href: '/admin/scan',
       icon: <IconQrcode className='h-5 w-5 shrink-0 text-neutral-200' />,
-      role: 'admin',
+      show: isAdmin,
     },
     {
-        label: 'Registro de Asistencia',
-        href: '/admin/records',
-        icon: <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />,
-        role: 'admin',
-    }
+      label: 'Registro de Asistencia',
+      href: '/admin/records',
+      icon: <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />,
+      show: isAdmin,
+    },
   ]
   const [open, setOpen] = useState(false)
   return (
@@ -37,9 +45,11 @@ export function CustomSidebar() {
         <div className='flex flex-1 flex-col overflow-y-auto overflow-x-hidden'>
           {open ? <Logo /> : <LogoIcon />}
           <div className='mt-8 flex flex-col gap-2'>
-            {links.map((link, idx) => (
-              <SidebarLink key={idx} link={link} />
-            ))}
+            {links
+              .filter((link) => link.show)
+              .map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
           </div>
         </div>
         <div>
