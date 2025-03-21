@@ -70,8 +70,7 @@ export default function QrScannerTab() {
     setError(true)
     setTimeout(() => setError(false), 1000)
 
-    errorSound.play()
-
+    errorSound?.play()
     error && showError(error)
   }
 
