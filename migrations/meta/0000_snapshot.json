@@ -1,5 +1,5 @@
 {
-  "id": "4baf9318-e767-4299-bf7e-fbfff6ee6f88",
+  "id": "604d40f2-6efd-4f18-8da3-ebe911b7e043",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -46,6 +46,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "method": {
+          "name": "method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'QR'"
         },
         "created_at": {
           "name": "created_at",
@@ -282,6 +289,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "email": {
           "name": "email",
           "type": "text",
@@ -296,7 +309,7 @@
         },
         "date_of_birth": {
           "name": "date_of_birth",
-          "type": "timestamp",
+          "type": "date",
           "primaryKey": false,
           "notNull": true
         },
@@ -335,38 +348,22 @@
           "default": "now()"
         }
       },
-      "indexes": {
-        "unq_student_code": {
-          "name": "unq_student_code",
-          "columns": [
-            {
-              "expression": "student_code",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_username_unique": {
+          "name": "users_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
-        },
-        "users_student_code_unique": {
-          "name": "users_student_code_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "student_code"
           ]
         }
       },
