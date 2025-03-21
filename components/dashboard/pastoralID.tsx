@@ -4,12 +4,12 @@ import { Skeleton } from '../ui/skeleton'
 
 export default async function PastoralId() {
   return (
-    <div className='pass-front group m-0 h-auto min-w-80 rounded-lg p-0 transition-all duration-300 sm:min-w-96 sm:max-w-sm'>
+    <div className='pass-front group m-0 h-auto min-w-80 rounded-lg p-0 transition-all duration-300 w-full sm:min-w-96 sm:max-w-sm'>
       <div className='group relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-[#001944] bg-white drop-shadow-md transition-all duration-300 hover:drop-shadow-2xl'>
         <div className='relative h-full w-full'>
           <Suspense
             fallback={
-              <Skeleton className='m-0 mx-auto aspect-square h-auto w-full max-w-xs items-center justify-center rounded-lg p-0 sm:max-w-sm' />
+              <Skeleton className='m-0 mx-auto aspect-square h-auto w-full items-center justify-center rounded-lg p-0 sm:max-w-sm' />
             }
           >
             <PastoralIdQRCode />
