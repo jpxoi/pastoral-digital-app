@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
@@ -15,22 +16,29 @@ import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { getTodayEvent } from '@/queries/select'
 import { SelectEvent } from '@/schema'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useTransition, useMemo } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
 import { FetchAttendanceProps } from '@/types/interfaces'
-import { IconCheck, IconX } from '@tabler/icons-react'
+import { IconAlertCircle, IconCheck, IconX } from '@tabler/icons-react'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
-  const [lastScanned, setLastScanned] = useState<any | null>(null)
+  const [cameraPermission, setCameraPermission] = useState<
+    'granted' | 'denied' | 'prompt'
+  >('prompt')
+  const [lastScanned, setLastScanned] = useState<FetchAttendanceProps | null>(
+    null
+  )
   const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
   const [errorSound, setErrorSound] = useState<HTMLAudioElement | null>(null)
-  const [successSound, setSuccessSound] = useState<HTMLAudioElement | null>(null)
+  const [successSound, setSuccessSound] = useState<HTMLAudioElement | null>(
+    null
+  )
   const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
@@ -47,26 +55,43 @@ export default function QrScannerTab() {
     setSuccessSound(successSound)
   }, [])
 
-  const calculateStatus = (checkInTime: Date, eventTime: Date) => {
-    const timeDifference = checkInTime.getTime() - eventTime.getTime()
-    const minutesDifference = Math.floor(timeDifference / (1000 * 60))
+  useEffect(() => {
+    const checkCameraPermission = async () => {
+      try {
+        const result = await navigator.permissions.query({
+          name: 'camera' as PermissionName,
+        })
+        setCameraPermission(result.state as 'granted' | 'denied' | 'prompt')
 
-    if (minutesDifference < 0) {
-      return 'A TIEMPO'
-    } else if (minutesDifference < 6) {
-      // From event time until 05:59 minutes after
-      return 'A TIEMPO'
-    } else if (minutesDifference < 16) {
-      // From 06:00 until 15:59 minutes after
-      return 'TARDANZA'
-    } else if (minutesDifference < 20) {
-      // From 16:00 until 19:59 minutes after
-      return 'DOBLE TARDANZA'
-    } else {
-      // 20 minutes or more after event time
-      return 'AUSENTE'
+        result.onchange = () => {
+          setCameraPermission(result.state as 'granted' | 'denied' | 'prompt')
+        }
+      } catch (error) {
+        console.error('Camera permissions API not supported', error)
+      }
     }
-  }
+
+    checkCameraPermission()
+  }, [])
+
+  const calculateStatus = useMemo(() => {
+    return (checkInTime: Date, eventTime: Date) => {
+      const timeDifference = checkInTime.getTime() - eventTime.getTime()
+      const minutesDifference = Math.floor(timeDifference / (1000 * 60))
+  
+      if (minutesDifference < 0) {
+        return 'A TIEMPO'
+      } else if (minutesDifference < 6) {
+        return 'A TIEMPO'
+      } else if (minutesDifference < 16) {
+        return 'TARDANZA'
+      } else if (minutesDifference < 20) {
+        return 'DOBLE TARDANZA'
+      } else {
+        return 'AUSENTE'
+      }
+    }
+  }, [])
 
   const handleError = (error?: string) => {
     setLastScanned(null)
@@ -99,7 +124,6 @@ export default function QrScannerTab() {
       }
 
       const status = calculateStatus(checkInTime, event.date)
-
 
       if (!user) {
         handleError('No se pudo obtener el usuario actual')
@@ -173,7 +197,17 @@ export default function QrScannerTab() {
           <IconCheck className='size-64 sm:size-72 md:size-80' />
         </div>
       )}
-      <TabsContent value='scan' className='space-y-8'>
+      <TabsContent value='scan' className='space-y-4'>
+        {cameraPermission === 'denied' && (
+          <Alert variant='destructive' className='bg-red-50 text-left'>
+            <IconAlertCircle className='h-4 w-4' />
+            <AlertTitle>Permiso de cámara</AlertTitle>
+            <AlertDescription>
+              Acceso a la cámara denegado. Por favor, habilite el acceso en la
+              configuración de su navegador.{' '}
+            </AlertDescription>
+          </Alert>
+        )}
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
           <Card>
             <CardHeader>
