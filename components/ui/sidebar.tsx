@@ -167,7 +167,14 @@ export const SidebarLink = ({
   className?: string;
   props?: LinkProps;
 }) => {
-  const { open, animate } = useSidebar();
+  const { open, animate, setOpen } = useSidebar();
+
+  const handleClick = () => {
+    if (open && window.innerWidth < 768) {
+      setOpen(false); // Close sidebar only on mobile
+    }
+  };
+
   return (
     <Link
       href={link.href}
@@ -175,6 +182,7 @@ export const SidebarLink = ({
         "flex items-center justify-start gap-2  group/sidebar py-2",
         className
       )}
+      onClick={handleClick}
       {...props}
     >
       {link.icon}
