@@ -1,8 +1,5 @@
 import type { Metadata } from 'next'
-import AppHeader from '@/components/header/appHeader'
-import { Suspense } from 'react'
-import AppHeaderSkeleton from '@/components/header/appHeaderSkeleton'
-import { FooterWide } from '@/components/shared/footer'
+import { CustomSidebar } from '@/components/dashboard/custom-sidebar'
 
 export const metadata: Metadata = {
   title: 'Dashboard | Pastoral Digital App',
@@ -16,12 +13,9 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   return (
-    <>
-      <AppHeader />
-      {children}
-      <footer className='mt-8 pb-8 lg:pb-4'>
-        <FooterWide />
-      </footer>
-    </>
+    <div className='mx-auto flex h-screen w-screen flex-1 flex-col overflow-hidden bg-gray-100 md:flex-row'>
+      <CustomSidebar />
+      <div className='flex flex-1 bg-[#07309B]'>{children}</div>
+    </div>
   )
 }
