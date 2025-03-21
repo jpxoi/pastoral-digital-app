@@ -7,7 +7,7 @@ export default async function PastoralIdQRCode() {
   return (
     <Image
       src={`https://quickchart.io/qr?text=${user?.id}&size=300&margin=2&dark=001944&ecLevel=H&format=svg`}
-      className='m-0 mx-auto h-auto w-full max-w-xs rounded-lg p-0 sm:max-w-sm'
+      className='m-0 mx-auto h-auto w-full rounded-lg p-0 sm:max-w-sm'
       width={300}
       height={300}
       unoptimized={true}
