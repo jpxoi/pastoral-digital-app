@@ -119,7 +119,10 @@ export const MobileSidebar = ({
         )}
         {...props}
       >
-        <div className="flex justify-end z-20 w-full">
+        <div className="flex justify-between z-20 w-full">
+          <Link href="/dashboard" className="flex items-center">
+            <span className="whitespace-pre font-medium text-white">Pastoral Digital App</span>
+          </Link>
           <IconMenu2
             className="text-neutral-100"
             onClick={() => setOpen(!open)}
