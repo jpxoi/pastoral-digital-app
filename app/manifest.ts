@@ -56,6 +56,12 @@ export default function manifest() {
         form_factor: 'narrow',
       },
       {
+        src: '/screenshots/mobile-4.png',
+        sizes: '1080x1920',
+        type: 'image/png',
+        form_factor: 'narrow',
+      },
+      {
         src: '/screenshots/desktop-1.png',
         sizes: '1920x1218',
         type: 'image/png',
