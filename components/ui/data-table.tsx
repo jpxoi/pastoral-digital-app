@@ -40,6 +40,8 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState<any>([])
 
+  const router = useRouter()
+
   const table = useReactTable({
     data,
     columns,
@@ -66,6 +68,10 @@ export function DataTable<TData, TValue>({
           }
           className='max-w-sm'
         />
+        <Button variant='ghost' onClick={() => router.refresh()}>
+          <RefreshCcwIcon className='h-5 w-5' />
+        </Button>
+        
       </div>
       <div className='rounded-md border'>
         <Table>
