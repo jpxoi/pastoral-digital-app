@@ -29,9 +29,7 @@ export default function QrScannerTab() {
   const [error, setError] = useState(false)
   const [lastScanned, setLastScanned] = useState<any | null>(null)
   const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
-  const [errorSound, setErrorSound] = useState<HTMLAudioElement>(
-    new Audio('/sounds/error-21.mp3')
-  )
+  const [errorSound, setErrorSound] = useState<HTMLAudioElement | null>(null)
   const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
@@ -42,6 +40,8 @@ export default function QrScannerTab() {
       setEvent(event || undefined)
     }
     fetchEventId()
+    const errorSound = new Audio('/sounds/error.mp3')
+    setErrorSound(errorSound)
   }, [])
 
   const calculateStatus = (checkInTime: Date, eventTime: Date) => {
