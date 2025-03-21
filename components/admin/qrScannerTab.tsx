@@ -25,7 +25,7 @@ import { FetchAttendanceProps } from '@/types/interfaces'
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [lastScanned, setLastScanned] = useState<any | null>(null)
-  const [event, setEvent] = useState<SelectEvent | null>(null)
+  const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
   const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
@@ -33,7 +33,7 @@ export default function QrScannerTab() {
   useEffect(() => {
     const fetchEventId = async () => {
       const event = await getTodayEvent()
-      setEvent(event || null)
+      setEvent(event || undefined)
     }
     fetchEventId()
   }, [])
@@ -63,12 +63,26 @@ export default function QrScannerTab() {
       const userScannedId = detectedCodes[0].rawValue
 
       if (!event) {
+        const audio = new Audio('/sounds/error.wav')
+        audio.play()
+        setLastScanned(null)
         toast.error('No hay un evento programado para hoy')
         return
       }
 
       if (!user) {
+        const audio = new Audio('/sounds/error.wav')
+        audio.play()
+        setLastScanned(null)
         toast.error('No se pudo obtener el usuario actual')
+        return
+      }
+
+      if (userScannedId === user.id as string) {
+        const audio = new Audio('/sounds/error.wav')
+        audio.play()
+        setLastScanned(null)
+        toast.error('No puedes registrarte a ti mismo')
         return
       }
 
@@ -132,7 +146,7 @@ export default function QrScannerTab() {
               ) : (
                 <div className='flex h-full items-center justify-center bg-gray-100'>
                   <Button
-                    disabled={!event && !isLoaded}
+                    disabled={!event || !isLoaded || isRegistrationPending}
                     onClick={() => setScanning(true)}
                   >
                     Iniciar escáner
@@ -143,7 +157,7 @@ export default function QrScannerTab() {
           </CardContent>
           <CardFooter className='flex justify-between'>
             <Button
-              disabled={!event && !isLoaded && !isRegistrationPending}
+              disabled={!event || !isLoaded || isRegistrationPending}
               variant='outline'
               onClick={() => setScanning(!scanning)}
             >
@@ -151,7 +165,7 @@ export default function QrScannerTab() {
             </Button>
             <Button
               variant='outline'
-              disabled={!event && !isLoaded && !isRegistrationPending}
+              disabled={!event || !isLoaded || isRegistrationPending}
               onClick={() => {
                 setScanning(false)
                 setTimeout(() => setScanning(true), 100)
