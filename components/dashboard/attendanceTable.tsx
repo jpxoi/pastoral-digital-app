@@ -11,5 +11,3 @@ export default async function AttendanceTable() {
 
   return <SimpleDataTable columns={columns} data={attendanceRecords} />
 }
-
-export const dynamic = 'force-dynamic'
