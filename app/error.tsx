@@ -2,7 +2,7 @@
 
 import ErrorMessage from '@/components/shared/errorMessage'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function Error({
   error,
@@ -12,10 +12,6 @@ export default function Error({
   reset: () => void
 }) {
   const [showError, setShowError] = useState(false)
-  useEffect(() => {
-    console.error(error)
-  }, [error])
-
   return (
     <main className='flex w-full flex-col items-center justify-center'>
       <div

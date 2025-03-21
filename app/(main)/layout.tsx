@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { CustomSidebar } from '@/components/dashboard/custom-sidebar'
+import { CustomSidebar } from '@/components/dashboard/customSidebar'
 
 export const metadata: Metadata = {
   title: 'Dashboard | Pastoral Digital App',

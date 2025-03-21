@@ -28,28 +28,10 @@ const nextConfig = {
           },
           {
             protocol: 'https',
-            hostname: 'api.dicebear.com',
-            port: '',
-            pathname: '/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'ucarecdn.com',
-            port: '',
-            pathname: '/**',
-          },
-          {
-            protocol: 'https',
-            hostname: '*.gravatar.com',
-            port: '',
-            pathname: '/**',
-          },
-          {
-            protocol: 'https',
             hostname: 'img.clerk.com',
             port: '',
             pathname: '/**',
-          }
+          },
         ],
       },
 };

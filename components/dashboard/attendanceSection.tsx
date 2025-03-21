@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import AttendanceTable from '@/components/dashboard/attendanceTable'
-import AttendanceTableSkeleton from '@/components/dashboard/attendanceTableSkeleton'
 import { Card, CardHeader } from '../ui/card'
 
 export default function AttendanceSection() {

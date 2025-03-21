@@ -5,6 +5,7 @@ CREATE TABLE "attendance_records" (
 	"check_in_time" timestamp DEFAULT now(),
 	"status" text DEFAULT 'A TIEMPO' NOT NULL,
 	"registered_by" text NOT NULL,
+	"method" text DEFAULT 'QR' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now()
 );
@@ -33,21 +34,21 @@ CREATE TABLE "users" (
 	"first_name" text NOT NULL,
 	"last_name" text NOT NULL,
 	"nickname" text,
+	"username" text NOT NULL,
 	"email" text NOT NULL,
 	"phone_number" text NOT NULL,
-	"date_of_birth" timestamp NOT NULL,
+	"date_of_birth" date NOT NULL,
 	"category" text DEFAULT 'student' NOT NULL,
 	"student_code" text,
 	"role" text DEFAULT 'member' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
-	CONSTRAINT "users_email_unique" UNIQUE("email"),
-	CONSTRAINT "users_student_code_unique" UNIQUE("student_code")
+	CONSTRAINT "users_username_unique" UNIQUE("username"),
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "attendance_records" ADD CONSTRAINT "attendance_records_registered_by_users_id_fk" FOREIGN KEY ("registered_by") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "events" ADD CONSTRAINT "events_location_id_locations_id_fk" FOREIGN KEY ("location_id") REFERENCES "public"."locations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-CREATE UNIQUE INDEX "unq_user_event" ON "attendance_records" USING btree ("user_id","event_id");--> statement-breakpoint
-CREATE UNIQUE INDEX "unq_student_code" ON "users" USING btree ("student_code");
+CREATE UNIQUE INDEX "unq_user_event" ON "attendance_records" USING btree ("user_id","event_id");

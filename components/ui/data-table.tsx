@@ -69,7 +69,6 @@ export function DataTable<TData, TValue>({
         <Button variant='ghost' onClick={() => revalidateAttendanceRecords()}>
           <RefreshCcwIcon className='h-5 w-5' />
         </Button>
-        
       </div>
       <div className='rounded-md border'>
         <Table>

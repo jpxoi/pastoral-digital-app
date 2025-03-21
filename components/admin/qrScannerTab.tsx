@@ -49,9 +49,8 @@ export default function QrScannerTab() {
     }
   }
 
-  const handleError = (error: unknown) => {
+  const handleError = () => {
     showError('Ha ocurrido un error al activar el escáner')
-    console.error(error)
   }
 
   const showError = (error: string) => {
@@ -78,7 +77,7 @@ export default function QrScannerTab() {
         return
       }
 
-      if (userScannedId === user.id as string) {
+      if (userScannedId === (user.id as string)) {
         const audio = new Audio('/sounds/error.wav')
         audio.play()
         setLastScanned(null)
@@ -116,7 +115,10 @@ export default function QrScannerTab() {
             const audio = new Audio('/sounds/error.wav')
             audio.play()
 
-            return error.message || 'Ha ocurrido un error al registrar la asistencia.'
+            return (
+              error.message ||
+              'Ha ocurrido un error al registrar la asistencia.'
+            )
           },
         })
       })
