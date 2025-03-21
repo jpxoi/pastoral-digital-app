@@ -41,7 +41,7 @@ export default function QrScannerTab() {
       setEvent(event || undefined)
     }
     fetchEventId()
-    const errorSound = new Audio('/sounds/error.mp3')
+    const errorSound = new Audio('/sounds/error-2.mp3')
     const successSound = new Audio('/sounds/success.mp3')
     setErrorSound(errorSound)
     setSuccessSound(successSound)
