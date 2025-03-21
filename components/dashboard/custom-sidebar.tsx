@@ -1,15 +1,14 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from '../ui/sidebar'
-import { IconBrandTabler, IconListCheck, IconQrcode } from '@tabler/icons-react'
+import { IconHome2, IconListCheck, IconQrcode } from '@tabler/icons-react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
-import { ClerkLoaded, ClerkLoading, UserButton, useUser } from '@clerk/nextjs'
+import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
 import { Skeleton } from '../ui/skeleton'
 import { checkRole } from '@/lib/roles'
 
 export function CustomSidebar() {
-  const { user } = useUser()
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
@@ -22,7 +21,7 @@ export function CustomSidebar() {
     {
       label: 'Inicio',
       href: '/dashboard',
-      icon: <IconBrandTabler className='h-5 w-5 shrink-0 text-neutral-200' />,
+      icon: <IconHome2 className='h-5 w-5 shrink-0 text-neutral-200' />,
       show: true,
     },
     {
@@ -54,24 +53,23 @@ export function CustomSidebar() {
         </div>
         <div>
           <ClerkLoading>
-            <SidebarLink
-              link={{
-                label: 'Loading...',
-                href: '#',
-                icon: (
-                  <Skeleton className='h-7 w-7 shrink-0 rounded-full text-neutral-200' />
-                ),
-              }}
-            />
+            <div className='flex items-center justify-start gap-2'>
+              <Skeleton className='size-7 aspect-square rounded-full' />
+              <Skeleton className='h-4 w-32' />
+            </div>
           </ClerkLoading>
           <ClerkLoaded>
-            <SidebarLink
-              link={{
-                label: user ? (user.fullName as string) : 'Guest',
-                href: '#',
-                icon: <UserButton />,
-              }}
-            />
+            <div className='flex items-center justify-start gap-2 max-md:hidden'>
+              <UserButton
+                showName={open}
+                appearance={{
+                  elements: {
+                    userButtonBox: 'flex-row-reverse',
+                    userButtonOuterIdentifier: 'text-white text-nowrap',
+                  },
+                }}
+              />
+            </div>
           </ClerkLoaded>
         </div>
       </SidebarBody>
