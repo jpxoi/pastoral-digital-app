@@ -49,9 +49,8 @@ export default function QrScannerTab() {
     }
   }
 
-  const handleError = (error: unknown) => {
+  const handleError = () => {
     showError('Ha ocurrido un error al activar el escáner')
-    console.error(error)
   }
 
   const showError = (error: string) => {

@@ -1,5 +1,5 @@
 import { JustifyIcon, LogOutIcon } from '@/components/icons/icons24'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 
 export default async function UserMenuOptions() {
   const user = await currentUser()

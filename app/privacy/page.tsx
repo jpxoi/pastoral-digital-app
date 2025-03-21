@@ -11,7 +11,6 @@ import {
   Mail,
   Users,
   ChevronLeft,
-  Printer,
 } from 'lucide-react'
 import PrintButton from '@/components/shared/print-button'
 

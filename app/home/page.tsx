@@ -1,18 +1,7 @@
-import Link from 'next/link'
 import Image from 'next/image'
-// import { Button } from "@/components/ui/button"
-import {
-  ArrowRight,
-  CheckCircle,
-  ChevronRight,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Twitter,
-  Zap,
-} from 'lucide-react'
 import { MainFooter } from '@/components/shared/footer'
 import { LogoImageWide } from '@/components/shared/logoImage'
+import { CheckCircle } from 'lucide-react'
 import {
   ClerkLoaded,
   ClerkLoading,

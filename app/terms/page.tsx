@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   User,
   ExternalLink,
-  Globe,
   ChevronLeft,
   Ban,
   Scale,
