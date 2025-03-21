@@ -4,7 +4,7 @@ import { Card, CardHeader } from '../ui/card'
 
 export default function AttendanceSection() {
   return (
-    <div className='container mx-auto flex h-auto max-w-[100vw] flex-col items-center justify-center px-4 md:px-0'>
+    <div className='container mx-auto flex h-auto max-w-[100vw] flex-col items-center justify-center'>
       <h1 className='mb-4 text-xl font-bold sm:text-2xl'>
         Registro de Asistencias
       </h1>
