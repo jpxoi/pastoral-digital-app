@@ -13,3 +13,6 @@ tsconfig.json
 /public/sw.js
 /public/fallback-development.js
 /public/workbox-a5d17aea.js
+
+# Migration files
+/migration
