@@ -1,3 +1,6 @@
+'use client'
+
+import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
 export default function Offline() {
@@ -19,12 +22,12 @@ export default function Offline() {
         <p className='text-md md:text-lg'>
           Por favor, revisa tu conexión y vuelve a intentarlo.
         </p>
-        <a
-          href='/'
+        <Button
+          onClick={() => location.reload()}
           className='text-md rounded-md p-2 px-4 text-blue-600 hover:bg-blue-100 hover:text-blue-800 md:text-lg'
         >
           Volver a intentar
-        </a>
+        </Button>
       </div>
     </div>
   )
