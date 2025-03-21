@@ -15,4 +15,4 @@ tsconfig.json
 /public/workbox-a5d17aea.js
 
 # Migration files
-/migration
+/migrations/*
