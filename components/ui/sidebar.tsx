@@ -122,7 +122,7 @@ export const MobileSidebar = ({
         <div className='z-20 flex w-full items-center justify-between'>
           <ClerkLoading>
             <div className='flex items-center justify-center gap-2'>
-              <Skeleton className='rounded-full size-7' />
+              <Skeleton className='size-7 rounded-full' />
               <Skeleton className='h-4 w-32' />
             </div>
           </ClerkLoading>
@@ -132,7 +132,7 @@ export const MobileSidebar = ({
               appearance={{
                 elements: {
                   userButtonBox: 'flex-row-reverse',
-                  userButtonOuterIdentifier: 'text-white'
+                  userButtonOuterIdentifier: 'text-white',
                 },
               }}
             />

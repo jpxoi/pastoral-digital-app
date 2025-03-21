@@ -119,7 +119,7 @@ export default function RootLayout({
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
         <body className={poppins.className}>
-          <Toaster position="top-right" richColors />
+          <Toaster position='top-right' richColors />
           {children}
         </body>
       </html>

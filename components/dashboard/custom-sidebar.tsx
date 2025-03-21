@@ -54,7 +54,7 @@ export function CustomSidebar() {
         <div>
           <ClerkLoading>
             <div className='flex items-center justify-start gap-2'>
-              <Skeleton className='size-7 aspect-square rounded-full' />
+              <Skeleton className='aspect-square size-7 rounded-full' />
               <Skeleton className='h-4 w-32' />
             </div>
           </ClerkLoading>
