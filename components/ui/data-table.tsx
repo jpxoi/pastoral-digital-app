@@ -21,8 +21,11 @@ import {
 } from '@/components/ui/table'
 
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 import { DataTablePagination } from './data-table-pagination'
+import { RefreshCcwIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 interface DataTableProps<TData, TValue> {
@@ -36,6 +39,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState<any>([])
+
+  const router = useRouter()
 
   const table = useReactTable({
     data,
@@ -54,7 +59,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex items-center'>
+      <div className='flex items-center justify-between'>
         <Input
           placeholder='Buscar registros...'
           value={table.getState().globalFilter}
@@ -63,6 +68,10 @@ export function DataTable<TData, TValue>({
           }
           className='max-w-sm'
         />
+        <Button variant='ghost' onClick={() => router.refresh()}>
+          <RefreshCcwIcon className='h-5 w-5' />
+        </Button>
+        
       </div>
       <div className='rounded-md border'>
         <Table>

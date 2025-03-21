@@ -1,8 +1,4 @@
-import AttendanceTableHeader from '@/components/dashboard/attendanceTableHeader'
-import AttendanceTableBody from '@/components/dashboard/attendanceTableBody'
-import { AttendanceProvider } from '@/app/context/attendanceContext'
 import { currentUser } from '@clerk/nextjs/server'
-import AttendanceTableRefresh from '@/components/dashboard/attendanceTableRefresh'
 import { getAttendanceRecordsByUserId } from '@/queries/select'
 import { SimpleDataTable } from '../ui/simple-data-table'
 import { columns } from './attendance/columns'

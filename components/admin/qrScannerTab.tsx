@@ -9,30 +9,31 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
-import { getLastAttendanceRecord, getTodayEvent } from '@/queries/select'
+import { getTodayEvent } from '@/queries/select'
 import { SelectEvent } from '@/schema'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
-import { createAttendanceRecord } from '@/queries/insert'
-import { NeonDbError } from '@neondatabase/serverless'
+import { registerAttendanceRecord } from '@/actions/attendance'
+import { FetchAttendanceProps } from '@/types/interfaces'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [lastScanned, setLastScanned] = useState<any | null>(null)
-  const [event, setEvent] = useState<SelectEvent | null>(null)
+  const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
+  const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
 
   useEffect(() => {
     const fetchEventId = async () => {
       const event = await getTodayEvent()
-      setEvent(event || null)
+      setEvent(event || undefined)
     }
     fetchEventId()
   }, [])
@@ -49,72 +50,76 @@ export default function QrScannerTab() {
   }
 
   const handleError = (error: unknown) => {
-    toast.error('Ha ocurrido un error al activar el escáner')
+    showError('Ha ocurrido un error al activar el escáner')
     console.error(error)
   }
 
-  const handleDbError = (error: NeonDbError) => {
-    if (error.message.includes('unq_user_event')) {
-      toast.error('ERROR: El catequista ya ha sido registrado en este evento.')
-    } else if (
-      error.message.includes('attendance_records_user_id_users_id_fk')
-    ) {
-      toast.error('ERROR: El catequista no existe en la base de datos.')
-    } else if (
-      error.message.includes('attendance_records_event_id_events_id_fk')
-    ) {
-      toast.error('ERROR: El evento no existe en la base de datos.')
-    } else if (
-      error.message.includes('attendance_records_registered_by_users_id_fk')
-    ) {
-      toast.error(
-        'ERROR: El usuario que registra no existe en la base de datos.'
-      )
-    } else {
-      toast.error('Ha ocurrido un error al registrar la asistencia.')
-    }
-
-    const audio = new Audio('/sounds/error.wav')
-    audio.play()
+  const showError = (error: string) => {
+    toast.error(error)
   }
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes) {
-      try {
-        const userScannedId = detectedCodes[0].rawValue
+      const userScannedId = detectedCodes[0].rawValue
 
-        if (!event) {
-          toast.error('No hay un evento programado para hoy')
-          return
-        }
-
-        if (!user) {
-          toast.error('No se pudo obtener el usuario actual')
-          return
-        }
-
-        const newRecord = {
-          userId: userScannedId,
-          eventId: event.id as number,
-          checkInTime: new Date(),
-          status: calculateStatus(new Date(), event.date),
-          registeredBy: user.id as string,
-        }
-
-        await createAttendanceRecord(newRecord)
-          .then(async () => {
-            toast.success('Registro de asistencia creado exitosamente')
-            const lastAttendanceRecord = await getLastAttendanceRecord()
-            setLastScanned(lastAttendanceRecord)
-          })
-          .catch((error) => {
-            handleDbError(error)
-            setLastScanned(null)
-          })
-      } catch (error) {
-        toast.error('Ha ocurrido un error al registrar la asistencia')
+      if (!event) {
+        const audio = new Audio('/sounds/error.wav')
+        audio.play()
         setLastScanned(null)
+        toast.error('No hay un evento programado para hoy')
+        return
       }
+
+      if (!user) {
+        const audio = new Audio('/sounds/error.wav')
+        audio.play()
+        setLastScanned(null)
+        toast.error('No se pudo obtener el usuario actual')
+        return
+      }
+
+      if (userScannedId === user.id as string) {
+        const audio = new Audio('/sounds/error.wav')
+        audio.play()
+        setLastScanned(null)
+        toast.error('No puedes registrarte a ti mismo')
+        return
+      }
+
+      const newRecord = {
+        userId: userScannedId,
+        eventId: event.id as number,
+        checkInTime: new Date(),
+        status: calculateStatus(new Date(), event.date),
+        registeredBy: user.id as string,
+      }
+
+      startTransition(() => {
+        toast.promise(registerAttendanceRecord(newRecord), {
+          loading: 'Registrando asistencia...',
+          success: (data: {
+            error?: string
+            success?: string
+            lastAttendanceRecord?: FetchAttendanceProps
+          }) => {
+            if (data?.error) {
+              throw new Error(data.error)
+            }
+
+            if (data?.success && data?.lastAttendanceRecord) {
+              setLastScanned(data.lastAttendanceRecord)
+              return data.success
+            }
+          },
+          error: (error) => {
+            setLastScanned(null)
+            const audio = new Audio('/sounds/error.wav')
+            audio.play()
+
+            return error.message || 'Ha ocurrido un error al registrar la asistencia.'
+          },
+        })
+      })
     }
   }
   return (
@@ -141,7 +146,7 @@ export default function QrScannerTab() {
               ) : (
                 <div className='flex h-full items-center justify-center bg-gray-100'>
                   <Button
-                    disabled={!event && !isLoaded}
+                    disabled={!event || !isLoaded || isRegistrationPending}
                     onClick={() => setScanning(true)}
                   >
                     Iniciar escáner
@@ -152,7 +157,7 @@ export default function QrScannerTab() {
           </CardContent>
           <CardFooter className='flex justify-between'>
             <Button
-              disabled={!event && !isLoaded}
+              disabled={!event || !isLoaded || isRegistrationPending}
               variant='outline'
               onClick={() => setScanning(!scanning)}
             >
@@ -160,7 +165,7 @@ export default function QrScannerTab() {
             </Button>
             <Button
               variant='outline'
-              disabled={!event && !isLoaded}
+              disabled={!event || !isLoaded || isRegistrationPending}
               onClick={() => {
                 setScanning(false)
                 setTimeout(() => setScanning(true), 100)

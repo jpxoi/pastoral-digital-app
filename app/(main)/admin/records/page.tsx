@@ -4,7 +4,6 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card'
 import AttendanceTable from '@/components/admin/attendanceTable'
 import { Suspense } from 'react'
@@ -31,3 +30,5 @@ export default async function Page() {
     </main>
   )
 }
+
+export const dynamic = 'force-dynamic'
