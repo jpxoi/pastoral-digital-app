@@ -9,6 +9,7 @@ import {
   SignUpButton,
 } from '@clerk/nextjs'
 import Background from '@/components/shared/background'
+import Link from 'next/link'
 
 export default function LandingPage() {
   return (
@@ -20,12 +21,12 @@ export default function LandingPage() {
             <LogoImageWide width={100} />
           </div>
           <div className='flex items-center gap-4'>
-            <a
+            <Link
               href='/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2Fhome%23contact'
               className='cursor-pointer text-sm font-medium text-blue-900 underline-offset-4 hover:underline'
             >
               Iniciar Sesión
-            </a>
+            </Link>
           </div>
         </div>
       </header>
