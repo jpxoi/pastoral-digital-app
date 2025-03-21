@@ -21,9 +21,12 @@ import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
 import { FetchAttendanceProps } from '@/types/interfaces'
+import { IconCheck, IconX } from '@tabler/icons-react'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
   const [lastScanned, setLastScanned] = useState<any | null>(null)
   const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
   const [isRegistrationPending, startTransition] = useTransition()
@@ -39,18 +42,40 @@ export default function QrScannerTab() {
   }, [])
 
   const calculateStatus = (checkInTime: Date, eventTime: Date) => {
-    // Add 10 minutes tolerance
-    const toleranceTime = new Date(eventTime.getTime() + 10 * 60 * 1000)
+    const timeDifference = checkInTime.getTime() - eventTime.getTime()
+    const minutesDifference = Math.floor(timeDifference / (1000 * 60))
 
-    if (checkInTime > toleranceTime) {
-      return 'TARDANZA'
-    } else {
+    if (minutesDifference < 0) {
       return 'A TIEMPO'
+    } else if (minutesDifference < 6) {
+      // From event time until 05:59 minutes after
+      return 'A TIEMPO'
+    } else if (minutesDifference < 16) {
+      // From 06:00 until 15:59 minutes after
+      return 'TARDANZA'
+    } else if (minutesDifference < 20) {
+      // From 16:00 until 19:59 minutes after
+      return 'DOBLE TARDANZA'
+    } else {
+      // 20 minutes or more after event time
+      return 'AUSENTE'
     }
   }
 
-  const handleError = () => {
-    showError('Ha ocurrido un error al activar el escáner')
+  const handleError = (error?: string) => {
+    setLastScanned(null)
+    setError(true)
+    setTimeout(() => setError(false), 1000)
+
+    const audio = new Audio('/sounds/error.wav')
+    audio.play()
+
+    error && showError(error)
+  }
+
+  const handleSuccess = () => {
+    setSuccess(true)
+    setTimeout(() => setSuccess(false), 1000)
   }
 
   const showError = (error: string) => {
@@ -60,36 +85,38 @@ export default function QrScannerTab() {
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes) {
       const userScannedId = detectedCodes[0].rawValue
+      const checkInTime = new Date()
 
       if (!event) {
-        const audio = new Audio('/sounds/error.wav')
-        audio.play()
-        setLastScanned(null)
-        toast.error('No hay un evento programado para hoy')
+        handleError('No hay un evento programado para hoy')
         return
       }
 
+      const status = calculateStatus(checkInTime, event.date)
+
+
       if (!user) {
-        const audio = new Audio('/sounds/error.wav')
-        audio.play()
-        setLastScanned(null)
-        toast.error('No se pudo obtener el usuario actual')
+        handleError('No se pudo obtener el usuario actual')
         return
       }
 
       if (userScannedId === (user.id as string)) {
-        const audio = new Audio('/sounds/error.wav')
-        audio.play()
-        setLastScanned(null)
-        toast.error('No puedes registrarte a ti mismo')
+        handleError('No puedes registrar tu propia asistencia')
+        return
+      }
+
+      if (status === 'AUSENTE') {
+        handleError(
+          'Es demasiado tarde para registrar asistencia en este evento'
+        )
         return
       }
 
       const newRecord = {
         userId: userScannedId,
         eventId: event.id as number,
-        checkInTime: new Date(),
-        status: calculateStatus(new Date(), event.date),
+        checkInTime: checkInTime,
+        status: status,
         registeredBy: user.id as string,
       }
 
@@ -107,14 +134,12 @@ export default function QrScannerTab() {
 
             if (data?.success && data?.lastAttendanceRecord) {
               setLastScanned(data.lastAttendanceRecord)
+              handleSuccess()
               return data.success
             }
           },
           error: (error) => {
-            setLastScanned(null)
-            const audio = new Audio('/sounds/error.wav')
-            audio.play()
-
+            handleError()
             return (
               error.message ||
               'Ha ocurrido un error al registrar la asistencia.'
@@ -125,80 +150,100 @@ export default function QrScannerTab() {
     }
   }
   return (
-    <TabsContent value='scan' className='space-y-8'>
-      <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
-        <Card>
-          <CardHeader>
-            <CardTitle>Escanear Código QR</CardTitle>
-            <CardDescription>
-              Escanea el código QR del carnet pastoral para registrar la
-              asistencia
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className='mx-auto aspect-square w-full max-w-md overflow-hidden rounded-xl border border-gray-200'>
-              {scanning ? (
-                <Scanner
-                  onScan={handleScan}
-                  onError={handleError}
-                  constraints={{ facingMode: 'environment' }}
-                  formats={['qr_code']}
-                  scanDelay={500}
-                />
-              ) : (
-                <div className='flex h-full items-center justify-center bg-gray-100'>
-                  <Button
-                    disabled={!event || !isLoaded || isRegistrationPending}
-                    onClick={() => setScanning(true)}
-                  >
-                    Iniciar escáner
-                  </Button>
-                </div>
-              )}
-            </div>
-          </CardContent>
-          <CardFooter className='flex justify-between'>
-            <Button
-              disabled={!event || !isLoaded || isRegistrationPending}
-              variant='outline'
-              onClick={() => setScanning(!scanning)}
-            >
-              {scanning ? 'Pausar' : 'Reanudar'}
-            </Button>
-            <Button
-              variant='outline'
-              disabled={!event || !isLoaded || isRegistrationPending}
-              onClick={() => {
-                setScanning(false)
-                setTimeout(() => setScanning(true), 100)
-              }}
-            >
-              Reiniciar
-            </Button>
-          </CardFooter>
-        </Card>
-
-        {lastScanned ? (
+    <>
+      {error && (
+        <div
+          id='scan-error-screen'
+          className='absolute inset-0 z-50 flex items-center justify-center bg-red-600 text-white'
+        >
+          <IconX className='size-64 sm:size-72 md:size-80' />
+        </div>
+      )}
+      {success && (
+        <div
+          id='scan-success-screen'
+          className='absolute inset-0 z-50 flex items-center justify-center bg-green-600 text-white'
+        >
+          <IconCheck className='size-64 sm:size-72 md:size-80' />
+        </div>
+      )}
+      <TabsContent value='scan' className='space-y-8'>
+        <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
           <Card>
-            <CardHeader className='flex flex-col items-center justify-center'>
-              <h2 className='text-left text-lg font-semibold'>
-                {lastScanned.user.firstName} {lastScanned.user.lastName}
-              </h2>
-              <p className='text-left text-xs text-muted-foreground'>
-                {lastScanned.checkInTime?.toLocaleDateString('es-ES', {
-                  day: 'numeric',
-                  month: 'short',
-                  year: 'numeric',
-                  hour: 'numeric',
-                  minute: 'numeric',
-                })}
-              </p>
-
-              <AttendanceStatusLabel status={lastScanned.status} />
+            <CardHeader>
+              <CardTitle>Escanear Código QR</CardTitle>
+              <CardDescription>
+                Escanea el código QR del carnet pastoral para registrar la
+                asistencia
+              </CardDescription>
             </CardHeader>
+            <CardContent>
+              <div className='mx-auto aspect-square w-full max-w-md overflow-hidden rounded-xl border border-gray-200'>
+                {scanning ? (
+                  <Scanner
+                    onScan={handleScan}
+                    onError={() =>
+                      showError('Ha ocurrido un error al iniciar el escáner.')
+                    }
+                    constraints={{ facingMode: 'environment' }}
+                    formats={['qr_code']}
+                    scanDelay={1000}
+                  />
+                ) : (
+                  <div className='flex h-full items-center justify-center bg-gray-100'>
+                    <Button
+                      disabled={!event || !isLoaded || isRegistrationPending}
+                      onClick={() => setScanning(true)}
+                    >
+                      Iniciar escáner
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+            <CardFooter className='flex justify-between'>
+              <Button
+                disabled={!event || !isLoaded || isRegistrationPending}
+                variant='outline'
+                onClick={() => setScanning(!scanning)}
+              >
+                {scanning ? 'Pausar' : 'Reanudar'}
+              </Button>
+              <Button
+                variant='outline'
+                disabled={!event || !isLoaded || isRegistrationPending}
+                onClick={() => {
+                  setScanning(false)
+                  setTimeout(() => setScanning(true), 100)
+                }}
+              >
+                Reiniciar
+              </Button>
+            </CardFooter>
           </Card>
-        ) : null}
-      </div>
-    </TabsContent>
+
+          {lastScanned ? (
+            <Card>
+              <CardHeader className='flex flex-col items-center justify-center'>
+                <h2 className='text-left text-lg font-semibold'>
+                  {lastScanned.user.firstName} {lastScanned.user.lastName}
+                </h2>
+                <p className='text-left text-xs text-muted-foreground'>
+                  {lastScanned.checkInTime?.toLocaleDateString('es-ES', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                  })}
+                </p>
+
+                <AttendanceStatusLabel status={lastScanned.status} />
+              </CardHeader>
+            </Card>
+          ) : null}
+        </div>
+      </TabsContent>
+    </>
   )
 }
