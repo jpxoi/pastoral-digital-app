@@ -4,7 +4,7 @@ import QrScannerTab from '@/components/admin/qrScannerTab'
 
 export default function Page() {
   return (
-    <div className='container mx-auto px-4 py-4'>
+    <main className='flex h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-neutral-200 bg-white p-2 py-4 md:p-10'>
       <Tabs defaultValue='scan' className='w-full'>
         <TabsList className='mb-4 grid w-full grid-cols-2'>
           <TabsTrigger value='scan'>Escanear QR</TabsTrigger>
@@ -15,6 +15,6 @@ export default function Page() {
 
         {/* <AttendanceTab /> */}
       </Tabs>
-    </div>
+    </main>
   )
 }
