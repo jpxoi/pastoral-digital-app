@@ -4,14 +4,14 @@ import { createAttendanceRecord } from '@/queries/insert'
 import { getLastAttendanceRecord } from '@/queries/select'
 import { InsertAttendance } from '@/schema'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 export async function registerAttendanceRecord(data: InsertAttendance) {
   return createAttendanceRecord(data)
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
-      revalidateTag('attendanceRecords')
+      revalidatePath('/admin/records')
 
       return {
         success: 'Asistencia registrada correctamente.',
@@ -30,6 +30,10 @@ export async function registerAttendanceRecord(data: InsertAttendance) {
         error: 'Ha ocurrido un error al registrar la asistencia.',
       }
     })
+}
+
+export async function revalidateAttendanceRecords() {
+  revalidatePath('/admin/records')
 }
 
 const handleDbError = (error: NeonDbError) => {

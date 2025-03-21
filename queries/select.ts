@@ -1,7 +1,6 @@
 'use server'
 
 import { db } from '@/db'
-import { unstable_cache } from 'next/cache'
 import {
   attendanceRecordsTable,
   eventsTable,
@@ -24,17 +23,14 @@ export async function getAttendanceRecordsForLast24Hours() {
   })
 }
 
-export const getAllAttendanceRecords = unstable_cache(async () => {
+export const getAllAttendanceRecords = async () => {
   return db.query.attendanceRecordsTable.findMany({
     with: {
       user: true,
     },
     orderBy: (fields) => [desc(fields.checkInTime)],
   })
-},
-  ['attendanceRecords'],
-  { revalidate: 3600, tags: ['attendanceRecords'] }
-)
+}
 
 export async function getLastAttendanceRecord() {
   return db.query.attendanceRecordsTable.findFirst({
