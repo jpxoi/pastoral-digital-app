@@ -72,10 +72,10 @@ export const columns: ColumnDef<FetchAttendanceProps>[] = [
     cell: ({ row }) => {
       return (
         <div className='flex gap-4'>
-          <Button variant='ghost' size='icon' className='h-auto p-0'>
+          <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
             <Edit2Icon />
           </Button>
-          <Button variant='ghost' size='icon' className='h-auto p-0' disabled>
+          <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
             <TrashIcon className='text-red-500' />
           </Button>
         </div>
