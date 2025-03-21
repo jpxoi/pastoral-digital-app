@@ -3,12 +3,9 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
@@ -22,7 +19,10 @@ import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
 import { FetchAttendanceProps } from '@/types/interfaces'
-import { IconAlertCircle, IconCheck, IconX } from '@tabler/icons-react'
+import { ScanErrorScreen, ScanSuccessScreen } from './scanStateScreen'
+import AdminAlert from './adminAlert'
+import QrScannerHeader from './qrScannerHeader'
+import { calculateStatus } from '@/lib/attendance'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
@@ -72,25 +72,6 @@ export default function QrScannerTab() {
     }
 
     checkCameraPermission()
-  }, [])
-
-  const calculateStatus = useMemo(() => {
-    return (checkInTime: Date, eventTime: Date) => {
-      const timeDifference = checkInTime.getTime() - eventTime.getTime()
-      const minutesDifference = Math.floor(timeDifference / (1000 * 60))
-  
-      if (minutesDifference < 0) {
-        return 'A TIEMPO'
-      } else if (minutesDifference < 6) {
-        return 'A TIEMPO'
-      } else if (minutesDifference < 16) {
-        return 'TARDANZA'
-      } else if (minutesDifference < 20) {
-        return 'DOBLE TARDANZA'
-      } else {
-        return 'AUSENTE'
-      }
-    }
   }, [])
 
   const handleError = (error?: string) => {
@@ -181,42 +162,18 @@ export default function QrScannerTab() {
   }
   return (
     <>
-      {error && (
-        <div
-          id='scan-error-screen'
-          className='absolute inset-0 z-50 flex items-center justify-center bg-red-600 text-white'
-        >
-          <IconX className='size-64 sm:size-72 md:size-80' />
-        </div>
-      )}
-      {success && (
-        <div
-          id='scan-success-screen'
-          className='absolute inset-0 z-50 flex items-center justify-center bg-green-600 text-white'
-        >
-          <IconCheck className='size-64 sm:size-72 md:size-80' />
-        </div>
-      )}
+      {error && <ScanErrorScreen />}
+      {success && <ScanSuccessScreen />}
       <TabsContent value='scan' className='space-y-4'>
         {cameraPermission === 'denied' && (
-          <Alert variant='destructive' className='bg-red-50 text-left'>
-            <IconAlertCircle className='h-4 w-4' />
-            <AlertTitle>Permiso de cámara</AlertTitle>
-            <AlertDescription>
-              Acceso a la cámara denegado. Por favor, habilite el acceso en la
-              configuración de su navegador.{' '}
-            </AlertDescription>
-          </Alert>
+          <AdminAlert
+            title='Acceso a la cámara denegado'
+            description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
+          />
         )}
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
           <Card>
-            <CardHeader>
-              <CardTitle>Escanear Código QR</CardTitle>
-              <CardDescription>
-                Escanea el código QR del carnet pastoral para registrar la
-                asistencia
-              </CardDescription>
-            </CardHeader>
+            <QrScannerHeader />
             <CardContent>
               <div className='mx-auto aspect-square w-full max-w-md overflow-hidden rounded-xl border border-gray-200'>
                 {scanning ? (
