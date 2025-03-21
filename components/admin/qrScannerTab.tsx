@@ -68,7 +68,7 @@ export default function QrScannerTab() {
   const handleError = (error?: string) => {
     setLastScanned(null)
     setError(true)
-    setTimeout(() => setError(false), 1500)
+    setTimeout(() => setError(false), 1000)
 
     errorSound.play()
 
@@ -77,7 +77,7 @@ export default function QrScannerTab() {
 
   const handleSuccess = () => {
     setSuccess(true)
-    setTimeout(() => setSuccess(false), 1500)
+    setTimeout(() => setSuccess(false), 1000)
   }
 
   const showError = (error: string) => {
