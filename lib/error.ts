@@ -1,4 +1,4 @@
-import { NeonDbError } from "@neondatabase/serverless"
+import { NeonDbError } from '@neondatabase/serverless'
 
 export const handleDbError = (error: NeonDbError) => {
   if (error.message.includes('unq_user_event')) {

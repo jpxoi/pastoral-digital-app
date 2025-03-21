@@ -1,6 +1,6 @@
 import { StatusLabel } from '@/types/interfaces'
 
-import type { JSX } from "react";
+import type { JSX } from 'react'
 
 export default function AttendanceStatusLabel({ status }: StatusLabel) {
   const statusMapping: { [key: string]: JSX.Element } = {
