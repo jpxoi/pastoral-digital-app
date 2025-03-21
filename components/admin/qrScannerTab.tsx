@@ -124,7 +124,7 @@ export default function QrScannerTab() {
   }
   return (
     <TabsContent value='scan' className='space-y-8'>
-      <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
+      <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
         <Card>
           <CardHeader>
             <CardTitle>Escanear Código QR</CardTitle>
