@@ -71,7 +71,7 @@ export function CustomSidebar() {
 export const Logo = () => {
   return (
     <Link
-      href='#'
+      href='/dashboard'
       className='relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white'
     >
       <div className='h-5 w-6 shrink-0 rounded-bl-sm rounded-br-lg rounded-tl-lg rounded-tr-sm bg-white' />
@@ -88,7 +88,7 @@ export const Logo = () => {
 export const LogoIcon = () => {
   return (
     <Link
-      href='#'
+      href='/dashboard'
       className='relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-white'
     >
       <div className='h-5 w-6 shrink-0 rounded-bl-sm rounded-br-lg rounded-tl-lg rounded-tr-sm bg-white' />
