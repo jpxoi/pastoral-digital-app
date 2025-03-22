@@ -1,5 +1,10 @@
 import { Column } from '@tanstack/react-table'
-import { IconArrowDown, IconArrowUp, IconSelector, IconEyeOff } from '@tabler/icons-react'
+import {
+  IconArrowDown,
+  IconArrowUp,
+  IconSelector,
+  IconEyeOff,
+} from '@tabler/icons-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

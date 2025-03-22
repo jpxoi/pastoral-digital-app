@@ -4,8 +4,8 @@ import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { Toaster } from '@/components/ui/sonner'
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import Script from 'next/script'
 
 const poppins = Poppins({
@@ -122,7 +122,11 @@ export default function RootLayout({
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
         <head>
-        <Script src="https://analytics.ahrefs.com/analytics.js" data-key="pfMw5i4GadfYS+TXaYJi6w" async></Script>
+          <Script
+            src='https://analytics.ahrefs.com/analytics.js'
+            data-key='pfMw5i4GadfYS+TXaYJi6w'
+            async
+          ></Script>
         </head>
         <body className={poppins.className}>
           <Toaster position='top-right' richColors />
