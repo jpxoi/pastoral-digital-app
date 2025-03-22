@@ -18,7 +18,7 @@ export default function OnboardingPage() {
   return (
     <main className='flex h-dvh w-full flex-col items-center justify-center bg-primary bg-center p-4'>
       <Background />
-      <Card className='bg-white max-h-full overflow-y-scroll'>
+      <Card className='max-h-full overflow-y-scroll bg-white'>
         <CardHeader>
           <CardTitle>Completa tu registro</CardTitle>
           <CardDescription>
