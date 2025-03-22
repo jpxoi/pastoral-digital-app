@@ -1,5 +1,5 @@
 {
-  "id": "604d40f2-6efd-4f18-8da3-ebe911b7e043",
+  "id": "8b6c1ef4-89e3-4e47-8ec6-6b15c6661157",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -315,7 +315,8 @@
         },
         "category": {
           "name": "category",
-          "type": "text",
+          "type": "user_category_enum",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'student'"
@@ -328,7 +329,8 @@
         },
         "role": {
           "name": "role",
-          "type": "text",
+          "type": "user_role_enum",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'member'"
@@ -372,7 +374,24 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.user_category_enum": {
+      "name": "user_category_enum",
+      "schema": "public",
+      "values": [
+        "student",
+        "alumni"
+      ]
+    },
+    "public.user_role_enum": {
+      "name": "user_role_enum",
+      "schema": "public",
+      "values": [
+        "member",
+        "admin"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

@@ -1,3 +1,5 @@
+CREATE TYPE "public"."user_category_enum" AS ENUM('student', 'alumni');--> statement-breakpoint
+CREATE TYPE "public"."user_role_enum" AS ENUM('member', 'admin');--> statement-breakpoint
 CREATE TABLE "attendance_records" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" text NOT NULL,
@@ -38,9 +40,9 @@ CREATE TABLE "users" (
 	"email" text NOT NULL,
 	"phone_number" text NOT NULL,
 	"date_of_birth" date NOT NULL,
-	"category" text DEFAULT 'student' NOT NULL,
+	"category" "user_category_enum" DEFAULT 'student' NOT NULL,
 	"student_code" text,
-	"role" text DEFAULT 'member' NOT NULL,
+	"role" "user_role_enum" DEFAULT 'member' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	CONSTRAINT "users_username_unique" UNIQUE("username"),
