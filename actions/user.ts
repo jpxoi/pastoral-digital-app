@@ -1,48 +1,27 @@
 'use server'
 
 import { createUser } from '@/queries/insert'
-import userData from './userData.json'
+import { z } from 'zod'
+import { OnboardingFormSchema } from '@/schema'
 
-// export const migrateUsers = async () => {
-//   let usersLength = userData.length
-//   let usersCreated = 0
+export const registerUser = async (
+  values: z.infer<typeof OnboardingFormSchema>
+) => {
+  const validatedFields = OnboardingFormSchema.safeParse(values)
 
-//   for (const user of userData) {
-//     // Create a new user in the database
-//     await createUser({
-//         id: user.id,
-//         firstName: user.firstName,
-//         lastName: user.lastName,
-//         nickname: user.nickname,
-//         username: user.username,
-//         email: user.email,
-//         phoneNumber: user.phoneNumber.toString(),
-//         dateOfBirth: user.dateOfBirth,
-//         category: user.category as 'alumni' | 'student' | undefined,
-//         studentCode: user.studentCode,
-//         role: user.role as 'member' | 'admin',
-//     })
-//       .then(() => {
-//         console.log(
-//           `User ${user.firstName} ${user.lastName} created successfully`
-//         )
-//         usersCreated++
-//       })
-//       .catch((error) => {
-//         console.error(
-//           `Error creating user ${user.firstName} ${user.lastName}: ${error}`
-//         )
-//       })
-//   }
+  if (!validatedFields.success) {
+    return {
+      error:
+        'Error al validar los campos. Por favor, verifica los datos ingresados',
+    }
+  }
 
-//   if (usersCreated < usersLength) {
-//     console.error(
-//       `Migration failed. ${usersLength - usersCreated} users were not created.`
-//     )
-//   }
-
-//   console.log(
-//     `Total users processed: ${usersLength}, Users created: ${usersCreated}`
-//   )
-// }
-
+  return await createUser(validatedFields.data)
+    .then(() => {
+      return { success: 'Usuario registrado exitosamente' }
+    })
+    .catch((error) => {
+      console.error(error)
+      return { error: 'Error al registrar el usuario. Intenta nuevamente.' }
+    })
+}
