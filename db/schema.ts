@@ -15,6 +15,15 @@ export const userCategoryEnum = pgEnum('user_category_enum', ['student', 'alumni
 
 export const userRoleEnum = pgEnum('user_role_enum', ['member', 'admin'])
 
+export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
+  'A TIEMPO',
+  'TARDANZA',
+  'DOBLE TARDANZA',
+  'FALTA JUSTIFICADA',
+  'TARDANZA JUSTIFICADA',
+  'FALTA INJUSTIFICADA',
+])
+
 export const usersTable = pgTable('users', {
   id: text('id').primaryKey(),
   firstName: text('first_name').notNull(),
@@ -44,7 +53,7 @@ export const attendanceRecordsTable = pgTable(
       .references(() => eventsTable.id)
       .notNull(),
     checkInTime: timestamp('check_in_time').defaultNow(),
-    status: text('status').default('A TIEMPO').notNull(),
+    status: attendanceStatusEnum().notNull().default('A TIEMPO'),
     registeredBy: text('registered_by')
       .references(() => usersTable.id)
       .notNull(),
