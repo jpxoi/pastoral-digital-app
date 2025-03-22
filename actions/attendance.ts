@@ -7,7 +7,7 @@ import { InsertAttendance } from '@/schema'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidatePath } from 'next/cache'
 
-export async function registerAttendanceRecord(data: InsertAttendance) {
+export const registerAttendanceRecord = async (data: InsertAttendance) => {
   return createAttendanceRecord(data)
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
@@ -33,6 +33,6 @@ export async function registerAttendanceRecord(data: InsertAttendance) {
     })
 }
 
-export async function revalidateAttendanceRecords() {
+export const revalidateAttendanceRecords = async () => {
   revalidatePath('/admin/records')
 }
