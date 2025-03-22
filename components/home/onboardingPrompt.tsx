@@ -19,8 +19,6 @@ export default async function OnboardingPrompt() {
     <CardContent>
       <OnboardingForm
         userId={user.id}
-        userFirstName={user.firstName as string}
-        userLastName={user.lastName as string}
         userUsername={user.username as string}
         userEmail={user?.primaryEmailAddress?.emailAddress as string}
       />

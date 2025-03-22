@@ -39,14 +39,10 @@ import { useRouter } from 'next/navigation'
 
 export default function OnboardingForm({
   userId,
-  userFirstName,
-  userLastName,
   userUsername,
   userEmail,
 }: {
   userId: string
-  userFirstName: string
-  userLastName: string
   userUsername: string
   userEmail: string
 }) {
@@ -59,8 +55,8 @@ export default function OnboardingForm({
     resolver: zodResolver(OnboardingFormSchema),
     defaultValues: {
       id: userId,
-      firstName: userFirstName,
-      lastName: userLastName,
+      firstName:  '',
+      lastName: '',
       nickname: '',
       username: userUsername,
       email: userEmail,
@@ -105,7 +101,7 @@ export default function OnboardingForm({
               <FormItem>
                 <FormLabel>Nombres</FormLabel>
                 <FormControl>
-                  <Input placeholder='Ingrese su nombre' {...field} required />
+                  <Input placeholder='Ingrese sus nombres' {...field} required />
                 </FormControl>
                 <FormDescription>
                   Ingresa tus nombres tal y como aparecen en tu documento de
