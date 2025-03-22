@@ -1,6 +1,7 @@
+import { UserCategory, UserRole } from '@/types'
 import { z } from 'zod'
 
-export const onboardingFormSchema = z.object({
+export const OnboardingFormSchema = z.object({
   id: z.string().trim().nonempty('El ID es requerido para crear un usuario'),
   firstName: z
     .string()
@@ -19,8 +20,8 @@ export const onboardingFormSchema = z.object({
       /^(?:(?:\+|00)51|51)?[9]\d{8}$/,
       'Formato de número de teléfono peruano inválido. Debe ser un número móvil de 9 dígitos'
     )
-    .transform(val => val.replace(/\D/g, '')), // Strip non-digits for consistent storage
-  dateOfBirth: z
+    .transform((val) => val.replace(/\D/g, '')), // Strip non-digits for consistent storage
+  dateOfBirth: z.coerce
     .date()
     .refine(
       (date) => date < new Date(),
@@ -34,9 +35,14 @@ export const onboardingFormSchema = z.object({
         today.getDate()
       )
       return date <= minAge
-    }, 'El usuario debe tener al menos 14 años de edad para registrarse'),
-  category: z.enum(['student', 'alumni'], {
-    errorMap: () => ({ message: "La categoría debe ser 'student' o 'alumni'" }),
+    }, 'Debes tener al menos 14 años de edad para registrarte')
+    .transform((date) => {
+      return date.toISOString().split('T')[0]
+    }),
+  category: z.enum([UserCategory.STUDENT, UserCategory.ALUMNI], {
+    errorMap: () => ({
+      message: 'Debes seleccionar tu vínculo con la institución',
+    }),
   }),
   studentCode: z
     .string()
@@ -45,5 +51,5 @@ export const onboardingFormSchema = z.object({
       (code) => !code || /^S5[A-H]\d{2}$/.test(code),
       'El código de estudiante debe seguir el formato del colegio. (Ej. S5A01)'
     ),
-  role: z.enum(['member', 'admin']).default('member'),
+  role: z.enum([UserRole.ADMIN, UserRole.MEMBER]).default(UserRole.MEMBER),
 })
