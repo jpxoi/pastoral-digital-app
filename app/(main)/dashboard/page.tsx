@@ -13,7 +13,7 @@ export default function PastoralDigitalPage() {
       </Suspense>
 
       {/* Sección de Pastoral ID y Asistencia */}
-      <div className='flex w-full flex-col items-center justify-center lg:flex-row lg:items-start lg:justify-evenly'>
+      <div className='flex min-h-dvh w-full flex-col items-center justify-center lg:flex-row lg:items-start lg:justify-evenly'>
         <PastoralId />
         <div className='mt-8 flex flex-col items-center justify-start gap-4 lg:ml-4 lg:mt-0 lg:max-h-[80vh] xl:ml-0'>
           <AttendanceSection />
