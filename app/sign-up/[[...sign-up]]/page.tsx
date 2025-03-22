@@ -4,13 +4,15 @@ import { ClerkLoaded, ClerkLoading, SignUp } from '@clerk/nextjs'
 
 export default function Page() {
   return (
-    <main className='flex min-h-dvh w-full flex-col items-center justify-center bg-center p-4'>
+    <main className='flex h-dvh w-full flex-col items-center justify-center bg-center p-4'>
       <Background />
       <ClerkLoading>
         <Loading />
       </ClerkLoading>
       <ClerkLoaded>
-        <SignUp />
+        <div className='overflow-y-scroll rounded-xl'>
+          <SignUp />
+        </div>
       </ClerkLoaded>
     </main>
   )

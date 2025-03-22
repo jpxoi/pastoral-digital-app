@@ -22,10 +22,7 @@ export default function OfflinePage() {
         <p className='text-md md:text-lg'>
           Por favor, revisa tu conexión y vuelve a intentarlo.
         </p>
-        <Button
-          onClick={() => location.reload()}
-          className='text-md rounded-md p-2 px-4 text-blue-600 hover:bg-blue-100 hover:text-blue-800 md:text-lg'
-        >
+        <Button onClick={() => location.reload()} className=''>
           Volver a intentar
         </Button>
       </div>
