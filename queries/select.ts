@@ -15,6 +15,30 @@ export async function getUserById(id: SelectUser['id']) {
   })
 }
 
+export async function getUserBirthdays() {
+  return db.query.usersTable.findMany({
+    where: sql`
+      (
+        to_char(date_of_birth, 'MM-DD') BETWEEN 
+          to_char(current_date, 'MM-DD') AND 
+          to_char(current_date + interval '30 days', 'MM-DD')
+      )
+      OR
+      (
+        to_char(current_date + interval '30 days', 'MM-DD') < to_char(current_date, 'MM-DD') AND
+        (
+          to_char(date_of_birth, 'MM-DD') >= to_char(current_date, 'MM-DD') OR
+          to_char(date_of_birth, 'MM-DD') <= to_char(current_date + interval '30 days', 'MM-DD')
+        )
+      )
+    `,
+    orderBy: () => [
+      sql`to_char(date_of_birth, 'MM-DD')`,
+      sql`to_char(date_of_birth, 'YYYY')`,
+    ],
+  })
+}
+
 export const getAllAttendanceRecords = async () => {
   return db.query.attendanceRecordsTable.findMany({
     with: {
