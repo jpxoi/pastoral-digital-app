@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 
-import { onboardingFormSchema } from '@/schema'
+import { OnboardingFormSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -31,7 +31,10 @@ import { Calendar } from '../ui/calendar'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { UserCategory, UserRole } from '@/types'
+import { registerUser } from '@/actions/user'
+import { toast } from 'sonner'
 
 export default function OnboardingForm({
   userId,
@@ -47,9 +50,10 @@ export default function OnboardingForm({
   userEmail: string
 }) {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
+  const [isPending, startTransition] = useTransition()
 
-  const form = useForm<z.infer<typeof onboardingFormSchema>>({
-    resolver: zodResolver(onboardingFormSchema),
+  const form = useForm<z.infer<typeof OnboardingFormSchema>>({
+    resolver: zodResolver(OnboardingFormSchema),
     defaultValues: {
       id: userId,
       firstName: userFirstName,
@@ -61,14 +65,26 @@ export default function OnboardingForm({
       dateOfBirth: undefined,
       category: undefined,
       studentCode: '',
-      role: 'member',
+      role: UserRole.MEMBER,
     },
   })
 
-  function onSubmit(values: z.infer<typeof onboardingFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  function onSubmit(values: z.infer<typeof OnboardingFormSchema>) {
+    startTransition(() => {
+      registerUser(values)
+        .then((data: { success?: string; error?: string }) => {
+          if (data?.error) {
+            throw new Error(data?.error)
+          }
+
+          if (data?.success) {
+            toast.success(data.success)
+          }
+        })
+        .catch((error) => {
+          toast.error(error.message)
+        })
+    })
   }
 
   return (
@@ -234,7 +250,7 @@ export default function OnboardingForm({
                     <Calendar
                       mode='single'
                       captionLayout='dropdown-buttons'
-                      selected={field.value}
+                      selected={new Date(field.value)}
                       onSelect={field.onChange}
                       disabled={(date) => {
                         const today = new Date()
@@ -271,8 +287,8 @@ export default function OnboardingForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='student'>Alumno</SelectItem>
-                    <SelectItem value='alumni'>Exalumno</SelectItem>
+                    <SelectItem value={UserCategory.STUDENT}>Alumno</SelectItem>
+                    <SelectItem value={UserCategory.ALUMNI}>Exalumno</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -281,7 +297,7 @@ export default function OnboardingForm({
           />
         </div>
 
-        {form.watch('category') === 'student' && (
+        {form.watch('category') === UserCategory.STUDENT && (
           <FormField
             control={form.control}
             name='studentCode'
@@ -317,8 +333,7 @@ export default function OnboardingForm({
             </p>
           </div>
         </div>
-
-        <Button disabled={!isConfirmed} type='submit' className=''>
+        <Button disabled={!isConfirmed || isPending} type='submit' className=''>
           Completar Registro
         </Button>
       </form>
