@@ -10,16 +10,8 @@ import {
 import { between, desc, eq, sql } from 'drizzle-orm'
 
 export async function getUserById(id: SelectUser['id']) {
-  return db.select().from(usersTable).where(eq(usersTable.id, id))
-}
-
-export async function getAttendanceRecordsForLast24Hours() {
-  return db.query.attendanceRecordsTable.findMany({
-    where: (fields, { between, sql }) =>
-      between(fields.checkInTime, sql`now() - interval '1 day'`, sql`now()`),
-    with: {
-      user: true,
-    },
+  return db.query.usersTable.findFirst({
+    where: eq(usersTable.id, id),
   })
 }
 
