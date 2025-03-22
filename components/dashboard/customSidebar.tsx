@@ -1,7 +1,12 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from '../ui/sidebar'
-import { IconHome2, IconListCheck, IconQrcode } from '@tabler/icons-react'
+import {
+  IconCake,
+  IconHome2,
+  IconListCheck,
+  IconQrcode,
+} from '@tabler/icons-react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
@@ -22,6 +27,12 @@ export function CustomSidebar() {
       label: 'Inicio',
       href: '/dashboard',
       icon: <IconHome2 className='h-5 w-5 shrink-0 text-neutral-200' />,
+      show: true,
+    },
+    {
+      label: 'Cumpleaños',
+      href: '/birthdays',
+      icon: <IconCake className='h-5 w-5 shrink-0 text-neutral-200' />,
       show: true,
     },
     {
