@@ -6,7 +6,7 @@ import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
 import { getTodayEvent } from '@/queries/select'
-import { SelectEvent } from '@/schema'
+import { SelectEvent } from '@/db/schema'
 
 import { useState, useEffect, useTransition, useMemo } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'

@@ -2,7 +2,7 @@
 
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { SelectAttendance } from '@/schema'
+import { SelectAttendance } from '@/db/schema'
 import { ColumnDef } from '@tanstack/react-table'
 
 export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
