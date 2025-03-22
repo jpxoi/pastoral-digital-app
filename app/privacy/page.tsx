@@ -10,7 +10,7 @@ import {
   IconRefresh,
   IconMail,
   IconUsers,
-  IconChevronLeft
+  IconChevronLeft,
 } from '@tabler/icons-react'
 import PrintButton from '@/components/shared/printButton'
 

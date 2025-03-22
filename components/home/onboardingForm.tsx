@@ -105,7 +105,7 @@ export default function OnboardingForm({
               <FormItem>
                 <FormLabel>Nombres</FormLabel>
                 <FormControl>
-                  <Input placeholder='Nombres completo' {...field} required />
+                  <Input placeholder='Ingrese su nombre' {...field} required />
                 </FormControl>
                 <FormDescription>
                   Ingresa tus nombres tal y como aparecen en tu documento de
@@ -123,7 +123,7 @@ export default function OnboardingForm({
                 <FormLabel>Apellidos</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='Apellidos completos'
+                    placeholder='Ingrese sus dos apellidos'
                     {...field}
                     required
                   />
@@ -156,11 +156,11 @@ export default function OnboardingForm({
             name='username'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Nombre de usuario</FormLabel>
                 <FormControl>
                   <div className='relative'>
                     <Input
-                      placeholder='Username'
+                      placeholder='Ingrese su nombre de usuario'
                       {...field}
                       required
                       disabled
@@ -182,11 +182,11 @@ export default function OnboardingForm({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Correo Electrónico</FormLabel>
+                <FormLabel>Correo electrónico</FormLabel>
                 <FormControl>
                   <div className='relative'>
                     <Input
-                      placeholder='Correo Electrónico'
+                      placeholder='Ingrese su dirección de correo electrónico'
                       {...field}
                       required
                       disabled
@@ -230,7 +230,7 @@ export default function OnboardingForm({
             name='dateOfBirth'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fecha de Nacimiento</FormLabel>
+                <FormLabel>Fecha de nacimiento</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -244,7 +244,7 @@ export default function OnboardingForm({
                         {field.value ? (
                           format(field.value, 'PPP', { locale: es })
                         ) : (
-                          <span>Selecciona tu fecha de nacimiento</span>
+                          <span>Seleccione su fecha de nacimiento</span>
                         )}
                         <IconCalendar className='ml-auto h-4 w-4 opacity-50' />
                       </Button>
@@ -287,7 +287,7 @@ export default function OnboardingForm({
                 >
                   <FormControl>
                     <SelectTrigger className='text-left'>
-                      <SelectValue placeholder='Selecciona tu vínculo con la institución' />
+                      <SelectValue placeholder='Seleccione su vínculo con la institución' />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -309,9 +309,12 @@ export default function OnboardingForm({
             name='studentCode'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Código de Estudiante</FormLabel>
+                <FormLabel>Código de estudiante</FormLabel>
                 <FormControl>
-                  <Input placeholder='Código de Estudiante' {...field} />
+                  <Input
+                    placeholder='Ingrese su código de estudiante'
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription>
                   Ingresa tu código en el formato correspondiente (Ej. S5A01).
@@ -332,7 +335,7 @@ export default function OnboardingForm({
               htmlFor='terms1'
               className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
             >
-              Sacramento de la Confirmación
+              Sacramento de la confirmación
             </label>
             <p className='text-sm text-muted-foreground'>
               Doy fe de que he recibido el sacramento de la confirmación.
