@@ -8,7 +8,7 @@ import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { getTodayEvent } from '@/queries/select'
 import { SelectEvent } from '@/db/schema'
 
-import { useState, useEffect, useTransition, useMemo } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
