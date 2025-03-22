@@ -111,7 +111,7 @@ export default function QrScannerTab() {
         return
       }
 
-      if (status === 'AUSENTE') {
+      if (status === 'FALTA INJUSTIFICADA') {
         handleError(
           'Es demasiado tarde para registrar asistencia en este evento'
         )
