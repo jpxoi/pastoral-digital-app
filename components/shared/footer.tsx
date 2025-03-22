@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { LogoImageWide } from './logoImage'
-import { InstagramIcon } from 'lucide-react'
+import { IconBrandInstagram } from '@tabler/icons-react'
 
 export function FooterNarrow() {
   return (
@@ -130,7 +130,7 @@ export function MainFooter() {
               href='https://instagram.com/pastoralmarianaps'
               className='text-muted-foreground hover:text-foreground'
             >
-              <InstagramIcon className='h-5 w-5' />
+              <IconBrandInstagram className='h-5 w-5' />
               <span className='sr-only'>Instagram</span>
             </Link>
           </div>

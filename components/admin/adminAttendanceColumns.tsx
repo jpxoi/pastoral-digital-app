@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { FetchAttendanceProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
-import { Edit2Icon, TrashIcon } from 'lucide-react'
+import { IconEdit, IconTrash } from '@tabler/icons-react'
 
 export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
@@ -73,10 +73,10 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
       return (
         <div className='flex gap-4' key={row.id}>
           <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
-            <Edit2Icon />
+            <IconEdit />
           </Button>
           <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
-            <TrashIcon className='text-red-500' />
+            <IconTrash className='text-red-500' />
           </Button>
         </div>
       )

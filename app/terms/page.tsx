@@ -1,18 +1,18 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
 import {
-  ArrowUp,
-  FileText,
-  Shield,
-  AlertTriangle,
-  User,
-  ExternalLink,
-  ChevronLeft,
-  Ban,
-  Scale,
-  MessageSquare,
-  CheckCircle,
-} from 'lucide-react'
+  IconArrowUp,
+  IconFileText,
+  IconShield,
+  IconAlertTriangle,
+  IconUser,
+ IconExternalLink,
+ IconChevronLeft,
+ IconBan,
+ IconScale,
+  IconCircleCheck,
+  IconMessageChatbot,
+} from '@tabler/icons-react'
 import PrintButton from '@/components/shared/printButton'
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export default function TermsAndConditionsPage() {
             href='/'
             className='inline-flex items-center text-blue-600 hover:text-blue-800'
           >
-            <ChevronLeft className='mr-1 h-4 w-4' /> Volver al inicio
+            <IconChevronLeft className='mr-1 h-4 w-4' /> Volver al inicio
           </Link>
           <PrintButton />
         </div>
@@ -63,7 +63,7 @@ export default function TermsAndConditionsPage() {
               className='mb-4 flex items-center text-xl font-semibold text-gray-800'
               id='tabla-contenido'
             >
-              <FileText
+              <IconFileText
                 className='mr-2 h-5 w-5 text-blue-500'
                 aria-hidden='true'
               />
@@ -91,7 +91,7 @@ export default function TermsAndConditionsPage() {
                     className='flex items-center text-blue-600 hover:text-blue-800 hover:underline'
                     aria-label={`Ir a la sección ${section}`}
                   >
-                    <ArrowUp
+                    <IconArrowUp
                       className='mr-2 h-4 w-4 rotate-45'
                       aria-hidden='true'
                     />
@@ -111,7 +111,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <CheckCircle className='mr-2 h-6 w-6 text-indigo-500' />
+              <IconCircleCheck className='mr-2 h-6 w-6 text-indigo-500' />
               Aceptación de Términos
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -138,7 +138,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-yellow-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <User className='mr-2 h-6 w-6 text-yellow-500' />
+              <IconUser className='mr-2 h-6 w-6 text-yellow-500' />
               Registro y Cuentas
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -175,7 +175,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-green-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Shield className='mr-2 h-6 w-6 text-green-500' />
+              <IconShield className='mr-2 h-6 w-6 text-green-500' />
               Propiedad Intelectual
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -204,7 +204,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-purple-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <CheckCircle className='mr-2 h-6 w-6 text-purple-500' />
+              <IconCircleCheck className='mr-2 h-6 w-6 text-purple-500' />
               Uso Aceptable
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -252,7 +252,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-blue-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <MessageSquare className='mr-2 h-6 w-6 text-blue-500' />
+              <IconMessageChatbot className='mr-2 h-6 w-6 text-blue-500' />
               Contenido del Usuario
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -287,7 +287,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-orange-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <AlertTriangle className='mr-2 h-6 w-6 text-orange-500' />
+              <IconAlertTriangle className='mr-2 h-6 w-6 text-orange-500' />
               Limitación de Responsabilidad
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -324,7 +324,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-red-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <ExternalLink className='mr-2 h-6 w-6 text-red-500' />
+              <IconExternalLink className='mr-2 h-6 w-6 text-red-500' />
               Enlaces a Terceros
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -351,7 +351,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-teal-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Ban className='mr-2 h-6 w-6 text-teal-500' />
+              <IconBan className='mr-2 h-6 w-6 text-teal-500' />
               Terminación de Acceso
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -380,7 +380,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-pink-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <FileText className='mr-2 h-6 w-6 text-pink-500' />
+              <IconFileText className='mr-2 h-6 w-6 text-pink-500' />
               Modificaciones
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -416,7 +416,7 @@ export default function TermsAndConditionsPage() {
             className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Scale className='mr-2 h-6 w-6 text-indigo-500' />
+              <IconScale className='mr-2 h-6 w-6 text-indigo-500' />
               Legislación Aplicable
             </h2>
             <p className='mb-4 text-gray-700'>

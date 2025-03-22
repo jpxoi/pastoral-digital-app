@@ -1,17 +1,17 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
 import {
-  ArrowUp,
-  Shield,
-  Database,
-  Server,
-  ExternalLink,
-  Lock,
-  RefreshCw,
-  Mail,
-  Users,
-  ChevronLeft,
-} from 'lucide-react'
+  IconArrowUp,
+  IconShield,
+  IconDatabase,
+  IconServer,
+  IconExternalLink,
+  IconLock,
+  IconRefresh,
+  IconMail,
+  IconUsers,
+  IconChevronLeft
+} from '@tabler/icons-react'
 import PrintButton from '@/components/shared/printButton'
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function PrivacyPolicyPage() {
             href='/'
             className='inline-flex items-center text-blue-600 hover:text-blue-800'
           >
-            <ChevronLeft className='mr-1 h-4 w-4' /> Volver al inicio
+            <IconChevronLeft className='mr-1 h-4 w-4' /> Volver al inicio
           </Link>
           <PrintButton />
         </div>
@@ -62,7 +62,7 @@ export default function PrivacyPolicyPage() {
               className='mb-4 flex items-center text-xl font-semibold text-gray-800'
               id='tabla-contenido'
             >
-              <Database
+              <IconDatabase
                 className='mr-2 h-5 w-5 text-blue-500'
                 aria-hidden='true'
               />
@@ -90,7 +90,7 @@ export default function PrivacyPolicyPage() {
                     className='flex items-center text-blue-600 hover:text-blue-800 hover:underline'
                     aria-label={`Ir a la sección ${section}`}
                   >
-                    <ArrowUp
+                    <IconArrowUp
                       className='mr-2 h-4 w-4 rotate-45'
                       aria-hidden='true'
                     />
@@ -110,7 +110,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Database className='mr-2 h-6 w-6 text-indigo-500' />
+              <IconDatabase className='mr-2 h-6 w-6 text-indigo-500' />
               Recopilación de Datos
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -155,7 +155,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-yellow-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Server className='mr-2 h-6 w-6 text-yellow-500' />
+              <IconServer className='mr-2 h-6 w-6 text-yellow-500' />
               Cookies y Tecnologías
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -193,7 +193,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-green-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <ExternalLink className='mr-2 h-6 w-6 text-green-500' />
+              <IconExternalLink className='mr-2 h-6 w-6 text-green-500' />
               Servicios de Terceros
             </h2>
             <p className='mb-6 text-gray-700'>
@@ -217,26 +217,26 @@ export default function PrivacyPolicyPage() {
                   className='flex items-center text-sm text-green-600 hover:text-green-800'
                 >
                   Ver política de privacidad de Clerk{' '}
-                  <ExternalLink className='ml-1 h-3 w-3' />
+                  <IconExternalLink className='ml-1 h-3 w-3' />
                 </a>
               </div>
               <div className='rounded-lg bg-gray-50 p-4'>
                 <h3 className='mb-2 text-lg font-semibold text-green-700'>
-                  Supabase
+                  Neon.tech
                 </h3>
                 <p className='mb-2 text-gray-700'>
                   Almacena información de los usuarios y datos de la aplicación.
-                  Supabase procesa datos como perfiles de usuario e información
+                  Neon.tech procesa datos como perfiles de usuario e información
                   relacionada con las actividades pastorales.
                 </p>
                 <a
-                  href='https://supabase.com/privacy'
+                  href='https://neon.tech/privacy-policy'
                   target='_blank'
                   rel='noopener noreferrer'
                   className='flex items-center text-sm text-green-600 hover:text-green-800'
                 >
-                  Ver política de privacidad de Supabase{' '}
-                  <ExternalLink className='ml-1 h-3 w-3' />
+                  Ver política de privacidad de Neon{' '}
+                  <IconExternalLink className='ml-1 h-3 w-3' />
                 </a>
               </div>
             </div>
@@ -253,7 +253,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-purple-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Users className='mr-2 h-6 w-6 text-purple-500' />
+              <IconUsers className='mr-2 h-6 w-6 text-purple-500' />
               Uso de la Información
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -296,7 +296,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-blue-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Shield className='mr-2 h-6 w-6 text-blue-500' />
+              <IconShield className='mr-2 h-6 w-6 text-blue-500' />
               Derechos del Usuario
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -347,7 +347,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-orange-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Users className='mr-2 h-6 w-6 text-orange-500' />
+              <IconUsers className='mr-2 h-6 w-6 text-orange-500' />
               Menores de Edad
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -373,7 +373,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-red-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Lock className='mr-2 h-6 w-6 text-red-500' />
+              <IconLock className='mr-2 h-6 w-6 text-red-500' />
               Seguridad
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -416,7 +416,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-teal-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <RefreshCw className='mr-2 h-6 w-6 text-teal-500' />
+              <IconRefresh className='mr-2 h-6 w-6 text-teal-500' />
               Cambios en la Política
             </h2>
             <p className='mb-4 text-gray-700'>
@@ -458,7 +458,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-pink-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Mail className='mr-2 h-6 w-6 text-pink-500' />
+              <IconMail className='mr-2 h-6 w-6 text-pink-500' />
               Contacto
             </h2>
             <p className='mb-6 text-gray-700'>
@@ -494,7 +494,7 @@ export default function PrivacyPolicyPage() {
             className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
-              <Shield className='mr-2 h-6 w-6 text-indigo-500' />
+              <IconShield className='mr-2 h-6 w-6 text-indigo-500' />
               Cumplimiento de Normativas
             </h2>
             <p className='mb-4 text-gray-700'>
