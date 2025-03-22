@@ -5,6 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import Script from 'next/script'
 
 const poppins = Poppins({
@@ -126,6 +127,8 @@ export default function RootLayout({
         <body className={poppins.className}>
           <Toaster position='top-right' richColors />
           {children}
+          <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
