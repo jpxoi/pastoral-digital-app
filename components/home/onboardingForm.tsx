@@ -214,7 +214,7 @@ export default function OnboardingForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Número de Teléfono <span className='text-red-500'>*</span>
+                  Número de teléfono <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
                   <div className='flex'>
@@ -223,7 +223,7 @@ export default function OnboardingForm({
                     </div>
                     <Input
                       className='rounded-l-none'
-                      placeholder='Número de teléfono'
+                      placeholder='Ingrese su número de teléfono'
                       {...field}
                       required
                     />
