@@ -1,14 +1,14 @@
-import OnboardingForm from '@/components/home/onboardingForm'
+import OnboardingPrompt from '@/components/home/onboardingPrompt'
 import Background from '@/components/shared/background'
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Suspense } from 'react'
 import { Metadata } from 'next'
+import OnboardingPromptSkeleton from '@/components/home/onboardingPromptSkeleton'
 
 export const metadata: Metadata = {
   title: 'Onboarding | Pastoral Digital App',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function OnboardingPage() {
   return (
-    <main className='flex h-dvh w-full flex-col items-center justify-center bg-center p-4'>
+    <main className='flex min-h-dvh w-full flex-col items-center justify-center bg-center p-4'>
       <Background />
       <Card className='bg-white'>
         <CardHeader>
@@ -26,9 +26,9 @@ export default function OnboardingPage() {
             actualizada.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <OnboardingForm />
-        </CardContent>
+        <Suspense fallback={<OnboardingPromptSkeleton />}>
+          <OnboardingPrompt />
+        </Suspense>
       </Card>
     </main>
   )
