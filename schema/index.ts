@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const createUserSchema = z.object({
+export const onboardingFormSchema = z.object({
   id: z.string().trim().nonempty('El ID es requerido para crear un usuario'),
   firstName: z
     .string()
