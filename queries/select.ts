@@ -1,12 +1,12 @@
 'use server'
 
-import { db } from '@/db'
+import { db } from '@/db/drizzle'
 import {
   attendanceRecordsTable,
   eventsTable,
   SelectUser,
   usersTable,
-} from '@/schema'
+} from '@/db/schema'
 import { between, desc, eq, sql } from 'drizzle-orm'
 
 export async function getUserById(id: SelectUser['id']) {
