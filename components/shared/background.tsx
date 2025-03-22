@@ -12,7 +12,7 @@ export default function Background() {
         <Image
           alt='Background Waves Portrait'
           src={BgPortrait}
-          quality={100}
+          unoptimized={true}
           placeholder={placeholder}
           fill
           sizes='100vw'
@@ -27,7 +27,7 @@ export default function Background() {
         <Image
           alt='Background Waves Landscape'
           src={BgLandscape}
-          quality={100}
+          unoptimized={true}
           placeholder={placeholder}
           fill
           sizes='100vw'
