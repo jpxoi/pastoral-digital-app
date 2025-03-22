@@ -15,13 +15,11 @@ export const onboardingFormSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
   phoneNumber: z
     .string()
-    .min(7, 'El número de teléfono debe tener al menos 7 dígitos')
-    .max(15, 'El número de teléfono no debe exceder 15 dígitos')
-    .regex(/^\+?[0-9\s\-()]+$/, 'Formato de número de teléfono inválido')
-    .refine(
-      (val) => val.replace(/[\s\-()]/g, '').length >= 7,
-      'El número debe contener al menos 7 dígitos'
-    ),
+    .regex(
+      /^(?:(?:\+|00)51|51)?[9]\d{8}$/,
+      'Formato de número de teléfono peruano inválido. Debe ser un número móvil de 9 dígitos'
+    )
+    .transform(val => val.replace(/\D/g, '')), // Strip non-digits for consistent storage
   dateOfBirth: z
     .date()
     .refine(
