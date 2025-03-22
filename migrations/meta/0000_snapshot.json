@@ -1,5 +1,5 @@
 {
-  "id": "8b6c1ef4-89e3-4e47-8ec6-6b15c6661157",
+  "id": "507ecfcb-882c-42ea-9f6e-fb945414b51e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -36,7 +36,8 @@
         },
         "status": {
           "name": "status",
-          "type": "text",
+          "type": "attendance_status_enum",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
           "default": "'A TIEMPO'"
@@ -375,6 +376,18 @@
     }
   },
   "enums": {
+    "public.attendance_status_enum": {
+      "name": "attendance_status_enum",
+      "schema": "public",
+      "values": [
+        "A TIEMPO",
+        "TARDANZA",
+        "DOBLE TARDANZA",
+        "FALTA JUSTIFICADA",
+        "TARDANZA JUSTIFICADA",
+        "FALTA INJUSTIFICADA"
+      ]
+    },
     "public.user_category_enum": {
       "name": "user_category_enum",
       "schema": "public",

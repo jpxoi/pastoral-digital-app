@@ -1,3 +1,4 @@
+CREATE TYPE "public"."attendance_status_enum" AS ENUM('A TIEMPO', 'TARDANZA', 'DOBLE TARDANZA', 'FALTA JUSTIFICADA', 'TARDANZA JUSTIFICADA', 'FALTA INJUSTIFICADA');--> statement-breakpoint
 CREATE TYPE "public"."user_category_enum" AS ENUM('student', 'alumni');--> statement-breakpoint
 CREATE TYPE "public"."user_role_enum" AS ENUM('member', 'admin');--> statement-breakpoint
 CREATE TABLE "attendance_records" (
@@ -5,7 +6,7 @@ CREATE TABLE "attendance_records" (
 	"user_id" text NOT NULL,
 	"event_id" integer NOT NULL,
 	"check_in_time" timestamp DEFAULT now(),
-	"status" text DEFAULT 'A TIEMPO' NOT NULL,
+	"status" "attendance_status_enum" DEFAULT 'A TIEMPO' NOT NULL,
 	"registered_by" text NOT NULL,
 	"method" text DEFAULT 'QR' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
