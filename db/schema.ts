@@ -1,6 +1,7 @@
 import {
   date,
   integer,
+  pgEnum,
   pgTable,
   serial,
   text,
@@ -9,6 +10,10 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
+
+export const userCategoryEnum = pgEnum('user_category_enum', ['student', 'alumni'])
+
+export const userRoleEnum = pgEnum('user_role_enum', ['member', 'admin'])
 
 export const usersTable = pgTable('users', {
   id: text('id').primaryKey(),
@@ -19,9 +24,9 @@ export const usersTable = pgTable('users', {
   email: text('email').notNull().unique(),
   phoneNumber: text('phone_number').notNull(),
   dateOfBirth: date('date_of_birth').notNull(),
-  category: text('category').notNull().default('student'),
+  category: userCategoryEnum().notNull().default('student'),
   studentCode: text('student_code'),
-  role: text('role').notNull().default('member'),
+  role: userRoleEnum().notNull().default('member'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
