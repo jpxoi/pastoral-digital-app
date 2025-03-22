@@ -8,7 +8,7 @@ export default function AttendanceSection() {
       <h1 className='mb-4 text-xl font-bold sm:text-2xl'>
         Registro de Asistencias
       </h1>
-      <Card className='relative w-full overflow-x-auto sm:max-w-screen-sm md:max-w-screen-md lg:max-h-[65vh]'>
+      <Card className='relative w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-h-[65vh]'>
         <Suspense fallback={<CardHeader>Cargando registros...</CardHeader>}>
           <AttendanceTable />
         </Suspense>
