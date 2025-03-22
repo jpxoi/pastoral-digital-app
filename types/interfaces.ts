@@ -1,4 +1,4 @@
-import { SelectAttendance, SelectUser } from '@/schema'
+import { SelectAttendance, SelectUser } from '@/db/schema'
 
 export interface UserInfoProps {
   avatarURL: string | null
