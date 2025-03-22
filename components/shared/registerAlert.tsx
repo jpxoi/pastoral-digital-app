@@ -11,7 +11,7 @@ export default async function RegisterAlert() {
     const salutation = user.fullName ? `Hola, ${user.fullName}` : 'Hola';
     const userExistsInDb = await getUserById(user.id);
 
-    if (userExistsInDb) {
+    if (!userExistsInDb) {
         return (
         <Card className='bg-yellow-50 border-l-4 border-yellow-400 text-left text-card-foreground mb-2'>
             <CardHeader>
