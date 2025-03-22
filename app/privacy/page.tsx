@@ -12,7 +12,7 @@ import {
   Users,
   ChevronLeft,
 } from 'lucide-react'
-import PrintButton from '@/components/shared/print-button'
+import PrintButton from '@/components/shared/printButton'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad | Pastoral Mariana',
