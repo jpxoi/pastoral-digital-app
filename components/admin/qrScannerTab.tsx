@@ -15,7 +15,7 @@ import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
 import { FetchAttendanceProps } from '@/types/interfaces'
 import { ScanErrorScreen, ScanSuccessScreen } from './scanStateScreen'
-import AdminAlert from './adminAlert'
+import ErrorAlert from '@/components/shared/errorAlert'
 import QrScannerHeader from './qrScannerHeader'
 import { calculateStatus } from '@/lib/attendance'
 
@@ -161,7 +161,7 @@ export default function QrScannerTab() {
       {success && <ScanSuccessScreen />}
       <TabsContent value='scan' className='space-y-4'>
         {cameraPermission === 'denied' && (
-          <AdminAlert
+          <ErrorAlert
             title='Acceso a la cámara denegado'
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />

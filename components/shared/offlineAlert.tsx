@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import ErrorMessage from '@/components/shared/errorMessage'
+import ErrorAlert from '@/components/shared/errorAlert'
 
 export default function OfflineAlert() {
   const [offline, setOffline] = useState<boolean>(false)
@@ -12,6 +12,6 @@ export default function OfflineAlert() {
   }, [])
 
   return offline ? (
-    <ErrorMessage message='No hay conexión a internet. Por favor, intenta más tarde.' />
+    <ErrorAlert title="Conexión perdida" description='No hay conexión a internet. Por favor, intenta más tarde.' />
   ) : null
 }

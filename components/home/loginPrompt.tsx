@@ -10,7 +10,7 @@ import {
   useUser,
 } from '@clerk/nextjs'
 import WelcomeBackPrompt from '@/components/home/welcomeBackPrompt'
-import ErrorMessage from '@/components/shared/errorMessage'
+import ErrorAlert from '@/components/shared/errorAlert'
 
 export default function LoginPrompt() {
   const { isSignedIn, user } = useUser()
@@ -29,8 +29,9 @@ export default function LoginPrompt() {
   if (offline)
     return (
       <div className='mt-6'>
-        <ErrorMessage message='No hay conexión a internet. Por favor, intenta más tarde.' />
+        <ErrorAlert title="Conexión perdida" description='No hay conexión a internet. Por favor, intenta más tarde.' />
       </div>
+      
     )
 
   if (isSignedIn && user) {
