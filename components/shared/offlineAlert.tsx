@@ -12,6 +12,9 @@ export default function OfflineAlert() {
   }, [])
 
   return offline ? (
-    <ErrorAlert title="Conexión perdida" description='No hay conexión a internet. Por favor, intenta más tarde.' />
+    <ErrorAlert
+      title='Conexión perdida'
+      description='No hay conexión a internet. Por favor, intenta más tarde.'
+    />
   ) : null
 }

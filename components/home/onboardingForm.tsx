@@ -292,7 +292,9 @@ export default function OnboardingForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value={UserCategory.STUDENT}>Alumno</SelectItem>
-                    <SelectItem value={UserCategory.ALUMNI}>Exalumno</SelectItem>
+                    <SelectItem value={UserCategory.ALUMNI}>
+                      Exalumno
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

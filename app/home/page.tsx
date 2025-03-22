@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { MainFooter } from '@/components/shared/footer'
 import { LogoImageWide } from '@/components/shared/logoImage'
-import { CheckCircle } from 'lucide-react'
 import {
   ClerkLoaded,
   ClerkLoading,
@@ -10,6 +9,7 @@ import {
 } from '@clerk/nextjs'
 import Background from '@/components/shared/background'
 import Link from 'next/link'
+import { IconCircleCheck } from '@tabler/icons-react'
 
 export default function LandingPage() {
   return (
@@ -105,7 +105,7 @@ export default function LandingPage() {
               {/* Feature 1 */}
               <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-sm'>
                 <div className='rounded-full bg-primary/10 p-3'>
-                  <CheckCircle className='h-6 w-6 text-primary' />
+                  <IconCircleCheck className='h-6 w-6 text-primary' />
                 </div>
                 <h3 className='text-xl font-bold'>Pastoral Digital ID</h3>
                 <p className='text-center text-muted-foreground'>
@@ -117,7 +117,7 @@ export default function LandingPage() {
               {/* Feature 2 */}
               <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-sm'>
                 <div className='rounded-full bg-primary/10 p-3'>
-                  <CheckCircle className='h-6 w-6 text-primary' />
+                  <IconCircleCheck className='h-6 w-6 text-primary' />
                 </div>
                 <h3 className='text-xl font-bold'>Registro de Asistencias</h3>
                 <p className='text-center text-muted-foreground'>
@@ -129,7 +129,7 @@ export default function LandingPage() {
               {/* Feature 3 */}
               <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-sm'>
                 <div className='rounded-full bg-primary/10 p-3'>
-                  <CheckCircle className='h-6 w-6 text-primary' />
+                  <IconCircleCheck className='h-6 w-6 text-primary' />
                 </div>
                 <h3 className='text-xl font-bold'>
                   Justificación de Inasistencias

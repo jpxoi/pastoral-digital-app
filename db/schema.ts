@@ -13,7 +13,7 @@ import { relations } from 'drizzle-orm'
 import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 
 export const userCategoryEnum = pgEnum('user_category_enum', [
- UserCategory.STUDENT,
+  UserCategory.STUDENT,
   UserCategory.ALUMNI,
 ])
 

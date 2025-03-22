@@ -10,9 +10,9 @@ export default function ErrorAlert({
 }) {
   return (
     <Alert variant='destructive' className='bg-red-50 text-left'>
-    <IconExclamationCircle className='h-4 w-4' />
-    <AlertTitle>{title}</AlertTitle>
-    <AlertDescription>{description}</AlertDescription>
-  </Alert>
+      <IconExclamationCircle className='h-4 w-4' />
+      <AlertTitle>{title}</AlertTitle>
+      <AlertDescription>{description}</AlertDescription>
+    </Alert>
   )
 }

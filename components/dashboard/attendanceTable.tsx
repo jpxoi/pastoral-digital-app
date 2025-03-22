@@ -9,5 +9,7 @@ export default async function AttendanceTable() {
     user?.id as string
   )
 
-  return <SimpleDataTable columns={UserAttendanceColumns} data={attendanceRecords} />
+  return (
+    <SimpleDataTable columns={UserAttendanceColumns} data={attendanceRecords} />
+  )
 }

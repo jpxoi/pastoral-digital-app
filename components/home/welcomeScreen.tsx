@@ -16,7 +16,7 @@ export default function WelcomeScreen() {
           App
         </h1>
 
-        <div className='p-4 sm:p-8 text-white sm:text-black'>
+        <div className='p-4 text-white sm:p-8 sm:text-black'>
           <LogoImageWideLight />
           <LogoImageWideDark />
           <LoginPrompt />
