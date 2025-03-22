@@ -1,5 +1,4 @@
 import { StatusLabel } from '@/types/interfaces'
-
 import type { JSX } from 'react'
 
 export default function AttendanceStatusLabel({ status }: StatusLabel) {
