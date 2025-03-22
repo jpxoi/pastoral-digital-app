@@ -6,16 +6,16 @@ import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
 import { getTodayEvent } from '@/queries/select'
-import { SelectEvent } from '@/schema'
+import { SelectEvent } from '@/db/schema'
 
-import { useState, useEffect, useTransition, useMemo } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
-import { FetchAttendanceProps } from '@/types/interfaces'
+import { FetchAttendanceProps } from '@/types'
 import { ScanErrorScreen, ScanSuccessScreen } from './scanStateScreen'
-import AdminAlert from './adminAlert'
+import ErrorAlert from '@/components/shared/errorAlert'
 import QrScannerHeader from './qrScannerHeader'
 import { calculateStatus } from '@/lib/attendance'
 
@@ -111,7 +111,7 @@ export default function QrScannerTab() {
         return
       }
 
-      if (status === 'AUSENTE') {
+      if (status === 'FALTA INJUSTIFICADA') {
         handleError(
           'Es demasiado tarde para registrar asistencia en este evento'
         )
@@ -161,16 +161,16 @@ export default function QrScannerTab() {
       {success && <ScanSuccessScreen />}
       <TabsContent value='scan' className='space-y-4'>
         {cameraPermission === 'denied' && (
-          <AdminAlert
+          <ErrorAlert
             title='Acceso a la cámara denegado'
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />
         )}
-        <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8'>
           <Card>
             <QrScannerHeader />
             <CardContent>
-              <div className='mx-auto aspect-square w-full max-w-md overflow-hidden rounded-xl border border-gray-200'>
+              <div className='mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl border border-gray-200'>
                 {scanning ? (
                   <Scanner
                     onScan={handleScan}

@@ -15,7 +15,7 @@ export default function Layout({
   return (
     <div className='mx-auto flex h-screen w-screen flex-1 flex-col overflow-hidden bg-gray-100 md:flex-row'>
       <CustomSidebar />
-      <div className='flex flex-1 bg-[#07309B]'>{children}</div>
+      <div className='flex flex-1 bg-primary'>{children}</div>
     </div>
   )
 }

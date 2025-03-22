@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
-export default function Offline() {
+export default function OfflinePage() {
   return (
     <div className='flex h-dvh w-full flex-col items-center justify-center gap-8 px-4'>
       <div className='w-52 md:w-96'>

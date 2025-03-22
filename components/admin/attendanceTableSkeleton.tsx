@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ChevronsUpDown, RefreshCcwIcon } from 'lucide-react'
+import { IconSelector, IconRefresh } from '@tabler/icons-react'
 
 export default async function AttendanceTableSkeleton() {
   return (
@@ -27,7 +27,7 @@ export default async function AttendanceTableSkeleton() {
           disabled
         />
         <Button variant='ghost' disabled>
-          <RefreshCcwIcon className='h-5 w-5 animate-spin' />
+          <IconRefresh className='h-5 w-5 animate-spin' />
         </Button>
       </div>
       <div className='rounded-md border'>
@@ -45,7 +45,7 @@ export default async function AttendanceTableSkeleton() {
                       className='-ml-3 h-8 data-[state=open]:bg-accent'
                     >
                       <span>Hora del Registro</span>
-                      <ChevronsUpDown />
+                      <IconSelector />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align='start'>

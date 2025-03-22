@@ -1,5 +1,6 @@
 import { SignOutButton } from '@clerk/nextjs'
 import Link from 'next/link'
+import { Button } from '../ui/button'
 
 export default function WelcomeBackPrompt({ nickname }: { nickname: string }) {
   return (
@@ -11,18 +12,19 @@ export default function WelcomeBackPrompt({ nickname }: { nickname: string }) {
         <p className='text-center text-sm text-gray-200 sm:text-gray-500'>
           ¿No eres {nickname}?{' '}
           <SignOutButton>
-            <span className='cursor-pointer text-gray-50 hover:text-white hover:underline sm:text-blue-500 sm:hover:text-blue-600'>
+            <span className='cursor-pointer text-gray-50 hover:text-white hover:underline sm:text-primary sm:hover:text-primary'>
               Cerrar Sesión
             </span>
           </SignOutButton>
         </p>
       </div>
-      <Link
-        href='/dashboard'
-        className='w-full cursor-pointer rounded-md border border-white bg-white p-3 text-blue-500 transition-colors duration-200 hover:border-gray-200 hover:bg-gray-100 sm:border-blue-500 sm:bg-blue-500 sm:text-white sm:hover:border-blue-600 sm:hover:bg-blue-600'
+      <Button
+        asChild
+        size='lg'
+        className='w-full max-sm:bg-primary-foreground max-sm:text-primary max-sm:hover:bg-accent max-sm:hover:text-accent-foreground'
       >
-        Acceder a la Plataforma
-      </Link>
+        <Link href='/dashboard'>Acceder a la Plataforma</Link>
+      </Button>
     </div>
   )
 }

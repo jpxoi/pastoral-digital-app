@@ -89,7 +89,7 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          'hidden h-full w-[300px] shrink-0 bg-[#07309B] px-4 py-4 md:flex md:flex-col',
+          'hidden h-full w-[300px] shrink-0 bg-primary px-4 py-4 md:flex md:flex-col',
           className
         )}
         animate={{
@@ -115,7 +115,7 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          'flex h-12 w-full flex-row items-center justify-between bg-[#07309B] px-4 py-4 md:hidden'
+          'flex h-12 w-full flex-row items-center justify-between bg-primary px-4 py-4 md:hidden'
         )}
         {...props}
       >
@@ -153,7 +153,7 @@ export const MobileSidebar = ({
                 ease: 'easeInOut',
               }}
               className={cn(
-                'fixed inset-0 z-[100] flex h-full w-full flex-col justify-between bg-[#07309B] p-10',
+                'fixed inset-0 z-[100] flex h-full w-full flex-col justify-between bg-primary p-10',
                 className
               )}
             >

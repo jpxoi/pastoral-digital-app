@@ -8,35 +8,31 @@ const placeholder =
 export default function Background() {
   return (
     <>
-      <div className='sm:hidden'>
-        <Image
-          alt='Background Waves Portrait'
-          src={BgPortrait}
-          quality={100}
-          placeholder={placeholder}
-          fill
-          sizes='100vw'
-          style={{
-            objectFit: 'cover',
-            zIndex: -100,
-          }}
-        />
-      </div>
+      <Image
+        alt='Background Waves Portrait'
+        className='sm:hidden'
+        src={BgPortrait}
+        unoptimized={true}
+        placeholder={placeholder}
+        fill
+        style={{
+          objectFit: 'cover',
+          zIndex: -100,
+        }}
+      />
 
-      <div className='hidden sm:block'>
-        <Image
-          alt='Background Waves Landscape'
-          src={BgLandscape}
-          quality={100}
-          placeholder={placeholder}
-          fill
-          sizes='100vw'
-          style={{
-            objectFit: 'cover',
-            zIndex: -1000,
-          }}
-        />
-      </div>
+      <Image
+        alt='Background Waves Landscape'
+        className='hidden sm:block'
+        src={BgLandscape}
+        unoptimized={true}
+        placeholder={placeholder}
+        fill
+        style={{
+          objectFit: 'cover',
+          zIndex: -1000,
+        }}
+      />
     </>
   )
 }

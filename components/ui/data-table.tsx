@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
 import { DataTablePagination } from './data-table-pagination'
-import { RefreshCcwIcon } from 'lucide-react'
+import { IconRefresh } from '@tabler/icons-react'
 import { useState } from 'react'
 import { revalidateAttendanceRecords } from '@/actions/attendance'
 
@@ -67,7 +67,7 @@ export function DataTable<TData, TValue>({
           className='max-w-sm'
         />
         <Button variant='ghost' onClick={() => revalidateAttendanceRecords()}>
-          <RefreshCcwIcon className='h-5 w-5' />
+          <IconRefresh className='h-5 w-5' />
         </Button>
       </div>
       <div className='rounded-md border'>

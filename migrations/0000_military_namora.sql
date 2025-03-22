@@ -1,9 +1,12 @@
+CREATE TYPE "public"."attendance_status_enum" AS ENUM('A TIEMPO', 'TARDANZA', 'DOBLE TARDANZA', 'FALTA JUSTIFICADA', 'TARDANZA JUSTIFICADA', 'FALTA INJUSTIFICADA');--> statement-breakpoint
+CREATE TYPE "public"."user_category_enum" AS ENUM('student', 'alumni');--> statement-breakpoint
+CREATE TYPE "public"."user_role_enum" AS ENUM('member', 'admin');--> statement-breakpoint
 CREATE TABLE "attendance_records" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" text NOT NULL,
 	"event_id" integer NOT NULL,
 	"check_in_time" timestamp DEFAULT now(),
-	"status" text DEFAULT 'A TIEMPO' NOT NULL,
+	"status" "attendance_status_enum" DEFAULT 'A TIEMPO' NOT NULL,
 	"registered_by" text NOT NULL,
 	"method" text DEFAULT 'QR' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
@@ -38,9 +41,9 @@ CREATE TABLE "users" (
 	"email" text NOT NULL,
 	"phone_number" text NOT NULL,
 	"date_of_birth" date NOT NULL,
-	"category" text DEFAULT 'student' NOT NULL,
+	"category" "user_category_enum" DEFAULT 'student' NOT NULL,
 	"student_code" text,
-	"role" text DEFAULT 'member' NOT NULL,
+	"role" "user_role_enum" DEFAULT 'member' NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	CONSTRAINT "users_username_unique" UNIQUE("username"),

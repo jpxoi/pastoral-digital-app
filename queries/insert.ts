@@ -1,4 +1,4 @@
-import { db } from '@/db'
+import { db } from '@/db/drizzle'
 import {
   InsertUser,
   InsertAttendance,
@@ -8,7 +8,7 @@ import {
   attendanceRecordsTable,
   eventsTable,
   locationsTable,
-} from '@/schema'
+} from '@/db/schema'
 
 export async function createUser(data: InsertUser) {
   await db.insert(usersTable).values(data)

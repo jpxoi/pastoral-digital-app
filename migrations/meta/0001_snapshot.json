@@ -1,6 +1,6 @@
 {
-  "id": "507ecfcb-882c-42ea-9f6e-fb945414b51e",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f0f51ceb-143f-440c-982c-b93fd843a650",
+  "prevId": "507ecfcb-882c-42ea-9f6e-fb945414b51e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -319,8 +319,7 @@
           "type": "user_category_enum",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'student'"
+          "notNull": true
         },
         "student_code": {
           "name": "student_code",
