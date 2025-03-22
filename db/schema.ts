@@ -10,18 +10,25 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
+import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 
-export const userCategoryEnum = pgEnum('user_category_enum', ['student', 'alumni'])
+export const userCategoryEnum = pgEnum('user_category_enum', [
+ UserCategory.STUDENT,
+  UserCategory.ALUMNI,
+])
 
-export const userRoleEnum = pgEnum('user_role_enum', ['member', 'admin'])
+export const userRoleEnum = pgEnum('user_role_enum', [
+  UserRole.MEMBER,
+  UserRole.ADMIN,
+])
 
 export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
-  'A TIEMPO',
-  'TARDANZA',
-  'DOBLE TARDANZA',
-  'FALTA JUSTIFICADA',
-  'TARDANZA JUSTIFICADA',
-  'FALTA INJUSTIFICADA',
+  AttendanceStatus.A_TIEMPO,
+  AttendanceStatus.TARDANZA,
+  AttendanceStatus.DOBLE_TARDANZA,
+  AttendanceStatus.FALTA_JUSTIFICADA,
+  AttendanceStatus.TARDANZA_JUSTIFICADA,
+  AttendanceStatus.FALTA_INJUSTIFICADA,
 ])
 
 export const usersTable = pgTable('users', {
@@ -33,9 +40,9 @@ export const usersTable = pgTable('users', {
   email: text('email').notNull().unique(),
   phoneNumber: text('phone_number').notNull(),
   dateOfBirth: date('date_of_birth').notNull(),
-  category: userCategoryEnum().notNull().default('student'),
+  category: userCategoryEnum().notNull(),
   studentCode: text('student_code'),
-  role: userRoleEnum().notNull().default('member'),
+  role: userRoleEnum().notNull().default(UserRole.MEMBER),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -53,7 +60,7 @@ export const attendanceRecordsTable = pgTable(
       .references(() => eventsTable.id)
       .notNull(),
     checkInTime: timestamp('check_in_time').defaultNow(),
-    status: attendanceStatusEnum().notNull().default('A TIEMPO'),
+    status: attendanceStatusEnum().notNull().default(AttendanceStatus.A_TIEMPO),
     registeredBy: text('registered_by')
       .references(() => usersTable.id)
       .notNull(),

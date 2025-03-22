@@ -13,7 +13,7 @@ import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
-import { FetchAttendanceProps } from '@/types/interfaces'
+import { FetchAttendanceProps } from '@/types'
 import { ScanErrorScreen, ScanSuccessScreen } from './scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
 import QrScannerHeader from './qrScannerHeader'
@@ -166,11 +166,11 @@ export default function QrScannerTab() {
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />
         )}
-        <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8'>
           <Card>
             <QrScannerHeader />
             <CardContent>
-              <div className='mx-auto aspect-square w-full max-w-md overflow-hidden rounded-xl border border-gray-200'>
+              <div className='mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl border border-gray-200'>
                 {scanning ? (
                   <Scanner
                     onScan={handleScan}

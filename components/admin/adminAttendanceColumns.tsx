@@ -3,7 +3,7 @@
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { FetchAttendanceProps } from '@/types/interfaces'
+import { FetchAttendanceProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { Edit2Icon, TrashIcon } from 'lucide-react'
 

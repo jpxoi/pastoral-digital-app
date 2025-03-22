@@ -12,6 +12,7 @@ import {
 import WelcomeBackPrompt from '@/components/home/welcomeBackPrompt'
 import ErrorAlert from '@/components/shared/errorAlert'
 import { Button } from '../ui/button'
+import { Skeleton } from '../ui/skeleton'
 
 export default function LoginPrompt() {
   const { isSignedIn, user } = useUser()
@@ -30,9 +31,11 @@ export default function LoginPrompt() {
   if (offline)
     return (
       <div className='mt-6'>
-        <ErrorAlert title="Conexión perdida" description='No hay conexión a internet. Por favor, intenta más tarde.' />
+        <ErrorAlert
+          title='Conexión perdida'
+          description='No hay conexión a internet. Por favor, intenta más tarde.'
+        />
       </div>
-      
     )
 
   if (isSignedIn && user) {
@@ -43,17 +46,24 @@ export default function LoginPrompt() {
     <>
       <div className='mt-6 flex flex-col items-center gap-2'>
         <ClerkLoading>
-          <div className='h-10 w-full animate-pulse rounded-md bg-gray-200'></div>
-          <div className='h-10 w-full animate-pulse rounded-md bg-gray-200'></div>
+          <Skeleton className='h-11 w-full' />
+          <Skeleton className='h-11 w-full' />
         </ClerkLoading>
         <ClerkLoaded>
           <SignInButton>
-            <Button className='w-full max-sm:bg-primary-foreground max-sm:text-primary'>
+            <Button
+              size='lg'
+              className='w-full max-sm:bg-primary-foreground max-sm:text-primary max-sm:hover:bg-accent max-sm:hover:text-accent-foreground'
+            >
               Iniciar sesión
             </Button>
           </SignInButton>
           <SignUpButton>
-            <Button variant='outline' className='w-full max-sm:bg-transparent max-sm:text-primary-foreground'> 
+            <Button
+              size='lg'
+              variant='outline'
+              className='w-full max-sm:bg-transparent max-sm:text-primary-foreground'
+            >
               Registrarse
             </Button>
           </SignUpButton>

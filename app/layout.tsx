@@ -106,7 +106,7 @@ export const viewport: Viewport = {
 
 const clerkAppearance = {
   variables: {
-    colorPrimary: '#3B82F6',
+    colorPrimary: '#07309B',
   },
 }
 

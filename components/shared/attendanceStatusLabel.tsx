@@ -1,4 +1,4 @@
-import { StatusLabel } from '@/types/interfaces'
+import { StatusLabel } from '@/types'
 import type { JSX } from 'react'
 
 export default function AttendanceStatusLabel({ status }: StatusLabel) {
