@@ -35,6 +35,7 @@ import { useState, useTransition } from 'react'
 import { UserCategory, UserRole } from '@/types'
 import { registerUser } from '@/actions/user'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 export default function OnboardingForm({
   userId,
@@ -51,6 +52,8 @@ export default function OnboardingForm({
 }) {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
   const [isPending, startTransition] = useTransition()
+
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof OnboardingFormSchema>>({
     resolver: zodResolver(OnboardingFormSchema),
@@ -79,6 +82,7 @@ export default function OnboardingForm({
 
           if (data?.success) {
             toast.success(data.success)
+            router.push('/dashboard')
           }
         })
         .catch((error) => {
