@@ -47,6 +47,7 @@ function Calendar({
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
+        ...classNames,
       }}
       components={{
         Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {

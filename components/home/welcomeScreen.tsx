@@ -3,7 +3,6 @@ import {
   LogoImageWideDark,
 } from '@/components/shared/logoImage'
 import LoginPrompt from '@/components/home/loginPrompt'
-import Link from 'next/link'
 
 export default function WelcomeScreen() {
   return (
