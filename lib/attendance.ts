@@ -10,7 +10,14 @@ export const calculateStatus = (checkInTime: Date, eventTime: Date) => {
     return 'TARDANZA'
   } else if (minutesDifference < 20) {
     return 'DOBLE TARDANZA'
+  } else if (isLateJustified) {
+    return 'TARDANZA JUSTIFICADA'
+  } else if (isAbsentJustified) {
+    return 'FALTA JUSTIFICADA'
   } else {
-    return 'AUSENTE'
+    return 'FALTA INJUSTIFICADA'
   }
 }
+
+const isLateJustified = false
+const isAbsentJustified = false
