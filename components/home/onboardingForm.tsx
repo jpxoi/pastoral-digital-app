@@ -55,7 +55,7 @@ export default function OnboardingForm({
     resolver: zodResolver(OnboardingFormSchema),
     defaultValues: {
       id: userId,
-      firstName:  '',
+      firstName: '',
       lastName: '',
       nickname: '',
       username: userUsername,
@@ -99,9 +99,15 @@ export default function OnboardingForm({
             name='firstName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nombres</FormLabel>
+                <FormLabel>
+                  Nombres <span className='text-red-500'>*</span>
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder='Ingrese sus nombres' {...field} required />
+                  <Input
+                    placeholder='Ingrese sus nombres'
+                    {...field}
+                    required
+                  />
                 </FormControl>
                 <FormDescription>
                   Ingresa tus nombres tal y como aparecen en tu documento de
@@ -116,7 +122,9 @@ export default function OnboardingForm({
             name='lastName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Apellidos</FormLabel>
+                <FormLabel>
+                  Apellidos <span className='text-red-500'>*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder='Ingrese sus dos apellidos'
@@ -152,7 +160,9 @@ export default function OnboardingForm({
             name='username'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nombre de usuario</FormLabel>
+                <FormLabel>
+                  Nombre de usuario <span className='text-red-500'>*</span>
+                </FormLabel>
                 <FormControl>
                   <div className='relative'>
                     <Input
@@ -178,7 +188,9 @@ export default function OnboardingForm({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Correo electrónico</FormLabel>
+                <FormLabel>
+                  Correo electrónico <span className='text-red-500'>*</span>
+                </FormLabel>
                 <FormControl>
                   <div className='relative'>
                     <Input
@@ -201,7 +213,9 @@ export default function OnboardingForm({
             name='phoneNumber'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Número de Teléfono</FormLabel>
+                <FormLabel>
+                  Número de Teléfono <span className='text-red-500'>*</span>
+                </FormLabel>
                 <FormControl>
                   <div className='flex'>
                     <div className='flex items-center justify-center rounded-l-md border border-r-0 bg-muted px-3 text-muted-foreground'>
@@ -211,6 +225,7 @@ export default function OnboardingForm({
                       className='rounded-l-none'
                       placeholder='Número de teléfono'
                       {...field}
+                      required
                     />
                   </div>
                 </FormControl>
@@ -226,7 +241,9 @@ export default function OnboardingForm({
             name='dateOfBirth'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fecha de nacimiento</FormLabel>
+                <FormLabel>
+                  Fecha de nacimiento <span className='text-red-500'>*</span>
+                </FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -276,7 +293,10 @@ export default function OnboardingForm({
             name='category'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Vínculo con la institución</FormLabel>
+                <FormLabel>
+                  Vínculo con la institución{' '}
+                  <span className='text-red-500'>*</span>
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}

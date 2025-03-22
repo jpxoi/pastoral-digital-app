@@ -5,11 +5,13 @@ export const OnboardingFormSchema = z.object({
   id: z.string().trim().nonempty('El ID es requerido para crear un usuario'),
   firstName: z
     .string()
+    .trim()
     .nonempty('El nombre es requerido para crear un usuario.'),
   lastName: z
     .string()
+    .trim()
     .nonempty('El apellido es requerido para crear un usuario.'),
-  nickname: z.string().optional(),
+  nickname: z.string().trim().optional(),
   username: z
     .string()
     .min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
