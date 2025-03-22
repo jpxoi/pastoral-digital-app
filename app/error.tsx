@@ -31,7 +31,12 @@ export default function Error({
             {showError ? 'Ocultar detalles' : 'Mostrar detalles'}
           </button>
         </div>
-        {showError && <ErrorAlert title="Ha ocurrido un error" description={`${error.message}`} />}
+        {showError && (
+          <ErrorAlert
+            title='Ha ocurrido un error'
+            description={`${error.message}`}
+          />
+        )}
         <button
           className='max-w-fit rounded-md border-none bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700'
           onClick={() => reset()}
