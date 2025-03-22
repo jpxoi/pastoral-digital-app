@@ -1,15 +1,21 @@
-export const isBirthdayToday = (date: string) => {
+export const isBirthdayToday = (dateOfBirth: string): boolean => {
   const today = new Date()
-  const birthdate = new Date(date)
+  const birthdate = new Date(dateOfBirth)
+
+  if (isNaN(birthdate.getTime())) return false
+
   return (
     today.getDate() === birthdate.getDate() &&
     today.getMonth() === birthdate.getMonth()
   )
 }
 
-export const getThisYearBirthday = (date: string) => {
+export const getThisYearBirthday = (dateOfBirth: string): Date => {
   const today = new Date()
-  const birthdate = new Date(date)
+  const birthdate = new Date(dateOfBirth)
+
+  if (isNaN(birthdate.getTime())) throw new Error('Invalid date format')
+
   return new Date(
     today.getFullYear(),
     birthdate.getMonth(),
@@ -17,9 +23,15 @@ export const getThisYearBirthday = (date: string) => {
   )
 }
 
-export const getBirthdayRelativeDate = (date: string) => {
+export const getBirthdayRelativeDate = (dateOfBirth: string): string => {
   const today = new Date()
-  const birthdateThisYear = getThisYearBirthday(date)
+  today.setHours(0, 0, 0, 0)
+
+  const birthdateThisYear = getThisYearBirthday(dateOfBirth)
+
+  if (birthdateThisYear < today) {
+    birthdateThisYear.setFullYear(today.getFullYear() + 1)
+  }
 
   const dayDiff = Math.ceil(
     (birthdateThisYear.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
@@ -31,9 +43,12 @@ export const getBirthdayRelativeDate = (date: string) => {
   }).format(dayDiff, 'day')
 }
 
-export const getTurnsAge = (date: string) => {
+export const getTurnsAge = (dateOfBirth: string) => {
   const today = new Date()
-  const birthdate = new Date(date)
+  const birthdate = new Date(dateOfBirth)
 
-  return today.getFullYear() - birthdate.getFullYear()
+  const age = today.getFullYear() - birthdate.getFullYear();
+
+
+  return age
 }
