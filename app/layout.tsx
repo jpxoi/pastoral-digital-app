@@ -4,6 +4,7 @@ import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { Toaster } from '@/components/ui/sonner'
+import Script from 'next/script'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -118,6 +119,9 @@ export default function RootLayout({
   return (
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
+        <head>
+        <Script src="https://analytics.ahrefs.com/analytics.js" data-key="pfMw5i4GadfYS+TXaYJi6w" async></Script>
+        </head>
         <body className={poppins.className}>
           <Toaster position='top-right' richColors />
           {children}
