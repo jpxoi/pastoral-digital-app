@@ -19,7 +19,8 @@ export default function Page() {
           Registrar Asistencia
         </h1>
         <p className='text-sm text-neutral-500'>
-          Registra la asistencia de los catequistas escaneando su código QR o de forma manual.
+          Registra la asistencia de los catequistas escaneando su código QR o de
+          forma manual.
         </p>
       </div>
       <Tabs defaultValue='scan' className='w-full'>

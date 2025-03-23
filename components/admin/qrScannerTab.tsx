@@ -13,7 +13,10 @@ import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
 import { FetchAttendanceProps } from '@/types'
-import { ScanErrorScreen, ScanSuccessScreen } from '@/components/admin/scanStateScreen'
+import {
+  ScanErrorScreen,
+  ScanSuccessScreen,
+} from '@/components/admin/scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
 import { calculateStatus } from '@/lib/attendance'
 import { getEventOfTheDay } from '@/actions/event'
@@ -233,7 +236,7 @@ export default function QrScannerTab() {
 
           {lastScanned ? (
             <Card>
-              <CardHeader className='flex flex-col items-center justify-center h-full'>
+              <CardHeader className='flex h-full flex-col items-center justify-center'>
                 <h2 className='text-left text-lg font-semibold'>
                   {lastScanned.user.firstName} {lastScanned.user.lastName}
                 </h2>
