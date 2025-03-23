@@ -9,26 +9,34 @@ import { IconEdit, IconTrash } from '@tabler/icons-react'
 
 export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
-    id: 'fullName',
-    header: 'Nombre Completo',
+    id: 'firstName',
+    accessorKey: 'user.firstName',
+    header: 'Nombres',
     cell: ({ row }) => {
-      const firstName = row.original.user.firstName as string
       const lastName = row.original.user.lastName as string
-
-      const fullName = `${firstName} ${lastName}`
-      return <div className='text-nowrap text-left font-medium'>{fullName}</div>
+      return <div className='text-nowrap text-left'>{lastName}</div>
     },
   },
   {
+    id: 'lastName',
+    accessorKey: 'user.lastName',
+    header: 'Apellidos',
+    cell: ({ row }) => {
+      const lastName = row.original.user.lastName as string
+      return <div className='text-nowrap text-left'>{lastName}</div>
+    },
+  },
+  {
+    id: 'checkInTime',
     accessorKey: 'checkInTime',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Hora del Registro' />
+      <DataTableColumnHeader column={column} title='Marca de Tiempo' />
     ),
     cell: ({ row }) => {
       const checkInTime = row.getValue('checkInTime')
-      const formattedTime = (checkInTime as Date).toLocaleDateString('es-ES', {
+      const formattedTime = (checkInTime as Date).toLocaleDateString('es-PE', {
         day: 'numeric',
-        month: 'long',
+        month: 'short',
         year: 'numeric',
         hour: 'numeric',
         minute: 'numeric',
@@ -36,7 +44,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
       })
 
       const mobileFormattedTime = (checkInTime as Date).toLocaleDateString(
-        'es-ES',
+        'es-PE',
         {
           day: 'numeric',
           month: 'numeric',

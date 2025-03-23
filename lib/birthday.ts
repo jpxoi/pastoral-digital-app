@@ -37,7 +37,7 @@ export const getBirthdayRelativeDate = (dateOfBirth: string): string => {
     (birthdateThisYear.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   )
 
-  return new Intl.RelativeTimeFormat('es-ES', {
+  return new Intl.RelativeTimeFormat('es-PE', {
     numeric: 'auto',
     style: 'long',
   }).format(dayDiff, 'day')
@@ -47,8 +47,21 @@ export const getTurnsAge = (dateOfBirth: string) => {
   const today = new Date()
   const birthdate = new Date(dateOfBirth)
 
-  const age = today.getFullYear() - birthdate.getFullYear();
+  const age = today.getFullYear() - birthdate.getFullYear()
 
+  return age
+}
+
+export const calculateAge = (dateOfBirth: string) => {
+  const today = new Date()
+  const birthdate = new Date(dateOfBirth)
+
+  let age = today.getFullYear() - birthdate.getFullYear()
+  const m = today.getMonth() - birthdate.getMonth()
+
+  if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
+    age--
+  }
 
   return age
 }

@@ -41,7 +41,7 @@ export const OnboardingFormSchema = z.object({
     .transform((date) => {
       return date.toISOString().split('T')[0]
     }),
-  category: z.enum([UserCategory.STUDENT, UserCategory.ALUMNI], {
+  category: z.enum([UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER], {
     errorMap: () => ({
       message: 'Debes seleccionar tu vínculo con la institución',
     }),

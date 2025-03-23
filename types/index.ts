@@ -47,4 +47,5 @@ export enum UserRole {
 export enum UserCategory {
   STUDENT = 'student',
   ALUMNI = 'alumni',
+  TEACHER = 'teacher',
 }

@@ -1,0 +1,1 @@
+ALTER TYPE "public"."user_category_enum" ADD VALUE 'teacher';

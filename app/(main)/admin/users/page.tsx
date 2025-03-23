@@ -1,11 +1,11 @@
-import AttendanceTable from '@/components/admin/attendanceTable'
 import { Suspense } from 'react'
-import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
 import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
+import UsersTable from '@/components/admin/usersTable'
+import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 
 export const metadata: Metadata = {
-  title: 'Registro de Asistencias | Pastoral Digital App',
+  title: 'Administrar Catequistas | Pastoral Digital App',
 }
 
 export default async function Page() {
@@ -14,14 +14,14 @@ export default async function Page() {
       <OfflineAlert />
       <div className='flex flex-col gap-2 text-left'>
         <h1 className='text-xl font-semibold sm:text-2xl'>
-          Registro de Asistencia
+          Administrar Catequistas
         </h1>
         <p className='text-sm text-neutral-500'>
-          Aquí puedes ver la lista de asistencia de los usuarios.
+          Esta es la lista de catequistas registrados en la aplicación.
         </p>
       </div>
-      <Suspense fallback={<AttendanceTableSkeleton />}>
-        <AttendanceTable />
+      <Suspense fallback={<UserTableSkeleton />}>
+        <UsersTable />
       </Suspense>
     </main>
   )

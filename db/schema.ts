@@ -15,6 +15,7 @@ import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 export const userCategoryEnum = pgEnum('user_category_enum', [
   UserCategory.STUDENT,
   UserCategory.ALUMNI,
+  UserCategory.TEACHER,
 ])
 
 export const userRoleEnum = pgEnum('user_role_enum', [
