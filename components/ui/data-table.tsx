@@ -3,6 +3,7 @@
 import {
   ColumnDef,
   SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -22,11 +23,15 @@ import {
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 import { DataTablePagination } from './data-table-pagination'
-import { IconRefresh } from '@tabler/icons-react'
 import { useState } from 'react'
-import { revalidateAttendanceRecords } from '@/actions/attendance'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -39,6 +44,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = useState<any>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   const table = useReactTable({
     data,
@@ -49,15 +55,17 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       globalFilter,
+      columnVisibility,
     },
   })
 
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex items-center justify-between'>
+      <div className='flex items-center justify-between gap-2'>
         <Input
           placeholder='Buscar registros...'
           value={table.getState().globalFilter}
@@ -66,9 +74,32 @@ export function DataTable<TData, TValue>({
           }
           className='max-w-sm'
         />
-        <Button variant='ghost' onClick={() => revalidateAttendanceRecords()}>
-          <IconRefresh className='h-5 w-5' />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='outline' className='ml-auto'>
+              Columnas
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className='capitalize'
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className='rounded-md border'>
         <Table>
@@ -98,7 +129,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && 'seleccionado'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className='text-left'>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
