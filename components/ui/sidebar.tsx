@@ -5,7 +5,7 @@ import React, { useState, createContext, useContext } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { IconMenu2, IconX } from '@tabler/icons-react'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
-import { Skeleton } from './skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface Links {
   label: string

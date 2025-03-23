@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { IconCake } from '@tabler/icons-react'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function BirthdayCardSkeleton() {
   return (

@@ -1,7 +1,7 @@
-import { Button } from '../ui/button'
-import { CardContent } from '../ui/card'
-import { Label } from '../ui/label'
-import { Skeleton } from '../ui/skeleton'
+import { Button } from '@/components/ui/button'
+import { CardContent } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function OnboardingPromptSkeleton() {
   return (

@@ -1,6 +1,6 @@
-import PastoralIdQRCode from './pastoraldQrCode'
+import PastoralIdQRCode from '@/components/dashboard/pastoraldQrCode'
 import { Suspense } from 'react'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default async function PastoralId() {
   return (

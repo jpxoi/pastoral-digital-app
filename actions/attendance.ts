@@ -7,9 +7,10 @@ import { InsertAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidatePath } from 'next/cache'
 import { checkRole } from '@/lib/roles'
+import { UserRole } from '@/types'
 
 export const registerAttendanceRecord = async (data: InsertAttendance) => {
-  if (!checkRole('admin')) {
+  if (!checkRole(UserRole.ADMIN)) {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
 

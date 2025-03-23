@@ -5,6 +5,7 @@ import { createUser } from '@/queries/insert'
 import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
 import { checkRole } from '@/lib/roles'
+import { UserRole } from '@/types'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -68,7 +69,7 @@ export async function setRole(formData: FormData) {
   const client = await clerkClient()
 
   // Check that the user trying to set the role is an admin
-  if (!checkRole('admin')) {
+  if (!checkRole(UserRole.ADMIN)) {
     return { error: 'No estás autorizado para realizar esta acción.' }
   }
 

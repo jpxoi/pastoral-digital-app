@@ -1,12 +1,12 @@
 import { auth, currentUser } from '@clerk/nextjs/server'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../ui/card'
+} from '@/components/ui/card'
 import Link from 'next/link'
 
 export default async function RegisterAlert() {

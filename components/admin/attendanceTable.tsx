@@ -1,6 +1,6 @@
+import { AdminAttendanceColumns } from '@/components/admin/adminAttendanceColumns'
 import { getAllAttendanceRecords } from '@/queries/select'
 import { DataTable } from '@/components/ui/data-table'
-import { AdminAttendanceColumns } from './adminAttendanceColumns'
 
 export default async function AttendanceTable() {
   const attendanceRecords = await getAllAttendanceRecords()

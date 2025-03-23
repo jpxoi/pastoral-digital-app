@@ -30,7 +30,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { DataTablePagination } from './data-table-pagination'
+import { DataTablePagination } from '@/components/ui/data-table-pagination'
 import { useState } from 'react'
 
 interface DataTableProps<TData, TValue> {
