@@ -1,4 +1,4 @@
-import BirthdayCardSkeleton from './birthdayCardSkeleton'
+import BirthdayCardSkeleton from '@/components/birthdays/birthdayCardSkeleton'
 
 export default function BirthdayGridSkeleton() {
   return (

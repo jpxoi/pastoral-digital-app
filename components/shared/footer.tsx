@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LogoImageWide } from './logoImage'
+import { LogoImageWide } from '@/components/shared/logoImage'
 import { IconBrandInstagram } from '@tabler/icons-react'
 
 export function FooterNarrow() {

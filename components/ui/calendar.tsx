@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
   SelectItem,
-} from './select'
+} from '@/components/ui/select'
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 

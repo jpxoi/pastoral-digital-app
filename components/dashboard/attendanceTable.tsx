@@ -1,7 +1,7 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { getAttendanceRecordsByUserId } from '@/queries/select'
-import { SimpleDataTable } from '../ui/simple-data-table'
-import { UserAttendanceColumns } from './userAttendanceColumns'
+import { SimpleDataTable } from '@/components/ui/simple-data-table'
+import { UserAttendanceColumns } from '@/components/dashboard/userAttendanceColumns'
 
 export default async function AttendanceTable() {
   const user = await currentUser()

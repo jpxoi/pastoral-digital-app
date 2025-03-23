@@ -2,7 +2,12 @@ import AttendanceSection from '@/components/dashboard/attendanceSection'
 import PastoralId from '@/components/dashboard/pastoralID'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import RegisterAlert from '@/components/shared/registerAlert'
+import { Metadata } from 'next'
 import { Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: 'Inicio | Pastoral Digital App',
+}
 
 export default function PastoralDigitalPage() {
   return (

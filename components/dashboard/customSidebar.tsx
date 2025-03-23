@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Sidebar, SidebarBody, SidebarLink } from '../ui/sidebar'
+import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import {
   IconCake,
   IconHome2,
@@ -11,7 +11,7 @@ import {
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import { checkRole } from '@/lib/roles'
 
 export function CustomSidebar() {

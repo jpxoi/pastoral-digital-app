@@ -1,11 +1,4 @@
-import type { Metadata } from 'next'
 import { CustomSidebar } from '@/components/dashboard/customSidebar'
-
-export const metadata: Metadata = {
-  title: 'Dashboard | Pastoral Digital App',
-  description:
-    'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
-}
 
 export default function Layout({
   children,
