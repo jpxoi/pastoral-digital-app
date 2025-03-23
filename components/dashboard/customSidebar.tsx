@@ -6,6 +6,7 @@ import {
   IconHome2,
   IconListCheck,
   IconQrcode,
+  IconUsers,
 } from '@tabler/icons-react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
@@ -47,6 +48,12 @@ export function CustomSidebar() {
       icon: <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />,
       show: isAdmin,
     },
+    {
+      label: 'Administrar Catequistas',
+      href: '/admin/users',
+      icon: <IconUsers className='h-5 w-5 shrink-0 text-neutral-200' />,
+      show: isAdmin,
+    }
   ]
   const [open, setOpen] = useState(false)
   return (
