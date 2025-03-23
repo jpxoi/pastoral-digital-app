@@ -7,7 +7,6 @@ import {
 } from '@/db/schema'
 import { between, desc, eq, sql } from 'drizzle-orm'
 
-
 /* UsersTable */
 export const getAllUsers = async () => {
   return db.query.usersTable.findMany({
@@ -44,7 +43,6 @@ export const getUserBirthdays = async () => {
     ],
   })
 }
-
 
 /* AttendanceRecordsTable */
 export const getAllAttendanceRecords = async () => {
