@@ -13,7 +13,7 @@ export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
     ),
     cell: ({ row }) => {
       const checkInTime = row.getValue('checkInTime')
-      const formattedTime = (checkInTime as Date).toLocaleDateString('es-ES', {
+      const formattedTime = (checkInTime as Date).toLocaleDateString('es-PE', {
         weekday: 'long',
         day: 'numeric',
         month: 'short',
