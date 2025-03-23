@@ -13,12 +13,13 @@ import { motion } from 'motion/react'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
 import { Skeleton } from '@/components/ui/skeleton'
 import { checkRole } from '@/lib/roles'
+import { UserRole } from '@/types'
 
 export function CustomSidebar() {
   const [isAdmin, setIsAdmin] = useState(false)
 
   useEffect(() => {
-    checkRole('admin').then((result) => {
+    checkRole(UserRole.ADMIN).then((result) => {
       setIsAdmin(result)
     })
   }, [])
