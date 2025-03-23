@@ -5,7 +5,7 @@ export default async function BirthdayGrid() {
   const userBirthdays = await getUserBirthdays()
 
   return (
-    <div className='grid gap-2 md:grid-cols-2 xl:grid-cols-3 max-w-full'>
+    <div className='grid max-w-full gap-2 md:grid-cols-2 xl:grid-cols-3'>
       {userBirthdays.map((user) => (
         <BirthdayCard
           key={user.id}

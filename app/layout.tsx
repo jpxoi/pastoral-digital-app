@@ -129,7 +129,12 @@ export default function RootLayout({
           ></Script>
         </head>
         <body className={poppins.className}>
-          <Toaster position='top-right' richColors />
+          <Toaster
+            className='text-left'
+            position='top-right'
+            theme='light'
+            richColors
+          />
           {children}
           <Analytics />
           <SpeedInsights />

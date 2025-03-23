@@ -1,5 +1,4 @@
-import { getUserById } from '@/queries/select'
-import { currentUser } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { Button } from '../ui/button'
 import {
   Card,
@@ -11,13 +10,14 @@ import {
 import Link from 'next/link'
 
 export default async function RegisterAlert() {
+  const isOnboarded =
+    (await auth()).sessionClaims?.metadata.onboardingComplete === true
   const user = await currentUser()
-  if (!user) return null
+  const salutation = user?.firstName
+    ? `Hola, ${user.firstName as string}!`
+    : 'Hola!'
 
-  const salutation = user.fullName ? `Hola, ${user.fullName}` : 'Hola'
-  const userExistsInDb = await getUserById(user.id)
-
-  if (!userExistsInDb) {
+  if (!isOnboarded) {
     return (
       <Card className='mb-2 border-l-4 border-yellow-400 bg-yellow-50 text-left text-card-foreground'>
         <CardHeader>
@@ -26,6 +26,9 @@ export default async function RegisterAlert() {
             Parece que no has completado tu registro. Por favor, completa tu
             registro para poder acceder a todas las funcionalidades de la
             plataforma.
+          </CardDescription>
+          <CardDescription className='text-card-foreground'>
+            Si necesitas ayuda, no dudes en contactarnos.
           </CardDescription>
         </CardHeader>
         <CardFooter>

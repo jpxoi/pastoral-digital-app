@@ -53,7 +53,7 @@ export function CustomSidebar() {
       href: '/admin/users',
       icon: <IconUsers className='h-5 w-5 shrink-0 text-neutral-200' />,
       show: isAdmin,
-    }
+    },
   ]
   const [open, setOpen] = useState(false)
   return (
