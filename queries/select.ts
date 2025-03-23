@@ -39,6 +39,12 @@ export async function getUserBirthdays() {
   })
 }
 
+export const getAllUsers = async () => {
+  return db.query.usersTable.findMany({
+    orderBy: (fields) => [fields.firstName],
+  })
+}
+
 export const getAllAttendanceRecords = async () => {
   return db.query.attendanceRecordsTable.findMany({
     with: {
