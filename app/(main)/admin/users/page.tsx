@@ -1,0 +1,30 @@
+import { Suspense } from 'react'
+import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
+import { Metadata } from 'next'
+import OfflineAlert from '@/components/shared/offlineAlert'
+import UsersTable from '@/components/admin/usersTable'
+
+export const metadata: Metadata = {
+  title: 'Administrar Catequistas | Pastoral Digital App',
+}
+
+export default async function Page() {
+  return (
+    <main className='flex h-full w-full flex-1 flex-col gap-4 overflow-y-scroll rounded-tl-2xl border border-neutral-200 bg-white p-4 max-sm:max-h-[calc(100vh-3rem)] md:p-10'>
+      <OfflineAlert />
+      <div className='flex flex-col gap-2 text-left'>
+        <h1 className='text-xl font-semibold sm:text-2xl'>
+          Administrar Catequistas
+        </h1>
+        <p className='text-sm text-neutral-500'>
+          Esta es la lista de catequistas registrados en la aplicación.
+        </p>
+      </div>
+      <Suspense fallback={<AttendanceTableSkeleton />}>
+        <UsersTable />
+      </Suspense>
+    </main>
+  )
+}
+
+export const dynamic = 'force-dynamic'
