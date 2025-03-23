@@ -1,4 +1,3 @@
-import { FooterNarrow } from '@/components/shared/footer'
 import Background from '@/components/shared/background'
 import WelcomeScreen from '@/components/home/welcomeScreen'
 
