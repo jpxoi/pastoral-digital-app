@@ -311,6 +311,9 @@ export default function OnboardingForm({
                     <SelectItem value={UserCategory.ALUMNI}>
                       Exalumno
                     </SelectItem>
+                    <SelectItem value={UserCategory.TEACHER}>
+                      Docente
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
