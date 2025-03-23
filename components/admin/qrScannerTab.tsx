@@ -15,7 +15,6 @@ import { registerAttendanceRecord } from '@/actions/attendance'
 import { FetchAttendanceProps } from '@/types'
 import { ScanErrorScreen, ScanSuccessScreen } from './scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
-import QrScannerHeader from './qrScannerHeader'
 import { calculateStatus } from '@/lib/attendance'
 import { getEventOfTheDay } from '@/actions/event'
 
@@ -187,8 +186,7 @@ export default function QrScannerTab() {
         )}
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8'>
           <Card>
-            <QrScannerHeader />
-            <CardContent>
+            <CardHeader>
               <div className='mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl border border-gray-200'>
                 {scanning ? (
                   <Scanner
@@ -211,7 +209,7 @@ export default function QrScannerTab() {
                   </div>
                 )}
               </div>
-            </CardContent>
+            </CardHeader>
             <CardFooter className='flex justify-between'>
               <Button
                 disabled={!event || !isLoaded || isRegistrationPending}
@@ -235,7 +233,7 @@ export default function QrScannerTab() {
 
           {lastScanned ? (
             <Card>
-              <CardHeader className='flex flex-col items-center justify-center'>
+              <CardHeader className='flex flex-col items-center justify-center h-full'>
                 <h2 className='text-left text-lg font-semibold'>
                   {lastScanned.user.firstName} {lastScanned.user.lastName}
                 </h2>
