@@ -37,4 +37,3 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
       }
     })
 }
-

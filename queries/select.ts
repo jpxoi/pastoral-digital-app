@@ -1,5 +1,3 @@
-'use server'
-
 import { db } from '@/db/drizzle'
 import {
   attendanceRecordsTable,
@@ -9,13 +7,21 @@ import {
 } from '@/db/schema'
 import { between, desc, eq, sql } from 'drizzle-orm'
 
-export async function getUserById(id: SelectUser['id']) {
+
+/* UsersTable */
+export const getAllUsers = async () => {
+  return db.query.usersTable.findMany({
+    orderBy: (fields) => [fields.firstName],
+  })
+}
+
+export const getUserById = async (id: SelectUser['id']) => {
   return db.query.usersTable.findFirst({
     where: eq(usersTable.id, id),
   })
 }
 
-export async function getUserBirthdays() {
+export const getUserBirthdays = async () => {
   return db.query.usersTable.findMany({
     where: sql`
       (
@@ -39,12 +45,8 @@ export async function getUserBirthdays() {
   })
 }
 
-export const getAllUsers = async () => {
-  return db.query.usersTable.findMany({
-    orderBy: (fields) => [fields.firstName],
-  })
-}
 
+/* AttendanceRecordsTable */
 export const getAllAttendanceRecords = async () => {
   return db.query.attendanceRecordsTable.findMany({
     with: {
@@ -71,6 +73,20 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
       user: true,
     },
     limit: 100,
+  })
+}
+
+/* EventsTable */
+export const getAllEvents = async () => {
+  return db.query.eventsTable.findMany({
+    orderBy: (fields) => [desc(fields.date)],
+  })
+}
+
+export const getUpcomingEvents = async () => {
+  return db.query.eventsTable.findMany({
+    where: sql`date >= current_date`,
+    orderBy: (fields) => [fields.date],
   })
 }
 

@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
-import { getTodayEvent } from '@/queries/select'
 import { SelectEvent } from '@/db/schema'
 
 import { useState, useEffect, useTransition } from 'react'
@@ -18,6 +17,7 @@ import { ScanErrorScreen, ScanSuccessScreen } from './scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
 import QrScannerHeader from './qrScannerHeader'
 import { calculateStatus } from '@/lib/attendance'
+import { getEventOfTheDay } from '@/actions/event'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
@@ -39,18 +39,31 @@ export default function QrScannerTab() {
   const { user, isLoaded } = useUser()
 
   useEffect(() => {
-    const fetchEventId = async () => {
-      const event = await getTodayEvent()
-      setEvent(event || undefined)
-    }
-    fetchEventId()
-    const errorSound = new Audio('/sounds/error.mp3')
-    const successSound = new Audio('/sounds/success.mp3')
-    setErrorSound(errorSound)
-    setSuccessSound(successSound)
-  }, [])
+    const fetchEvent = async () => {
+      const data = await getEventOfTheDay()
 
-  useEffect(() => {
+      if (data?.error) {
+        toast.error(data.error)
+        return
+      }
+
+      if (data?.success && data?.event) {
+        toast.message(`Evento: ${data.event.name}`, {
+          description: `
+              Hoy a las ${new Date(data.event.date).toLocaleTimeString(
+                'es-PE',
+                {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                }
+              )}
+            `,
+        })
+        setEvent(data.event)
+        return
+      }
+    }
+
     const checkCameraPermission = async () => {
       try {
         const result = await navigator.permissions.query({
@@ -66,7 +79,13 @@ export default function QrScannerTab() {
       }
     }
 
+    fetchEvent()
     checkCameraPermission()
+
+    const errorSound = new Audio('/sounds/error.mp3')
+    const successSound = new Audio('/sounds/success.mp3')
+    setErrorSound(errorSound)
+    setSuccessSound(successSound)
   }, [])
 
   const handleError = (error?: string) => {
@@ -95,7 +114,7 @@ export default function QrScannerTab() {
       const checkInTime = new Date()
 
       if (!event) {
-        handleError('No hay un evento programado para hoy')
+        handleError('No hay ningún evento programado para hoy.')
         return
       }
 
