@@ -15,6 +15,13 @@
       "when": 1742640906230,
       "tag": "0001_high_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742690702593,
+      "tag": "0002_public_shinobi_shaw",
+      "breakpoints": true
     }
   ]
 }
