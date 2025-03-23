@@ -38,6 +38,3 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
     })
 }
 
-export const revalidateAttendanceRecords = async () => {
-  revalidatePath('/admin/records')
-}
