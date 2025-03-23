@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
-import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
 import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import UsersTable from '@/components/admin/usersTable'
+import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 
 export const metadata: Metadata = {
   title: 'Administrar Catequistas | Pastoral Digital App',
@@ -20,7 +20,7 @@ export default async function Page() {
           Esta es la lista de catequistas registrados en la aplicación.
         </p>
       </div>
-      <Suspense fallback={<AttendanceTableSkeleton />}>
+      <Suspense fallback={<UserTableSkeleton />}>
         <UsersTable />
       </Suspense>
     </main>

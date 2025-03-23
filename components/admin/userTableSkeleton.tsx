@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default async function AttendanceTableSkeleton() {
+export default async function UserTableSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex items-center justify-between'>
@@ -28,10 +28,12 @@ export default async function AttendanceTableSkeleton() {
             <TableRow>
               <TableHead>Nombres</TableHead>
               <TableHead>Apellidos</TableHead>
-              <TableHead>Marca de Tiempo</TableHead>
-              <TableHead>
-                <div className='text-right'>Estado</div>
-              </TableHead>
+              <TableHead>Nombre de Usuario</TableHead>
+              <TableHead>Correo Electrónico</TableHead>
+              <TableHead>Número de Teléfono</TableHead>
+              <TableHead>Fecha de Nacimiento</TableHead>
+              <TableHead>Edad</TableHead>
+              <TableHead>Categoría</TableHead>
               <TableHead>
                 <div></div>
               </TableHead>
@@ -40,7 +42,7 @@ export default async function AttendanceTableSkeleton() {
           <TableBody>
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
-                {Array.from({ length: 5 }).map((_, index) => (
+                {Array.from({ length: 9 }).map((_, index) => (
                   <TableCell key={index}>
                     <div className='text-left'>
                       <Skeleton className='h-5' />
