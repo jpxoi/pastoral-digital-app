@@ -34,25 +34,9 @@ export default async function AttendanceTableSkeleton() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nombre Completo</TableHead>
-              <TableHead>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      disabled
-                      className='-ml-3 h-8 data-[state=open]:bg-accent'
-                    >
-                      <span>Hora del Registro</span>
-                      <IconSelector />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align='start'>
-                    {/* Add dropdown items here */}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableHead>
+              <TableHead>Nombres</TableHead>
+              <TableHead>Apellidos</TableHead>
+              <TableHead>Marca de Tiempo</TableHead>
               <TableHead>
                 <div className='text-right'>Estado</div>
               </TableHead>
@@ -65,7 +49,12 @@ export default async function AttendanceTableSkeleton() {
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  <div className='text-nowrap text-left font-medium'>
+                  <div className='text-left'>
+                    <Skeleton className='h-5' />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className='text-left'>
                     <Skeleton className='h-5' />
                   </div>
                 </TableCell>
