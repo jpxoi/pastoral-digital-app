@@ -15,7 +15,7 @@ export default function LoginPrompt() {
       <div className='mt-6 flex flex-col items-center gap-2'>
         <ClerkLoading>
           <Skeleton className='h-11 w-full' />
-          <Skeleton className='h-11 w-full' />
+          {/* <Skeleton className='h-11 w-full' /> */}
         </ClerkLoading>
         <ClerkLoaded>
           <SignInButton>
@@ -26,7 +26,7 @@ export default function LoginPrompt() {
               Iniciar sesión
             </Button>
           </SignInButton>
-          <SignUpButton>
+          {/* <SignUpButton>
             <Button
               size='lg'
               variant='outline'
@@ -34,7 +34,7 @@ export default function LoginPrompt() {
             >
               Registrarse
             </Button>
-          </SignUpButton>
+          </SignUpButton> */}
         </ClerkLoaded>
       </div>
     </>
