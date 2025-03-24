@@ -90,6 +90,7 @@ export const eventsTable = pgTable('events', {
   name: text().notNull(),
   description: text(),
   date: timestamp().notNull(),
+  endDate: timestamp('end_date').notNull(),
   locationId: serial('location_id')
     .references(() => locationsTable.id)
     .notNull(),
