@@ -12,6 +12,8 @@ import {
 import { relations } from 'drizzle-orm'
 import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 
+/* Enums */
+
 export const userCategoryEnum = pgEnum('user_category_enum', [
   UserCategory.STUDENT,
   UserCategory.ALUMNI,
@@ -31,6 +33,8 @@ export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
   AttendanceStatus.TARDANZA_JUSTIFICADA,
   AttendanceStatus.FALTA_INJUSTIFICADA,
 ])
+
+/* Tables */
 
 export const usersTable = pgTable('users', {
   id: text().primaryKey(),
@@ -109,6 +113,8 @@ export const locationsTable = pgTable('locations', {
     .$onUpdate(() => new Date()),
 })
 
+/* Relations */
+
 export const attendanceRecordsRelations = relations(
   attendanceRecordsTable,
   ({ one }) => {
@@ -151,6 +157,8 @@ export const locationsRelations = relations(locationsTable, ({ many }) => {
     events: many(eventsTable),
   }
 })
+
+/* Types */
 
 export type InsertUser = typeof usersTable.$inferInsert
 export type SelectUser = typeof usersTable.$inferSelect
