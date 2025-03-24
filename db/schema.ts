@@ -33,17 +33,17 @@ export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
 ])
 
 export const usersTable = pgTable('users', {
-  id: text('id').primaryKey(),
+  id: text().primaryKey(),
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
-  nickname: text('nickname'),
-  username: text('username').notNull().unique(),
-  email: text('email').notNull().unique(),
+  nickname: text(),
+  username: text().notNull().unique(),
+  email: text().notNull().unique(),
   phoneNumber: text('phone_number').notNull(),
   dateOfBirth: date('date_of_birth').notNull(),
   category: userCategoryEnum().notNull(),
   studentCode: text('student_code'),
-  role: userRoleEnum().notNull().default(UserRole.MEMBER),
+  role: userRoleEnum().default(UserRole.MEMBER).notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -53,7 +53,7 @@ export const usersTable = pgTable('users', {
 export const attendanceRecordsTable = pgTable(
   'attendance_records',
   {
-    id: uuid('id').primaryKey().defaultRandom(),
+    id: uuid().primaryKey().defaultRandom(),
     userId: text('user_id')
       .references(() => usersTable.id)
       .notNull(),
@@ -61,11 +61,11 @@ export const attendanceRecordsTable = pgTable(
       .references(() => eventsTable.id)
       .notNull(),
     checkInTime: timestamp('check_in_time').defaultNow(),
-    status: attendanceStatusEnum().notNull().default(AttendanceStatus.A_TIEMPO),
+    status: attendanceStatusEnum().default(AttendanceStatus.A_TIEMPO).notNull(),
     registeredBy: text('registered_by')
       .references(() => usersTable.id)
       .notNull(),
-    method: text('method').default('QR').notNull(),
+    method: text().default('QR').notNull(),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at')
       .defaultNow()
@@ -82,10 +82,10 @@ export const attendanceRecordsTable = pgTable(
 )
 
 export const eventsTable = pgTable('events', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  description: text('description'),
-  date: timestamp('date').notNull(),
+  id: serial().primaryKey(),
+  name: text().notNull(),
+  description: text(),
+  date: timestamp().notNull(),
   locationId: serial('location_id')
     .references(() => locationsTable.id)
     .notNull(),
@@ -96,10 +96,13 @@ export const eventsTable = pgTable('events', {
 })
 
 export const locationsTable = pgTable('locations', {
-  id: serial('id').primaryKey(),
-  name: text('name').notNull(),
-  description: text('description'),
-  capacity: integer('capacity').notNull(),
+  id: serial().primaryKey(),
+  name: text().notNull(),
+  address: text().notNull(),
+  city: text().default('Trujillo').notNull(),
+  postalCode: text('postal_code').notNull(),
+  country: text('country').default('Perú').notNull(),
+  googleMapsUrl: text('google_maps_url').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -114,6 +117,10 @@ export const attendanceRecordsRelations = relations(
         fields: [attendanceRecordsTable.userId],
         references: [usersTable.id],
       }),
+      event: one(eventsTable, {
+        fields: [attendanceRecordsTable.eventId],
+        references: [eventsTable.id],
+      }),
       registeredBy: one(usersTable, {
         fields: [attendanceRecordsTable.registeredBy],
         references: [usersTable.id],
@@ -121,6 +128,29 @@ export const attendanceRecordsRelations = relations(
     }
   }
 )
+
+export const usersRelations = relations(usersTable, ({ many }) => {
+  return {
+    attendanceRecords: many(attendanceRecordsTable),
+    attendanceRecordsRegisteredBy: many(attendanceRecordsTable),
+  }
+})
+
+export const eventsRelations = relations(eventsTable, ({ one, many }) => {
+  return {
+    attendanceRecords: many(attendanceRecordsTable),
+    location: one(locationsTable, {
+      fields: [eventsTable.locationId],
+      references: [locationsTable.id],
+    }),
+  }
+})
+
+export const locationsRelations = relations(locationsTable, ({ many }) => {
+  return {
+    events: many(eventsTable),
+  }
+})
 
 export type InsertUser = typeof usersTable.$inferInsert
 export type SelectUser = typeof usersTable.$inferSelect
