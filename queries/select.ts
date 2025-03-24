@@ -81,10 +81,27 @@ export const getAllEvents = async () => {
   })
 }
 
+export const getEventWithAttendanceRecords = async (eventId: number) => {
+  return db.query.eventsTable.findFirst({
+    where: eq(eventsTable.id, eventId),
+    with: {
+      attendanceRecords: {
+        orderBy: (fields) => [desc(fields.checkInTime)],
+        with: {
+          user: true,
+        },
+      },
+    },
+  })
+}
+
 export const getUpcomingEvents = async () => {
   return db.query.eventsTable.findMany({
     where: sql`date >= current_date`,
     orderBy: (fields) => [fields.date],
+    with: {
+      location: true,
+    },
     limit: 10,
   })
 }
@@ -93,6 +110,9 @@ export const getPastEvents = async () => {
   return db.query.eventsTable.findMany({
     where: sql`date < current_date`,
     orderBy: (fields) => [desc(fields.date)],
+    with: {
+      location: true,
+    },
     limit: 10,
   })
 }
