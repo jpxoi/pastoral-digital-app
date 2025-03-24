@@ -14,8 +14,8 @@ export default async function RegisterAlert() {
     (await auth()).sessionClaims?.metadata.onboardingComplete === true
   const user = await currentUser()
   const salutation = user?.firstName
-    ? `Hola, ${user.firstName as string}!`
-    : 'Hola!'
+    ? `¡Hola, ${user.firstName as string}!`
+    : '¡Hola!'
 
   if (!isOnboarded) {
     return (
@@ -28,11 +28,11 @@ export default async function RegisterAlert() {
             plataforma.
           </CardDescription>
           <CardDescription className='text-card-foreground'>
-            Si necesitas ayuda, no dudes en contactarnos.
+            Si necesitas ayuda, no dudes en contactar con el coordinador de sistemas.
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button asChild variant='outline'>
+          <Button asChild variant='outline' className='bg-yellow-600 text-white hover:bg-yellow-700 hover:text-white'>
             <Link href='/onboarding'>Completar Registro</Link>
           </Button>
         </CardFooter>
