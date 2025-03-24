@@ -1,4 +1,9 @@
-import { SelectAttendance, SelectUser } from '@/db/schema'
+import {
+  SelectAttendance,
+  SelectEvent,
+  SelectLocation,
+  SelectUser,
+} from '@/db/schema'
 
 export interface UserInfoProps {
   avatarURL: string | null
@@ -28,6 +33,10 @@ export interface StatusLabel {
 
 export interface FetchAttendanceProps extends SelectAttendance {
   user: SelectUser
+}
+
+export interface FetchEventProps extends SelectEvent {
+  location: SelectLocation
 }
 
 export enum AttendanceStatus {
