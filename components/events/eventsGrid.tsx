@@ -1,61 +1,26 @@
-import { getPastEvents, getUpcomingEvents } from '@/queries/select'
-import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Suspense } from 'react'
+import PastEvents from './pastEvents'
+import UpcomingEvents from './upcomingEvents'
+import EventCardGroupSkeleton from './eventCardGroupSkeleton'
 
-export default async function EventsGrid() {
-  const pastEvents = await getPastEvents()
-  const upcomingEvents = await getUpcomingEvents()
-
+export default function EventsGrid() {
   return (
-    <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-      <div className='grid gap-2 lg:col-span-2 lg:grid-cols-2'>
-        <h2 className='col-span-full text-lg'>Próximos eventos</h2>
-        {upcomingEvents.length > 0 ? (
-          upcomingEvents.map((record) => (
-            <Card key={record.id} className='text-left'>
-              <CardHeader>
-                <CardTitle className='text-lg'>{record.name}</CardTitle>
-                <CardDescription>
-                  {record.date.toLocaleDateString('es-PE', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                  })}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          ))
-        ) : (
-          <div className='flex flex-col items-center justify-center gap-4'>
-            <p className='text-neutral-500'>No hay registros de asistencia.</p>
-          </div>
-        )}
+    <div className='grid gap-4 text-left md:grid-cols-2 lg:grid-cols-3'>
+      <div className='flex flex-col gap-2 lg:col-span-2'>
+        <div className='grid gap-2 lg:grid-cols-2'>
+          <h2 className='col-span-full text-lg'>Próximos eventos</h2>
+          <Suspense fallback={<EventCardGroupSkeleton count={6} />}>
+            <UpcomingEvents />
+          </Suspense>
+        </div>
       </div>
-      <div className='grid gap-2'>
-        <h2 className='col-span-full text-lg'>Eventos pasados</h2>
-        {pastEvents.length > 0 ? (
-          pastEvents.map((record) => (
-            <Card key={record.id}>
-              <CardHeader>
-                <CardTitle className='text-lg'>{record.name}</CardTitle>
-                <CardDescription>
-                  {record.date.toLocaleDateString('es-PE', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                  })}
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          ))
-        ) : (
-          <div className='flex flex-col items-center justify-center gap-4'>
-            <p className='text-neutral-500'>No hay registros de asistencia.</p>
-          </div>
-        )}
+      <div className='flex flex-col gap-2'>
+        <div className='grid gap-2'>
+          <h2 className='col-span-full text-lg'>Eventos pasados</h2>
+          <Suspense fallback={<EventCardGroupSkeleton count={3} />}>
+            <PastEvents />
+          </Suspense>
+        </div>
       </div>
     </div>
   )
