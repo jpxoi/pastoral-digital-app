@@ -13,8 +13,8 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
     accessorKey: 'user.firstName',
     header: 'Nombres',
     cell: ({ row }) => {
-      const lastName = row.original.user.lastName as string
-      return <div className='text-nowrap text-left'>{lastName}</div>
+      const firstName = row.original.user.firstName as string
+      return <div className='text-nowrap text-left'>{firstName}</div>
     },
   },
   {
