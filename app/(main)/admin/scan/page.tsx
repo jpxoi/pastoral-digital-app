@@ -31,8 +31,9 @@ export default function Page() {
           <TabsTrigger value='scan'>Escanear QR</TabsTrigger>
           <TabsTrigger value='register'>Registro Manual</TabsTrigger>
         </TabsList>
-
-        <QrScannerTab />
+        <Suspense fallback={null}>
+          <QrScannerTab />
+        </Suspense>
         <ManualAttendanceTab />
       </Tabs>
     </main>
