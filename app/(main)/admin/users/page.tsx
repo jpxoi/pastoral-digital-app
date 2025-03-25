@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Administrar Catequistas | Pastoral Digital App',
 }
 
-export default async function Page() {
+export default function Page() {
   return (
     <main className='flex h-full w-full flex-1 flex-col gap-4 overflow-y-scroll rounded-tl-2xl border border-neutral-200 bg-white p-4 pb-8 max-sm:max-h-[calc(100vh-3rem)] md:p-8'>
       <Suspense fallback={null}>
