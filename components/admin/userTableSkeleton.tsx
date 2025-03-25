@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default async function UserTableSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex items-center justify-between'>
+      <div className='flex items-center justify-between gap-2'>
         <Input
           placeholder='Buscar registros...'
           className='max-w-sm'
