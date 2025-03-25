@@ -1,6 +1,17 @@
 'use client'
 
 import { fillAbsenceRecords } from '@/actions/attendance'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { useTransition } from 'react'
 import { toast } from 'sonner'
@@ -32,13 +43,32 @@ export default function EventFillAbsenteesButton({
     })
   }
   return (
-    <Button
-      variant='destructive'
-      size='sm'
-      disabled={isPending}
-      onClick={() => handleClick(eventId)}
-    >
-      Rellenar Faltas
-    </Button>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant='destructive' size='sm' disabled={isPending}>
+          Rellenar Faltas
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            ¿Estás seguro que quieres rellenar las faltas?
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            Esta acción rellenará las faltas de todos los asistentes que no
+            marcaron su asistencia. Esta acción no se puede deshacer.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+            onClick={() => handleClick(eventId)}
+          >
+            Continuar
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }
