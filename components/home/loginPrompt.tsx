@@ -2,7 +2,7 @@ import {
   ClerkLoaded,
   ClerkLoading,
   SignInButton,
-  SignUpButton,
+
 } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
