@@ -132,8 +132,9 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
           size='icon'
           className='h-5 w-5 p-0'
           onClick={() => {
-            navigator.clipboard.writeText(row.original.id)
-            toast.info('El ID del catequista ha sido copiado al portapapeles')
+            navigator.clipboard.writeText(row.original.id).then(()=>{
+              toast.info('El ID del catequista ha sido copiado al portapapeles')
+            })
           }}
         >
           <IconCopy />
