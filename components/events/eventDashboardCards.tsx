@@ -1,8 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-    countAllUsers,
-  getEventAttendanceStats,
-} from '@/queries/select'
+import { countAllUsers, getEventAttendanceStats } from '@/queries/select'
 import {
   IconCalendarX,
   IconClockCheck,
@@ -15,7 +12,7 @@ export default async function EventDashboardCards({
 }: {
   eventId: number
 }) {
-    const totalExpected = await countAllUsers()
+  const totalExpected = await countAllUsers()
   const {
     totalOnTime,
     totalLate,

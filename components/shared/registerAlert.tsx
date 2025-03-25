@@ -28,11 +28,16 @@ export default async function RegisterAlert() {
             plataforma.
           </CardDescription>
           <CardDescription className='text-card-foreground'>
-            Si necesitas ayuda, no dudes en contactar con el coordinador de sistemas.
+            Si necesitas ayuda, no dudes en contactar con el coordinador de
+            sistemas.
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button asChild variant='outline' className='bg-yellow-600 text-white hover:bg-yellow-700 hover:text-white'>
+          <Button
+            asChild
+            variant='outline'
+            className='bg-yellow-600 text-white hover:bg-yellow-700 hover:text-white'
+          >
             <Link href='/onboarding'>Completar Registro</Link>
           </Button>
         </CardFooter>
