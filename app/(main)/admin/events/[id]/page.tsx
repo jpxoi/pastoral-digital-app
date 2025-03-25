@@ -39,7 +39,9 @@ export default async function Page({
 
   return (
     <main className='flex h-full w-full flex-1 flex-col gap-4 overflow-y-scroll rounded-tl-2xl border border-neutral-200 bg-white p-4 pb-8 max-sm:max-h-[calc(100vh-3rem)] md:p-8'>
-      <OfflineAlert />
+      <Suspense fallback={null}>
+        <OfflineAlert />
+      </Suspense>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -55,7 +57,6 @@ export default async function Page({
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
       <div className='flex flex-col gap-4 text-left'>
         <div className='flex justify-between gap-2 max-sm:flex-col'>
           <div className='flex flex-col gap-2'>
@@ -64,7 +65,6 @@ export default async function Page({
           <EventPageActionButtons eventId={id} />
         </div>
       </div>
-
       <div className='flex w-full flex-col items-start justify-start gap-4'>
         <Suspense fallback={<EventDashboardCardsSkeleton />}>
           <EventDashboardCards eventId={id} />

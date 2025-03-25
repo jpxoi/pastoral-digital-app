@@ -2,11 +2,14 @@ import { ClerkLoaded, ClerkLoading, SignInButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import OfflineAlert from '@/components/shared/offlineAlert'
+import { Suspense } from 'react'
 
 export default function LoginPrompt() {
   return (
     <>
-      <OfflineAlert />
+      <Suspense fallback={null}>
+        <OfflineAlert />
+      </Suspense>
       <div className='mt-6 flex flex-col items-center gap-2'>
         <ClerkLoading>
           <Skeleton className='h-11 w-full' />
