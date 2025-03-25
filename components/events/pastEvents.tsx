@@ -4,7 +4,7 @@ import EventCard from './eventCard'
 export default async function PastEvents() {
   const pastEvents = await getPastEvents()
   return (
-    <>
+    <div className='flex flex-col gap-2 lg:grid lg:grid-cols-2 xl:grid-cols-3'>
       {pastEvents.length > 0 ? (
         pastEvents.map((record) => (
           <EventCard key={record.id} record={record} type='past' />
@@ -14,6 +14,6 @@ export default async function PastEvents() {
           <p>No hay eventos pasados</p>
         </div>
       )}
-    </>
+    </div>
   )
 }
