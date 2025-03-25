@@ -4,7 +4,7 @@ export function LogoImage({ width = 80, height = 100 }) {
       <source srcSet='/images/pastoral_logo.avif' type='image/avif' />
       <source srcSet='/images/pastoral_logo.webp' type='image/webp' />
       <img
-        src='/pastoral_logo.webp'
+        src='/images/pastoral_logo.webp'
         alt='Pastoral Logo'
         width={width}
         height={height}
@@ -19,7 +19,7 @@ export function LogoImageWideLight({ width = 200, height = 70 }) {
       <source srcSet='/images/pastoral_logo_wide.avif' type='image/avif' />
       <source srcSet='/images/pastoral_logo_wide.webp' type='image/webp' />
       <img
-        src='/pastoral_logo_wide.webp'
+        src='/images/pastoral_logo_wide.webp'
         alt='Pastoral Logo'
         width={width}
         height={height}
@@ -34,7 +34,7 @@ export function LogoImageWideDark({ width = 180, height = 63 }) {
       <source srcSet='/images/pastoral_logo_wide_dark.avif' type='image/avif' />
       <source srcSet='/images/pastoral_logo_wide_dark.webp' type='image/webp' />
       <img
-        src='/pastoral_logo_wide_dark.webp'
+        src='/images/pastoral_logo_wide_dark.webp'
         alt='Pastoral Logo'
         width={width}
         height={height}
@@ -49,7 +49,7 @@ export function LogoImageWide({ width = 200, height = 70 }) {
       <source srcSet='/images/pastoral_logo_wide_dark.avif' type='image/avif' />
       <source srcSet='/images/pastoral_logo_wide_dark.webp' type='image/webp' />
       <img
-        src='/pastoral_logo_wide.webp'
+        src='/images/pastoral_logo_wide.webp'
         alt='Pastoral Logo'
         width={width}
         height={height}

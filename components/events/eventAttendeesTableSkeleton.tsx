@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default async function UserTableSkeleton() {
+export default async function EventAttendeesTableSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
       <div className='flex items-center justify-between gap-2'>
@@ -25,29 +25,26 @@ export default async function UserTableSkeleton() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nombres</TableHead>
-              <TableHead>Apellidos</TableHead>
-              <TableHead>Nombre de Usuario</TableHead>
-              <TableHead>Correo Electrónico</TableHead>
-              <TableHead>Número de Teléfono</TableHead>
-              <TableHead>Fecha de Nacimiento</TableHead>
-              <TableHead>Edad</TableHead>
-              <TableHead>Categoría</TableHead>
+              <TableHead>Catequista</TableHead>
               <TableHead>
-                <div></div>
+                <div className='text-right'>Estado</div>
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
-                {Array.from({ length: 9 }).map((_, index) => (
-                  <TableCell key={index}>
-                    <div className='text-left'>
-                      <Skeleton className='h-5' />
-                    </div>
-                  </TableCell>
-                ))}
+                <TableCell>
+                  <div className='flex flex-col justify-start gap-1'>
+                    <Skeleton className='h-5 w-40' />
+                    <Skeleton className='h-4 w-32' />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className='flex justify-end'>
+                    <Skeleton className='h-8 w-32' />
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

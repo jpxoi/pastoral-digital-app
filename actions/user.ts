@@ -51,7 +51,7 @@ export const completeOnboarding = async () => {
   const client = await clerkClient()
 
   try {
-    const res = await client.users.updateUser(userId, {
+    await client.users.updateUser(userId, {
       publicMetadata: {
         role: currentUserRole,
         onboardingComplete: true,
@@ -69,7 +69,7 @@ export async function setRole(formData: FormData) {
   const client = await clerkClient()
 
   // Check that the user trying to set the role is an admin
-  if (!checkRole(UserRole.ADMIN)) {
+  if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estás autorizado para realizar esta acción.' }
   }
 

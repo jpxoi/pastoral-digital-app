@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import {
   IconCake,
+  IconCalendar,
   IconHome2,
   IconListCheck,
   IconQrcode,
@@ -29,6 +30,12 @@ export function CustomSidebar() {
       label: 'Inicio',
       href: '/dashboard',
       icon: <IconHome2 className='h-5 w-5 shrink-0 text-neutral-200' />,
+      show: true,
+    },
+    {
+      label: 'Eventos',
+      href: '/events',
+      icon: <IconCalendar className='h-5 w-5 shrink-0 text-neutral-200' />,
       show: true,
     },
     {
