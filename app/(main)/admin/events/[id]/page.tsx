@@ -9,8 +9,6 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { getEventById } from '@/queries/select'
-import { Button } from '@/components/ui/button'
-import EventFillAbsenteesButton from '@/components/events/eventFillAbsenteesButton'
 import EventDashboardCards from '@/components/events/eventDashboardCards'
 import { Suspense } from 'react'
 import EventDashboardCardsSkeleton from '@/components/events/eventDashboardCardsSkeleton'
