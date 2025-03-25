@@ -1,4 +1,5 @@
 import EventCardGroupSkeleton from '@/components/events/eventCardGroupSkeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function Loading() {
   return (
@@ -9,24 +10,18 @@ export default function Loading() {
           Aquí puedes ver la lista de eventos.
         </p>
       </div>
-      <div className='grid gap-4 text-left md:grid-cols-2 xl:grid-cols-3'>
-        <div className='flex flex-col gap-2 xl:col-span-2'>
-          <div className='grid gap-2 xl:grid-cols-2'>
-            <h2 className='col-span-full text-lg font-medium'>
-              Próximos eventos
-            </h2>
-            <EventCardGroupSkeleton count={6} />
-          </div>
-        </div>
-        <div className='flex flex-col gap-2'>
-          <div className='grid gap-2'>
-            <h2 className='col-span-full text-lg font-medium'>
-              Eventos pasados
-            </h2>
-            <EventCardGroupSkeleton count={3} />
-          </div>
-        </div>
-      </div>
+      <Tabs defaultValue='upcoming' className='w-full'>
+        <TabsList className='mb-2 grid w-full grid-cols-2'>
+          <TabsTrigger value='upcoming'>Próximos eventos</TabsTrigger>
+          <TabsTrigger value='past'>Eventos pasados</TabsTrigger>
+        </TabsList>
+        <TabsContent value='upcoming'>
+          <EventCardGroupSkeleton />
+        </TabsContent>
+        <TabsContent value='past'>
+          <EventCardGroupSkeleton />
+        </TabsContent>
+      </Tabs>
     </main>
   )
 }
