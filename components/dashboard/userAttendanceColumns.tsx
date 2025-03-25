@@ -9,12 +9,11 @@ export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
   {
     accessorKey: 'checkInTime',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Hora del Registro' />
+      <DataTableColumnHeader column={column} title='Hora de Ingreso' />
     ),
     cell: ({ row }) => {
       const checkInTime = row.getValue('checkInTime')
       const formattedTime = (checkInTime as Date).toLocaleDateString('es-PE', {
-        weekday: 'long',
         day: 'numeric',
         month: 'short',
         hour: 'numeric',

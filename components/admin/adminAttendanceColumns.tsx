@@ -25,7 +25,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
     },
   },
   {
-    id: 'checkInTime',
+    id: 'horaDeIngreso',
     accessorKey: 'checkInTime',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Hora de Ingreso' />
