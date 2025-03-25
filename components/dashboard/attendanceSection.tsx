@@ -14,10 +14,6 @@ export default function AttendanceSection() {
           <AttendanceTable />
         </Suspense>
       </Card>
-      <p className='mt-4 w-full max-w-full text-sm text-gray-600 sm:max-w-screen-sm md:max-w-screen-md'>
-        Las faltas no se registran en la tabla. No obstante, cualquier fecha sin
-        registro válido, se considera falta.
-      </p>
     </div>
   )
 }
