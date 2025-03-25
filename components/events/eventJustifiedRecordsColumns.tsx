@@ -54,7 +54,7 @@ export const EventJustifiedRecordsColumns: ColumnDef<FetchAttendanceProps>[] = [
     id: 'acciones',
     cell: ({ row }) => {
       return (
-        <div className='flex items-center justify-end gap-2'>
+        <div className='flex items-center justify-end gap-2' key={row.id}>
           <Button
             variant='ghost'
             className='h-6 p-1 text-red-600 hover:bg-red-50 hover:text-red-600'
