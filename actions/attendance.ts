@@ -9,6 +9,7 @@ import {
   getUsersWithNoAttendanceRecord,
   getEventById,
   getLastAttendanceRecord,
+  getAttendanceRecordsByEventId,
 } from '@/queries/select'
 import { InsertAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
@@ -93,5 +94,21 @@ export const fillAbsenceRecords = async (eventId: number) => {
       return { error: handleDbError(error) }
     }
     return { error: 'Ha ocurrido un error al rellenar las faltas del evento.' }
+  }
+}
+
+export const fetchAttendanceRecordsByEventId = async (eventId: number) => {
+  try {
+    const res = await getAttendanceRecordsByEventId(eventId)
+
+    return {
+      success: 'Registros de asistencia obtenidos correctamente.',
+      records: res,
+    }
+  } catch (error) {
+    console.error(error)
+    return {
+      error: 'Ha ocurrido un error al obtener los registros de asistencia.',
+    }
   }
 }
