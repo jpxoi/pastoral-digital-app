@@ -13,7 +13,18 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-import { IconCalendar, IconClock, IconMapPin } from '@tabler/icons-react'
+import {
+  IconCalendar,
+  IconCalendarCode,
+  IconCalendarPlus,
+  IconClock,
+  IconClock12,
+  IconMapPin,
+  IconMoodSick,
+  IconNote,
+} from '@tabler/icons-react'
+import { z } from 'zod'
+import { EventJustifyModal } from './eventJustifyModal'
 
 export default async function EventCard({
   record,
@@ -31,7 +42,26 @@ export default async function EventCard({
       className={cn('text-left', isToday ? 'border-blue-700 bg-blue-50' : '')}
     >
       <CardHeader>
-        <CardTitle className='text-lg'>{record.name}</CardTitle>
+        <CardTitle className='flex items-center justify-between'>
+          <h3 className='text-lg'>{record.name}</h3>
+          {type === 'upcoming' && (
+            <Button
+              asChild
+              variant='ghost'
+              size='icon'
+              className='size-6 p-1 hover:bg-blue-50 hover:text-primary'
+            >
+              <a
+                href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${record.date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${record.endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=&location=${record.location.name}&text=${record.name}`}
+                target='_blank'
+                rel='noreferrer'
+                className='text-primary'
+              >
+                <IconCalendarPlus className='size-4' />
+              </a>
+            </Button>
+          )}
+        </CardTitle>
         <CardDescription className='space-y-0.5'>
           <span className='flex items-center gap-1 text-ellipsis'>
             <IconCalendar className='size-4' />
@@ -47,6 +77,11 @@ export default async function EventCard({
             <IconClock className='size-4' />
             <span>
               {record.date.toLocaleTimeString('es-PE', {
+                hour: 'numeric',
+                minute: 'numeric',
+              })}{' '}
+              -{' '}
+              {record.endDate.toLocaleTimeString('es-PE', {
                 hour: 'numeric',
                 minute: 'numeric',
               })}
@@ -65,34 +100,27 @@ export default async function EventCard({
       </CardHeader>
       <CardContent className='flex items-center justify-between gap-2'>
         {type === 'upcoming' ? (
-          <span
-            className={cn(
-              'text-sm',
-              isToday ? 'text-blue-700' : 'text-neutral-500'
-            )}
-          >
-            {getRelativeEventDate(record.date)}
-          </span>
+          <EventJustifyModal />
         ) : (
-          <span className='text-sm text-neutral-500'>Evento pasado</span>
-        )}
-        {type === 'upcoming' && (
-          <Button asChild variant='link' className='h-6 p-0'>
-            <a
-              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${record.date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${record.endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=&location=${record.location.name}&text=${record.name}`}
-              target='_blank'
-              rel='noreferrer'
-              className='text-primary underline-offset-4 hover:underline'
-            >
-              Agregar a calendario
-            </a>
+          <Button
+            variant='ghost'
+            disabled
+            className='h-6 cursor-not-allowed px-2 py-1 text-primary hover:bg-blue-50 hover:text-primary'
+          >
+            Justificar Inasistencia
           </Button>
         )}
-        {isAdmin && type === 'past' ? (
-          <Button asChild variant='link' className='h-6 p-0'>
-            <Link href={`/admin/events/${record.id}`}>Ver asistencia</Link>
-          </Button>
-        ) : null}
+        <div className='flex gap-2'>
+          {isAdmin ? (
+            <Button asChild variant='link' className='h-6 p-1 text-primary'>
+              <Link href={`/admin/events/${record.id}`}>Ver Asistencia</Link>
+            </Button>
+          ) : (
+            <span className='text-sm text-muted-foreground'>
+              {getRelativeEventDate(record.date)}
+            </span>
+          )}
+        </div>
       </CardContent>
     </Card>
   )
