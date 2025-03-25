@@ -15,15 +15,11 @@ import { Button } from '@/components/ui/button'
 
 import {
   IconCalendar,
-  IconCalendarCode,
   IconCalendarPlus,
   IconClock,
-  IconClock12,
   IconMapPin,
-  IconMoodSick,
-  IconNote,
+
 } from '@tabler/icons-react'
-import { z } from 'zod'
 import { EventJustifyModal } from './eventJustifyModal'
 
 export default async function EventCard({
