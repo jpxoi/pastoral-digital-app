@@ -18,7 +18,7 @@ import { AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 
 export const registerAttendanceRecord = async (data: InsertAttendance) => {
-  if (!checkRole(UserRole.ADMIN)) {
+  if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
 
@@ -48,7 +48,7 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
 }
 
 export const fillAbsenceRecords = async (eventId: number) => {
-  if (!checkRole(UserRole.ADMIN)) {
+  if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para modificar asistencias.' }
   }
 
@@ -64,7 +64,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
     return { error: 'No hay usuarios sin registro para relenar faltas.' }
   }
 
-  const { userId } = await auth()
+  const { userId: registeredBy } = await auth()
 
   console.log(
     `Creating ${absentUsers.length} absence records for event ${eventId}`
@@ -75,7 +75,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
     eventId,
     checkInTime: event.endDate,
     status: AttendanceStatus.FALTA_INJUSTIFICADA,
-    registeredBy: userId || '',
+    registeredBy: registeredBy || '',
     method: 'MANUAL',
   }))
 

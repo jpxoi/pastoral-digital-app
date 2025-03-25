@@ -22,7 +22,7 @@ export const getUserById = async (id: SelectUser['id']) => {
 }
 
 export const countAllUsers = async () => {
-  return await db.$count(usersTable)
+  return db.$count(usersTable)
 }
 
 export const getUserBirthdays = async () => {
