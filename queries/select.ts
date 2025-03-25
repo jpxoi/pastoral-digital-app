@@ -5,7 +5,8 @@ import {
   SelectUser,
   usersTable,
 } from '@/db/schema'
-import { between, desc, eq, sql } from 'drizzle-orm'
+import { AttendanceStatus } from '@/types'
+import { and, between, count, desc, eq, notInArray, or, sql } from 'drizzle-orm'
 
 /* UsersTable */
 export const getAllUsers = async () => {
@@ -20,9 +21,8 @@ export const getUserById = async (id: SelectUser['id']) => {
   })
 }
 
-export const countUsers = async () => {
-  const result = await db.select({ count: sql`count(*)` }).from(usersTable)
-  return result[0].count
+export const countAllUsers = async () => {
+  return await db.$count(usersTable)
 }
 
 export const getUserBirthdays = async () => {
@@ -47,6 +47,41 @@ export const getUserBirthdays = async () => {
       sql`to_char(date_of_birth, 'YYYY')`,
     ],
   })
+}
+
+export async function getUsersWithNoAttendanceRecord(eventId: number) {
+  return db
+    .select({
+      id: usersTable.id,
+    })
+    .from(usersTable)
+    .where(
+      notInArray(
+        usersTable.id,
+        db
+          .select({ userId: attendanceRecordsTable.userId })
+          .from(attendanceRecordsTable)
+          .where(eq(attendanceRecordsTable.eventId, eventId))
+      )
+    )
+}
+
+export async function countUsersWithNoAttendanceRecord(eventId: number) {
+  return db
+    .select({
+      count: count(usersTable.id),
+    })
+    .from(usersTable)
+    .where(
+      notInArray(
+        usersTable.id,
+        db
+          .select({ userId: attendanceRecordsTable.userId })
+          .from(attendanceRecordsTable)
+          .where(eq(attendanceRecordsTable.eventId, eventId))
+      )
+    )
+    .then((result) => result[0]?.count || 0)
 }
 
 /* AttendanceRecordsTable */
@@ -79,6 +114,34 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
   })
 }
 
+export async function getAttendanceRecordsByEventId(eventId: number) {
+  return db.query.attendanceRecordsTable.findMany({
+    where: eq(attendanceRecordsTable.eventId, eventId),
+    orderBy: (fields) => [desc(fields.checkInTime)],
+    with: {
+      user: true,
+    },
+    limit: 100,
+  })
+}
+
+export async function getJustifiedAttendanceRecords(eventId: number) {
+  return db.query.attendanceRecordsTable.findMany({
+    where: and(
+      eq(attendanceRecordsTable.eventId, eventId),
+      or(
+        eq(attendanceRecordsTable.status, AttendanceStatus.FALTA_JUSTIFICADA),
+        eq(attendanceRecordsTable.status, AttendanceStatus.TARDANZA_JUSTIFICADA)
+      )
+    ),
+    orderBy: (fields) => [desc(fields.checkInTime)],
+    with: {
+      user: true,
+    },
+    limit: 100,
+  })
+}
+
 /* EventsTable */
 export const getAllEvents = async () => {
   return db.query.eventsTable.findMany({
@@ -90,6 +153,40 @@ export const getEventById = async (id: number) => {
   return db.query.eventsTable.findFirst({
     where: eq(eventsTable.id, id),
   })
+}
+
+export const getEventAttendanceStats = async (eventId: number) => {
+  const [
+    stats = {
+      totalOnTime: 0,
+      totalLate: 0,
+      totalLateJustified: 0,
+      totalAbsentees: 0,
+      totalAbsenteesJustified: 0,
+    },
+  ] = await db
+    .select({
+      totalOnTime: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
+      ),
+      totalLate: count(
+        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
+      ),
+      totalLateJustified: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.TARDANZA_JUSTIFICADA} then 1 end`
+      ),
+      totalAbsentees: count(
+        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
+      ),
+      totalAbsenteesJustified: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.FALTA_JUSTIFICADA} then 1 end`
+      ),
+    })
+    .from(attendanceRecordsTable)
+    .where(eq(attendanceRecordsTable.eventId, eventId))
+    .groupBy() // Group all results together
+
+  return stats
 }
 
 export const getEventWithAttendanceRecords = async (eventId: number) => {
