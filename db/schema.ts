@@ -64,7 +64,7 @@ export const attendanceRecordsTable = pgTable(
     eventId: integer('event_id')
       .references(() => eventsTable.id)
       .notNull(),
-    checkInTime: timestamp('check_in_time').defaultNow(),
+    checkInTime: timestamp('check_in_time').defaultNow().notNull(),
     status: attendanceStatusEnum().default(AttendanceStatus.A_TIEMPO).notNull(),
     registeredBy: text('registered_by')
       .references(() => usersTable.id)
