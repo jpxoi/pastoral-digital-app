@@ -27,7 +27,6 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
       })
 
       return (
-        // <div className='text-nowrap text-left'>{`${firstName} ${lastName}`}</div>
         <div className='flex flex-col gap-1 text-left'>
           <span className='text-nowrap font-medium'>{`${firstName} ${lastName}`}</span>
           <span className='text-xs text-gray-500'>{formattedTime}</span>
