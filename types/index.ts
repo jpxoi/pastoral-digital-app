@@ -39,6 +39,10 @@ export interface FetchEventProps extends SelectEvent {
   location: SelectLocation
 }
 
+export interface FetchEventWithAttendanceProps extends SelectEvent {
+  attendanceRecords: FetchAttendanceProps[]
+}
+
 export enum AttendanceStatus {
   A_TIEMPO = 'A TIEMPO',
   TARDANZA = 'TARDANZA',
