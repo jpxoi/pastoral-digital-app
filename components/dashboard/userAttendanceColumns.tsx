@@ -12,7 +12,7 @@ export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
       <DataTableColumnHeader column={column} title='Hora de Ingreso' />
     ),
     cell: ({ row }) => {
-      const checkInTime = row.getValue('checkInTime')
+      const checkInTime = row.original.checkInTime
       const formattedTime = (checkInTime as Date).toLocaleDateString('es-PE', {
         day: 'numeric',
         month: 'short',
@@ -28,7 +28,7 @@ export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
     accessorKey: 'status',
     header: () => <div className='text-right'>Estado</div>,
     cell: ({ row }) => {
-      const status = row.getValue('status')
+      const status = row.original.status
       return (
         <div className='flex items-center justify-end'>
           <AttendanceStatusLabel status={status as string} />

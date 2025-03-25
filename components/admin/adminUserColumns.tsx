@@ -18,7 +18,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
       <DataTableColumnHeader column={column} title='Nombres' />
     ),
     cell: ({ row }) => (
-      <span className='truncate'>{row.getValue('firstName')}</span>
+      <span className='truncate'>{row.original.firstName}</span>
     ),
   },
   {
@@ -28,7 +28,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
       <DataTableColumnHeader column={column} title='Apellidos' />
     ),
     cell: ({ row }) => (
-      <span className='truncate'>{row.getValue('lastName')}</span>
+      <span className='truncate'>{row.original.lastName}</span>
     ),
   },
   {
@@ -42,12 +42,12 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     header: 'Correo Electrónico',
     cell: ({ row }) => (
       <a
-        href={`mailto:${row.getValue('email')}`}
+        href={`mailto:${row.original.email}`}
         target='_blank'
         rel='noreferrer'
         className='truncate hover:underline'
       >
-        {row.getValue('email')}
+        {row.original.email}
       </a>
     ),
   },
@@ -57,12 +57,12 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     header: 'Número de Teléfono',
     cell: ({ row }) => (
       <a
-        href={`https://wa.me/51${row.getValue('phoneNumber')}`}
+        href={`https://wa.me/51${row.original.phoneNumber}`}
         target='_blank'
         rel='noreferrer'
         className='truncate hover:underline'
       >
-        {`+51 ${String(row.getValue('phoneNumber')).replace(
+        {`+51 ${String(row.original.phoneNumber).replace(
           /(\d{3})(\d{3})(\d{3})/,
           '$1 $2 $3'
         )}`}
@@ -76,7 +76,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     header: 'Fecha de Nacimiento',
     cell: ({ row }) => (
       <span className='truncate'>
-        {new Date(row.getValue('dateOfBirth')).toLocaleDateString('es-PE', {
+        {new Date(row.original.dateOfBirth).toLocaleDateString('es-PE', {
           day: 'numeric',
           month: 'short',
           year: 'numeric',
@@ -90,7 +90,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     header: 'Edad',
     cell: ({ row }) => (
       <span className='truncate'>
-        {calculateAge(row.getValue('dateOfBirth'))} años
+        {calculateAge(row.original.dateOfBirth)} años
       </span>
     ),
   },
@@ -101,23 +101,20 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     cell: ({ row }) => (
       <Badge
         className={cn(
-          row.getValue('category') === 'alumni' &&
-            'bg-blue-600 hover:bg-blue-500',
-          row.getValue('category') === 'student' &&
+          row.original.category === 'alumni' && 'bg-blue-600 hover:bg-blue-500',
+          row.original.category === 'student' &&
             'bg-green-600 hover:bg-green-500',
-          row.getValue('category') === 'teacher' &&
-            'bg-yellow-600 hover:bg-yellow-500',
-          row.getValue('category') === 'other' &&
-            'bg-gray-600 hover:bg-gray-500'
+          row.original.category === 'teacher' &&
+            'bg-yellow-600 hover:bg-yellow-500'
         )}
       >
-        {row.getValue('category') === 'alumni'
+        {row.original.category === 'alumni'
           ? 'Exalumno'
-          : row.getValue('category') === 'student'
+          : row.original.category === 'student'
             ? 'Estudiante'
-            : row.getValue('category') === 'teacher'
+            : row.original.category === 'teacher'
               ? 'Docente'
-              : row.getValue('category') === 'other'
+              : row.original.category === 'other'
                 ? 'Otro'
                 : 'Desconocido'}
       </Badge>
