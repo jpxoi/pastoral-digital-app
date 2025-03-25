@@ -31,7 +31,7 @@ export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
     cell: ({ row }) => {
       const status = row.getValue('status')
       return (
-        <div className='text-right'>
+        <div className='flex items-center justify-end'>
           <AttendanceStatusLabel status={status as string} />
         </div>
       )
