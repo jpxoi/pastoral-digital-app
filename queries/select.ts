@@ -20,6 +20,11 @@ export const getUserById = async (id: SelectUser['id']) => {
   })
 }
 
+export const countUsers = async () => {
+  const result = await db.select({ count: sql`count(*)` }).from(usersTable)
+  return result[0].count
+}
+
 export const getUserBirthdays = async () => {
   return db.query.usersTable.findMany({
     where: sql`
@@ -78,6 +83,12 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
 export const getAllEvents = async () => {
   return db.query.eventsTable.findMany({
     orderBy: (fields) => [desc(fields.date)],
+  })
+}
+
+export const getEventById = async (id: number) => {
+  return db.query.eventsTable.findFirst({
+    where: eq(eventsTable.id, id),
   })
 }
 
