@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import AttendanceTable from '@/components/dashboard/attendanceTable'
 import { Card, CardHeader } from '@/components/ui/card'
+import AttendanceTableSkeleton from './attendanceTableSkeleton'
 
 export default function AttendanceSection() {
   return (
@@ -9,7 +10,7 @@ export default function AttendanceSection() {
         Registro de Asistencias
       </h1>
       <Card className='relative w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-h-[65vh]'>
-        <Suspense fallback={<CardHeader>Cargando registros...</CardHeader>}>
+        <Suspense fallback={<AttendanceTableSkeleton />}>
           <AttendanceTable />
         </Suspense>
       </Card>
