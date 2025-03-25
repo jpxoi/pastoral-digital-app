@@ -5,22 +5,6 @@ import {
   SelectUser,
 } from '@/db/schema'
 
-export interface UserInfoProps {
-  avatarURL: string | null
-  fallbackAvatar: string | null
-  userID: string | null
-  userToken: string | null
-  userCustomAvatar: boolean
-}
-
-export interface AttendanceContextProps {
-  data: never[]
-  loading: boolean
-  error: string | null
-  refreshButtonText: string
-  refreshTable: () => void
-}
-
 export interface TableRow {
   row: {
     [key: string]: string
@@ -37,10 +21,6 @@ export interface FetchAttendanceProps extends SelectAttendance {
 
 export interface FetchEventProps extends SelectEvent {
   location: SelectLocation
-}
-
-export interface FetchEventWithAttendanceProps extends SelectEvent {
-  attendanceRecords: FetchAttendanceProps[]
 }
 
 export enum AttendanceStatus {
