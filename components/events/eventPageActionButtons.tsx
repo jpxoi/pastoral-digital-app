@@ -1,6 +1,6 @@
 import { countUsersWithNoAttendanceRecord } from '@/queries/select'
-import { Button } from '../ui/button'
 import EventFillAbsenteesButton from './eventFillAbsenteesButton'
+import ExportToCsv from '../shared/exportToCsv'
 
 export default async function EventPageActionButtons({
   eventId,
@@ -14,14 +14,7 @@ export default async function EventPageActionButtons({
       {absentUsers > 0 ? (
         <EventFillAbsenteesButton eventId={eventId} />
       ) : (
-        <>
-          <Button variant='outline' size='sm' className='max-sm:w-full'>
-            Exportar CSV
-          </Button>
-          <Button size='sm' className='max-sm:w-full'>
-            Exportar PDF
-          </Button>
-        </>
+        <ExportToCsv eventId={eventId} />
       )}
     </div>
   )
