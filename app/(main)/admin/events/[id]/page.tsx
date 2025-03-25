@@ -16,6 +16,7 @@ import EventJustifiedRecordsTable from '@/components/events/eventJustifiedRecord
 import EventAttendeesTable from '@/components/events/eventAttendeesTable'
 import EventAttendeesTableSkeleton from '@/components/events/eventAttendeesTableSkeleton'
 import EventPageActionButtons from '@/components/events/eventPageActionButtons'
+import Link from 'next/link'
 
 export default async function Page({
   params,
@@ -42,7 +43,9 @@ export default async function Page({
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href='/events'>Eventos</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href='/events'>Eventos</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

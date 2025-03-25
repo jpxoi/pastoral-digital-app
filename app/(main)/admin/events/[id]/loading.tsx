@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
 
 export default function Loading() {
   return (
@@ -16,7 +17,9 @@ export default function Loading() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href='/events'>Eventos</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href='/events'>Eventos</Link>
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
