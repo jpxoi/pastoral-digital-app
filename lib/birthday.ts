@@ -47,9 +47,7 @@ export const getTurnsAge = (dateOfBirth: string) => {
   const today = new Date()
   const birthdate = new Date(dateOfBirth)
 
-  const age = today.getFullYear() - birthdate.getFullYear()
-
-  return age
+  return today.getFullYear() - birthdate.getFullYear()
 }
 
 export const calculateAge = (dateOfBirth: string) => {
