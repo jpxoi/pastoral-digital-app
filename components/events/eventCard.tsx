@@ -56,9 +56,10 @@ export default async function EventCard({
             href={record.location.googleMapsUrl}
             target='_blank'
             rel='noreferrer'
-            className='flex items-center gap-1 text-ellipsis text-primary hover:underline'
+            className='flex items-start gap-1 text-ellipsis text-primary hover:underline'
           >
-            <IconMapPin className='size-4' /> {record.location.name}
+            <IconMapPin className='mt-0.5 size-4 min-w-4' />
+            <span>{record.location.name}</span>
           </a>
         </CardDescription>
       </CardHeader>
