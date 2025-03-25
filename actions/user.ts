@@ -51,7 +51,7 @@ export const completeOnboarding = async () => {
   const client = await clerkClient()
 
   try {
-    const res = await client.users.updateUser(userId, {
+    await client.users.updateUser(userId, {
       publicMetadata: {
         role: currentUserRole,
         onboardingComplete: true,
