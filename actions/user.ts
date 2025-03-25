@@ -69,7 +69,7 @@ export async function setRole(formData: FormData) {
   const client = await clerkClient()
 
   // Check that the user trying to set the role is an admin
-  if (!await checkRole(UserRole.ADMIN)) {
+  if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estás autorizado para realizar esta acción.' }
   }
 

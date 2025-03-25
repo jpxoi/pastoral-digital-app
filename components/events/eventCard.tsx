@@ -18,7 +18,6 @@ import {
   IconCalendarPlus,
   IconClock,
   IconMapPin,
-
 } from '@tabler/icons-react'
 import { EventJustifyModal } from './eventJustifyModal'
 

@@ -1,9 +1,4 @@
-import {
-  ClerkLoaded,
-  ClerkLoading,
-  SignInButton,
-
-} from '@clerk/nextjs'
+import { ClerkLoaded, ClerkLoading, SignInButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import OfflineAlert from '@/components/shared/offlineAlert'
