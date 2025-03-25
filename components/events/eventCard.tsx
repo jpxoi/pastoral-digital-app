@@ -100,7 +100,7 @@ export default async function EventCard({
           <Button
             variant='ghost'
             disabled
-            className='h-6 cursor-not-allowed px-2 py-1 text-primary hover:bg-blue-50 hover:text-primary'
+            className='h-6 cursor-not-allowed p-1 text-primary hover:bg-blue-50 hover:text-primary'
           >
             Justificar Inasistencia
           </Button>
