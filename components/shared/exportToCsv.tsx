@@ -37,8 +37,6 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               item.user.studentCode,
               new Intl.DateTimeFormat('es-PE', {
                 timeZone: 'America/Lima',
-                dateStyle: 'short',
-                timeStyle: 'short',
               }).format(new Date(item.checkInTime)),
               item.status,
               item.registeredBy,
