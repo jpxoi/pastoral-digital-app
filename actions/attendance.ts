@@ -18,7 +18,10 @@ import { checkRole } from '@/lib/roles'
 import { AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 
-export const registerAttendanceRecord = async (data: InsertAttendance) => {
+export const registerAttendanceRecord = async (
+  data: InsertAttendance,
+  path?: string
+) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
@@ -27,7 +30,7 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
-      revalidatePath('/admin/records')
+      revalidatePath(path || '/admin/records')
 
       return {
         success: 'Asistencia registrada correctamente.',
@@ -44,6 +47,36 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
       console.error(error)
       return {
         error: 'Ha ocurrido un error al registrar la asistencia.',
+      }
+    })
+}
+
+export const registerAttendanceRecords = async (
+  data: InsertAttendance[],
+  path?: string
+) => {
+  if (!(await checkRole(UserRole.ADMIN))) {
+    return { error: 'No estas autorizado para registrar asistencias.' }
+  }
+
+  return await createAttendanceRecords(data)
+    .then(async () => {
+      revalidatePath(path || '/admin/records')
+
+      return {
+        success: 'Asistencias registrada correctamente.',
+      }
+    })
+    .catch((error: NeonDbError) => {
+      console.error(error)
+      return {
+        error: handleDbError(error),
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return {
+        error: 'Ha ocurrido un error al registrar las asistencias.',
       }
     })
 }
