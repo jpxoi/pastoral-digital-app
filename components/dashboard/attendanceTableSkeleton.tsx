@@ -10,30 +10,33 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function AttendanceTableSkeleton() {
   return (
-    <div className='rounded-md border'>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Hora de Ingreso</TableHead>
-            <TableHead>
-              <div className='text-right'>Estado</div>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <TableRow key={index}>
-              {Array.from({ length: 2 }).map((_, index) => (
-                <TableCell key={index}>
-                  <div className='text-left'>
-                    <Skeleton className='h-5' />
-                  </div>
-                </TableCell>
-              ))}
+    <div className='flex w-full flex-col gap-2'>
+      <h1 className='text-left text-lg font-bold'>Mis Asistencias</h1>
+      <div className='rounded-md border'>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Hora de Ingreso</TableHead>
+              <TableHead>
+                <div className='text-right'>Estado</div>
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <TableRow key={index}>
+                {Array.from({ length: 2 }).map((_, index) => (
+                  <TableCell key={index}>
+                    <div className='text-left'>
+                      <Skeleton className='h-5' />
+                    </div>
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
