@@ -23,6 +23,7 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               'last_name',
               'category',
               'student_code',
+              'check_in_date',
               'check_in_time',
               'status',
               'registered_by',
@@ -37,6 +38,8 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               item.user.studentCode,
               new Intl.DateTimeFormat('es-PE', {
                 timeZone: 'America/Lima',
+                dateStyle: 'medium',
+                timeStyle: 'full',
               }).format(new Date(item.checkInTime)),
               item.status,
               item.registeredBy,
