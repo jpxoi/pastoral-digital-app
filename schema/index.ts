@@ -1,4 +1,4 @@
-import { UserCategory, UserRole } from '@/types'
+import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 import { z } from 'zod'
 
 export const OnboardingFormSchema = z.object({
@@ -57,4 +57,13 @@ export const OnboardingFormSchema = z.object({
       'El código de estudiante debe seguir el formato del colegio. (Ej. S5A01)'
     ),
   role: z.enum([UserRole.ADMIN, UserRole.MEMBER]).default(UserRole.MEMBER),
+})
+
+export const NewAttendanceRecordFormSchema = z.object({
+  userId: z.string().nonempty('El ID de usuario es requerido'),
+  status: z.nativeEnum(AttendanceStatus, {
+    errorMap: () => ({
+      message: 'Debes seleccionar un estado para el registro',
+    }),
+  }),
 })
