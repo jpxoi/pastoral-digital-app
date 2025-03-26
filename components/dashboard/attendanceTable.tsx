@@ -10,6 +10,12 @@ export default async function AttendanceTable() {
   )
 
   return (
-    <SimpleDataTable columns={UserAttendanceColumns} data={attendanceRecords} />
+    <div className='flex flex-col gap-2'>
+      <h1 className='text-left text-lg font-bold'>Mis Asistencias</h1>
+      <SimpleDataTable
+        columns={UserAttendanceColumns}
+        data={attendanceRecords}
+      />
+    </div>
   )
 }
