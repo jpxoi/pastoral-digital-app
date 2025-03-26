@@ -14,7 +14,6 @@ export default function DashboardCardsSkeleton() {
             <div className='flex items-center justify-start py-1'>
               <Skeleton className='h-6 w-8' />
             </div>
-            <Skeleton className='h-4 w-24' />
           </CardContent>
         </Card>
       ))}
