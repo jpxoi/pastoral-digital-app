@@ -4,11 +4,10 @@ import QrScannerTab from '@/components/admin/qrScannerTab'
 
 import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
-import ManualAttendanceTab from '@/components/admin/manualAttendanceTab'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: 'Registrar Asistencia | Pastoral Digital App',
+  title: 'Escanear Código QR | Pastoral Digital App',
 }
 
 export default function Page() {
@@ -19,22 +18,18 @@ export default function Page() {
       </Suspense>
       <div className='flex flex-col gap-2 text-left'>
         <h1 className='text-xl font-semibold sm:text-2xl'>
-          Registrar Asistencia
+          Escanear Código QR
         </h1>
         <p className='text-sm text-neutral-500'>
-          Registra la asistencia de los catequistas escaneando su código QR o de
-          forma manual.
+          Registra la asistencia de los catequistas escaneando su código QR.
         </p>
       </div>
       <Tabs defaultValue='scan' className='w-full'>
         <TabsList className='mb-4 grid w-full grid-cols-2'>
           <TabsTrigger value='scan'>Escanear QR</TabsTrigger>
-          <TabsTrigger value='register'>Registro Manual</TabsTrigger>
+          <TabsTrigger disabled value='nfc'>Escanear NFC</TabsTrigger>
         </TabsList>
-        <Suspense fallback={null}>
-          <QrScannerTab />
-        </Suspense>
-        <ManualAttendanceTab />
+        <QrScannerTab />
       </Tabs>
     </main>
   )
