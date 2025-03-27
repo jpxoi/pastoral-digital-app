@@ -46,14 +46,12 @@ export const completeOnboarding = async () => {
     return { error: 'No se pudo obtener el ID del usuario.' }
   }
 
-  const currentUserRole = (await auth()).sessionClaims?.metadata.role
-
   const client = await clerkClient()
 
   try {
     await client.users.updateUser(userId, {
       publicMetadata: {
-        role: currentUserRole,
+        role: UserRole.MEMBER,
         onboardingComplete: true,
       },
     })
