@@ -53,7 +53,7 @@ export const OnboardingFormSchema = z.object({
     .string()
     .optional()
     .refine(
-      (code) => !code || /^S5[A-H]\d{2}$/.test(code),
+      (code) => !code || /^[SP][156][A-H]\d{2}$/.test(code),
       'El código de estudiante debe seguir el formato del colegio. (Ej. S5A01)'
     ),
   role: z.enum([UserRole.ADMIN, UserRole.MEMBER]).default(UserRole.MEMBER),
