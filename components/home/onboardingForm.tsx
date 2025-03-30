@@ -276,13 +276,13 @@ export default function OnboardingForm({
                       disabled={(date) => {
                         const today = new Date()
                         const minAgeDate = new Date()
-                        minAgeDate.setFullYear(today.getFullYear() - 14)
+                        minAgeDate.setFullYear(today.getFullYear() - 13)
                         return (
                           date > minAgeDate || date < new Date('1900-01-01')
                         )
                       }}
                       fromYear={1900}
-                      toYear={new Date().getFullYear() - 14}
+                      toYear={new Date().getFullYear() - 13}
                       initialFocus
                     />
                   </PopoverContent>

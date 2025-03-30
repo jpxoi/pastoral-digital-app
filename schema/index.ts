@@ -32,12 +32,12 @@ export const OnboardingFormSchema = z.object({
     .refine((date) => {
       const today = new Date()
       const minAge = new Date(
-        today.getFullYear() - 14,
+        today.getFullYear() - 13,
         today.getMonth(),
         today.getDate()
       )
       return date <= minAge
-    }, 'Debes tener al menos 14 años de edad para registrarte')
+    }, 'Debes tener al menos 13 años de edad para registrarte')
     .transform((date) => {
       return date.toISOString().split('T')[0]
     }),
