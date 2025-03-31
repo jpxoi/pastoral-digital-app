@@ -110,7 +110,13 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(row.original.id)}
+              onClick={() =>
+                navigator.clipboard
+                  .writeText(row.original.id)
+                  .then(() =>
+                    toast.info('El ID de asistencia ha sido copiado al portapapeles')
+                  )
+              }
             >
               <IconCopy />
               Copiar ID de asistencia
