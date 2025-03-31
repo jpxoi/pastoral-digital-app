@@ -134,6 +134,7 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
     orderBy: (fields) => [desc(fields.checkInTime)],
     with: {
       user: true,
+      event: true,
     },
     limit: 100,
   })

@@ -19,6 +19,11 @@ export interface FetchAttendanceProps extends SelectAttendance {
   user: SelectUser
 }
 
+export interface FetchAttendancePropsWithEvent extends SelectAttendance {
+  user: SelectUser
+  event: SelectEvent
+}
+
 export interface FetchEventProps extends SelectEvent {
   location: SelectLocation
 }

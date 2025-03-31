@@ -2,16 +2,17 @@
 
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { SelectAttendance } from '@/db/schema'
+import { FetchAttendancePropsWithEvent } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 
-export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
+export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] = [
   {
-    accessorKey: 'checkInTime',
+    accessorKey: 'event.name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Hora de Ingreso' />
+      <DataTableColumnHeader column={column} title='Evento' />
     ),
     cell: ({ row }) => {
+      const eventName = row.original.event.name
       const checkInTime = row.original.checkInTime
       const formattedTime = (checkInTime as Date).toLocaleDateString('es-PE', {
         day: 'numeric',
@@ -21,7 +22,12 @@ export const UserAttendanceColumns: ColumnDef<SelectAttendance>[] = [
         second: 'numeric',
       })
 
-      return <div className='text-left'>{formattedTime}</div>
+      return (
+        <div className='flex flex-col gap-1 text-left'>
+          <span className='text-nowrap font-medium'>{eventName}</span>
+          <span className='text-xs text-gray-500'>{formattedTime}</span>
+        </div>
+      )
     },
   },
   {
