@@ -157,38 +157,62 @@ export async function getAttendanceRecordsByEventId(eventId: number) {
 }
 
 export async function getAttendanceCalendar() {
-  // Get all users and events
-  const users = await getAllUsers()
-  const events = await getAllEvents()
+  try {
+    // Get all users and events
+    const users = await getAllUsers()
+    const events = await getAllEvents()
 
-  // Get all attendance records
-  const attendanceRecords = await getAllAttendanceRecords()
-
-  // Create a map of user_id -> attendance records for faster lookup
-  const attendanceMap = new Map(
-    attendanceRecords.map((record) => [
-      `${record.userId}-${record.eventId}`,
-      record.status,
-    ])
-  )
-
-  // Create the calendar data structure
-  const calendarData = users.map((user) => {
-    const userData: any = {
-      id: user.id,
-      fullName: `${user.firstName} ${user.lastName}`,
+    if (!users.length || !events.length) {
+      return []
     }
 
-    // Add attendance status for each event
-    events.forEach((event) => {
-      const status = attendanceMap.get(`${user.id}-${event.id}`) || null
-      userData[event.date.toISOString().split('T')[0]] = status
+    // Get all attendance records
+    const attendanceRecords = await getAllAttendanceRecords()
+
+    // Create a map of user_id -> attendance records for faster lookup
+    const attendanceMap = new Map(
+      attendanceRecords.map((record) => [
+        `${record.userId}-${record.eventId}`,
+        record.status,
+      ])
+    )
+
+    // Create the calendar data structure
+    const calendarData = users.map((user) => {
+      // Handle missing user data
+      const fullName = user.firstName && user.lastName 
+        ? `${user.firstName} ${user.lastName}`
+        : user.firstName || user.lastName || 'Sin nombre'
+
+      const userData: Record<string, string | null> = {
+        id: user.id,
+        fullName,
+        category: user.category || 'Sin categoría',
+        studentCode: user.studentCode || 'Sin código',
+      }
+
+      // Add attendance status for each event
+      events.forEach((event) => {
+        if (!event.date) return // Skip events without date
+
+        try {
+          const dateKey = event.date.toISOString().split('T')[0]
+          const status = attendanceMap.get(`${user.id}-${event.id}`) || null
+          userData[dateKey] = status
+        } catch (error) {
+          console.error(`Error processing event ${event.id} for user ${user.id}:`, error)
+          userData[`event_${event.id}`] = null
+        }
+      })
+
+      return userData
     })
 
-    return userData
-  })
-
-  return calendarData
+    return calendarData
+  } catch (error) {
+    console.error('Error generating attendance calendar:', error)
+    return []
+  }
 }
 
 /* EventsTable */
