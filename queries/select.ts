@@ -146,7 +146,7 @@ export async function getAttendanceRecordsByEventId(eventId: number) {
     with: {
       user: true,
     },
-    limit: 100,
+    limit: 200,
   })
 }
 
