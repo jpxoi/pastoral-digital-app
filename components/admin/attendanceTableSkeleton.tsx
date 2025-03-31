@@ -20,8 +20,8 @@ export default function AttendanceTableSkeleton() {
             disabled
             className='sm:max-w-xs'
           />
-        <div className='flex items-center gap-2'>
-        <Skeleton className='h-8 w-24' />
+          <div className='flex items-center gap-2'>
+            <Skeleton className='h-8 w-24' />
             <Skeleton className='h-8 w-24' />
           </div>
         </div>
