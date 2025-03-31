@@ -3,7 +3,7 @@
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { AttendanceStatus, FetchAttendanceProps } from '@/types'
+import { AttendanceStatus, FetchAttendancePropsWithEvent } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import {
   IconCalendarHeart,
@@ -48,7 +48,7 @@ const handleSetAttendanceRecordStatus = async (
   })
 }
 
-export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
+export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] = [
   {
     id: 'catequista',
     accessorKey: 'user.firstName',
@@ -63,6 +63,16 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
           {firstName} {lastName}
         </span>
       )
+    },
+  },
+  {
+    id: 'evento',
+    accessorKey: 'event.name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Evento' />
+    ),
+    cell: ({ row }) => {
+      return <span className='text-left'>{row.original.event.name}</span>
     },
   },
   {
