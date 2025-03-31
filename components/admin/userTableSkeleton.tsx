@@ -13,16 +13,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default function UserTableSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex items-center justify-between'>
-        <div className='flex flex-1 items-center space-x-2'>
+      <div className='flex items-center justify-between gap-2'>
+        <div className='flex flex-1 flex-col items-start max-sm:space-y-2 sm:flex-row sm:items-center sm:space-x-2'>
           <Input
             placeholder='Buscar registros...'
             disabled
-            className='max-w-xs'
+            className='sm:max-w-xs'
           />
           <Skeleton className='h-8 w-24' />
         </div>
-        <Skeleton className='h-8 w-24' />
+        <Skeleton className='h-8 w-24 max-lg:hidden' />
       </div>
       <div className='rounded-md border'>
         <Table>

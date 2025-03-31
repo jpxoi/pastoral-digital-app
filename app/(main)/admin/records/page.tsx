@@ -19,7 +19,7 @@ export default function Page() {
           Registro de Asistencia
         </h1>
         <p className='text-sm text-neutral-500'>
-          Aquí puedes ver la lista de asistencia de los usuarios.
+          Aquí puedes ver los registros de asistencia de los catequistas.
         </p>
       </div>
       <Suspense fallback={<AttendanceTableSkeleton />}>
