@@ -67,7 +67,7 @@ export function DataTable<TData, TValue>({
     <div className='flex flex-col gap-4'>
       <div className='flex items-center justify-between gap-2'>
         <Input
-          placeholder='Buscar registros...'
+          placeholder='Filtrar registros...'
           value={table.getState().globalFilter}
           onChange={(event) =>
             table.setGlobalFilter(String(event.target.value))
