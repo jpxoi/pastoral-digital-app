@@ -2,6 +2,7 @@
 
 import { Button } from '../ui/button'
 import { fetchAttendanceRecordsByEventId } from '@/actions/attendance'
+import { UserCategory } from '@/types'
 import { toast } from 'sonner'
 
 export default function ExportToCsv({ eventId }: { eventId: number }) {
@@ -15,6 +16,10 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
 
         if (data.success && data.records) {
           const attendanceRecords = data.records
+          const sortedAttendanceRecords = attendanceRecords.sort((a, b) => {
+            return a.user.firstName.localeCompare(b.user.firstName)
+          })
+
           const csvString = [
             [
               'id',
@@ -29,7 +34,7 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               'registered_by',
               'method',
             ],
-            ...attendanceRecords.map((item) => [
+            ...sortedAttendanceRecords.map((item) => [
               item.id,
               item.user.id,
               item.user.firstName,
@@ -39,7 +44,7 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               new Intl.DateTimeFormat('es-PE', {
                 timeZone: 'America/Lima',
                 dateStyle: 'medium',
-                timeStyle: 'full',
+                timeStyle: 'long',
               }).format(new Date(item.checkInTime)),
               item.status,
               item.registeredBy,
