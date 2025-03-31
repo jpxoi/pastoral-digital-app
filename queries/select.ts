@@ -2,6 +2,7 @@ import { db } from '@/db/drizzle'
 import {
   attendanceRecordsTable,
   eventsTable,
+  SelectEvent,
   SelectUser,
   usersTable,
 } from '@/db/schema'
@@ -74,7 +75,9 @@ export const getUserBirthdays = async () => {
   })
 }
 
-export async function getUsersWithNoAttendanceRecord(eventId: number) {
+export const getUsersWithNoAttendanceRecord = async (
+  eventId: SelectEvent['id']
+) => {
   return db
     .select({
       id: usersTable.id,
@@ -87,7 +90,9 @@ export async function getUsersWithNoAttendanceRecord(eventId: number) {
     .where(sql`${attendanceRecordsTable.id} IS NULL`)
 }
 
-export async function countUsersWithNoAttendanceRecord(eventId: number) {
+export const countUsersWithNoAttendanceRecord = async (
+  eventId: SelectEvent['id']
+) => {
   return db
     .select({
       count: count(usersTable.id),
@@ -113,7 +118,7 @@ export const getAllAttendanceRecords = async () => {
   })
 }
 
-export async function getLastAttendanceRecord() {
+export const getLastAttendanceRecord = async () => {
   return db.query.attendanceRecordsTable.findFirst({
     orderBy: (fields) => [desc(fields.checkInTime)],
     with: {
@@ -123,7 +128,9 @@ export async function getLastAttendanceRecord() {
   })
 }
 
-export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
+export const getAttendanceRecordsByUserId = async (
+  userId: SelectUser['id']
+) => {
   return db.query.attendanceRecordsTable.findMany({
     where: eq(attendanceRecordsTable.userId, userId),
     orderBy: (fields) => [desc(fields.checkInTime)],
@@ -136,7 +143,9 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
   })
 }
 
-export async function getAttendanceRecordsByEventId(eventId: number) {
+export const getAttendanceRecordsByEventId = async (
+  eventId: SelectEvent['id']
+) => {
   return db.query.attendanceRecordsTable.findMany({
     where: eq(attendanceRecordsTable.eventId, eventId),
     orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
@@ -148,7 +157,7 @@ export async function getAttendanceRecordsByEventId(eventId: number) {
   })
 }
 
-export async function getAttendanceCalendar() {
+export const getAttendanceCalendar = async () => {
   try {
     // Get all data in a single query with proper joins
     const calendarData = await db
@@ -174,9 +183,10 @@ export async function getAttendanceCalendar() {
 
     for (const record of calendarData) {
       if (!userMap.has(record.userId)) {
-        const fullName = record.firstName && record.lastName
-          ? `${record.firstName} ${record.lastName}`
-          : record.firstName || record.lastName || 'Sin nombre'
+        const fullName =
+          record.firstName && record.lastName
+            ? `${record.firstName} ${record.lastName}`
+            : record.firstName || record.lastName || 'Sin nombre'
 
         userMap.set(record.userId, {
           id: record.userId,
@@ -204,13 +214,13 @@ export const getAllEvents = async () => {
   })
 }
 
-export const getEventById = async (id: number) => {
+export const getEventById = async (id: SelectEvent['id']) => {
   return db.query.eventsTable.findFirst({
     where: eq(eventsTable.id, id),
   })
 }
 
-export const getEventAttendanceStats = async (eventId: number) => {
+export const getEventAttendanceStats = async (eventId: SelectEvent['id']) => {
   const [
     stats = {
       totalOnTime: 0,
@@ -266,7 +276,7 @@ export const getPastEvents = async () => {
   })
 }
 
-export async function getTodayEvent() {
+export const getTodayEvent = async () => {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
