@@ -100,7 +100,7 @@ export default async function AttendanceCalendarTable() {
                           'bg-neutral-100 text-neutral-500'
                         )}
                       >
-                        --
+                        -
                       </span>
                     )}
                   </TableCell>
