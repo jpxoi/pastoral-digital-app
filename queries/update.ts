@@ -1,12 +1,12 @@
 import { db } from '@/db/drizzle'
-import { attendanceRecordsTable } from '@/db/schema'
+import { attendanceRecordsTable, SelectAttendance } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
 import { eq } from 'drizzle-orm'
 
-export async function updateAttendanceRecordStatus(
+export const updateAttendanceRecordStatus = async (
   status: AttendanceStatus,
-  recordId: string
-) {
+  recordId: SelectAttendance['id']
+) => {
   return db
     .update(attendanceRecordsTable)
     .set({ status, updatedAt: new Date() })
