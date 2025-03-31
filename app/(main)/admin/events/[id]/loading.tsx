@@ -29,8 +29,9 @@ export default function Loading() {
       </Breadcrumb>
       <div className='flex flex-col gap-4 text-left'>
         <div className='flex justify-between gap-2 max-sm:flex-col'>
-          <div className='flex flex-col gap-2'>
-            <Skeleton className='h-8 w-64' />
+          <div className='flex flex-col gap-0.5'>
+            <Skeleton className='h-8 w-72' />
+            <Skeleton className='h-5 w-64' />
           </div>
           <div className='flex items-center gap-2'>
             <Skeleton className='h-9 w-32' />
@@ -40,16 +41,9 @@ export default function Loading() {
 
       <div className='flex w-full flex-col items-start justify-start gap-4'>
         <EventDashboardCardsSkeleton />
-        <div className='flex w-full flex-col gap-4 text-left lg:grid lg:grid-cols-3'>
-          <div className='flex flex-col gap-2 lg:col-span-2'>
-            <h3 className='text-lg font-bold'>Registros</h3>
-
-            <EventAttendeesTableSkeleton />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <h3 className='text-lg font-bold'>Justificaciones</h3>
-            <EventAttendeesTableSkeleton />
-          </div>
+        <div className='flex w-full flex-col gap-2 text-left'>
+          <h3 className='text-lg font-bold'>Registros</h3>
+          <EventAttendeesTableSkeleton />
         </div>
       </div>
     </main>
