@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { AttendanceStatus, FetchAttendanceProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
-import { IconDots, IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconCalendarHeart, IconCalendarX, IconClockCheck, IconClockExclamation, IconClockHeart, IconClockX, IconDots, IconEdit, IconTrash } from '@tabler/icons-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,98 +89,95 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const record = row.original
       return (
-        <div className='flex gap-4' key={row.id}>
-          <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
-            <IconEdit />
-          </Button>
-          <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
-            <IconTrash className='text-red-500' />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='ghost' className='h-8 w-8 p-0'>
-                <span className='sr-only'>Abrir menu</span>
-                <IconDots className='h-4 w-4' />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end'>
-              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(record.id)}
-              >
-                Copiar ID de asistencia
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() =>
-                  handleSetAttendanceRecordStatus(
-                    AttendanceStatus.A_TIEMPO,
-                    record.id
-                  )
-                }
-              >
-                Marcar como A Tiempo
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  handleSetAttendanceRecordStatus(
-                    AttendanceStatus.TARDANZA,
-                    record.id
-                  )
-                }
-              >
-                Marcar como Tardanza
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  handleSetAttendanceRecordStatus(
-                    AttendanceStatus.DOBLE_TARDANZA,
-                    record.id
-                  )
-                }
-              >
-                Marcar como Doble Tardanza
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  handleSetAttendanceRecordStatus(
-                    AttendanceStatus.FALTA_JUSTIFICADA,
-                    record.id
-                  )
-                }
-              >
-                Marcar como Falta Justificada
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  handleSetAttendanceRecordStatus(
-                    AttendanceStatus.TARDANZA_JUSTIFICADA,
-                    record.id
-                  )
-                }
-              >
-                Marcar como Tardanza Justificada
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() =>
-                  handleSetAttendanceRecordStatus(
-                    AttendanceStatus.FALTA_INJUSTIFICADA,
-                    record.id
-                  )
-                }
-              >
-                Marcar como Falta Injustificada
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <IconTrash />
-                Eliminar asistencia
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <DropdownMenu key={row.id}>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' className='h-6 w-6 p-0'>
+              <span className='sr-only'>Abrir menu</span>
+              <IconDots className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(row.original.id)}
+            >
+              Copiar ID de asistencia
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetAttendanceRecordStatus(
+                  AttendanceStatus.A_TIEMPO,
+                  row.original.id
+                )
+              }
+            >
+              <IconClockCheck />
+              Marcar A Tiempo
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetAttendanceRecordStatus(
+                  AttendanceStatus.TARDANZA,
+                  row.original.id
+                )
+              }
+            >
+              <IconClockExclamation />
+              Marcar Tardanza
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetAttendanceRecordStatus(
+                  AttendanceStatus.DOBLE_TARDANZA,
+                  row.original.id
+                )
+              }
+            >
+              <IconClockX />
+              Marcar Doble Tardanza
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetAttendanceRecordStatus(
+                  AttendanceStatus.FALTA_JUSTIFICADA,
+                  row.original.id
+                )
+              }
+            >
+              <IconCalendarHeart />
+              Marcar Falta Justificada
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetAttendanceRecordStatus(
+                  AttendanceStatus.TARDANZA_JUSTIFICADA,
+                  row.original.id
+                )
+              }
+            >
+              <IconClockHeart />
+              Marcar Tardanza Justificada
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                handleSetAttendanceRecordStatus(
+                  AttendanceStatus.FALTA_INJUSTIFICADA,
+                  row.original.id
+                )
+              }
+            >
+              <IconCalendarX />
+              Marcar Falta Injustificada
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <IconTrash />
+              Eliminar asistencia
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )
     },
   },
