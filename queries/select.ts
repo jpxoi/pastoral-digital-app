@@ -114,6 +114,7 @@ export const getAllAttendanceRecords = async () => {
   return db.query.attendanceRecordsTable.findMany({
     with: {
       user: true,
+      event: true,
     },
     orderBy: (fields) => [desc(fields.checkInTime)],
   })
