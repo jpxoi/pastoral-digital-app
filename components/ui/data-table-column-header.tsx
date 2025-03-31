@@ -68,11 +68,15 @@ export function DataTableColumnHeader<TData, TValue>({
               </DropdownMenuItem>
             </>
           )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <IconEyeOff className='h-3.5 w-3.5 text-muted-foreground/70' />
-            Ocultar
-          </DropdownMenuItem>
+          {column.getCanHide() && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+                <IconEyeOff className='h-3.5 w-3.5 text-muted-foreground/70' />
+                Ocultar
+              </DropdownMenuItem>
+            </>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
