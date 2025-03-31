@@ -187,8 +187,6 @@ export async function getAttendanceCalendar() {
       const userData: Record<string, string | null> = {
         id: user.id,
         fullName,
-        category: user.category || 'Sin categoría',
-        studentCode: user.studentCode || 'Sin código',
       }
 
       // Add attendance status for each event

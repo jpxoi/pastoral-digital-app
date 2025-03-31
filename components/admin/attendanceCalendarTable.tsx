@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils'
 
 export default async function AttendanceCalendarTable() {
   const attendanceCalendar = await getAttendanceCalendar()
+  const ignoreColumns = ['id', 'fullName']
 
   const attendanceBadgeClassName =
     'flex w-12 cursor-pointer items-center justify-center rounded-md px-2 font-bold transition-colors'
@@ -23,7 +24,7 @@ export default async function AttendanceCalendarTable() {
             <TableHead className='text-nowrap'>Nombre Completo</TableHead>
             {Object.keys(attendanceCalendar[0])
               .filter((key) => {
-                return key !== 'id' && key !== 'fullName'
+                return !ignoreColumns.includes(key)
               })
               .map((key) => (
                 <TableHead key={key} className='text-nowrap'>
@@ -43,7 +44,7 @@ export default async function AttendanceCalendarTable() {
               </TableCell>
               {Object.keys(attendanceCalendar[0])
                 .filter((key) => {
-                  return key !== 'id' && key !== 'fullName'
+                  return !ignoreColumns.includes(key)
                 })
                 .map((key) => (
                   <TableCell key={key}>
