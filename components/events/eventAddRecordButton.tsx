@@ -65,7 +65,6 @@ export default function EventFillAbsenteesButton({
     values: z.infer<typeof NewAttendanceRecordFormSchema>
   ) => {
     const { userId } = values
-    /* If userId contains a comma, split it and create a userIds array */
 
     const userIds = userId.includes(',')
       ? userId.split(',').map((id) => id.trim())

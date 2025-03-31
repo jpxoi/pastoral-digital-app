@@ -9,6 +9,6 @@ export async function updateAttendanceRecordStatus(
 ) {
   return db
     .update(attendanceRecordsTable)
-    .set({ status })
+    .set({ status, updatedAt: new Date() })
     .where(eq(attendanceRecordsTable.id, recordId))
 }
