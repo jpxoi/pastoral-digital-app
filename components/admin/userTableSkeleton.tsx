@@ -10,16 +10,19 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default async function UserTableSkeleton() {
+export default function UserTableSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
-      <div className='flex items-center justify-between gap-2'>
-        <Input
-          placeholder='Buscar registros...'
-          className='max-w-sm'
-          disabled
-        />
-        <Skeleton className='h-10 w-28' />
+      <div className='flex items-center justify-between'>
+        <div className='flex flex-1 items-center space-x-2'>
+          <Input
+            placeholder='Buscar registros...'
+            disabled
+            className='max-w-xs'
+          />
+          <Skeleton className='h-8 w-24' />
+        </div>
+        <Skeleton className='h-8 w-24' />
       </div>
       <div className='rounded-md border'>
         <Table>
