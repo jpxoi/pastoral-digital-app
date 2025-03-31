@@ -14,7 +14,6 @@ import {
   IconClockX,
   IconCopy,
   IconDots,
-  IconEdit,
   IconTrash,
 } from '@tabler/icons-react'
 import {
