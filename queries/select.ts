@@ -6,7 +6,7 @@ import {
   usersTable,
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
-import { and, between, count, desc, eq, notInArray, or, sql } from 'drizzle-orm'
+import { asc, between, count, desc, eq, notInArray, sql } from 'drizzle-orm'
 
 /* UsersTable */
 export const getAllUsers = async () => {
@@ -115,8 +115,9 @@ export const getAllAttendanceRecords = async () => {
     with: {
       user: true,
       event: true,
+      registeredByUser: true,
     },
-    orderBy: (fields) => [desc(fields.checkInTime)],
+    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
   })
 }
 
@@ -125,6 +126,7 @@ export async function getLastAttendanceRecord() {
     orderBy: (fields) => [desc(fields.checkInTime)],
     with: {
       user: true,
+      registeredByUser: true,
     },
   })
 }
@@ -136,6 +138,7 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
     with: {
       user: true,
       event: true,
+      registeredByUser: true,
     },
     limit: 100,
   })
@@ -144,35 +147,54 @@ export async function getAttendanceRecordsByUserId(userId: SelectUser['id']) {
 export async function getAttendanceRecordsByEventId(eventId: number) {
   return db.query.attendanceRecordsTable.findMany({
     where: eq(attendanceRecordsTable.eventId, eventId),
-    orderBy: (fields) => [desc(fields.checkInTime)],
+    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
     with: {
       user: true,
+      registeredByUser: true,
     },
     limit: 200,
   })
 }
 
-export async function getJustifiedAttendanceRecords(eventId: number) {
-  return db.query.attendanceRecordsTable.findMany({
-    where: and(
-      eq(attendanceRecordsTable.eventId, eventId),
-      or(
-        eq(attendanceRecordsTable.status, AttendanceStatus.FALTA_JUSTIFICADA),
-        eq(attendanceRecordsTable.status, AttendanceStatus.TARDANZA_JUSTIFICADA)
-      )
-    ),
-    orderBy: (fields) => [desc(fields.checkInTime)],
-    with: {
-      user: true,
-    },
-    limit: 100,
+export async function getAttendanceCalendar() {
+  // Get all users and events
+  const users = await getAllUsers()
+  const events = await getAllEvents()
+
+  // Get all attendance records
+  const attendanceRecords = await getAllAttendanceRecords()
+
+  // Create a map of user_id -> attendance records for faster lookup
+  const attendanceMap = new Map(
+    attendanceRecords.map((record) => [
+      `${record.userId}-${record.eventId}`,
+      record.status,
+    ])
+  )
+
+  // Create the calendar data structure
+  const calendarData = users.map((user) => {
+    const userData: any = {
+      id: user.id,
+      fullName: `${user.firstName} ${user.lastName}`,
+    }
+
+    // Add attendance status for each event
+    events.forEach((event) => {
+      const status = attendanceMap.get(`${user.id}-${event.id}`) || null
+      userData[event.date.toISOString().split('T')[0]] = status
+    })
+
+    return userData
   })
+
+  return calendarData
 }
 
 /* EventsTable */
 export const getAllEvents = async () => {
   return db.query.eventsTable.findMany({
-    orderBy: (fields) => [desc(fields.date)],
+    orderBy: (fields) => [asc(fields.date)],
   })
 }
 
@@ -214,20 +236,6 @@ export const getEventAttendanceStats = async (eventId: number) => {
     .groupBy() // Group all results together
 
   return stats
-}
-
-export const getEventWithAttendanceRecords = async (eventId: number) => {
-  return db.query.eventsTable.findFirst({
-    where: eq(eventsTable.id, eventId),
-    with: {
-      attendanceRecords: {
-        orderBy: (fields) => [desc(fields.checkInTime)],
-        with: {
-          user: true,
-        },
-      },
-    },
-  })
 }
 
 export const getUpcomingEvents = async () => {

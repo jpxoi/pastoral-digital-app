@@ -128,7 +128,7 @@ export const attendanceRecordsRelations = relations(
         fields: [attendanceRecordsTable.eventId],
         references: [eventsTable.id],
       }),
-      registeredBy: one(usersTable, {
+      registeredByUser: one(usersTable, {
         fields: [attendanceRecordsTable.registeredBy],
         references: [usersTable.id],
       }),
