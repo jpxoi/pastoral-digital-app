@@ -25,7 +25,9 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
 
       return (
         <div className='flex flex-col gap-1 text-left'>
-          <span className='text-nowrap font-medium'>{row.getValue('catequista')}</span>
+          <span className='text-nowrap font-medium'>
+            {row.getValue('catequista')}
+          </span>
           <span className='text-xs text-gray-500'>{formattedTime}</span>
         </div>
       )

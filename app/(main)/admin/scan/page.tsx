@@ -27,7 +27,9 @@ export default function Page() {
       <Tabs defaultValue='scan' className='w-full'>
         <TabsList className='mb-4 grid w-full grid-cols-2'>
           <TabsTrigger value='scan'>Escanear QR</TabsTrigger>
-          <TabsTrigger disabled value='nfc'>Escanear NFC</TabsTrigger>
+          <TabsTrigger disabled value='nfc'>
+            Escanear NFC
+          </TabsTrigger>
         </TabsList>
         <QrScannerTab />
       </Tabs>
