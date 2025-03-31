@@ -26,6 +26,7 @@ export default async function AttendanceTableSkeleton() {
           <TableHeader>
             <TableRow>
               <TableHead>Catequista</TableHead>
+              <TableHead>Evento</TableHead>
               <TableHead>Hora de Ingreso</TableHead>
               <TableHead>
                 <div className='text-right'>Estado</div>
@@ -38,13 +39,21 @@ export default async function AttendanceTableSkeleton() {
           <TableBody>
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <TableCell key={index}>
-                    <div className='text-left'>
-                      <Skeleton className='h-5' />
-                    </div>
-                  </TableCell>
-                ))}
+                <TableCell>
+                  <Skeleton className='h-5 w-72' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-44' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-36' />
+                </TableCell>
+                <TableCell className='flex items-center justify-end'>
+                  <Skeleton className='my-1.5 h-5 w-32' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='my-1.5 h-5 w-8' />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

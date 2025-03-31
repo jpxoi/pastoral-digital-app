@@ -5,30 +5,28 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { SelectUser } from '@/db/schema'
 import { ColumnDef } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { calculateAge } from '@/lib/birthday'
-import { IconCopy, IconTrash } from '@tabler/icons-react'
+import { IconCopy, IconDots, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
 
 export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
-    id: 'firstName',
-    accessorKey: 'firstName',
+    id: 'nombreCompleto',
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Nombres' />
+      <DataTableColumnHeader column={column} title='Nombre Completo' />
     ),
     cell: ({ row }) => (
-      <span className='truncate'>{row.original.firstName}</span>
-    ),
-  },
-  {
-    id: 'lastName',
-    accessorKey: 'lastName',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Apellidos' />
-    ),
-    cell: ({ row }) => (
-      <span className='truncate'>{row.original.lastName}</span>
+      <span className='text-nowrap'>{row.getValue('nombreCompleto')}</span>
     ),
   },
   {
@@ -66,7 +64,6 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
           /(\d{3})(\d{3})(\d{3})/,
           '$1 $2 $3'
         )}`}
-        {/* Format as +51 987 654 321 */}
       </a>
     ),
   },
@@ -89,9 +86,19 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     accessorKey: 'dateOfBirth',
     header: 'Edad',
     cell: ({ row }) => (
-      <span className='truncate'>
+      <span className='text-nowrap'>
         {calculateAge(row.original.dateOfBirth)} años
       </span>
+    ),
+  },
+  {
+    id: 'codigoEstudiante',
+    accessorKey: 'studentCode',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Código' />
+    ),
+    cell: ({ row }) => (
+      <span className='truncate'>{row.original.studentCode}</span>
     ),
   },
   {
@@ -124,21 +131,36 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className='flex gap-4' key={row.id}>
-        <Button
-          variant='ghost'
-          size='icon'
-          className='h-5 w-5 p-0'
-          onClick={() => {
-            navigator.clipboard.writeText(row.original.id).then(() => {
-              toast.info('El ID del catequista ha sido copiado al portapapeles')
-            })
-          }}
-        >
-          <IconCopy />
-        </Button>
-        <Button variant='ghost' size='icon' className='h-5 w-5 p-0' disabled>
-          <IconTrash className='text-red-500' />
-        </Button>
+        <DropdownMenu key={row.id}>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Abrir menu</span>
+              <IconDots className='h-4 w-4' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() =>
+                navigator.clipboard
+                  .writeText(row.original.id)
+                  .then(() =>
+                    toast.info(
+                      'El ID del catequista ha sido copiado al portapapeles'
+                    )
+                  )
+              }
+            >
+              <IconCopy />
+              Copiar ID de catequista
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem disabled className='text-red-500'>
+              <IconTrash />
+              Eliminar catequista
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     ),
   },

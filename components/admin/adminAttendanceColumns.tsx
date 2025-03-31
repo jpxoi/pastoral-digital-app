@@ -53,16 +53,14 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
   [
     {
       id: 'catequista',
-      accessorKey: 'user.firstName',
+      accessorFn: (row) => `${row.user.firstName} ${row.user.lastName}`,
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Catequista' />
       ),
       cell: ({ row }) => {
-        const firstName = row.original.user.firstName as string
-        const lastName = row.original.user.lastName as string
         return (
           <span className='text-nowrap text-left'>
-            {firstName} {lastName}
+            {row.getValue('catequista')}
           </span>
         )
       },
@@ -124,7 +122,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
         return (
           <DropdownMenu key={row.id}>
             <DropdownMenuTrigger asChild>
-              <Button variant='ghost' className='h-6 w-6 p-0'>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
                 <span className='sr-only'>Abrir menu</span>
                 <IconDots className='h-4 w-4' />
               </Button>
