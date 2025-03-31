@@ -5,7 +5,18 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { AttendanceStatus, FetchAttendanceProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
-import { IconCalendarHeart, IconCalendarX, IconClockCheck, IconClockExclamation, IconClockHeart, IconClockX, IconDots, IconEdit, IconTrash } from '@tabler/icons-react'
+import {
+  IconCalendarHeart,
+  IconCalendarX,
+  IconClockCheck,
+  IconClockExclamation,
+  IconClockHeart,
+  IconClockX,
+  IconCopy,
+  IconDots,
+  IconEdit,
+  IconTrash,
+} from '@tabler/icons-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -102,10 +113,12 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(row.original.id)}
             >
+              <IconCopy />
               Copiar ID de asistencia
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              disabled={row.original.status === AttendanceStatus.A_TIEMPO}
               onClick={() =>
                 handleSetAttendanceRecordStatus(
                   AttendanceStatus.A_TIEMPO,
@@ -117,6 +130,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar A Tiempo
             </DropdownMenuItem>
             <DropdownMenuItem
+              disabled={row.original.status === AttendanceStatus.TARDANZA}
               onClick={() =>
                 handleSetAttendanceRecordStatus(
                   AttendanceStatus.TARDANZA,
@@ -128,6 +142,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar Tardanza
             </DropdownMenuItem>
             <DropdownMenuItem
+              disabled={row.original.status === AttendanceStatus.DOBLE_TARDANZA}
               onClick={() =>
                 handleSetAttendanceRecordStatus(
                   AttendanceStatus.DOBLE_TARDANZA,
@@ -139,6 +154,9 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar Doble Tardanza
             </DropdownMenuItem>
             <DropdownMenuItem
+              disabled={
+                row.original.status === AttendanceStatus.FALTA_JUSTIFICADA
+              }
               onClick={() =>
                 handleSetAttendanceRecordStatus(
                   AttendanceStatus.FALTA_JUSTIFICADA,
@@ -150,6 +168,9 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar Falta Justificada
             </DropdownMenuItem>
             <DropdownMenuItem
+              disabled={
+                row.original.status === AttendanceStatus.TARDANZA_JUSTIFICADA
+              }
               onClick={() =>
                 handleSetAttendanceRecordStatus(
                   AttendanceStatus.TARDANZA_JUSTIFICADA,
@@ -161,6 +182,9 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar Tardanza Justificada
             </DropdownMenuItem>
             <DropdownMenuItem
+              disabled={
+                row.original.status === AttendanceStatus.FALTA_INJUSTIFICADA
+              }
               onClick={() =>
                 handleSetAttendanceRecordStatus(
                   AttendanceStatus.FALTA_INJUSTIFICADA,
@@ -172,7 +196,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar Falta Injustificada
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem className='text-red-500'>
               <IconTrash />
               Eliminar asistencia
             </DropdownMenuItem>
