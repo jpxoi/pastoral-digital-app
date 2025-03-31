@@ -13,7 +13,7 @@ export default function Loading() {
           Registro de Asistencia
         </h1>
         <p className='text-sm text-neutral-500'>
-        Aquí puedes ver los registros de asistencia de los catequistas.
+          Aquí puedes ver los registros de asistencia de los catequistas.
         </p>
       </div>
       <AttendanceTableSkeleton />

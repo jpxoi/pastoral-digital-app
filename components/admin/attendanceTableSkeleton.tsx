@@ -19,7 +19,7 @@ export default function AttendanceTableSkeleton() {
             placeholder='Buscar registros...'
             disabled
             className='sm:max-w-xs'
-            />
+          />
           <Skeleton className='h-8 w-24' />
           <Skeleton className='h-8 w-24' />
         </div>
