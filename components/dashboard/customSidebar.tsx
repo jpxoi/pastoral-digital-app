@@ -7,6 +7,7 @@ import {
   IconHome2,
   IconListCheck,
   IconQrcode,
+  IconTable,
   IconUsers,
 } from '@tabler/icons-react'
 import Link from 'next/link'
@@ -54,6 +55,12 @@ export function CustomSidebar() {
       label: 'Registro de Asistencia',
       href: '/admin/records',
       icon: <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />,
+      show: isAdmin,
+    },
+    {
+      label: 'Calendario de Asistencia',
+      href: '/admin/calendar',
+      icon: <IconTable className='h-5 w-5 shrink-0 text-neutral-200' />,
       show: isAdmin,
     },
     {
