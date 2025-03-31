@@ -1,7 +1,6 @@
 'use client'
 
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { FetchAttendancePropsWithEvent } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -9,9 +8,7 @@ export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
   [
     {
       accessorKey: 'event.name',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Evento' />
-      ),
+      header: 'Evento',
       cell: ({ row }) => {
         const eventName = row.original.event.name
         const checkInTime = row.original.checkInTime
