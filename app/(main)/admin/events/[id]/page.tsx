@@ -12,7 +12,6 @@ import { getEventById } from '@/queries/select'
 import EventDashboardCards from '@/components/events/eventDashboardCards'
 import { Suspense } from 'react'
 import EventDashboardCardsSkeleton from '@/components/events/eventDashboardCardsSkeleton'
-import EventJustifiedRecordsTable from '@/components/events/eventJustifiedRecordsTable'
 import EventAttendeesTable from '@/components/events/eventAttendeesTable'
 import EventAttendeesTableSkeleton from '@/components/events/eventAttendeesTableSkeleton'
 import EventPageActionButtons from '@/components/events/eventPageActionButtons'
@@ -59,8 +58,18 @@ export default async function Page({
       </Breadcrumb>
       <div className='flex flex-col gap-4 text-left'>
         <div className='flex justify-between gap-2 max-sm:flex-col'>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-0.5'>
             <h1 className='text-xl font-semibold sm:text-2xl'>{event.name}</h1>
+            <p className='text-sm text-neutral-500'>
+              {event.date.toLocaleDateString('es-PE', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                weekday: 'long',
+                hour: 'numeric',
+                minute: 'numeric',
+              })}
+            </p>
           </div>
           <EventPageActionButtons eventId={id} />
         </div>
@@ -70,19 +79,11 @@ export default async function Page({
           <EventDashboardCards eventId={id} />
         </Suspense>
 
-        <div className='flex w-full flex-col gap-4 text-left lg:grid lg:grid-cols-3'>
-          <div className='flex flex-col gap-2 lg:col-span-2'>
-            <h3 className='text-lg font-bold'>Registros</h3>
-            <Suspense fallback={<EventAttendeesTableSkeleton />}>
-              <EventAttendeesTable eventId={id} />
-            </Suspense>
-          </div>
-          <div className='flex flex-col gap-2'>
-            <h3 className='text-lg font-bold'>Justificaciones</h3>
-            <Suspense fallback={<EventAttendeesTableSkeleton />}>
-              <EventJustifiedRecordsTable eventId={id} />
-            </Suspense>
-          </div>
+        <div className='flex w-full flex-col gap-2 text-left'>
+          <h3 className='text-lg font-bold'>Registros</h3>
+          <Suspense fallback={<EventAttendeesTableSkeleton />}>
+            <EventAttendeesTable eventId={id} />
+          </Suspense>
         </div>
       </div>
     </main>
