@@ -10,34 +10,34 @@ import {
   locationsTable,
 } from '@/db/schema'
 
-export async function createUser(data: InsertUser) {
+export const createUser = async (data: InsertUser) => {
   await db.insert(usersTable).values(data)
 }
 
-export async function createUsers(data: InsertUser[]) {
+export const createUsers = async (data: InsertUser[]) => {
   await db.insert(usersTable).values(data)
 }
 
-export async function createAttendanceRecord(data: InsertAttendance) {
+export const createAttendanceRecord = async (data: InsertAttendance) => {
   await db.insert(attendanceRecordsTable).values(data)
 }
 
-export async function createAttendanceRecords(data: InsertAttendance[]) {
+export const createAttendanceRecords = async (data: InsertAttendance[]) => {
   await db.insert(attendanceRecordsTable).values(data)
 }
 
-export async function createEvent(data: InsertEvent) {
+export const createEvent = async (data: InsertEvent) => {
   await db.insert(eventsTable).values(data)
 }
 
-export async function createEvents(data: InsertEvent[]) {
+export const createEvents = async (data: InsertEvent[]) => {
   await db.insert(eventsTable).values(data)
 }
 
-export async function createLocation(data: InsertLocation) {
+export const createLocation = async (data: InsertLocation) => {
   await db.insert(locationsTable).values(data)
 }
 
-export async function createLocations(data: InsertLocation[]) {
+export const createLocations = async (data: InsertLocation[]) => {
   await db.insert(locationsTable).values(data)
 }
