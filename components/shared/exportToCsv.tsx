@@ -2,7 +2,7 @@
 
 import { Button } from '../ui/button'
 import { fetchAttendanceRecordsByEventId } from '@/actions/attendance'
-import { UserCategory } from '@/types'
+import { IconFileTypeCsv } from '@tabler/icons-react'
 import { toast } from 'sonner'
 
 export default function ExportToCsv({ eventId }: { eventId: number }) {
@@ -24,21 +24,20 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
             [
               'id',
               'user_id',
-              'first_name',
-              'last_name',
+              'full_name',
               'category',
               'student_code',
               'check_in_date',
               'check_in_time',
               'status',
-              'registered_by',
+              'registered_by_user_id',
+              'registered_by_full_name',
               'method',
             ],
             ...sortedAttendanceRecords.map((item) => [
               item.id,
               item.user.id,
-              item.user.firstName,
-              item.user.lastName,
+              `${item.user.firstName} ${item.user.lastName}`,
               item.user.category,
               item.user.studentCode,
               new Intl.DateTimeFormat('es-PE', {
@@ -48,6 +47,7 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               }).format(new Date(item.checkInTime)),
               item.status,
               item.registeredBy,
+              `${item.registeredByUser.firstName} ${item.registeredByUser.lastName}`,
               item.method,
             ]),
           ]
@@ -79,6 +79,7 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
       size='sm'
       className='max-sm:w-full'
     >
+      <IconFileTypeCsv className='mr-1 h-4 w-4' />
       Exportar CSV
     </Button>
   )
