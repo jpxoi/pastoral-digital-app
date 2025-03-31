@@ -80,15 +80,11 @@ export async function getUsersWithNoAttendanceRecord(eventId: number) {
       id: usersTable.id,
     })
     .from(usersTable)
-    .where(
-      notInArray(
-        usersTable.id,
-        db
-          .select({ userId: attendanceRecordsTable.userId })
-          .from(attendanceRecordsTable)
-          .where(eq(attendanceRecordsTable.eventId, eventId))
-      )
+    .leftJoin(
+      attendanceRecordsTable,
+      sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventId}`
     )
+    .where(sql`${attendanceRecordsTable.id} IS NULL`)
 }
 
 export async function countUsersWithNoAttendanceRecord(eventId: number) {
@@ -97,15 +93,11 @@ export async function countUsersWithNoAttendanceRecord(eventId: number) {
       count: count(usersTable.id),
     })
     .from(usersTable)
-    .where(
-      notInArray(
-        usersTable.id,
-        db
-          .select({ userId: attendanceRecordsTable.userId })
-          .from(attendanceRecordsTable)
-          .where(eq(attendanceRecordsTable.eventId, eventId))
-      )
+    .leftJoin(
+      attendanceRecordsTable,
+      sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventId}`
     )
+    .where(sql`${attendanceRecordsTable.id} IS NULL`)
     .then((result) => result[0]?.count || 0)
 }
 
