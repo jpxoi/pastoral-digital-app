@@ -10,14 +10,11 @@ import { IconX } from '@tabler/icons-react'
 export const EventJustifiedRecordsColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
     id: 'catequista',
-    accessorKey: 'user.firstName',
+    accessorFn: (row) => `${row.user.firstName} ${row.user.lastName}`,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Catequista' />
     ),
     cell: ({ row }) => {
-      const firstName = row.original.user.firstName as string
-      const lastName = row.original.user.lastName as string
-
       const formattedTime = (
         row.original.checkInTime as Date
       ).toLocaleDateString('es-PE', {
@@ -29,9 +26,10 @@ export const EventJustifiedRecordsColumns: ColumnDef<FetchAttendanceProps>[] = [
       })
 
       return (
-        // <div className='text-nowrap text-left'>{`${firstName} ${lastName}`}</div>
         <div className='flex flex-col gap-1 text-left'>
-          <span className='text-nowrap font-medium'>{`${firstName} ${lastName}`}</span>
+          <span className='text-nowrap font-medium'>
+            {row.getValue('catequista')}
+          </span>
           <span className='text-xs text-gray-500'>{formattedTime}</span>
         </div>
       )
