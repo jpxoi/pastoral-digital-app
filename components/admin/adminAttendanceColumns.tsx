@@ -34,7 +34,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
         return (
           <Link
             href={`/admin/events/${row.original.event.id}`}
-            className='text-left hover:underline'
+            className='text-nowrap text-left hover:underline'
           >
             {row.original.event.name}
           </Link>
