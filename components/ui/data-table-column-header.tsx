@@ -59,10 +59,19 @@ export function DataTableColumnHeader<TData, TValue>({
             <IconArrowDown className='h-3.5 w-3.5 text-muted-foreground/70' />
             Desc
           </DropdownMenuItem>
+          {column.getIsSorted() && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => column.clearSorting()}>
+                <IconSelector className='h-3.5 w-3.5 text-muted-foreground/70' />
+                Ninguno
+              </DropdownMenuItem>
+            </>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <IconEyeOff className='h-3.5 w-3.5 text-muted-foreground/70' />
-            Hide
+            Ocultar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
