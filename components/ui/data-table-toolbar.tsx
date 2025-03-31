@@ -40,7 +40,7 @@ export function DataTableToolbar<TData>({
           }
           className='sm:max-w-xs'
         />
-        <div className='flex items-center justify-between gap-2'>
+        <div className='flex items-center gap-2'>
           {table.getAllColumns().some((col) => col.id === 'category') && (
             <DataTableFacetedFilter
               column={table.getColumn('category')}
