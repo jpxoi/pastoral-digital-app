@@ -32,7 +32,7 @@ export default function AttendanceStatusLabel({ status }: StatusLabel) {
     'FALTA INJUSTIFICADA': (
       <span className='flex max-w-fit flex-nowrap items-center justify-start gap-1.5 rounded-lg bg-red-50 p-2 text-xs text-red-700'>
         <IconCalendarX className='size-4' />
-        <span className='text-nowrap'>FALTA INJUSTIFICADA</span>
+        <span className='text-nowrap'>FALTA NO JUSTIFICADA</span>
       </span>
     ),
     'TARDANZA JUSTIFICADA': (
