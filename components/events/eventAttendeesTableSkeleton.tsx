@@ -42,7 +42,7 @@ export default function EventAttendeesTableSkeleton() {
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
                 <TableCell>
-                    <Skeleton className='h-5 w-40' />
+                  <Skeleton className='h-5 w-40' />
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-5 w-20' />

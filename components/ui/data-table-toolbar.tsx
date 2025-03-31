@@ -93,28 +93,28 @@ export function DataTableToolbar<TData>({
               {
                 label: 'TARDANZA',
                 value: AttendanceStatus.TARDANZA,
-                icon: IconClockExclamation
+                icon: IconClockExclamation,
               },
               {
                 label: 'DOBLE TARDANZA',
                 value: AttendanceStatus.DOBLE_TARDANZA,
-                icon: IconClockX
+                icon: IconClockX,
               },
               {
                 label: 'FALTA JUSTIFICADA',
                 value: AttendanceStatus.FALTA_JUSTIFICADA,
-                icon: IconCalendarHeart
+                icon: IconCalendarHeart,
               },
               {
                 label: 'TARDANZA JUSTIFICADA',
                 value: AttendanceStatus.TARDANZA_JUSTIFICADA,
-                icon: IconClockHeart
+                icon: IconClockHeart,
               },
               {
                 label: 'FALTA NO JUSTIFICADA',
                 value: AttendanceStatus.FALTA_INJUSTIFICADA,
-                icon: IconCalendarX
-              }
+                icon: IconCalendarX,
+              },
             ]}
           />
         )}
