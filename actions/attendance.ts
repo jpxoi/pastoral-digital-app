@@ -17,6 +17,7 @@ import { revalidatePath } from 'next/cache'
 import { checkRole } from '@/lib/roles'
 import { AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
+import { updateAttendanceRecordStatus } from '@/queries/update'
 
 export const registerAttendanceRecord = async (
   data: InsertAttendance,
@@ -90,9 +91,26 @@ export const setAttendanceRecordStatus = async (
     return { error: 'No estas autorizado para modificar asistencias.' }
   }
 
-  return {
-    success: 'Estado de asistencia modificado correctamente.',
-  }
+  return updateAttendanceRecordStatus(status, recordId)
+    .then(async () => {
+      revalidatePath(path || '/admin/records')
+
+      return {
+        success: 'Estado de asistencia modificado correctamente.',
+      }
+    })
+    .catch((error: NeonDbError) => {
+      console.error(error)
+      return {
+        error: handleDbError(error),
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return {
+        error: 'Ha ocurrido un error al modificar el estado de asistencia.',
+      }
+    })
 }
 
 export const fillAbsenceRecords = async (eventId: number) => {
