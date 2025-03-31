@@ -114,7 +114,9 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
                 navigator.clipboard
                   .writeText(row.original.id)
                   .then(() =>
-                    toast.info('El ID de asistencia ha sido copiado al portapapeles')
+                    toast.info(
+                      'El ID de asistencia ha sido copiado al portapapeles'
+                    )
                   )
               }
             >
@@ -201,7 +203,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendanceProps>[] = [
               Marcar Falta Injustificada
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className='text-red-500'>
+            <DropdownMenuItem disabled className='text-red-500'>
               <IconTrash />
               Eliminar asistencia
             </DropdownMenuItem>
