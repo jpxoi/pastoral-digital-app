@@ -95,7 +95,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
     },
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'estado',
     header: () => <div className='text-right'>Estado</div>,
     cell: ({ row }) => {
       const status = row.original.status
@@ -107,7 +107,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
     },
   },
   {
-    id: 'actions',
+    id: 'acciones',
     cell: ({ row }) => {
       return (
         <DropdownMenu key={row.id}>
