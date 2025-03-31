@@ -111,7 +111,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
         {row.original.category === 'alumni'
           ? 'Exalumno'
           : row.original.category === 'student'
-            ? 'Estudiante'
+            ? 'Alumno'
             : row.original.category === 'teacher'
               ? 'Docente'
               : row.original.category === 'other'
