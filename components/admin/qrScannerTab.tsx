@@ -12,7 +12,7 @@ import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
-import { FetchAttendanceProps } from '@/types'
+import { AttendanceStatus, FetchAttendanceProps } from '@/types'
 import {
   ScanErrorScreen,
   ScanSuccessScreen,
@@ -132,7 +132,7 @@ export default function QrScannerTab() {
         return
       }
 
-      if (status === 'FALTA INJUSTIFICADA') {
+      if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
         handleError(
           'Es demasiado tarde para registrar asistencia en este evento'
         )
