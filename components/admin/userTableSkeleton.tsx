@@ -25,13 +25,13 @@ export default async function UserTableSkeleton() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nombres</TableHead>
-              <TableHead>Apellidos</TableHead>
+              <TableHead>Nombre Completo</TableHead>
               <TableHead>Nombre de Usuario</TableHead>
               <TableHead>Correo Electrónico</TableHead>
               <TableHead>Número de Teléfono</TableHead>
               <TableHead>Fecha de Nacimiento</TableHead>
               <TableHead>Edad</TableHead>
+              <TableHead>Código</TableHead>
               <TableHead>Categoría</TableHead>
               <TableHead>
                 <div></div>
@@ -41,13 +41,33 @@ export default async function UserTableSkeleton() {
           <TableBody>
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
-                {Array.from({ length: 9 }).map((_, index) => (
-                  <TableCell key={index}>
-                    <div className='text-left'>
-                      <Skeleton className='h-5' />
-                    </div>
-                  </TableCell>
-                ))}
+                <TableCell>
+                  <Skeleton className='h-5 w-72' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-28' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-48' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-28' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-20' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-12' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-11' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-20' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='my-1.5 h-5 w-8' />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
