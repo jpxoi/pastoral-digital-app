@@ -17,11 +17,13 @@ export interface StatusLabel {
 
 export interface FetchAttendanceProps extends SelectAttendance {
   user: SelectUser
+  registeredByUser: SelectUser
 }
 
 export interface FetchAttendancePropsWithEvent extends SelectAttendance {
   user: SelectUser
   event: SelectEvent
+  registeredByUser: SelectUser
 }
 
 export interface FetchEventProps extends SelectEvent {
