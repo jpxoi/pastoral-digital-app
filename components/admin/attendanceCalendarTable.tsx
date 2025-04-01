@@ -17,8 +17,8 @@ export default async function AttendanceCalendarTable() {
     'flex w-12 cursor-pointer items-center justify-center rounded-md px-2 font-bold transition-colors'
 
   return (
-    <div className='rounded-md border'>
-      <Table className='text-left'>
+    <div className='relative h-[calc(100vh-8rem)] overflow-auto rounded-md border'>
+      <Table className='max-h-full text-left'>
         <TableHeader>
           <TableRow>
             <TableHead className='text-nowrap'>Nombre Completo</TableHead>
