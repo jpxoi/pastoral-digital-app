@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
 import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import AttendanceCalendarTable from '@/components/admin/attendanceCalendarTable'
