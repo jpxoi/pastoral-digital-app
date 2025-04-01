@@ -32,18 +32,18 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
     id: 'username',
     accessorKey: 'username',
-    header: 'Nombre de Usuario',
+    header: () => <span className='text-nowrap'>Nombre de Usuario</span>,
   },
   {
     id: 'email',
     accessorKey: 'email',
-    header: 'Correo Electrónico',
+    header: () => <span className='text-nowrap'>Correo Electrónico</span>,
     cell: ({ row }) => (
       <a
         href={`mailto:${row.original.email}`}
         target='_blank'
         rel='noreferrer'
-        className='truncate hover:underline'
+        className='text-nowrap hover:underline'
       >
         {row.original.email}
       </a>
@@ -52,13 +52,13 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
     id: 'phoneNumber',
     accessorKey: 'phoneNumber',
-    header: 'Número de Teléfono',
+    header: () => <span className='text-nowrap'>Número de Teléfono</span>,
     cell: ({ row }) => (
       <a
         href={`https://wa.me/51${row.original.phoneNumber}`}
         target='_blank'
         rel='noreferrer'
-        className='truncate hover:underline'
+        className='text-nowrap hover:underline'
       >
         {`+51 ${String(row.original.phoneNumber).replace(
           /(\d{3})(\d{3})(\d{3})/,
@@ -70,9 +70,9 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
     id: 'dateOfBirth',
     accessorKey: 'dateOfBirth',
-    header: 'Fecha de Nacimiento',
+    header: () => <span className='text-nowrap'>Fecha de Nacimiento</span>,
     cell: ({ row }) => (
-      <span className='truncate'>
+      <span className='text-nowrap'>
         {new Date(row.original.dateOfBirth).toLocaleDateString('es-PE', {
           day: 'numeric',
           month: 'short',
@@ -83,12 +83,12 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   },
   {
     id: 'age',
-    accessorKey: 'dateOfBirth',
-    header: 'Edad',
+    accessorFn: (row) => calculateAge(row.dateOfBirth),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Edad' />
+    ),
     cell: ({ row }) => (
-      <span className='text-nowrap'>
-        {calculateAge(row.original.dateOfBirth)} años
-      </span>
+      <span className='text-nowrap'>{row.getValue('age')} años</span>
     ),
   },
   {
@@ -98,13 +98,13 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
       <DataTableColumnHeader column={column} title='Código' />
     ),
     cell: ({ row }) => (
-      <span className='truncate'>{row.original.studentCode}</span>
+      <span className='text-nowrap'>{row.original.studentCode}</span>
     ),
   },
   {
     id: 'category',
     accessorKey: 'category',
-    header: 'Categoría',
+    header: () => <span className='text-nowrap'>Categoría</span>,
     cell: ({ row }) => (
       <Badge
         className={cn(
