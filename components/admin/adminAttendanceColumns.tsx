@@ -66,7 +66,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
     {
       id: 'estado',
       accessorKey: 'status',
-      header: () => <div className='text-right'>Estado</div>,
+      header: () => <span className='text-right'>Estado</span>,
       cell: ({ row }) => {
         const status = row.original.status
         return (
