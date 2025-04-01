@@ -18,7 +18,7 @@ export default function AttendanceTableSkeleton() {
             <TableRow>
               <TableHead>Evento</TableHead>
               <TableHead>
-                <div className='text-right'>Estado</div>
+                <span className='text-right'>Estado</span>
               </TableHead>
             </TableRow>
           </TableHeader>

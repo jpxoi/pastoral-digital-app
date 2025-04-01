@@ -31,7 +31,7 @@ export default function EventAttendeesTableSkeleton() {
               <TableHead>Catequista</TableHead>
               <TableHead>Hora de Ingreso</TableHead>
               <TableHead>
-                <div className='text-right'>Estado</div>
+                <span className='text-right'>Estado</span>
               </TableHead>
               <TableHead>
                 <div></div>
