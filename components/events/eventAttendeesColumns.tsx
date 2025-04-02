@@ -57,7 +57,11 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
     id: 'estado',
     accessorKey: 'status',
-    header: () => <span className='text-right'>Estado</span>,
+    header: () => (
+      <div className='w-full text-right'>
+        <span>Estado</span>
+      </div>
+    ),
     cell: ({ row }) => {
       const status = row.original.status
       return (

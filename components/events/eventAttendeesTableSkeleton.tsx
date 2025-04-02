@@ -30,8 +30,11 @@ export default function EventAttendeesTableSkeleton() {
             <TableRow>
               <TableHead>Catequista</TableHead>
               <TableHead>Hora de Ingreso</TableHead>
+              <TableHead>Registrado por</TableHead>
               <TableHead>
-                <span className='text-right'>Estado</span>
+                <div className='w-full text-right'>
+                  <span>Estado</span>
+                </div>
               </TableHead>
               <TableHead>
                 <div></div>
@@ -46,6 +49,9 @@ export default function EventAttendeesTableSkeleton() {
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-5 w-20' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-40' />
                 </TableCell>
                 <TableCell>
                   <div className='flex justify-end'>
