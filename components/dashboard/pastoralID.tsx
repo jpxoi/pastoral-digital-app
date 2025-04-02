@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default async function PastoralId() {
   return (
     <div className='pass-front group m-0 h-auto w-full min-w-80 rounded-lg p-0 transition-all duration-300 sm:min-w-96 sm:max-w-sm'>
-      <div className='group relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-[#001944] bg-white drop-shadow-md transition-all duration-300 hover:drop-shadow-2xl'>
+      <div className='group relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-blue-950 bg-white drop-shadow-md transition-all duration-300 hover:drop-shadow-2xl'>
         <div className='relative h-full w-full'>
           <Suspense
             fallback={
@@ -14,9 +14,9 @@ export default async function PastoralId() {
           >
             <PastoralIdQRCode />
           </Suspense>
-          <div className='flex h-full flex-col items-center justify-center bg-[#001944] p-2'>
+          <div className='flex h-full flex-col items-center justify-center bg-blue-950 p-2'>
             <p className='text-balance text-xs text-blue-50'>
-              Escanea este QR para registrar tu asistencia
+              Muestra este QR para registrar tu asistencia
             </p>
           </div>
         </div>
