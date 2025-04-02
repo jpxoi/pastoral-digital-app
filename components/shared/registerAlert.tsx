@@ -29,7 +29,16 @@ export default async function RegisterAlert() {
           </CardDescription>
           <CardDescription className='text-card-foreground'>
             Si necesitas ayuda, no dudes en contactar con el coordinador de
-            sistemas <a href='https://wa.me/51941952314' target='_blank' rel='noopener noreferrer' className='text-yellow-600 hover:text-yellow-700 hover:underline'>Irvin Alvarado</a>.
+            sistemas{' '}
+            <a
+              href='https://wa.me/51941952314'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='text-yellow-600 hover:text-yellow-700 hover:underline'
+            >
+              Irvin Alvarado
+            </a>
+            .
           </CardDescription>
         </CardHeader>
         <CardFooter>
