@@ -7,7 +7,7 @@ import {
   usersTable,
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
-import { asc, between, count, desc, eq, notInArray, sql } from 'drizzle-orm'
+import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
 
 /* UsersTable */
 export const getAllUsers = async () => {
