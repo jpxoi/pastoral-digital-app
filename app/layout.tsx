@@ -5,7 +5,6 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { PostHogProvider } from '@/providers/postHogProvider'
 
 const poppins = Poppins({
@@ -129,6 +128,7 @@ export default function RootLayout({
             richColors
           />
           <PostHogProvider>{children}</PostHogProvider>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
