@@ -6,6 +6,7 @@ import { esMX } from '@clerk/localizations'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { PostHogProvider } from '@/providers/postHogProvider'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -121,15 +122,17 @@ export default function RootLayout({
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
         <body className={poppins.className}>
-          <Toaster
-            className='text-left'
-            position='top-right'
-            theme='light'
-            richColors
-          />
-          {children}
-          <Analytics />
-          <SpeedInsights />
+          <PostHogProvider>
+            <Toaster
+              className='text-left'
+              position='top-right'
+              theme='light'
+              richColors
+            />
+            {children}
+            <Analytics />
+            <SpeedInsights />
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>
