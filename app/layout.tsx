@@ -122,17 +122,15 @@ export default function RootLayout({
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
       <html lang='es'>
         <body className={poppins.className}>
-          <PostHogProvider>
-            <Toaster
-              className='text-left'
-              position='top-right'
-              theme='light'
-              richColors
-            />
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </PostHogProvider>
+          <Toaster
+            className='text-left'
+            position='top-right'
+            theme='light'
+            richColors
+          />
+          <PostHogProvider>{children}</PostHogProvider>
+          <Analytics />
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProvider>
