@@ -111,6 +111,19 @@ export default function QrScannerTab() {
     toast.error(error)
   }
 
+  const validateScanInput = (detectedCodes: IDetectedBarcode[]) => {
+    if (!detectedCodes || detectedCodes.length === 0) {
+      throw new Error('No se detectó ningún código QR')
+    }
+
+    const userScannedId = detectedCodes[0].rawValue
+    if (!userScannedId) {
+      throw new Error('El código QR escaneado no contiene un ID válido')
+    }
+
+    return userScannedId
+  }
+
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
     if (detectedCodes) {
       const userScannedId = detectedCodes[0].rawValue
@@ -120,8 +133,6 @@ export default function QrScannerTab() {
         handleError('No hay ningún evento programado para hoy.')
         return
       }
-
-      const status = calculateStatus(checkInTime, event.date)
 
       if (!user) {
         handleError('No se pudo obtener el usuario actual')
@@ -133,47 +144,65 @@ export default function QrScannerTab() {
         return
       }
 
-      if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
-        handleError(
-          'Es demasiado tarde para registrar asistencia en este evento'
-        )
-        return
-      }
-
-      const newRecord = {
-        userId: userScannedId,
-        eventId: event.id as number,
-        checkInTime: checkInTime,
-        status: status,
-        registeredBy: user.id as string,
-      }
-
       startTransition(() => {
-        toast.promise(registerAttendanceRecord(newRecord), {
-          loading: 'Registrando asistencia...',
-          success: (data: {
-            error?: string
-            success?: string
-            lastAttendanceRecord?: FetchAttendanceProps
-          }) => {
-            if (data?.error) {
-              throw new Error(data.error)
+        toast.promise(
+          async () => {
+            const scannedUserSchedule = await fetchUserSchedule(userScannedId)
+
+            if (scannedUserSchedule.error) {
+              throw new Error(scannedUserSchedule.error)
             }
 
-            if (data?.success && data?.lastAttendanceRecord) {
-              setLastScanned(data.lastAttendanceRecord)
-              handleSuccess()
-              return data.success
+            const eventDate =
+              scannedUserSchedule.data === UserSchedule.FULL_TIME ||
+              scannedUserSchedule.data === UserSchedule.PRIMERA_COMUNION
+                ? event.date
+                : event.secondTurnDate
+
+            const status = calculateStatus(checkInTime, eventDate)
+
+            if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
+              throw new Error(
+                'Es demasiado tarde para registrar asistencia en este evento'
+              )
             }
+
+            const newRecord = {
+              userId: userScannedId,
+              eventId: event.id as number,
+              checkInTime: checkInTime,
+              status: status,
+              registeredBy: user.id as string,
+            }
+
+            return registerAttendanceRecord(newRecord)
           },
-          error: (error) => {
-            handleError()
-            return (
-              error.message ||
-              'Ha ocurrido un error al registrar la asistencia.'
-            )
-          },
-        })
+          {
+            loading: 'Registrando asistencia...',
+            success: (data: {
+              error?: string
+              success?: string
+              lastAttendanceRecord?: FetchAttendanceProps
+            }) => {
+              if (data?.error) {
+                throw new Error(data.error)
+              }
+
+              if (data?.success && data?.lastAttendanceRecord) {
+                setLastScanned(data.lastAttendanceRecord)
+                handleSuccess()
+                return data.success
+              }
+            },
+            error: (error) => {
+              handleError()
+              return (
+                error.message ||
+                'Ha ocurrido un error al registrar la asistencia.'
+              )
+            },
+          }
+        )
       })
     }
   }
