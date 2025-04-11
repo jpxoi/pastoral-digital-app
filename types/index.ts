@@ -53,5 +53,5 @@ export enum UserCategory {
 export enum UserSchedule {
   FULL_TIME = 'full-time',
   PRIMERA_COMUNION = 'primera-comunion',
-  CONFIRMACION = 'confirmacion'
+  CONFIRMACION = 'confirmacion',
 }
