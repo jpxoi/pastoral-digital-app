@@ -97,7 +97,7 @@ export const eventsTable = pgTable('events', {
   name: text().notNull(),
   description: text(),
   date: timestamp('date').notNull(),
-  secondTurnDate: timestamp('second_turn_date'),
+  secondTurnDate: timestamp('second_turn_date').notNull(),
   endDate: timestamp('end_date').notNull(),
   locationId: serial('location_id')
     .references(() => locationsTable.id, { onDelete: 'cascade' })
