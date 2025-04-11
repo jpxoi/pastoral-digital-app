@@ -26,6 +26,15 @@ export const countAllUsers = async () => {
   return db.$count(usersTable)
 }
 
+export const getUserSchedule = async (userId: SelectUser['id']) => {
+  return db.query.usersTable.findFirst({
+    where: eq(usersTable.id, userId),
+    columns: {
+      schedule: true,
+    },
+  })
+}
+
 export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
   const [
     stats = {

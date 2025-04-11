@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
 import { checkRole } from '@/lib/roles'
 import { UserRole } from '@/types'
+import { getUserSchedule } from '@/queries/select'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -105,5 +106,20 @@ export async function removeRole(formData: FormData) {
   } catch (err) {
     console.error(err)
     return { error: 'Hubo un error al eliminar el rol.' }
+  }
+}
+
+export async function fetchUserSchedule(userId: string) {
+  try {
+    const user = await getUserSchedule(userId)
+
+    if (!user?.schedule) {
+      return { error: 'No se pudo obtener el horario del usuario.' }
+    }
+
+    return { success: 'Horario del usuario obtenido correctamente', data: user.schedule }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Hubo un error al obtener el horario del usuario.' }
   }
 }
