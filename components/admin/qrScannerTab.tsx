@@ -12,7 +12,7 @@ import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
-import { AttendanceStatus, FetchAttendanceProps } from '@/types'
+import { AttendanceStatus, FetchAttendanceProps, UserSchedule } from '@/types'
 import {
   ScanErrorScreen,
   ScanSuccessScreen,
@@ -20,6 +20,7 @@ import {
 import ErrorAlert from '@/components/shared/errorAlert'
 import { calculateStatus } from '@/lib/attendance'
 import { getEventOfTheDay } from '@/actions/event'
+import { fetchUserSchedule } from '@/actions/user'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
