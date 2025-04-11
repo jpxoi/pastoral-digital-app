@@ -117,7 +117,10 @@ export async function fetchUserSchedule(userId: string) {
       return { error: 'No se pudo obtener el horario del usuario.' }
     }
 
-    return { success: 'Horario del usuario obtenido correctamente', data: user.schedule }
+    return {
+      success: 'Horario del usuario obtenido correctamente',
+      data: user.schedule,
+    }
   } catch (err) {
     console.error(err)
     return { error: 'Hubo un error al obtener el horario del usuario.' }
