@@ -10,7 +10,7 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
-import { AttendanceStatus, UserCategory, UserRole } from '@/types'
+import { AttendanceStatus, UserCategory, UserRole, UserSchedule } from '@/types'
 
 /* Enums */
 
@@ -23,6 +23,12 @@ export const userCategoryEnum = pgEnum('user_category_enum', [
 export const userRoleEnum = pgEnum('user_role_enum', [
   UserRole.MEMBER,
   UserRole.ADMIN,
+])
+
+export const userScheduleEnum = pgEnum('user_schedule_enum', [
+  UserSchedule.FULL_TIME,
+  UserSchedule.PRIMERA_COMUNION,
+  UserSchedule.CONFIRMACION,
 ])
 
 export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
@@ -48,6 +54,7 @@ export const usersTable = pgTable('users', {
   category: userCategoryEnum().notNull(),
   studentCode: text('student_code'),
   role: userRoleEnum().default(UserRole.MEMBER).notNull(),
+  schedule: userScheduleEnum().default(UserSchedule.FULL_TIME).notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
@@ -59,10 +66,10 @@ export const attendanceRecordsTable = pgTable(
   {
     id: uuid().primaryKey().defaultRandom(),
     userId: text('user_id')
-      .references(() => usersTable.id)
+      .references(() => usersTable.id, { onDelete: 'cascade' })
       .notNull(),
     eventId: integer('event_id')
-      .references(() => eventsTable.id)
+      .references(() => eventsTable.id, { onDelete: 'cascade' })
       .notNull(),
     checkInTime: timestamp('check_in_time').defaultNow().notNull(),
     status: attendanceStatusEnum().default(AttendanceStatus.A_TIEMPO).notNull(),
@@ -89,10 +96,11 @@ export const eventsTable = pgTable('events', {
   id: serial().primaryKey(),
   name: text().notNull(),
   description: text(),
-  date: timestamp().notNull(),
+  date: timestamp('date').notNull(),
+  secondTurnDate: timestamp('second_turn_date'),
   endDate: timestamp('end_date').notNull(),
   locationId: serial('location_id')
-    .references(() => locationsTable.id)
+    .references(() => locationsTable.id, { onDelete: 'cascade' })
     .notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at')

@@ -49,3 +49,9 @@ export enum UserCategory {
   ALUMNI = 'alumni',
   TEACHER = 'teacher',
 }
+
+export enum UserSchedule {
+  FULL_TIME = 'full-time',
+  PRIMERA_COMUNION = 'primera-comunion',
+  CONFIRMACION = 'confirmacion'
+}
