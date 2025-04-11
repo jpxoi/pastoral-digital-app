@@ -124,12 +124,12 @@ export default function QrScannerTab() {
       }
 
       if (!user) {
-        handleError('No se pudo obtener el usuario actual')
+        handleError('No se pudo obtener tu usuario. Por favor, cierra sesión y vuelve a iniciar sesión')
         return
       }
 
       if (userScannedId === (user.id as string)) {
-        handleError('No puedes registrar tu propia asistencia')
+        handleError('No puedes registrar tu propia asistencia. Por favor, pide a otro administrador que registre tu asistencia')
         return
       }
 
@@ -152,7 +152,7 @@ export default function QrScannerTab() {
 
             if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
               throw new Error(
-                'Es demasiado tarde para registrar asistencia en este evento'
+                'Es demasiado tarde para registrar asistencia en este evento. Por favor, contacta al administrador'
               )
             }
 
@@ -167,7 +167,7 @@ export default function QrScannerTab() {
             return registerAttendanceRecord(newRecord)
           },
           {
-            loading: 'Registrando asistencia...',
+            loading: 'Registrando asistencia del catequista...',
             success: (data: {
               error?: string
               success?: string
@@ -187,7 +187,7 @@ export default function QrScannerTab() {
               handleError()
               return (
                 error.message ||
-                'Ha ocurrido un error al registrar la asistencia.'
+                'Ha ocurrido un error al registrar la asistencia. Por favor, inténtalo nuevamente'
               )
             },
           }
