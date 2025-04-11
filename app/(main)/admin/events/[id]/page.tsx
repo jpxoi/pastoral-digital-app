@@ -68,6 +68,8 @@ export default async function Page({
                 weekday: 'long',
                 hour: 'numeric',
                 minute: 'numeric',
+                timeZone: 'America/Lima',
+                timeZoneName: 'shortGeneric',
               })}
             </p>
           </div>

@@ -20,6 +20,8 @@ export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
             hour: 'numeric',
             minute: 'numeric',
             second: 'numeric',
+            timeZone: 'America/Lima',
+            timeZoneName: 'shortGeneric',
           }
         )
 

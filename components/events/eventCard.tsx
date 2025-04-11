@@ -47,7 +47,7 @@ export default async function EventCard({
               className='size-6 p-1 hover:bg-blue-50 hover:text-primary'
             >
               <a
-                href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${record.date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${record.endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=&location=${record.location.name}&text=${record.name}`}
+                href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${record.date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${record.endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=${record.description}&location=${record.location.name}&text=${record.name}`}
                 target='_blank'
                 rel='noreferrer'
                 className='text-primary'
@@ -74,11 +74,14 @@ export default async function EventCard({
               {record.date.toLocaleTimeString('es-PE', {
                 hour: 'numeric',
                 minute: 'numeric',
+                timeZone: 'America/Lima',
               })}{' '}
               -{' '}
               {record.endDate.toLocaleTimeString('es-PE', {
                 hour: 'numeric',
                 minute: 'numeric',
+                timeZone: 'America/Lima',
+                timeZoneName: 'shortGeneric',
               })}
             </span>
           </span>

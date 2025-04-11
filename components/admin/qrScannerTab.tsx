@@ -58,6 +58,8 @@ export default function QrScannerTab() {
                 {
                   hour: 'numeric',
                   minute: 'numeric',
+                  timeZone: 'America/Lima',
+                  timeZoneName: 'shortGeneric',
                 }
               )}
             `,
@@ -109,19 +111,6 @@ export default function QrScannerTab() {
 
   const showError = (error: string) => {
     toast.error(error)
-  }
-
-  const validateScanInput = (detectedCodes: IDetectedBarcode[]) => {
-    if (!detectedCodes || detectedCodes.length === 0) {
-      throw new Error('No se detectó ningún código QR')
-    }
-
-    const userScannedId = detectedCodes[0].rawValue
-    if (!userScannedId) {
-      throw new Error('El código QR escaneado no contiene un ID válido')
-    }
-
-    return userScannedId
   }
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
@@ -277,6 +266,8 @@ export default function QrScannerTab() {
                     year: 'numeric',
                     hour: 'numeric',
                     minute: 'numeric',
+                    timeZone: 'America/Lima',
+                    timeZoneName: 'shortGeneric',
                   })}
                 </p>
 

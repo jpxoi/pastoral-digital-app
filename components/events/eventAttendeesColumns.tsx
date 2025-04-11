@@ -35,6 +35,8 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
+        timeZone: 'America/Lima',
+        timeZoneName: 'shortGeneric',
       })
       return <span>{formattedTime}</span>
     },
