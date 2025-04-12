@@ -13,7 +13,7 @@ import { IconCircleCheck } from '@tabler/icons-react'
 
 export default function LandingPage() {
   return (
-    <main className='h-dvh overflow-y-scroll'>
+    <main className='h-screen overflow-y-scroll'>
       <div className='flex min-h-screen flex-col items-center justify-center'>
         {/* Header */}
         <header className='sticky top-0 z-50 flex w-full items-center justify-center bg-white backdrop-blur'>

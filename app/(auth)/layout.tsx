@@ -6,7 +6,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <main className='flex h-dvh w-full flex-col items-center justify-center bg-center p-4 max-sm:pb-8'>
+    <main className='flex h-screen w-full flex-col items-center justify-center bg-center p-4 max-sm:pb-8'>
       <Background />
       {children}
     </main>

@@ -1,15 +1,6 @@
-import Loading from '@/app/loading'
-import { ClerkLoaded, ClerkLoading, SignIn } from '@clerk/nextjs'
+import Loading from '@/app/(auth)/loading'
+import { SignIn } from '@clerk/nextjs'
 
 export default function Page() {
-  return (
-    <>
-      <ClerkLoading>
-        <Loading />
-      </ClerkLoading>
-      <ClerkLoaded>
-        <SignIn />
-      </ClerkLoaded>
-    </>
-  )
+  return <SignIn fallback={<Loading />} />
 }

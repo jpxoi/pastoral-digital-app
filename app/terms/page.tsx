@@ -26,7 +26,7 @@ export default function TermsAndConditionsPage() {
   const lastUpdated = '10 de marzo de 2025'
 
   return (
-    <div className='h-dvh overflow-y-scroll bg-gradient-to-b from-gray-50 to-gray-100 print:bg-white'>
+    <div className='h-screen overflow-y-scroll bg-gradient-to-b from-gray-50 to-gray-100 print:bg-white'>
       <div className='mx-auto max-w-5xl px-4 py-12'>
         <div className='mb-6 flex items-center justify-between'>
           <Link

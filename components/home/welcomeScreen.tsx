@@ -6,7 +6,7 @@ import LoginPrompt from '@/components/home/loginPrompt'
 
 export default function WelcomeScreen() {
   return (
-    <div className='mx-auto flex h-dvh w-screen flex-col justify-between sm:h-auto sm:max-w-sm sm:rounded-xl sm:bg-white sm:shadow-md'>
+    <div className='mx-auto flex h-screen w-screen flex-col justify-between sm:h-auto sm:max-w-sm sm:rounded-xl sm:bg-white sm:shadow-md'>
       <div className='flex h-full w-full flex-col justify-between bg-none sm:rounded-xl sm:bg-center'>
         <h1 className='select-none p-4 text-left text-[2.7rem] font-semibold leading-normal text-white sm:hidden sm:text-black'>
           Pastoral
