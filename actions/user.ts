@@ -114,11 +114,17 @@ export async function fetchUserSchedule(userId: string) {
     const user = await getUserSchedule(userId)
 
     if (!user) {
-      return { error: 'No se encontró al catequista en la base de datos. Por favor, verifica que esté registrado correctamente' }
+      return {
+        error:
+          'No se encontró al catequista en la base de datos. Por favor, verifica que esté registrado correctamente',
+      }
     }
 
     if (!user.schedule) {
-      return { error: 'No se encontró el horario del catequista en la base de datos. Por favor, contacta al administrador' }
+      return {
+        error:
+          'No se encontró el horario del catequista en la base de datos. Por favor, contacta al administrador',
+      }
     }
 
     return {
@@ -127,6 +133,9 @@ export async function fetchUserSchedule(userId: string) {
     }
   } catch (err) {
     console.error(err)
-    return { error: 'Ocurrió un error inesperado al obtener el horario del catequista. Por favor, inténtalo nuevamente.' }
+    return {
+      error:
+        'Ocurrió un error inesperado al obtener el horario del catequista. Por favor, inténtalo nuevamente.',
+    }
   }
 }

@@ -12,7 +12,9 @@ import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
 /* UsersTable */
 export const getAllUsers = async () => {
   return db.query.usersTable.findMany({
-    orderBy: (fields) => [sql`${fields.firstName} || ' ' || ${fields.lastName}`],
+    orderBy: (fields) => [
+      sql`${fields.firstName} || ' ' || ${fields.lastName}`,
+    ],
   })
 }
 
@@ -185,7 +187,10 @@ export const getAttendanceCalendar = async () => {
         sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
       )
       .where(sql`${eventsTable.date} IS NOT NULL`)
-      .orderBy(sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`, eventsTable.date)
+      .orderBy(
+        sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
+        eventsTable.date
+      )
 
     // Group the data by user
     const userMap = new Map<string, Record<string, string | null>>()

@@ -124,12 +124,16 @@ export default function QrScannerTab() {
       }
 
       if (!user) {
-        handleError('No se pudo obtener tu usuario. Por favor, cierra sesión y vuelve a iniciar sesión')
+        handleError(
+          'No se pudo obtener tu usuario. Por favor, cierra sesión y vuelve a iniciar sesión'
+        )
         return
       }
 
       if (userScannedId === (user.id as string)) {
-        handleError('No puedes registrar tu propia asistencia. Por favor, pide a otro administrador que registre tu asistencia')
+        handleError(
+          'No puedes registrar tu propia asistencia. Por favor, pide a otro administrador que registre tu asistencia'
+        )
         return
       }
 
