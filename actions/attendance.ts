@@ -15,7 +15,7 @@ import { InsertAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidatePath } from 'next/cache'
 import { checkRole } from '@/lib/roles'
-import { AttendanceStatus, UserRole } from '@/types'
+import { AttendanceRecordMethod, AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
 
@@ -142,7 +142,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
     checkInTime: event.endDate,
     status: AttendanceStatus.FALTA_INJUSTIFICADA,
     registeredBy: registeredBy || '',
-    method: 'MANUAL',
+    method: AttendanceRecordMethod.MANUAL,
   }))
 
   try {
