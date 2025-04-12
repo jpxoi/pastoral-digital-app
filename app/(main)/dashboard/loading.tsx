@@ -9,7 +9,7 @@ export default function Loading() {
         <div className='flex w-full flex-col items-center justify-start gap-4'>
           <div className='flex w-full justify-between gap-2 text-left max-sm:flex-col'>
             <h1 className='text-xl font-semibold sm:text-2xl'>Inicio</h1>
-            <Skeleton className='h-9 w-36 max-sm:hidden' />
+            <Skeleton className='h-9 w-36 max-sm:w-full' />
           </div>
 
           {/* Attendance Section */}
