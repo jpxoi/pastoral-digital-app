@@ -4,6 +4,7 @@
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
 import { usePostHog } from 'posthog-js/react'
+import { useUser } from '@clerk/nextjs'
 
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
@@ -31,6 +32,7 @@ function PostHogPageView() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const posthog = usePostHog()
+  const { user, isLoaded } = useUser()
 
   // Track pageviews
   useEffect(() => {
@@ -43,6 +45,23 @@ function PostHogPageView() {
       posthog.capture('$pageview', { $current_url: url })
     }
   }, [pathname, searchParams, posthog])
+
+  // Identify user when authenticated
+  useEffect(() => {
+    if (isLoaded && user && posthog) {
+      // Identify the user with their unique ID
+      posthog.identify(user.id, {
+        email: user.primaryEmailAddress?.emailAddress,
+        name: user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      })
+    } else if (isLoaded && !user && posthog) {
+      // Reset identification if user logs out
+      posthog.reset()
+    }
+  }, [isLoaded, user, posthog])
 
   return null
 }
