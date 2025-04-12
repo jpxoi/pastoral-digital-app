@@ -55,3 +55,9 @@ export enum UserSchedule {
   PRIMERA_COMUNION = 'primera-comunion',
   CONFIRMACION = 'confirmacion',
 }
+
+export enum AttendanceRecordMethod {
+  MANUAL = 'manual',
+  QR = 'qr',
+  NFC = 'nfc',
+}
