@@ -1,26 +1,50 @@
 import PastoralIdQRCode from '@/components/dashboard/pastoraldQrCode'
-import { Suspense } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
+import { auth, currentUser } from '@clerk/nextjs/server'
+import PastoralIDSkeleton from './pastoralIDSkeleton'
 
 export default async function PastoralId() {
+  const user = await currentUser()
+
+  if (!user) {
+    return <PastoralIDSkeleton />
+  }
+
+  const isOnboarded =
+    (await auth()).sessionClaims?.metadata.onboardingComplete === true
+
   return (
-    <div className='pass-front group m-0 h-auto w-full min-w-80 rounded-lg p-0 transition-all duration-300 sm:min-w-96 sm:max-w-sm'>
-      <div className='group relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-blue-950 bg-white drop-shadow-md transition-all duration-300 hover:drop-shadow-2xl'>
-        <div className='relative h-full w-full'>
-          <Suspense
-            fallback={
-              <Skeleton className='m-0 mx-auto aspect-square h-auto w-full items-center justify-center rounded-lg p-0 sm:max-w-sm' />
-            }
-          >
-            <PastoralIdQRCode />
-          </Suspense>
-          <div className='flex h-full flex-col items-center justify-center bg-blue-950 p-2'>
-            <p className='text-balance text-xs text-blue-50'>
-              Muestra este QR para registrar tu asistencia
-            </p>
+    <div
+      className='mx-[-1.5rem] flex aspect-[9/11] w-[calc(100%+3rem)] flex-col gap-2 bg-cover bg-center p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'
+      style={{
+        backgroundImage: 'url(/graphics/id-bg.svg)',
+      }}
+    >
+      <div className='flex flex-grow flex-col items-center justify-start gap-2'>
+        {!isOnboarded ? (
+          <div className='m-0 mx-auto flex aspect-square h-auto w-full flex-col items-center justify-center rounded-lg bg-white p-4 text-center sm:max-w-sm'>
+            <div className='flex aspect-square h-auto w-full flex-col items-center justify-center rounded-lg bg-blue-50 p-4 text-center'>
+              <h3 className='text-xl text-blue-950'>Código QR no disponible</h3>
+              <p className='text-sm text-blue-950'>
+                Por favor, completa tu registro para acceder a esta
+                funcionalidad.
+              </p>
+            </div>
           </div>
-        </div>
-        <div className='z-5 absolute -inset-full top-0 block h-full w-1/2 -skew-x-12 transform bg-gradient-to-r from-transparent to-white opacity-40 group-hover:animate-shine' />
+        ) : (
+          <>
+            <PastoralIdQRCode userId={user.id} />
+            <div className='m-0 mx-auto h-auto w-full rounded-lg bg-white p-0 sm:max-w-sm'>
+              <span className='text-sm text-muted-foreground'>{user?.id}</span>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className='flex w-full flex-col items-center justify-center'>
+        <h3 className='text-2xl font-semibold text-blue-950'>
+          {user?.fullName}
+        </h3>
+        <p className='text-base text-blue-950'>Catequista</p>
       </div>
     </div>
   )
