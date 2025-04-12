@@ -40,7 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-import { AttendanceStatus } from '@/types'
+import { AttendanceRecordMethod, AttendanceStatus } from '@/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { useUser } from '@clerk/nextjs'
 
@@ -80,7 +80,7 @@ export default function EventFillAbsenteesButton({
                 userId: id,
                 registeredBy: registeredBy?.id || '',
                 checkInTime: new Date(),
-                method: 'MANUAL',
+                method: AttendanceRecordMethod.MANUAL,
                 status: values.status,
               }),
               `/admin/events/${eventId}`
@@ -115,7 +115,7 @@ export default function EventFillAbsenteesButton({
               userId: values.userId,
               registeredBy: registeredBy?.id || '',
               checkInTime: new Date(),
-              method: 'MANUAL',
+              method: AttendanceRecordMethod.MANUAL,
               status: values.status,
             },
             `/admin/events/${eventId}`
