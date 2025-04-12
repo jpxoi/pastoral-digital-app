@@ -32,7 +32,7 @@ export default function PastoralDigitalPage() {
 
       {/* Sección de Pastoral ID y Asistencia */}
       <div className='flex w-full flex-col items-center justify-start gap-4'>
-        <div className='flex w-full justify-between gap-2 text-left max-sm:flex-col'>
+        <div className='flex w-full justify-between sm:items-center gap-2 text-left max-sm:flex-col'>
           <h1 className='text-xl font-semibold sm:text-2xl'>Inicio</h1>
           <Dialog>
             <DialogTrigger asChild>
