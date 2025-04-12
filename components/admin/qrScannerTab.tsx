@@ -155,12 +155,12 @@ export default function QrScannerTab() {
             const status = calculateStatus(checkInTime, eventDate)
 
             if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
-              toast.error("Se procesará el registro como FALTA INJUSTIFICADA. Este no podrá ser modificado.")
+              toast.info("Se procesará el registro como FALTA INJUSTIFICADA. Este no podrá ser modificado.")
             }
 
             if (checkInTime > event.endDate) {
               throw new Error(
-                'No puedes registrar asistencia después de la hora de finalización del evento'
+                'No puedes registrar asistencia después de la hora de finalización del evento.'
               )
             }
 
