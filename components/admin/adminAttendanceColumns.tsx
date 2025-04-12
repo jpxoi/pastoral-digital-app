@@ -62,7 +62,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
           }
         )
 
-        return <span className='text-left text-nowrap'>{formattedTime}</span>
+        return <span className='text-nowrap text-left'>{formattedTime}</span>
       },
     },
     {
