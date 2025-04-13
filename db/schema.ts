@@ -1,5 +1,7 @@
 import {
+  boolean,
   date,
+  index,
   integer,
   pgEnum,
   pgTable,
@@ -90,21 +92,25 @@ export const attendanceRecordsTable = pgTable(
   ]
 )
 
-export const eventsTable = pgTable('events', {
-  id: serial().primaryKey(),
-  name: text().notNull(),
-  description: text(),
-  date: timestamp('date').notNull(),
-  secondTurnDate: timestamp('second_turn_date').notNull(),
-  endDate: timestamp('end_date').notNull(),
-  locationId: serial('location_id')
-    .references(() => locationsTable.id, { onDelete: 'cascade' })
-    .notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at')
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-})
+export const eventsTable = pgTable(
+  'events',
+  {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    name: text().notNull(),
+    description: text(),
+    date: timestamp('date').notNull(),
+    secondTurnDate: timestamp('second_turn_date').notNull(),
+    endDate: timestamp('end_date').notNull(),
+    locationId: integer('location_id')
+      .references(() => locationsTable.id, { onDelete: 'cascade' })
+      .notNull(),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [index('idx_events_date').on(table.date)]
+)
 
 export const locationsTable = pgTable('locations', {
   id: serial().primaryKey(),
@@ -119,6 +125,32 @@ export const locationsTable = pgTable('locations', {
     .defaultNow()
     .$onUpdate(() => new Date()),
 })
+
+/* Registro de Misas Dominicales */
+export const sundayMassesTable = pgTable(
+  'sunday_masses',
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: text('user_id')
+      .references(() => usersTable.id, { onDelete: 'cascade' })
+      .notNull(),
+    parish: text().notNull(),
+    date: timestamp('date').notNull(),
+    evidenceUrl: text('evidence_url').notNull(),
+    verified: boolean('verified').default(false).notNull(),
+    verifiedBy: text('verified_by').references(() => usersTable.id),
+    verifiedAt: timestamp('verified_at'),
+    createdAt: timestamp('created_at').defaultNow(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    index('idx_sunday_masses_user_id').on(table.userId),
+    index('idx_sunday_masses_date').on(table.date),
+    index('idx_sunday_masses_verified').on(table.verified),
+  ]
+)
 
 /* Relations */
 
@@ -146,6 +178,7 @@ export const usersRelations = relations(usersTable, ({ many }) => {
   return {
     attendanceRecords: many(attendanceRecordsTable),
     attendanceRecordsRegisteredBy: many(attendanceRecordsTable),
+    sundayMasses: many(sundayMassesTable),
   }
 })
 
@@ -165,6 +198,19 @@ export const locationsRelations = relations(locationsTable, ({ many }) => {
   }
 })
 
+export const sundayMassesRelations = relations(sundayMassesTable, ({ one }) => {
+  return {
+    user: one(usersTable, {
+      fields: [sundayMassesTable.userId],
+      references: [usersTable.id]
+    }),
+    verifier: one(usersTable, {
+      fields: [sundayMassesTable.verifiedBy],
+      references: [usersTable.id]
+    })
+  }
+})
+
 /* Types */
 
 export type InsertUser = typeof usersTable.$inferInsert
@@ -178,3 +224,6 @@ export type SelectEvent = typeof eventsTable.$inferSelect
 
 export type InsertLocation = typeof locationsTable.$inferInsert
 export type SelectLocation = typeof locationsTable.$inferSelect
+
+export type InsertSundayMass = typeof sundayMassesTable.$inferInsert
+export type SelectSundayMass = typeof sundayMassesTable.$inferSelect
