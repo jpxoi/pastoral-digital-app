@@ -121,7 +121,7 @@ export default function SundayMassForm() {
                   ) : (
                     <div className='flex flex-row items-center justify-start gap-2'>
                       <UploadButton
-                        className='ut-button:ut-readying:opacity-50 ut-button:cursor-pointer ut-button:border ut-button:border-input ut-button:bg-background ut-button:hover:bg-accent ut-button:hover:text-accent-foreground ut-button:text-accent-foreground ut-button:text-sm ut-allowed-content:hidden'
+                        className='ut-button:cursor-pointer ut-button:border ut-button:border-input ut-button:bg-background ut-button:text-sm ut-button:text-accent-foreground ut-button:hover:bg-accent ut-button:hover:text-accent-foreground ut-allowed-content:hidden ut-button:ut-readying:opacity-50'
                         content={{
                           button({ ready, uploadProgress, isUploading }) {
                             if (isUploading) {

@@ -4,7 +4,6 @@ import { IconClock, IconRefresh } from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
-
 export default function MaintenanceScreen({
   startDateTime,
   endDateTime,
@@ -49,8 +48,7 @@ export default function MaintenanceScreen({
     style: 'short',
   }).format(
     Math.floor(
-      (endDateTime.getTime() - currentTime.getTime()) /
-        (1000 * 60 * 60 * 24)
+      (endDateTime.getTime() - currentTime.getTime()) / (1000 * 60 * 60 * 24)
     ),
     'days'
   )

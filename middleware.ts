@@ -22,7 +22,7 @@ export default clerkMiddleware(async (auth, req) => {
     req.nextUrl.pathname = `/maintenance`
     return NextResponse.rewrite(req.nextUrl)
   }
-  
+
   if (isMaintenanceRoute(req) && !isInMaintenanceMode) {
     const url = new URL('/', req.url)
     return NextResponse.redirect(url)

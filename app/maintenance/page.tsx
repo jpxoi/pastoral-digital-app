@@ -5,7 +5,7 @@ import { get } from '@vercel/edge-config'
 export default async function MaintenancePage() {
   const [startDateTime, endDateTime] = await Promise.all([
     get('maintenanceStartDateTime'),
-    get('maintenanceEndDateTime')
+    get('maintenanceEndDateTime'),
   ])
 
   return (
