@@ -22,6 +22,8 @@ import { calculateStatus } from '@/lib/attendance'
 import { getEventOfTheDay } from '@/actions/event'
 import { fetchUserSchedule } from '@/actions/user'
 
+import useSound from 'use-sound';
+
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -33,13 +35,12 @@ export default function QrScannerTab() {
     null
   )
   const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
-  const [errorSound, setErrorSound] = useState<HTMLAudioElement | null>(null)
-  const [successSound, setSuccessSound] = useState<HTMLAudioElement | null>(
-    null
-  )
   const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
+
+  const [playSuccessSound] = useSound('/sounds/success.mp3')
+  const [playErrorSound] = useSound('/sounds/error.mp3')
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -86,11 +87,6 @@ export default function QrScannerTab() {
 
     fetchEvent()
     checkCameraPermission()
-
-    const errorSound = new Audio('/sounds/error.mp3')
-    const successSound = new Audio('/sounds/success.mp3')
-    setErrorSound(errorSound)
-    setSuccessSound(successSound)
   }, [])
 
   const handleError = (error?: string) => {
@@ -98,7 +94,7 @@ export default function QrScannerTab() {
     setError(true)
     setTimeout(() => setError(false), 1000)
 
-    errorSound?.play()
+    playErrorSound()
     error && showError(error)
   }
 
@@ -106,7 +102,7 @@ export default function QrScannerTab() {
     setSuccess(true)
     setTimeout(() => setSuccess(false), 1000)
 
-    successSound?.play()
+    playSuccessSound()
   }
 
   const showError = (error: string) => {
