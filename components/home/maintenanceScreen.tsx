@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
 
-export default async function MaintenanceScreen({
+export default function MaintenanceScreen({
   startDateTime,
   endDateTime,
 }: {
