@@ -15,8 +15,16 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { calculateAge } from '@/lib/birthday'
-import { IconCopy, IconDots, IconTrash } from '@tabler/icons-react'
+import { IconCopy, IconDots, IconQrcode, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from '../ui/dialog'
+import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
+import { DialogTitle } from '@radix-ui/react-dialog'
 
 export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
@@ -131,36 +139,49 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className='flex gap-4' key={row.id}>
-        <DropdownMenu key={row.id}>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Abrir menu</span>
-              <IconDots className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                navigator.clipboard
-                  .writeText(row.original.id)
-                  .then(() =>
-                    toast.info(
-                      'El ID del catequista ha sido copiado al portapapeles'
+        <Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='ghost' className='h-8 w-8 p-0'>
+                <span className='sr-only'>Abrir menu</span>
+                <IconDots className='h-4 w-4' />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() =>
+                  navigator.clipboard
+                    .writeText(row.original.id)
+                    .then(() =>
+                      toast.info(
+                        'El ID del catequista ha sido copiado al portapapeles'
+                      )
                     )
-                  )
-              }
-            >
-              <IconCopy />
-              Copiar ID de catequista
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem disabled className='text-red-500'>
-              <IconTrash />
-              Eliminar catequista
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                }
+              >
+                <IconCopy />
+                Copiar ID de catequista
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DialogTrigger asChild>
+                <DropdownMenuItem>
+                  <IconQrcode />
+                  Ver Pastoral ID
+                </DropdownMenuItem>
+              </DialogTrigger>
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem disabled className='text-red-500'>
+                <IconTrash />
+                Eliminar catequista
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DialogContent>
+            <PastoralIdQRCode userId={row.original.id} />
+          </DialogContent>
+        </Dialog>
       </div>
     ),
   },
