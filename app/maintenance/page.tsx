@@ -1,14 +1,10 @@
 import MaintenanceScreen from '@/components/home/maintenanceScreen'
 import { IconBarrierBlock } from '@tabler/icons-react'
 import { get } from '@vercel/edge-config'
-import { redirect } from 'next/navigation'
 
 export default async function MaintenancePage() {
-  const isInMaintenanceMode = await get('isInMaintenanceMode')
   const startDateTime = await get('maintenanceStartDateTime')
   const endDateTime = await get('maintenanceEndDateTime')
-
-  if (!isInMaintenanceMode) redirect('/')
 
   return (
     <div className='flex max-w-md flex-col items-center'>

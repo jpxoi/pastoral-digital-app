@@ -4,6 +4,8 @@ import { get } from '@vercel/edge-config'
 
 const isHomeRoute = createRouteMatcher(['/'])
 
+const isMaintenanceRoute = createRouteMatcher(['/maintenance'])
+
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/birthdays(.*)',
@@ -19,6 +21,11 @@ export default clerkMiddleware(async (auth, req) => {
   if (isInMaintenanceMode) {
     req.nextUrl.pathname = `/maintenance`
     return NextResponse.rewrite(req.nextUrl)
+  }
+  
+  if (isMaintenanceRoute(req) && !isInMaintenanceMode) {
+    const url = new URL('/', req.url)
+    return NextResponse.redirect(url)
   }
 
   if (isProtectedRoute(req)) await auth.protect()
