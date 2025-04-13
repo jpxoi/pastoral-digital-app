@@ -46,7 +46,13 @@ export default function MaintenancePage() {
   const formattedDate = new Intl.RelativeTimeFormat('es-PE', {
     numeric: 'auto',
     style: 'short',
-  }).format(Math.floor((estimatedCompletionTime.getTime() - currentTime.getTime()) / (1000 * 60 * 60 * 24)), 'days')
+  }).format(
+    Math.floor(
+      (estimatedCompletionTime.getTime() - currentTime.getTime()) /
+        (1000 * 60 * 60 * 24)
+    ),
+    'days'
+  )
 
   const startTime = startDateTime.getTime()
   const endTime = estimatedCompletionTime.getTime()
