@@ -13,7 +13,9 @@ export const handleDbError = (error: NeonDbError) => {
     error.message.includes('attendance_records_registered_by_users_id_fk')
   ) {
     return 'Tu usuario no tiene permisos para registrar asistencias. Por favor, contacta al administrador.'
+  } else if (error.message.includes('unq_user_sunday_date')) {
+    return 'Ya has registrado una misa para hoy. No se permiten registros duplicados.'
   } else {
-    return 'Ocurrió un error inesperado al registrar la asistencia. Por favor, inténtalo nuevamente.'
+    return 'Ocurrió un error inesperado al enviar la solicitud. Por favor, intenta nuevamente más tarde.'
   }
 }
