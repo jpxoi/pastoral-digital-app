@@ -135,7 +135,7 @@ export const sundayMassesTable = pgTable(
       .references(() => usersTable.id, { onDelete: 'cascade' })
       .notNull(),
     parish: text().notNull(),
-    date: timestamp('date').notNull(),
+    sundayDate: date('sunday_date').notNull().defaultNow(),
     evidenceUrl: text('evidence_url').notNull(),
     verified: boolean('verified').default(false).notNull(),
     verifiedBy: text('verified_by').references(() => usersTable.id),
@@ -146,8 +146,8 @@ export const sundayMassesTable = pgTable(
       .$onUpdate(() => new Date()),
   },
   (table) => [
+    uniqueIndex('unq_user_sunday_date').on(table.userId, table.sundayDate),
     index('idx_sunday_masses_user_id').on(table.userId),
-    index('idx_sunday_masses_date').on(table.date),
     index('idx_sunday_masses_verified').on(table.verified),
   ]
 )
