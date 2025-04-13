@@ -1,6 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
+
+
 const isHomeRoute = createRouteMatcher(['/'])
 
 const isProtectedRoute = createRouteMatcher([
@@ -12,7 +14,15 @@ const isProtectedRoute = createRouteMatcher([
 
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
+
 export default clerkMiddleware(async (auth, req) => {
+  const isInMaintenanceMode = true // Replace with your actual maintenance mode check
+
+  if (isInMaintenanceMode) {
+    req.nextUrl.pathname = `/maintenance`
+    return NextResponse.rewrite(req.nextUrl)
+  }
+
   if (isProtectedRoute(req)) await auth.protect()
 
   if (isHomeRoute(req) && (await auth()).sessionClaims) {
