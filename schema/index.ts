@@ -70,4 +70,7 @@ export const NewAttendanceRecordFormSchema = z.object({
 
 export const NewSundayMassFormSchema = z.object({
   parish: z.string().nonempty('El nombre de la parroquia es requerido'),
+  evidenceUrl: z
+    .string()
+    .nonempty('Es requerido subir una evidencia de asistencia a misa'),
 })
