@@ -12,11 +12,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           En Mantenimiento
         </h1>
 
-        <div className='w-full rounded-xl bg-white/10 p-6 shadow-xl backdrop-blur-md transition-all duration-300 hover:bg-white/15'>
-          <p className='text-center text text-white'>
-            La aplicación está en mantenimiento. Por favor, vuelve más tarde.
+        <div className='w-full rounded-xl bg-white/5 hover:bg-white/10 p-6 shadow-xl backdrop-blur-md transition-all duration-300'>
+          <p className='text-center text-white'>
+            La aplicación está en mantenimiento y no está disponible temporalmente.
           </p>
-
+            <p className='mt-2 text-center text-sm text-white/70'>
+                Estamos trabajando para mejorar tu experiencia.
+            </p>
           {children}
         </div>
 

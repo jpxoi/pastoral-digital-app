@@ -3,6 +3,7 @@
 import { IconClock, IconRefresh } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 const MAINTENANCE_CONFIG = {
   startDateTime: new Date('2025-04-13T14:30:00Z'),
@@ -76,7 +77,7 @@ export default function MaintenancePage() {
           </span>
         </div>
         <div
-          className='h-2 w-full overflow-hidden rounded-full bg-white/10'
+          className='h-2 w-full overflow-hidden rounded-full bg-white/5'
           role='progressbar'
           aria-valuenow={percentageComplete}
           aria-valuemin={0}
@@ -90,15 +91,15 @@ export default function MaintenancePage() {
       </div>
 
       {/* Estimated completion time */}
-      <div className='flex items-center justify-center gap-3 rounded-lg bg-white/10 p-4 backdrop-blur-sm'>
+      <div className='flex items-center justify-center gap-2 rounded-lg bg-white/5 p-4 backdrop-blur-sm'>
         <IconClock className='text-white/90' size={20} />
-        <p className='text-center font-semibold text-white'>
+        <p className='text-center text-sm font-semibold text-white'>
           Finaliza {formattedDate} a las {formattedTime}
         </p>
       </div>
 
       {timeRemaining.hours > 0 || timeRemaining.minutes > 0 ? (
-        <div className='mt-4 flex items-center justify-center gap-3 rounded-lg bg-white/10 p-4 backdrop-blur-sm'>
+        <div className='mt-4 flex items-center justify-center gap-3 rounded-lg bg-white/5 p-4 backdrop-blur-sm'>
           <div>
             <p className='text-center text-sm text-white/90'>
               Tiempo restante:
@@ -119,17 +120,14 @@ export default function MaintenancePage() {
       )}
 
       {/* Refresh button */}
-      <button
+      <Button
+        variant='outline'
         onClick={() => window.location.reload()}
-        className={cn(
-          'mt-4 flex w-full items-center justify-center gap-2 rounded-lg',
-          'bg-white/10 p-3 text-sm text-white transition-all duration-300',
-          'hover:bg-white/20 active:bg-white/30'
-        )}
+        className='w-full'
       >
         <IconRefresh size={16} />
         <span>Comprobar estado</span>
-      </button>
+      </Button>
     </div>
   )
 }
