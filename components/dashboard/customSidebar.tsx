@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar'
 import {
+  IconBuildingChurch,
   IconCake,
   IconCalendar,
   IconHome2,
@@ -31,43 +32,46 @@ export function CustomSidebar() {
       label: 'Inicio',
       href: '/dashboard',
       icon: <IconHome2 className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: true,
     },
     {
       label: 'Eventos',
       href: '/events',
       icon: <IconCalendar className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: true,
     },
     {
       label: 'Cumpleaños',
       href: '/birthdays',
       icon: <IconCake className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: true,
     },
+  ]
+
+  const adminLinks = [
     {
       label: 'Escanear QR',
       href: '/admin/scan',
       icon: <IconQrcode className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: isAdmin,
     },
     {
       label: 'Registro de Asistencia',
       href: '/admin/records',
       icon: <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: isAdmin,
     },
     {
       label: 'Calendario de Asistencia',
       href: '/admin/calendar',
       icon: <IconTable className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: isAdmin,
     },
     {
       label: 'Administrar Catequistas',
       href: '/admin/users',
       icon: <IconUsers className='h-5 w-5 shrink-0 text-neutral-200' />,
-      show: isAdmin,
+    },
+    {
+      label: 'Administrar Misas',
+      href: '/admin/mass',
+      icon: (
+        <IconBuildingChurch className='h-5 w-5 shrink-0 text-neutral-200' />
+      ),
     },
   ]
   const [open, setOpen] = useState(false)
@@ -77,12 +81,17 @@ export function CustomSidebar() {
         <div className='flex flex-1 flex-col overflow-y-auto overflow-x-hidden'>
           {open ? <Logo /> : <LogoIcon />}
           <div className='mt-8 flex flex-col gap-2'>
-            {links
-              .filter((link) => link.show)
-              .map((link, idx) => (
+            {links.map((link, idx) => (
+              <SidebarLink key={idx} link={link} />
+            ))}
+          </div>
+          {isAdmin && (
+            <div className='mt-8 flex flex-col gap-2'>
+              {adminLinks.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
-          </div>
+            </div>
+          )}
         </div>
         <div>
           <ClerkLoading>
