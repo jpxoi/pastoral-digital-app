@@ -82,7 +82,12 @@ export const attendanceRecordsTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
-  (table) => [uniqueIndex('unq_user_event').on(table.userId, table.eventId)]
+  (table) => [
+    uniqueIndex('unq_user_event').on(table.userId, table.eventId),
+    index('idx_attendance_records_user_id').on(table.userId),
+    index('idx_attendance_records_event_id').on(table.eventId),
+    index('idx_attendance_records_status').on(table.status),
+  ]
 )
 
 export const eventsTable = pgTable('events', {
