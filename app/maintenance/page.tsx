@@ -3,8 +3,10 @@ import { IconBarrierBlock } from '@tabler/icons-react'
 import { get } from '@vercel/edge-config'
 
 export default async function MaintenancePage() {
-  const startDateTime = await get('maintenanceStartDateTime')
-  const endDateTime = await get('maintenanceEndDateTime')
+  const [startDateTime, endDateTime] = await Promise.all([
+    get('maintenanceStartDateTime'),
+    get('maintenanceEndDateTime')
+  ])
 
   return (
     <div className='flex max-w-md flex-col items-center'>
