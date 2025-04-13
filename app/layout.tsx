@@ -128,7 +128,6 @@ export default function RootLayout({
             richColors
           />
           <PostHogProvider>{children}</PostHogProvider>
-          <Analytics />
         </body>
       </html>
     </ClerkProvider>
