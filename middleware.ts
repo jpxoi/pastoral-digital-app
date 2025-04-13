@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import { get } from '@vercel/edge-config'
 
 const isHomeRoute = createRouteMatcher(['/'])
 
@@ -13,7 +14,7 @@ const isProtectedRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  const isInMaintenanceMode = true // Replace with your actual maintenance mode check
+  const isInMaintenanceMode = await get('isInMaintenanceMode')
 
   if (isInMaintenanceMode) {
     req.nextUrl.pathname = `/maintenance`
