@@ -22,7 +22,7 @@ import { calculateStatus } from '@/lib/attendance'
 import { getEventOfTheDay } from '@/actions/event'
 import { fetchUserSchedule } from '@/actions/user'
 
-import useSound from 'use-sound';
+import useSound from 'use-sound'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
