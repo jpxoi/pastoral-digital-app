@@ -41,7 +41,7 @@ export default async function PastoralId() {
       </div>
 
       <div className='flex w-full flex-col items-center justify-center'>
-        <h3 className='text-2xl font-semibold text-blue-950'>
+        <h3 className='text-2xl font-bold text-card-foreground md:text-3xl'>
           {user?.fullName}
         </h3>
         <p className='text-base text-blue-950'>Catequista</p>
