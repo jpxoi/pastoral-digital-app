@@ -8,12 +8,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <IconBarrierBlock className='size-24 text-white' />
         </div>
 
-        <h1 className='mb-4 text-4xl font-bold text-white drop-shadow-lg'>
+        <h1 className='mb-4 text-2xl font-bold text-white drop-shadow-lg'>
           En Mantenimiento
         </h1>
 
         <div className='w-full rounded-xl bg-white/10 p-6 shadow-xl backdrop-blur-md transition-all duration-300 hover:bg-white/15'>
-          <p className='text-center text-lg text-white'>
+          <p className='text-center text text-white'>
             La aplicación está en mantenimiento. Por favor, vuelve más tarde.
           </p>
 
