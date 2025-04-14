@@ -9,26 +9,42 @@ import { toast } from 'sonner'
 import { FetchMassesProps } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import UserCategoryLabel from '../shared/userCategoryLabel'
+import { rejectMassRecord, verifyMassRecord } from '@/actions/mass'
 
 const handleVerifyMass = async (id: string) => {
-  // Implement the logic to verify the mass
-  toast.promise(
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('Misa verificada correctamente')
-      }, 1000)
-    }),
-    {
-      loading: 'Verificando misa...',
-      success: 'Misa verificada correctamente',
-      error: 'Error al verificar la misa',
-    }
-  )
+  toast.promise(verifyMassRecord(id), {
+    loading: 'Verificando misa...',
+    success: (data: { error?: string; success?: string }) => {
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      if (data.success) {
+        return data.success
+      }
+    },
+    error: (error) => {
+      return error.message || 'Ha ocurrido un error al verificar la misa.'
+    },
+  })
 }
 
 const handleRejectMass = async (id: string) => {
-  // Implement the logic to reject the mass
-  toast.error('Misa rechazada correctamente')
+  toast.promise(rejectMassRecord(id), {
+    loading: 'Rechazando misa...',
+    success: (data: { error?: string; success?: string }) => {
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      if (data.success) {
+        return data.success
+      }
+    },
+    error: (error) => {
+      return error.message || 'Ha ocurrido un error al rechazar la misa.'
+    },
+  })
 }
 
 export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
