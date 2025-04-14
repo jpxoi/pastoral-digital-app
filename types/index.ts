@@ -2,6 +2,7 @@ import {
   SelectAttendance,
   SelectEvent,
   SelectLocation,
+  SelectSundayMass,
   SelectUser,
 } from '@/db/schema'
 
@@ -9,10 +10,6 @@ export interface TableRow {
   row: {
     [key: string]: string
   }
-}
-
-export interface StatusLabel {
-  status: string
 }
 
 export interface FetchAttendanceProps extends SelectAttendance {
@@ -30,6 +27,10 @@ export interface FetchEventProps extends SelectEvent {
   location: SelectLocation
 }
 
+export interface FetchMassesProps extends SelectSundayMass {
+  user: SelectUser
+}
+
 export enum AttendanceStatus {
   A_TIEMPO = 'A TIEMPO',
   TARDANZA = 'TARDANZA',
@@ -42,6 +43,7 @@ export enum AttendanceStatus {
 export enum UserRole {
   MEMBER = 'member',
   ADMIN = 'admin',
+  MASSES_MANAGER = 'masses-manager',
 }
 
 export enum UserCategory {
