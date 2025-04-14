@@ -24,7 +24,7 @@ import {
   DialogTrigger,
 } from '../ui/dialog'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
-import { DialogTitle } from '@radix-ui/react-dialog'
+import UserCategoryLabel from '../shared/userCategoryLabel'
 
 export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
@@ -113,27 +113,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     id: 'category',
     accessorKey: 'category',
     header: () => <span className='text-nowrap'>Categoría</span>,
-    cell: ({ row }) => (
-      <Badge
-        className={cn(
-          row.original.category === 'alumni' && 'bg-blue-600 hover:bg-blue-500',
-          row.original.category === 'student' &&
-            'bg-green-600 hover:bg-green-500',
-          row.original.category === 'teacher' &&
-            'bg-yellow-600 hover:bg-yellow-500'
-        )}
-      >
-        {row.original.category === 'alumni'
-          ? 'Exalumno'
-          : row.original.category === 'student'
-            ? 'Alumno'
-            : row.original.category === 'teacher'
-              ? 'Docente'
-              : row.original.category === 'other'
-                ? 'Otro'
-                : 'Desconocido'}
-      </Badge>
-    ),
+    cell: ({ row }) => <UserCategoryLabel category={row.original.category} />,
   },
   {
     id: 'actions',
