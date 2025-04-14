@@ -1,9 +1,8 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
-import UsersTable from '@/components/admin/usersTable'
-import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 import MassesTable from '@/components/admin/massesTable'
+import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 
 export const metadata: Metadata = {
   title: 'Administrar Misas | Pastoral Digital App',
@@ -21,7 +20,7 @@ export default function Page() {
           Esta es la lista de misas registradas en la aplicación.
         </p>
       </div>
-      <Suspense fallback={<UserTableSkeleton />}>
+      <Suspense fallback={<MassesTableSkeleton />}>
         <MassesTable />
       </Suspense>
     </main>

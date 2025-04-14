@@ -1,4 +1,4 @@
-import UserTableSkeleton from '@/components/admin/userTableSkeleton'
+import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 
 export default function Loading() {
   return (
@@ -9,7 +9,7 @@ export default function Loading() {
           Esta es la lista de misas registradas en la aplicación.
         </p>
       </div>
-      <UserTableSkeleton />
+      <MassesTableSkeleton />
     </main>
   )
 }
