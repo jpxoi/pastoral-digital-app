@@ -5,7 +5,7 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import PastoralIdDialog from '@/components/dashboard/pastoralIdDialog'
-import MassDialog from '@/components/dashboard/sundayMassDialog'
+import SundayMassDialog from '@/components/dashboard/sundayMassDialog'
 
 export const metadata: Metadata = {
   title: 'Inicio | Pastoral Digital App',
@@ -27,7 +27,7 @@ export default function PastoralDigitalPage() {
           <h1 className='text-xl font-semibold sm:text-2xl'>Inicio</h1>
           <div className='flex flex-col gap-2 sm:flex-row-reverse'>
             <PastoralIdDialog />
-            <MassDialog />
+            <SundayMassDialog />
           </div>
         </div>
 

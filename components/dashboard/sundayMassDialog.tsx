@@ -10,19 +10,14 @@ import { IconBuildingChurch } from '@tabler/icons-react'
 import SundayMassForm from './sundayMassForm'
 
 export default function SundayMassDialog() {
-  // Check if it's Sunday between 00:00 and 22:00 in Peru
   const peruDate = new Date(
     new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
   )
 
   console.log('Peru Date:', peruDate)
 
-  const isSunday = peruDate.getDay() === 1 // 0 is Sunday
-  const hour = peruDate.getHours()
+  const isSunday = peruDate.getDay() === 0
 
-  console.log('Hour:', hour)
-
-  // Early return if not Sunday or outside time range (from 00:00 to 00:00)
   if (!isSunday) {
     return null
   }
