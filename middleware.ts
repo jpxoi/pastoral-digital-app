@@ -37,7 +37,8 @@ export default clerkMiddleware(async (auth, req) => {
 
   if (
     isAdminRoute(req) &&
-    (await auth()).sessionClaims?.metadata?.role !== 'admin'
+    (await auth()).sessionClaims?.metadata?.role !== 'admin' &&
+    (await auth()).sessionClaims?.metadata?.role !== 'manager'
   ) {
     const url = new URL('/dashboard', req.url)
     return NextResponse.redirect(url)
