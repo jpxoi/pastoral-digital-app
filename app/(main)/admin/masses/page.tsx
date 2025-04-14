@@ -16,9 +16,7 @@ export default function Page() {
         <OfflineAlert />
       </Suspense>
       <div className='flex flex-col gap-2 text-left'>
-        <h1 className='text-xl font-semibold sm:text-2xl'>
-          Administrar Misas
-        </h1>
+        <h1 className='text-xl font-semibold sm:text-2xl'>Administrar Misas</h1>
         <p className='text-sm text-neutral-500'>
           Esta es la lista de misas registradas en la aplicación.
         </p>

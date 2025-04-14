@@ -1,8 +1,4 @@
-import {
-  IconBackpack,
-  IconSchool,
-  IconSchoolOff,
-} from '@tabler/icons-react'
+import { IconBackpack, IconSchool, IconSchoolOff } from '@tabler/icons-react'
 import type { JSX } from 'react'
 import { Badge } from '../ui/badge'
 import { UserCategory } from '@/types'

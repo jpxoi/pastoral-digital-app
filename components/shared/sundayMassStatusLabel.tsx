@@ -1,7 +1,4 @@
-import {
-  IconCheck,
-  IconClockQuestion,
-} from '@tabler/icons-react'
+import { IconCheck, IconClockQuestion } from '@tabler/icons-react'
 import type { JSX } from 'react'
 import { Badge } from '../ui/badge'
 
