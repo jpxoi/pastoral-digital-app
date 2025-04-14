@@ -43,7 +43,7 @@ export enum AttendanceStatus {
 export enum UserRole {
   MEMBER = 'member',
   ADMIN = 'admin',
-  MASSES_MANAGER = 'masses-manager',
+  MANAGER = 'manager',
 }
 
 export enum UserCategory {

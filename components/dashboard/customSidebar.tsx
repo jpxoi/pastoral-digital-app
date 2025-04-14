@@ -20,17 +20,15 @@ import { UserRole } from '@/types'
 
 export function CustomSidebar() {
   const [isAdmin, setIsAdmin] = useState(false)
-  const [isMassesManager, setIsMassesManager] = useState(false)
+  const [isManager, setIsManager] = useState(false)
 
   useEffect(() => {
     checkRole(UserRole.ADMIN).then((result) => {
       setIsAdmin(result)
     })
 
-    checkRole(UserRole.MASSES_MANAGER).then((result) => {
-      if (result) {
-        setIsMassesManager(true)
-      }
+    checkRole(UserRole.MANAGER).then((result) => {
+      setIsManager(result)
     })
   }, [])
 
@@ -75,7 +73,7 @@ export function CustomSidebar() {
     },
   ]
 
-  const massesLinks = [
+  const managerLinks = [
     {
       label: 'Administrar Misas',
       href: '/admin/masses',
@@ -103,10 +101,13 @@ export function CustomSidebar() {
               {adminLinks.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
-              {(isMassesManager || isAdmin) &&
-                massesLinks.map((link, idx) => (
-                  <SidebarLink key={idx} link={link} />
-                ))}
+            </div>
+          )}
+          {(isManager || isAdmin) && (
+            <div className='mt-8 flex flex-col gap-2'>
+              {managerLinks.map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
             </div>
           )}
         </div>
