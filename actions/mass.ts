@@ -41,13 +41,6 @@ export async function postNewMassRecord(
 
   const [year, month, day] = formattedDate.split('-')
 
-  await createSundayMass({
-    userId,
-    parish,
-    evidenceUrl,
-    sundayDate: `${year}-${month}-${day}`,
-  })
-
   return await createSundayMass({
     userId,
     parish,
