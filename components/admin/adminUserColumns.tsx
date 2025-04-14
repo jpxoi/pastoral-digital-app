@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { SelectUser } from '@/db/schema'
 import { ColumnDef } from '@tanstack/react-table'
-import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,14 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
 import { calculateAge } from '@/lib/birthday'
 import { IconCopy, IconDots, IconQrcode, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTrigger,
 } from '../ui/dialog'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'

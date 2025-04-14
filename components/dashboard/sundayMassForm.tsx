@@ -58,7 +58,6 @@ export default function SundayMassForm() {
           }
         })
         .catch((error) => {
-          console.error('Error:', error)
           setError(
             'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.'
           )
