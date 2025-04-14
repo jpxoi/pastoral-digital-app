@@ -20,10 +20,17 @@ import { UserRole } from '@/types'
 
 export function CustomSidebar() {
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isMassesManager, setIsMassesManager] = useState(false)
 
   useEffect(() => {
     checkRole(UserRole.ADMIN).then((result) => {
       setIsAdmin(result)
+    })
+
+    checkRole(UserRole.MASSES_MANAGER).then((result) => {
+      if (result) {
+        setIsMassesManager(true)
+      }
     })
   }, [])
 
@@ -66,15 +73,20 @@ export function CustomSidebar() {
       href: '/admin/users',
       icon: <IconUsers className='h-5 w-5 shrink-0 text-neutral-200' />,
     },
+  ]
+
+  const massesLinks = [
     {
       label: 'Administrar Misas',
-      href: '/admin/mass',
+      href: '/admin/masses',
       icon: (
         <IconBuildingChurch className='h-5 w-5 shrink-0 text-neutral-200' />
       ),
     },
   ]
+
   const [open, setOpen] = useState(false)
+
   return (
     <Sidebar open={open} setOpen={setOpen}>
       <SidebarBody className='justify-between gap-10'>
@@ -84,12 +96,17 @@ export function CustomSidebar() {
             {links.map((link, idx) => (
               <SidebarLink key={idx} link={link} />
             ))}
+            {}
           </div>
           {isAdmin && (
             <div className='mt-8 flex flex-col gap-2'>
               {adminLinks.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
+              {(isMassesManager || isAdmin) &&
+                massesLinks.map((link, idx) => (
+                  <SidebarLink key={idx} link={link} />
+                ))}
             </div>
           )}
         </div>
