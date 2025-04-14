@@ -44,7 +44,7 @@ export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
         const status = row.original.status
         return (
           <div className='flex items-center justify-end'>
-            <AttendanceStatusLabel status={status as string} />
+            <AttendanceStatusLabel status={status} />
           </div>
         )
       },

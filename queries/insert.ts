@@ -8,6 +8,8 @@ import {
   attendanceRecordsTable,
   eventsTable,
   locationsTable,
+  InsertSundayMass,
+  sundayMassesTable,
 } from '@/db/schema'
 
 export const createUser = async (data: InsertUser) => {
@@ -40,4 +42,11 @@ export const createLocation = async (data: InsertLocation) => {
 
 export const createLocations = async (data: InsertLocation[]) => {
   await db.insert(locationsTable).values(data)
+}
+
+export const createSundayMass = async (data: InsertSundayMass) => {
+  await db.insert(sundayMassesTable).values(data)
+}
+export const createSundayMasses = async (data: InsertSundayMass[]) => {
+  await db.insert(sundayMassesTable).values(data)
 }

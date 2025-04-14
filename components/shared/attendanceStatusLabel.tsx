@@ -1,4 +1,3 @@
-import { StatusLabel } from '@/types'
 import {
   IconCalendarHeart,
   IconCalendarX,
@@ -8,44 +7,50 @@ import {
   IconClockX,
 } from '@tabler/icons-react'
 import type { JSX } from 'react'
+import { Badge } from '../ui/badge'
+import { AttendanceStatus } from '@/types'
 
-export default function AttendanceStatusLabel({ status }: StatusLabel) {
+export default function AttendanceStatusLabel({
+  status,
+}: {
+  status: AttendanceStatus
+}) {
   const statusMapping: { [key: string]: JSX.Element } = {
     'A TIEMPO': (
-      <span className='flex max-w-fit flex-nowrap justify-start gap-1.5 rounded-lg bg-green-50 p-2 text-xs text-green-700'>
+      <Badge variant={'emerald'} className='h-8 rounded-lg'>
         <IconClockCheck className='size-4' />
-        <span className='text-nowrap'>A TIEMPO</span>
-      </span>
+        <span className='ml-2 text-nowrap'>A TIEMPO</span>
+      </Badge>
     ),
     TARDANZA: (
-      <span className='flex max-w-fit flex-nowrap justify-start gap-1.5 rounded-lg bg-yellow-50 p-2 text-xs text-yellow-700'>
+      <Badge variant={'yellow'} className='h-8 rounded-lg'>
         <IconClockExclamation className='size-4' />
-        <span className='text-nowrap'>TARDANZA</span>
-      </span>
+        <span className='ml-2 text-nowrap'>TARDANZA</span>
+      </Badge>
     ),
     'DOBLE TARDANZA': (
-      <span className='flex max-w-fit flex-nowrap justify-start gap-1.5 rounded-lg bg-orange-50 p-2 text-xs text-orange-700'>
+      <Badge variant={'orange'} className='h-8 rounded-lg'>
         <IconClockX className='size-4' />
-        <span className='text-nowrap'>DOBLE TARDANZA</span>
-      </span>
+        <span className='ml-2 text-nowrap'>DOBLE TARDANZA</span>
+      </Badge>
     ),
     'FALTA INJUSTIFICADA': (
-      <span className='flex max-w-fit flex-nowrap items-center justify-start gap-1.5 rounded-lg bg-red-50 p-2 text-xs text-red-700'>
+      <Badge variant={'red'} className='h-8 rounded-lg'>
         <IconCalendarX className='size-4' />
-        <span className='text-nowrap'>FALTA NO JUSTIFICADA</span>
-      </span>
+        <span className='ml-2 text-nowrap'>FALTA NO JUSTIFICADA</span>
+      </Badge>
     ),
     'TARDANZA JUSTIFICADA': (
-      <span className='flex max-w-fit flex-nowrap justify-start gap-1.5 rounded-lg bg-purple-50 p-2 text-xs text-purple-700'>
+      <Badge variant={'purple'} className='h-8 rounded-lg'>
         <IconClockHeart className='size-4' />
-        <span className='text-nowrap'>TARDANZA JUSTIFICADA</span>
-      </span>
+        <span className='ml-2 text-nowrap'>TARDANZA JUSTIFICADA</span>
+      </Badge>
     ),
     'FALTA JUSTIFICADA': (
-      <span className='flex max-w-fit flex-nowrap justify-start gap-1.5 rounded-lg bg-blue-50 p-2 text-xs text-blue-700'>
+      <Badge variant={'blue'} className='h-8 rounded-lg'>
         <IconCalendarHeart className='size-4' />
-        <span className='text-nowrap'>FALTA JUSTIFICADA</span>
-      </span>
+        <span className='ml-2 text-nowrap'>FALTA JUSTIFICADA</span>
+      </Badge>
     ),
   }
 

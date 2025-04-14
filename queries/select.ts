@@ -302,3 +302,13 @@ export const getTodayEvent = async () => {
     ),
   })
 }
+
+/* MassesTable */
+export const getAllMasses = async () => {
+  return db.query.sundayMassesTable.findMany({
+    orderBy: (fields) => [desc(fields.createdAt)],
+    with: {
+      user: true,
+    },
+  })
+}

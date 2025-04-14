@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { SelectUser } from '@/db/schema'
 import { ColumnDef } from '@tanstack/react-table'
-import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,18 +12,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
 import { calculateAge } from '@/lib/birthday'
 import { IconCopy, IconDots, IconQrcode, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from '../ui/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
-import { DialogTitle } from '@radix-ui/react-dialog'
+import UserCategoryLabel from '../shared/userCategoryLabel'
 
 export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
@@ -113,27 +106,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     id: 'category',
     accessorKey: 'category',
     header: () => <span className='text-nowrap'>Categoría</span>,
-    cell: ({ row }) => (
-      <Badge
-        className={cn(
-          row.original.category === 'alumni' && 'bg-blue-600 hover:bg-blue-500',
-          row.original.category === 'student' &&
-            'bg-green-600 hover:bg-green-500',
-          row.original.category === 'teacher' &&
-            'bg-yellow-600 hover:bg-yellow-500'
-        )}
-      >
-        {row.original.category === 'alumni'
-          ? 'Exalumno'
-          : row.original.category === 'student'
-            ? 'Alumno'
-            : row.original.category === 'teacher'
-              ? 'Docente'
-              : row.original.category === 'other'
-                ? 'Otro'
-                : 'Desconocido'}
-      </Badge>
-    ),
+    cell: ({ row }) => <UserCategoryLabel category={row.original.category} />,
   },
   {
     id: 'actions',
