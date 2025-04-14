@@ -16,7 +16,7 @@ export default function SundayMassDialog() {
 
   console.log('Peru Date:', peruDate)
 
-  const isSunday = peruDate.getDay() === 0
+  const isSunday = peruDate.getDay() === 1 // 0 = Sunday
 
   if (!isSunday) {
     return null
