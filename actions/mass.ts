@@ -1,8 +1,11 @@
 'use server'
 
 import { handleDbError } from '@/lib/error'
+import { checkRole } from '@/lib/roles'
 import { createSundayMass } from '@/queries/insert'
+import { updateSundayMassRecordVerification } from '@/queries/update'
 import { NewSundayMassFormSchema } from '@/schema'
+import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidatePath } from 'next/cache'
@@ -63,6 +66,76 @@ export async function postNewMassRecord(
       console.error(error)
       return {
         error: 'Ha ocurrido un error al registrar la misa.',
+      }
+    })
+}
+
+export async function verifyMassRecord(massId: string) {
+  if (!(await checkRole(UserRole.ADMIN || UserRole.MEMBER))) {
+    return { error: 'No estas autorizado para verificar misas.' }
+  }
+
+  const { userId: verifiedById } = await auth()
+
+  if (!verifiedById) {
+    return {
+      error:
+        'No se pudo obtener el usuario. Por favor, vuelve a iniciar sesión.',
+    }
+  }
+
+  return await updateSundayMassRecordVerification(massId, true, verifiedById)
+    .then(async () => {
+      revalidatePath('/admin/masses')
+      return {
+        success: 'Se ha verificado la asistencia a misa correctamente.',
+      }
+    })
+    .catch((error: NeonDbError) => {
+      console.error(error)
+      return {
+        error: handleDbError(error),
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return {
+        error: 'Ha ocurrido un error al verificar la misa.',
+      }
+    })
+}
+
+export async function rejectMassRecord(massId: string) {
+  if (!(await checkRole(UserRole.ADMIN || UserRole.MEMBER))) {
+    return { error: 'No estas autorizado para verificar misas.' }
+  }
+
+  const { userId: verifiedById } = await auth()
+
+  if (!verifiedById) {
+    return {
+      error:
+        'No se pudo obtener el usuario. Por favor, vuelve a iniciar sesión.',
+    }
+  }
+
+  return await updateSundayMassRecordVerification(massId, false, verifiedById)
+    .then(async () => {
+      revalidatePath('/admin/masses')
+      return {
+        success: 'Se ha rechazado la asistencia a misa correctamente.',
+      }
+    })
+    .catch((error: NeonDbError) => {
+      console.error(error)
+      return {
+        error: handleDbError(error),
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return {
+        error: 'Ha ocurrido un error al rechazar la misa.',
       }
     })
 }
