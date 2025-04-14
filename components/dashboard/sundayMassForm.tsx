@@ -69,7 +69,7 @@ export default function SundayMassForm() {
   return (
     <>
       {success ? (
-        <div className='rounded-lg border border-emerald-500 bg-emerald-50 p-4 text-sm font-medium text-destructive'>
+        <div className='rounded-lg border border-emerald-500 bg-emerald-50 p-4 text-sm font-medium text-emerald-600'>
           {success}
         </div>
       ) : (
@@ -134,7 +134,7 @@ export default function SundayMassForm() {
                               }
                               return <div>{uploadProgress}%</div>
                             }
-                            if (ready) return <div>Subir imagen</div>
+                            if (ready) return <div>Subir archivo</div>
                             return 'Cargando...'
                           },
                         }}
@@ -158,8 +158,9 @@ export default function SundayMassForm() {
                     </div>
                   )}
                   <FormDescription>
-                    Sube una imagen como evidencia de que asististe a misa.
-                    Puedes subir como máximo 1 imagen de 4 MB.
+                    Sube como evidencia de tu participación una foto de la
+                    celebración (máx. 4MB), o un documento con tu reflexión
+                    sobre el evangelio del día en formato PDF o Word (máx. 1MB).
                   </FormDescription>
                   <FormMessage />
                   {fileUploadError && (
