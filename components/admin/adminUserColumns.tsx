@@ -15,11 +15,7 @@ import {
 import { calculateAge } from '@/lib/birthday'
 import { IconCopy, IconDots, IconQrcode, IconTrash } from '@tabler/icons-react'
 import { toast } from 'sonner'
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from '../ui/dialog'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
 import UserCategoryLabel from '../shared/userCategoryLabel'
 
