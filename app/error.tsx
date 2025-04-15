@@ -44,10 +44,7 @@ export default function Error({
             id='error-details-section'
             className='animate-fade-in w-full'
           >
-            <ErrorAlert
-              title='Ha ocurrido un error'
-              description={error.message}
-            />
+            <ErrorAlert title={error.name} description={error.message} />
           </section>
         )}
         {!showError && (
