@@ -1,6 +1,7 @@
 'use client'
 
 import ErrorAlert from '@/components/shared/errorAlert'
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useState } from 'react'
 
@@ -13,50 +14,85 @@ export default function Error({
 }) {
   const [showError, setShowError] = useState(false)
   return (
-    <main className='flex w-full flex-col items-center justify-center'>
+    <main className='flex min-h-screen w-full flex-col items-center justify-center bg-destructive'>
       <div
         role='alert'
-        className='flex h-screen max-w-screen-sm flex-col items-center justify-center gap-6 p-8'
+        className='animate-fade-in flex w-full max-w-screen-sm flex-col items-center justify-center gap-10 rounded-2xl border border-red-200 bg-white/95 p-8 shadow-2xl backdrop-blur-lg md:p-14'
       >
-        <div className='flex flex-col items-center justify-center gap-2'>
-          <h1 className='text-3xl font-bold'>¡Algo salió mal!</h1>
-          <h2 className='text-xl font-semibold text-red-950'>
+        <div className='flex flex-col items-center justify-center gap-3'>
+          <div className='flex items-center gap-3'>
+            <h1 className='text-3xl font-extrabold text-red-700 drop-shadow-sm'>
+              ¡Algo salió mal!
+            </h1>
+          </div>
+          <h2 className='text-lg font-semibold text-red-900/80'>
             {`Error ${error.digest || 'desconocido'}`}
           </h2>
-
           <button
-            className='text-sm text-gray-500 hover:underline'
+            className='text-xs text-blue-700 underline transition-colors hover:text-blue-900 focus:outline-none'
             onClick={() => setShowError(!showError)}
+            aria-expanded={showError}
+            aria-controls='error-details-section'
           >
-            {showError ? 'Ocultar detalles' : 'Mostrar detalles'}
+            {showError
+              ? 'Ocultar detalles técnicos'
+              : 'Mostrar detalles técnicos'}
           </button>
         </div>
         {showError && (
-          <ErrorAlert
-            title='Ha ocurrido un error'
-            description={`${error.message}`}
-          />
-        )}
-        <button
-          className='max-w-fit rounded-md border-none bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700'
-          onClick={() => reset()}
-        >
-          Intentar de nuevo
-        </button>
-        <div className='text-sm text-gray-500'>
-          <p>Si el problema persiste, intente con las siguientes opciones</p>
-          <Link className='text-blue-600 hover:underline' href='/'>
-            Regresar al inicio
-          </Link>
-          <span className='mx-1'>|</span>
-          <a
-            href='https://wa.me/447787024710'
-            className='text-yellow-600 hover:underline'
+          <section
+            id='error-details-section'
+            className='animate-fade-in w-full'
           >
-            Contactar a soporte
-          </a>
-        </div>{' '}
+            <ErrorAlert
+              title='Ha ocurrido un error'
+              description={error.message}
+            />
+          </section>
+        )}
+        {!showError && (
+          <Button size={'lg'} onClick={() => reset()}>
+            Intentar de nuevo
+          </Button>
+        )}
+        <div className='space-y-2 text-center text-sm text-gray-500'>
+          <p className='font-medium text-gray-700'>
+            Si el problema persiste, intente con las siguientes opciones:
+          </p>
+          <div className='flex flex-wrap items-center justify-center gap-3'>
+            <Link
+              className='font-semibold text-blue-600 hover:underline'
+              href='/'
+            >
+              Regresar al inicio
+            </Link>
+            <span className='mx-1 text-gray-400'>|</span>
+            <a
+              href='https://wa.me/447787024710'
+              className='font-semibold text-yellow-600 hover:underline'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              Contactar a soporte
+            </a>
+          </div>
+        </div>
       </div>
+      <style jsx global>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(16px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      `}</style>
     </main>
   )
 }
