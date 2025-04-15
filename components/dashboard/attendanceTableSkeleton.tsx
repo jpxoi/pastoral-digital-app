@@ -27,13 +27,17 @@ export default function AttendanceTableSkeleton() {
           <TableBody>
             {Array.from({ length: 10 }).map((_, index) => (
               <TableRow key={index}>
-                {Array.from({ length: 2 }).map((_, index) => (
-                  <TableCell key={index}>
-                    <div className='text-left'>
-                      <Skeleton className='h-5' />
-                    </div>
-                  </TableCell>
-                ))}
+                <TableCell>
+                  <div className='flex flex-col gap-1 text-left'>
+                    <Skeleton className='h-5 w-40' />
+                    <Skeleton className='h-4 w-36' />
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className='flex w-full justify-end'>
+                    <Skeleton className='h-5 w-24' />
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
