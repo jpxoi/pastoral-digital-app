@@ -118,7 +118,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider localization={esMX} appearance={clerkAppearance}>
-      <html lang='es'>
+      <html lang='es' suppressHydrationWarning>
         <body className={`${poppins.className} antialiased`}>
           <Toaster
             className='text-left'
