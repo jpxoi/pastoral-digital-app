@@ -4,6 +4,7 @@ import {
   eventsTable,
   SelectEvent,
   SelectUser,
+  sundayMassesTable,
   usersTable,
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
@@ -310,5 +311,19 @@ export const getAllMasses = async () => {
     with: {
       user: true,
     },
+  })
+}
+
+/* Sunday Masses Table */
+export const getSundayMassesRecordsByUserId = async (
+  userId: SelectUser['id']
+) => {
+  return db.query.sundayMassesTable.findMany({
+    where: eq(sundayMassesTable.userId, userId),
+    orderBy: (fields) => [desc(fields.createdAt)],
+    with: {
+      user: true,
+    },
+    limit: 100,
   })
 }
