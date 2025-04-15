@@ -17,7 +17,8 @@ export default async function AttendanceCalendarTable() {
     return (
       <div className='flex items-center justify-start pt-2 text-muted-foreground'>
         <p className='text-sm'>
-          No hay asistencias registradas en este momento. Por favor verifica más tarde.
+          No hay asistencias registradas en este momento. Por favor verifica más
+          tarde.
         </p>
       </div>
     )

@@ -101,7 +101,7 @@ export default function SundayMassForm() {
                     <div className='flex flex-row items-center justify-between gap-4 rounded-md border border-dashed border-muted-foreground bg-muted p-2 text-primary'>
                       <div className='flex flex-row items-center gap-2 text-muted-foreground'>
                         <IconFile size={20} />
-                        <span className='max-w-56 sm:max-w-80 truncate text-sm font-medium text-muted-foreground'>
+                        <span className='max-w-56 truncate text-sm font-medium text-muted-foreground sm:max-w-80'>
                           {fileName}
                         </span>
                       </div>
