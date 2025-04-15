@@ -10,8 +10,11 @@ export default async function UpcomingEvents() {
           <EventCard key={record.id} record={record} type='upcoming' />
         ))
       ) : (
-        <div className='flex items-center justify-start text-neutral-500'>
-          <p>No hay eventos programados en los próximos días</p>
+        <div className='col-span-full flex items-center justify-start pt-4 text-muted-foreground'>
+          <p className='text-sm'>
+            No hay eventos programados en este momento. Por favor verifica más
+            tarde.
+          </p>
         </div>
       )}
     </div>

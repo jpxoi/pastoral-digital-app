@@ -13,6 +13,16 @@ export default async function AttendanceCalendarTable() {
   const attendanceCalendar = await getAttendanceCalendar()
   const ignoreColumns = ['id', 'fullName']
 
+  if (!attendanceCalendar || attendanceCalendar.length === 0) {
+    return (
+      <div className='flex items-center justify-start pt-2 text-muted-foreground'>
+        <p className='text-sm'>
+          No hay asistencias registradas en este momento. Por favor verifica más tarde.
+        </p>
+      </div>
+    )
+  }
+
   const attendanceBadgeClassName =
     'flex w-12 cursor-pointer items-center justify-center rounded-md px-2 font-bold transition-colors'
 
