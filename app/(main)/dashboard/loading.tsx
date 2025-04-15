@@ -1,5 +1,6 @@
 import AttendanceTableSkeleton from '@/components/dashboard/attendanceTableSkeleton'
 import DashboardCardsSkeleton from '@/components/dashboard/dashboardCardsSkeleton'
+import SundayMassTableSkeleton from '@/components/dashboard/sundayMassTableSkeleton'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Loading() {
@@ -15,7 +16,10 @@ export default function Loading() {
           {/* Attendance Section */}
           <div className='flex h-auto w-full flex-col items-center justify-start gap-4'>
             <DashboardCardsSkeleton />
-            <AttendanceTableSkeleton />
+            <div className='grid w-full grid-cols-1 gap-4 lg:grid-cols-2'>
+              <AttendanceTableSkeleton />
+              <SundayMassTableSkeleton />
+            </div>
           </div>
         </div>
       </div>

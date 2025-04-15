@@ -35,7 +35,7 @@ export default function BirthdayCard({
     >
       <CardHeader>
         <CardTitle className='flex max-w-full justify-between gap-2 text-base font-semibold sm:text-lg'>
-          <span className='truncate'>
+          <span className='max-w-60 truncate sm:max-w-96'>
             {firstName} {lastName}
           </span>
           <IconCake className={cn('size-6', isToday && 'text-blue-700')} />
@@ -46,7 +46,7 @@ export default function BirthdayCard({
             isToday && 'text-blue-700'
           )}
         >
-          <span className='truncate'>
+          <span className='max-w-60 truncate sm:max-w-96'>
             Cumple {getTurnsAge(dateOfBirth)} años{' '}
             {getBirthdayRelativeDate(dateOfBirth)}
           </span>

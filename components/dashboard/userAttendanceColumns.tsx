@@ -28,7 +28,9 @@ export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
         return (
           <div className='flex flex-col gap-1 text-left'>
             <span className='text-nowrap font-medium'>{eventName}</span>
-            <span className='text-xs text-gray-500'>{formattedTime}</span>
+            <span className='text-nowrap text-xs text-gray-500'>
+              {formattedTime}
+            </span>
           </div>
         )
       },
