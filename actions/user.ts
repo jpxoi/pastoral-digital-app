@@ -44,7 +44,7 @@ export const completeOnboarding = async () => {
   const { userId } = await auth()
 
   if (!userId) {
-    return { error: 'No se pudo obtener el ID del usuario.' }
+    return { error: 'No se encontró el usuario autenticado.' }
   }
 
   const client = await clerkClient()
