@@ -5,14 +5,19 @@ import {
   integer,
   pgEnum,
   pgTable,
-  serial,
   text,
   timestamp,
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
-import { AttendanceStatus, UserCategory, UserRole, UserSchedule } from '@/types'
+import {
+  AttendanceRecordMethod,
+  AttendanceStatus,
+  UserCategory,
+  UserRole,
+  UserSchedule,
+} from '@/types'
 
 /* Enums */
 
@@ -41,6 +46,15 @@ export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
   AttendanceStatus.TARDANZA_JUSTIFICADA,
   AttendanceStatus.FALTA_INJUSTIFICADA,
 ])
+
+export const AttendanceRecordMethodEnum = pgEnum(
+  'attendance_record_method_enum',
+  [
+    AttendanceRecordMethod.MANUAL,
+    AttendanceRecordMethod.QR,
+    AttendanceRecordMethod.NFC,
+  ]
+)
 
 /* Tables */
 
@@ -78,7 +92,9 @@ export const attendanceRecordsTable = pgTable(
     registeredBy: text('registered_by')
       .references(() => usersTable.id)
       .notNull(),
-    method: text().default('QR').notNull(),
+    method: AttendanceRecordMethodEnum()
+      .default(AttendanceRecordMethod.QR)
+      .notNull(),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at')
       .defaultNow()
@@ -95,13 +111,13 @@ export const attendanceRecordsTable = pgTable(
 export const eventsTable = pgTable(
   'events',
   {
-    id: serial().primaryKey(),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: text().notNull(),
     description: text(),
     date: timestamp('date').notNull(),
     secondTurnDate: timestamp('second_turn_date').notNull(),
     endDate: timestamp('end_date').notNull(),
-    locationId: serial('location_id')
+    locationId: integer('location_id')
       .references(() => locationsTable.id, { onDelete: 'cascade' })
       .notNull(),
     createdAt: timestamp('created_at').defaultNow(),
@@ -113,7 +129,7 @@ export const eventsTable = pgTable(
 )
 
 export const locationsTable = pgTable('locations', {
-  id: serial().primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: text().notNull(),
   address: text().notNull(),
   city: text().default('Trujillo').notNull(),
@@ -202,12 +218,12 @@ export const sundayMassesRelations = relations(sundayMassesTable, ({ one }) => {
   return {
     user: one(usersTable, {
       fields: [sundayMassesTable.userId],
-      references: [usersTable.id]
+      references: [usersTable.id],
     }),
     verifier: one(usersTable, {
       fields: [sundayMassesTable.verifiedBy],
-      references: [usersTable.id]
-    })
+      references: [usersTable.id],
+    }),
   }
 })
 
