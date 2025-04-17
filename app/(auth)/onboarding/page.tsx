@@ -7,13 +7,19 @@ import {
 } from '@/components/ui/card'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 import OnboardingPromptSkeleton from '@/components/home/onboardingPromptSkeleton'
 
 export const metadata: Metadata = {
   title: 'Onboarding | Pastoral Digital App',
 }
 
-export default function OnboardingPage() {
+export default async function OnboardingPage() {
+  if ((await auth()).sessionClaims?.metadata.onboardingComplete === true) {
+    redirect('/dashboard')
+  }
+
   return (
     <Card className='max-h-full overflow-y-scroll bg-white'>
       <CardHeader>
