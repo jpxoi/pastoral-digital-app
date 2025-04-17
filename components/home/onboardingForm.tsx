@@ -82,7 +82,7 @@ export default function OnboardingForm({
 
           if (data?.success) {
             toast.success(data.success)
-            router.push('/dashboard')
+            window.location.href = '/dashboard'
           }
         })
         .catch((error) => {
