@@ -34,28 +34,26 @@ const nextConfig = {
       },
     ];
   },
-  skipTrailingSlashRedirect: true,
-  experimental: {
-    turbo: {
-      // ...
-    },
+  turbopack: {
+    // ...
   },
-    images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'cdn.jpxoi.com',
-            port: '',
-            pathname: '/media/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'img.clerk.com',
-            port: '',
-            pathname: '/**',
-          },
-        ],
+  skipTrailingSlashRedirect: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.jpxoi.com',
+        port: '',
+        pathname: '/media/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default withPWA(nextConfig);
