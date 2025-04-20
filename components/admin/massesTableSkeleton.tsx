@@ -62,7 +62,6 @@ export default function MassesTableSkeleton() {
                 </TableCell>
                 <TableCell className='flex items-center justify-center gap-4'>
                   <Skeleton className='m-1.5 size-5' />
-                  <Skeleton className='m-1.5 size-5' />
                 </TableCell>
               </TableRow>
             ))}

@@ -125,28 +125,29 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     id: 'actions',
     cell: ({ row }) => (
       <div className='flex gap-4' key={row.id}>
-        <Button
-          variant='ghost'
-          className='h-8 w-8 p-0 hover:bg-emerald-50'
-          disabled={row.original.verified}
-          onClick={() => {
-            handleVerifyMass(row.original.id)
-          }}
-        >
-          <span className='sr-only'>Verificar</span>
-          <IconCheck className='h-4 w-4 text-emerald-700 hover:text-emerald-800' />
-        </Button>
-        <Button
-          variant='ghost'
-          className='h-8 w-8 p-0 hover:bg-red-50'
-          disabled={!row.original.verified}
-          onClick={() => {
-            handleRejectMass(row.original.id)
-          }}
-        >
-          <span className='sr-only'>Rechazar</span>
-          <IconX className='h-4 w-4 text-red-700 hover:text-red-800' />
-        </Button>
+        {row.original.verified ? (
+          <Button
+            variant='ghost'
+            className='h-8 w-8 p-0 hover:bg-red-50'
+            onClick={() => {
+              handleRejectMass(row.original.id)
+            }}
+          >
+            <span className='sr-only'>Rechazar</span>
+            <IconX className='h-4 w-4 text-red-700 hover:text-red-800' />
+          </Button>
+        ) : (
+          <Button
+            variant='ghost'
+            className='h-8 w-8 p-0 hover:bg-emerald-50'
+            onClick={() => {
+              handleVerifyMass(row.original.id)
+            }}
+          >
+            <span className='sr-only'>Verificar</span>
+            <IconCheck className='h-4 w-4 text-emerald-700 hover:text-emerald-800' />
+          </Button>
+        )}
       </div>
     ),
   },
