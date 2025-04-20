@@ -89,6 +89,7 @@ export default function SundayMassForm() {
                       {...field}
                       minLength={3}
                       maxLength={45}
+                      required
                     />
                   </FormControl>
                   <FormMessage />
