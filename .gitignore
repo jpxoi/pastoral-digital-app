@@ -40,6 +40,7 @@ next-env.d.ts
 *.afdesign
 **/public/workbox-*.js
 **/public/sw.js
+**/swe-worker-*.js
 **/public/fallback-*.js
 .idea
 certificates
