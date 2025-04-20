@@ -1,12 +1,12 @@
+import type { NextConfig } from 'next'
 import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
-  cacheOnFrontendNav: false,
+  cacheOnFrontEndNav: false,
   aggressiveFrontEndNavCaching: false,
   reloadOnOnline: true,
   cacheStartUrl: false,
   dynamicStartUrl: false,
-  swcMinify: true,
   dest: "public",
   fallbacks: {
     document: "/fallback",
@@ -16,8 +16,10 @@ const withPWA = withPWAInit({
   },
 });
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
+  turbopack: {
+    // ...
+  },
   async rewrites() {
     return [
       {
@@ -33,9 +35,6 @@ const nextConfig = {
         destination: "https://us.i.posthog.com/decide",
       },
     ];
-  },
-  turbopack: {
-    // ...
   },
   skipTrailingSlashRedirect: true,
   images: {
