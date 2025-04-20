@@ -324,6 +324,7 @@ export const getSundayMassesRecordsByUserId = async (
     orderBy: (fields) => [desc(fields.createdAt)],
     with: {
       user: true,
+      verifier: true,
     },
     limit: 100,
   })
