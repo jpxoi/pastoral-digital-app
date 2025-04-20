@@ -1,13 +1,13 @@
 'use client'
 
+import { SelectUser } from '@/db/schema'
 import { Button } from '../ui/button'
-import { FetchMassesProps } from '@/types'
 import { IconFileTypeCsv } from '@tabler/icons-react'
 import { toast } from 'sonner'
 
-export default function ExportToCsvMasses() {
+export default function ExportToCsvUsers() {
   const handleClick = async () => {
-    toast.promise(fetch('/api/masses'), {
+    toast.promise(fetch('/api/users'), {
       loading: 'Exportando CSV...',
       success: async (res) => {
         const data = await res.json()
@@ -17,49 +17,43 @@ export default function ExportToCsvMasses() {
         }
 
         if (data.success) {
-          const sundayMass = data.data as FetchMassesProps[]
+          const sundayMass = data.data as SelectUser[]
           console.log('Se han obtenido las misas')
 
           const csvString = [
             [
               'id',
-              'user_id',
+              'first_name',
+              'last_name',
               'full_name',
+              'nickname',
+              'username',
+              'email',
+              'phone_number',
+              'date_of_birth',
               'category',
               'student_code',
-              'parish',
-              'evidence_url',
-              'verified',
-              'verfied_by_user_id',
-              'verified_by_full_name',
-              'verified_at',
+              'role',
+              'schedule',
               'created_at',
+              'updated_at',
             ],
             ...sundayMass.map((item) => [
               item.id,
-              item.user.id,
-              `${item.user.firstName} ${item.user.lastName}`,
-              item.user.category,
-              item.user.studentCode,
-              item.parish,
-              item.evidenceUrl,
-              item.verified ? 'Verificado' : 'Pendiente',
-              item.verifiedBy,
-              item.verifier
-                ? `${item.verifier.firstName} ${item.verifier.lastName}`
-                : '',
-              item.verifiedAt
-                ? new Intl.DateTimeFormat('es-PE', {
-                    timeZone: 'America/Lima',
-                    dateStyle: 'medium',
-                    timeStyle: 'long',
-                  }).format(new Date(item.verifiedAt))
-                : '',
-              new Intl.DateTimeFormat('es-PE', {
-                timeZone: 'America/Lima',
-                dateStyle: 'medium',
-                timeStyle: 'long',
-              }).format(new Date(item.createdAt as Date)),
+              item.firstName,
+              item.lastName,
+              `${item.firstName} ${item.lastName}`,
+              item.nickname,
+              item.username,
+              item.email,
+              item.phoneNumber,
+              item.dateOfBirth,
+              item.category,
+              item.studentCode,
+              item.role,
+              item.schedule,
+              item.createdAt,
+              item.updatedAt,
             ]),
           ]
             .map((e) => e.join(';'))
@@ -69,7 +63,7 @@ export default function ExportToCsvMasses() {
           const url = URL.createObjectURL(blob)
           const a = document.createElement('a')
           a.href = url
-          a.download = `registro-misas.csv`
+          a.download = `registro-usuarios.csv`
           a.click()
           URL.revokeObjectURL(url)
 

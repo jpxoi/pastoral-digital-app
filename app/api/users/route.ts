@@ -1,10 +1,14 @@
 import { checkRole } from '@/lib/roles'
-import { getAllMasses } from '@/queries/select'
+import { getAllUsers } from '@/queries/select'
 import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams
+  const eventIdParam = searchParams.get('eventId')
+  const eventId = eventIdParam ? parseInt(eventIdParam, 10) : null
+
   const { userId } = await auth()
   if (!userId) {
     return NextResponse.json(
@@ -16,10 +20,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  if (
-    !(await checkRole(UserRole.ADMIN)) &&
-    !(await checkRole(UserRole.MANAGER))
-  ) {
+  if (!(await checkRole(UserRole.ADMIN))) {
     return NextResponse.json(
       {
         success: false,
@@ -30,13 +31,13 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const massesData = await getAllMasses()
+    const userData = await getAllUsers()
 
-    if (massesData.length === 0) {
+    if (userData.length === 0) {
       return NextResponse.json(
         {
           success: false,
-          error: 'No masses records found',
+          error: 'No users records found',
         },
         { status: 404 }
       )
@@ -44,14 +45,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: massesData,
+      data: userData,
     })
   } catch (error) {
-    console.error('Error fetching masses data:', error)
+    console.error('Error fetching user data:', error)
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to fetch masses data',
+        error: 'Failed to fetch user data',
       },
       { status: 500 }
     )
