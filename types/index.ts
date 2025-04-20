@@ -29,6 +29,7 @@ export interface FetchEventProps extends SelectEvent {
 
 export interface FetchMassesProps extends SelectSundayMass {
   user: SelectUser
+  verifier: SelectUser
 }
 
 export enum AttendanceStatus {

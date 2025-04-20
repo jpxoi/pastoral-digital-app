@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import MassesTable from '@/components/admin/massesTable'
 import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
+import ExportToCsvMasses from '@/components/shared/exportToCsvMasses'
 
 export const metadata: Metadata = {
   title: 'Administrar Misas | Pastoral Digital App',
@@ -14,11 +15,16 @@ export default function Page() {
       <Suspense fallback={null}>
         <OfflineAlert />
       </Suspense>
-      <div className='flex flex-col gap-2 text-left'>
-        <h1 className='text-xl font-semibold sm:text-2xl'>Administrar Misas</h1>
-        <p className='text-sm text-neutral-500'>
-          Esta es la lista de misas registradas en la aplicación.
-        </p>
+      <div className='flex flex-row items-center justify-between'>
+        <div className='flex flex-col gap-2 text-left'>
+          <h1 className='text-xl font-semibold sm:text-2xl'>
+            Administrar Misas
+          </h1>
+          <p className='text-sm text-neutral-500'>
+            Esta es la lista de misas registradas en la aplicación.
+          </p>
+        </div>
+        <ExportToCsvMasses />
       </div>
       <Suspense fallback={<MassesTableSkeleton />}>
         <MassesTable />

@@ -310,6 +310,7 @@ export const getAllMasses = async () => {
     orderBy: (fields) => [desc(fields.createdAt)],
     with: {
       user: true,
+      verifier: true,
     },
   })
 }
