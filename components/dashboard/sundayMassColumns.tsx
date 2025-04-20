@@ -25,7 +25,7 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
 
       return (
         <div className='flex flex-col gap-1 text-left'>
-          <span className='max-w-72 truncate font-medium'>
+          <span className='max-w-80 truncate font-medium'>
             {row.original.parish}
           </span>
           <span className='text-nowrap text-xs text-gray-500'>
