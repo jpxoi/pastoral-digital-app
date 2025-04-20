@@ -149,6 +149,7 @@ export default function SundayMassForm() {
                         }}
                         onClientUploadComplete={(res) => {
                           field.onChange(res[0].ufsUrl)
+                          console.log(res[0].fileHash)
                           setFileName(res[0].name)
                           setFileUploadError(null)
                         }}
