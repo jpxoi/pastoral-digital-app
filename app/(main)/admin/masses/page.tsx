@@ -16,7 +16,6 @@ export default function Page() {
         <OfflineAlert />
       </Suspense>
       <div className='flex justify-between gap-2 max-sm:flex-col'>
-        {' '}
         <div className='flex flex-col gap-2 text-left'>
           <h1 className='text-xl font-semibold sm:text-2xl'>
             Administrar Misas
