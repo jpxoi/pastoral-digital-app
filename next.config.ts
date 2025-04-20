@@ -3,14 +3,14 @@ import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
   cacheOnFrontEndNav: false,
-  aggressiveFrontEndNavCaching: false,
-  reloadOnOnline: true,
   cacheStartUrl: false,
   dynamicStartUrl: false,
   dest: "public",
   fallbacks: {
     document: "/fallback",
+    image: "/graphics/offline.svg",
   },
+  reloadOnOnline: true,
   workboxOptions: {
     disableDevLogs: true,
   },
