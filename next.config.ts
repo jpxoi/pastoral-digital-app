@@ -8,7 +8,6 @@ const withPWA = withPWAInit({
   dest: "public",
   fallbacks: {
     document: "/fallback",
-    image: "/graphics/offline.svg",
   },
   reloadOnOnline: true,
   workboxOptions: {

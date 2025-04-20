@@ -10,17 +10,13 @@ export default function OfflinePage() {
       <div className='flex max-w-md flex-col items-center justify-center gap-6 rounded-lg bg-background p-10 text-center shadow-lg transition-shadow duration-300'>
         <IconWifiOff className='h-20 w-20 text-destructive' stroke={2} />
         <h1 className='mt-4 text-balance text-xl font-extrabold tracking-tight md:text-2xl'>
-          ¡Oops! Sin conexión
+          ¡Ups! No hay conexión a Internet
         </h1>
-        <p className='text-muted-foreground'>
-          Parece que no estás conectado a internet. Revisa tu conexión y vuelve
-          a intentarlo.
+        <p className='text-pretty text-muted-foreground'>
+          Verifica tu red Wi-Fi o datos móviles y vuelve a intentarlo para usar
+          todas las funciones de Pastoral Digital App.
         </p>
-        <Button
-          onClick={() => location.reload()}
-          // Larger, rounded, more padding, hover effect
-          size='lg'
-        >
+        <Button onClick={() => location.reload()} size='lg'>
           Reintentar
         </Button>
       </div>
