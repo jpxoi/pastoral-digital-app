@@ -12,7 +12,8 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 export async function postNewMassRecord(
-  formValues: z.infer<typeof NewSundayMassFormSchema>
+  formValues: z.infer<typeof NewSundayMassFormSchema>,
+  evidenceFileHash: string
 ) {
   const validatedFields = NewSundayMassFormSchema.safeParse(formValues)
 
@@ -49,6 +50,7 @@ export async function postNewMassRecord(
     parish,
     evidenceUrl,
     sundayDate: `${year}-${month}-${day}`,
+    evidenceFileHash: evidenceFileHash,
   })
     .then(async () => {
       revalidatePath('/dashboard')
