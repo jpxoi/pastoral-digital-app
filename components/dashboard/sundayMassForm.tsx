@@ -24,6 +24,7 @@ import { postNewMassRecord } from '@/actions/mass'
 
 export default function SundayMassForm() {
   const [fileName, setFileName] = useState<string>('')
+  const [fileHash, setFileHash] = useState<string>('')
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [fileUploadError, setFileUploadError] = useState<string | null>(null)
@@ -43,7 +44,7 @@ export default function SundayMassForm() {
     setFileUploadError(null)
 
     startTransition(async () => {
-      await postNewMassRecord(data)
+      await postNewMassRecord(data, fileHash)
         .then((response: { success?: string; error?: string }) => {
           if (response.error) {
             setError(response.error)
@@ -149,13 +150,14 @@ export default function SundayMassForm() {
                         }}
                         onClientUploadComplete={(res) => {
                           field.onChange(res[0].ufsUrl)
-                          console.log(res[0].fileHash)
                           setFileName(res[0].name)
+                          setFileHash(res[0].fileHash)
                           setFileUploadError(null)
                         }}
                         onUploadError={(error: Error) => {
                           field.onChange('')
                           setFileName('')
+                          setFileHash('')
                           setError(
                             'Ha ocurrido un error al subir la imagen. Asegúrate de que la imagen no exceda los 4 MB.'
                           )
