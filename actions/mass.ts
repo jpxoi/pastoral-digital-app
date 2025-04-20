@@ -71,7 +71,10 @@ export async function postNewMassRecord(
 }
 
 export async function verifyMassRecord(massId: string) {
-  if (!(await checkRole(UserRole.ADMIN || UserRole.MEMBER))) {
+  if (
+    !(await checkRole(UserRole.ADMIN)) &&
+    !(await checkRole(UserRole.MANAGER))
+  ) {
     return { error: 'No estas autorizado para verificar misas.' }
   }
 
@@ -106,8 +109,11 @@ export async function verifyMassRecord(massId: string) {
 }
 
 export async function rejectMassRecord(massId: string) {
-  if (!(await checkRole(UserRole.ADMIN || UserRole.MEMBER))) {
-    return { error: 'No estas autorizado para verificar misas.' }
+  if (
+    !(await checkRole(UserRole.ADMIN)) &&
+    !(await checkRole(UserRole.MANAGER))
+  ) {
+    return { error: 'No estas autorizado para rechazar misas.' }
   }
 
   const { userId: verifiedById } = await auth()
