@@ -75,7 +75,8 @@ export const NewSundayMassFormSchema = z.object({
     .trim()
     .min(3, 'El nombre de la parroquia debe tener al menos 3 caracteres')
     .max(45, 'El nombre de la parroquia no puede exceder los 45 caracteres')
-    .nonempty('El nombre de la parroquia es requerido'),
+    .nonempty('El nombre de la parroquia es requerido')
+    .transform((val) => val.trim()),
   evidenceUrl: z
     .string()
     .trim()
