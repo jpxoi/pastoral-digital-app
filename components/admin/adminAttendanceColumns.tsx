@@ -58,7 +58,6 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
             minute: 'numeric',
             second: 'numeric',
             timeZone: 'America/Lima',
-            timeZoneName: 'shortGeneric',
           }
         )
 

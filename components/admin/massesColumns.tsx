@@ -67,6 +67,14 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     ),
   },
   {
+    id: 'parroquia',
+    accessorKey: 'parish',
+    header: () => <span className='text-nowrap'>Parroquia</span>,
+    cell: ({ row }) => (
+      <div className='max-w-60 truncate lg:max-w-72'>{row.original.parish}</div>
+    ),
+  },
+  {
     id: 'evidencia',
     accessorKey: 'evidenceUrl',
     header: () => <span className='text-nowrap'>Evidencia</span>,
@@ -85,21 +93,20 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     ),
   },
   {
-    id: 'fecha',
+    id: 'fechaYHora',
     accessorKey: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Fecha y Hora' />
     ),
     cell: ({ row }) => (
-      <div>
+      <div className='text-nowrap'>
         {row.original.createdAt?.toLocaleDateString('es-PE', {
+          weekday: 'short',
           day: 'numeric',
           month: 'short',
-          year: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
           timeZone: 'America/Lima',
-          timeZoneName: 'shortGeneric',
         })}
       </div>
     ),

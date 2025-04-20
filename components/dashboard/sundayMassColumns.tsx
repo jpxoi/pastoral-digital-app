@@ -1,6 +1,5 @@
 'use client'
 
-import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { FetchMassesProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
@@ -15,18 +14,20 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
     cell: ({ row }) => {
       const createdAt = row.original.createdAt
       const formattedTime = (createdAt as Date).toLocaleString('es-PE', {
+        weekday: 'short',
         day: 'numeric',
         month: 'short',
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
         timeZone: 'America/Lima',
-        timeZoneName: 'shortGeneric',
       })
 
       return (
         <div className='flex flex-col gap-1 text-left'>
-          <span className='text-nowrap font-medium'>{row.original.parish}</span>
+          <span className='max-w-72 truncate font-medium'>
+            {row.original.parish}
+          </span>
           <span className='text-nowrap text-xs text-gray-500'>
             {formattedTime}
           </span>

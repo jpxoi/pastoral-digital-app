@@ -81,7 +81,6 @@ export default async function EventCard({
                 hour: 'numeric',
                 minute: 'numeric',
                 timeZone: 'America/Lima',
-                timeZoneName: 'shortGeneric',
               })}
             </span>
           </span>

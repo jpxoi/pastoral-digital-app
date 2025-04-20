@@ -51,6 +51,7 @@ export const OnboardingFormSchema = z.object({
   ),
   studentCode: z
     .string()
+    .length(5, 'El código de estudiante debe tener 5 caracteres')
     .optional()
     .refine(
       (code) => !code || /^[SP][156][A-H]\d{2}$/.test(code),
@@ -69,8 +70,15 @@ export const NewAttendanceRecordFormSchema = z.object({
 })
 
 export const NewSundayMassFormSchema = z.object({
-  parish: z.string().nonempty('El nombre de la parroquia es requerido'),
+  parish: z
+    .string()
+    .trim()
+    .min(3, 'El nombre de la parroquia debe tener al menos 3 caracteres')
+    .max(45, 'El nombre de la parroquia no puede exceder los 45 caracteres')
+    .nonempty('El nombre de la parroquia es requerido'),
   evidenceUrl: z
     .string()
-    .nonempty('Es requerido subir una evidencia de asistencia a misa'),
+    .trim()
+    .nonempty('La evidencia de asistencia es requerida')
+    .url('La URL de la evidencia no es válida'),
 })

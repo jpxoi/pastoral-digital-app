@@ -84,7 +84,7 @@ export default function SundayMassForm() {
                 <FormItem>
                   <FormLabel>Parroquia</FormLabel>
                   <FormControl>
-                    <Input placeholder='Nombre de la parroquia' {...field} />
+                    <Input placeholder='Nombre de la parroquia' {...field} minLength={3} maxLength={45} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

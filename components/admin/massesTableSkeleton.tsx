@@ -30,6 +30,7 @@ export default function MassesTableSkeleton() {
             <TableRow>
               <TableHead>Nombre Completo</TableHead>
               <TableHead>Categoría</TableHead>
+              <TableHead>Parroquia</TableHead>
               <TableHead>Evidencia</TableHead>
               <TableHead>Fecha y Hora</TableHead>
               <TableHead>Estado</TableHead>
@@ -48,10 +49,13 @@ export default function MassesTableSkeleton() {
                   <Skeleton className='h-5 w-24' />
                 </TableCell>
                 <TableCell>
+                  <Skeleton className='h-5 w-60' />
+                </TableCell>
+                <TableCell>
                   <Skeleton className='h-5 w-24' />
                 </TableCell>
                 <TableCell>
-                  <Skeleton className='h-5 w-48' />
+                  <Skeleton className='h-5 w-40' />
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-5 w-28' />

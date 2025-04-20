@@ -60,7 +60,6 @@ export default function QrScannerTab() {
                   hour: 'numeric',
                   minute: 'numeric',
                   timeZone: 'America/Lima',
-                  timeZoneName: 'shortGeneric',
                 }
               )}
             `,
@@ -273,7 +272,6 @@ export default function QrScannerTab() {
                     hour: 'numeric',
                     minute: 'numeric',
                     timeZone: 'America/Lima',
-                    timeZoneName: 'shortGeneric',
                   })}
                 </p>
 
