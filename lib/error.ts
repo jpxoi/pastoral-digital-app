@@ -20,6 +20,10 @@ export const handleDbError = (error: NeonDbError) => {
     return 'Ya has registrado una misa para hoy. No se permiten registros duplicados.'
   } else if (error.message.includes('sunday_masses_verified_by_users_id_fk')) {
     return 'No tienes permisos para verificar asistencia a misa. Por favor, contacta al administrador.'
+  } else if (
+    error.message.includes('sunday_masses_evidence_file_hash_unique')
+  ) {
+    return 'Ya has registrado una misa con la misma evidencia. Por favor, verifica que no hayas subido el mismo archivo de semanas anteriores.'
   } else {
     return 'Ha ocurrido un error inesperado. Por favor, intenta nuevamente más tarde.'
   }
