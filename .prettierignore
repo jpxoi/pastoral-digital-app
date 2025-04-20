@@ -2,9 +2,10 @@
 /.github/
 .eslintrc.json
 .prettierrc
-next.config.mjs
+next.config.ts
 package.json
-package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
 postcss.config.mjs
 tailwind.config.ts
 tsconfig.json
