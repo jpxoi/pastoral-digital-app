@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 import withPWAInit from "@ducanh2912/next-pwa";
 
 const withPWA = withPWAInit({
-  cacheOnFrontEndNav: false,
+  cacheOnFrontEndNav: true,
   cacheStartUrl: false,
   dynamicStartUrl: false,
   dest: "public",
