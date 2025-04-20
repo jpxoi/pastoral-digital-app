@@ -69,7 +69,7 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
               ]
             ),
           ]
-            .map((e) => e.join(','))
+            .map((e) => e.join(';'))
             .join('\n')
 
           const blob = new Blob([csvString], { type: 'text/csv' })
