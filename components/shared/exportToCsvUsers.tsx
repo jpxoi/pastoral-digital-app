@@ -18,7 +18,6 @@ export default function ExportToCsvUsers() {
 
         if (data.success) {
           const sundayMass = data.data as SelectUser[]
-          console.log('Se han obtenido las misas')
 
           const csvString = [
             [

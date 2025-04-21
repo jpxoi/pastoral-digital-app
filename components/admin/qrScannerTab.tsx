@@ -80,7 +80,9 @@ export default function QrScannerTab() {
           setCameraPermission(result.state as 'granted' | 'denied' | 'prompt')
         }
       } catch (error) {
-        console.error('Camera permissions API not supported', error)
+        toast.error(
+          'No se pudo verificar el estado de los permisos de la cámara.'
+        )
       }
     }
 

@@ -18,7 +18,6 @@ export default function ExportToCsvMasses() {
 
         if (data.success) {
           const sundayMass = data.data as FetchMassesProps[]
-          console.log('Se han obtenido las misas')
 
           const csvString = [
             [
