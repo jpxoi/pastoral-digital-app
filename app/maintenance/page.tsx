@@ -1,11 +1,11 @@
 import MaintenanceScreen from '@/components/home/maintenanceScreen'
+import { redis } from '@/lib/upstash'
 import { IconBarrierBlock } from '@tabler/icons-react'
-import { get } from '@vercel/edge-config'
 
 export default async function MaintenancePage() {
-  const [startDateTime, endDateTime] = await Promise.all([
-    get('maintenanceStartDateTime'),
-    get('maintenanceEndDateTime'),
+  const [startDateTime, endDateTime]: (string | null)[] = await Promise.all([
+    redis.get<string>('maintenanceStartDateTime'),
+    redis.get<string>('maintenanceEndDateTime'),
   ])
 
   return (
