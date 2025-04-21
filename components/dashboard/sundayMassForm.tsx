@@ -1,12 +1,12 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState, useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { NewSundayMassFormSchema } from '@/schema'
 
-import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -17,20 +17,24 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { UploadButton } from '@/lib/uploadthing'
-import { useState, useTransition } from 'react'
 import { IconFile, IconLoader2, IconTrash } from '@tabler/icons-react'
-import { postNewMassRecord } from '@/actions/mass'
-import { deleteFile } from '@/actions/file'
+
 import { toast } from 'sonner'
+import { FileInfoProps } from '@/types'
+import { deleteFile } from '@/actions/file'
+import { postNewMassRecord } from '@/actions/mass'
 
 export default function SundayMassForm() {
-  const [fileName, setFileName] = useState<string>('')
-  const [fileHash, setFileHash] = useState<string>('')
-  const [fileKey, setFileKey] = useState<string>('')
+  const [fileInfo, setFileInfo] = useState<FileInfoProps>({
+    name: '',
+    hash: '',
+    key: '',
+  })
+
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [fileUploadError, setFileUploadError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof NewSundayMassFormSchema>>({
@@ -44,10 +48,9 @@ export default function SundayMassForm() {
   const onSubmit = async (data: z.infer<typeof NewSundayMassFormSchema>) => {
     setSuccess(null)
     setError(null)
-    setFileUploadError(null)
 
     startTransition(async () => {
-      await postNewMassRecord(data, fileHash)
+      await postNewMassRecord(data, fileInfo.hash)
         .then((response: { success?: string; error?: string }) => {
           if (response.error) {
             setError(response.error)
@@ -57,9 +60,7 @@ export default function SundayMassForm() {
           if (response.success) {
             setSuccess(response.success)
             form.reset()
-            setFileName('')
-            setFileHash('')
-            setFileUploadError(null)
+            setFileInfo({ name: '', hash: '', key: '' })
           }
         })
         .catch((error) => {
@@ -113,7 +114,7 @@ export default function SundayMassForm() {
                       <div className='flex flex-row items-center gap-2 text-muted-foreground'>
                         <IconFile size={20} />
                         <span className='max-w-56 truncate text-sm font-medium text-muted-foreground sm:max-w-80'>
-                          {fileName}
+                          {fileInfo.name}
                         </span>
                       </div>
                       <Button
@@ -122,9 +123,7 @@ export default function SundayMassForm() {
                         className='text-destructive hover:bg-destructive/10 hover:text-destructive'
                         onClick={async () => {
                           field.onChange('')
-                          setFileName('')
-                          setFileHash('')
-                          await deleteFile(fileKey)
+                          await deleteFile(fileInfo.key)
                             .then(() => {
                               toast.success(
                                 'El archivo se eliminó correctamente.'
@@ -134,6 +133,9 @@ export default function SundayMassForm() {
                               toast.warning(
                                 'Ocurrió un error al eliminar el archivo. No te preocupes, aún puedes subir uno nuevo.'
                               )
+                            })
+                            .finally(() => {
+                              setFileInfo({ name: '', hash: '', key: '' })
                             })
                         }}
                       >
@@ -162,19 +164,20 @@ export default function SundayMassForm() {
                         }}
                         endpoint='imageUploader'
                         onUploadBegin={() => {
-                          setFileUploadError(null)
+                          setError(null)
                         }}
                         onClientUploadComplete={(res) => {
                           field.onChange(res[0].ufsUrl)
-                          setFileName(res[0].name)
-                          setFileKey(res[0].key)
-                          setFileHash(res[0].fileHash)
-                          setFileUploadError(null)
+                          setFileInfo({
+                            name: res[0].name,
+                            hash: res[0].fileHash,
+                            key: res[0].key,
+                          })
+                          setError(null)
                         }}
                         onUploadError={(error: Error) => {
                           field.onChange('')
-                          setFileName('')
-                          setFileHash('')
+                          setFileInfo({ name: '', hash: '', key: '' })
                           setError(
                             'Ha ocurrido un error al subir el archivo. Asegúrate de que el archivo no exceda los 4 MB.'
                           )
@@ -188,11 +191,6 @@ export default function SundayMassForm() {
                     evangelio del día en formato PDF o Word (máx. 4 MB).
                   </FormDescription>
                   <FormMessage />
-                  {fileUploadError && (
-                    <p className='text-sm font-medium text-destructive'>
-                      {fileUploadError}
-                    </p>
-                  )}
                 </FormItem>
               )}
             />
@@ -212,7 +210,7 @@ export default function SundayMassForm() {
               {isPending ? (
                 <div className='flex items-center gap-2'>
                   <IconLoader2 className='animate-spin' />
-                  Procesando...
+                  Registrando...
                 </div>
               ) : (
                 'Registrar Misa'

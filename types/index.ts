@@ -6,6 +6,12 @@ import {
   SelectUser,
 } from '@/db/schema'
 
+export interface FileInfoProps {
+  name: string
+  hash: string
+  key: string
+}
+
 export interface TableRow {
   row: {
     [key: string]: string
