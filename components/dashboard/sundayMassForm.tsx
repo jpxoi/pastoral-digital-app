@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import esLocale from '@/lib/uploadcare/locale/es'
+import es from '@/lib/uploadcare/locale/es'
 import { IconLoader2 } from '@tabler/icons-react'
 
 import { toast } from 'sonner'
@@ -57,7 +57,7 @@ export default function SundayMassForm() {
     setError(null)
   }
 
-  const handleOnFileRemoved = async (e: {uuid: string | null}) => {
+  const handleOnFileRemoved = async (e: { uuid: string | null }) => {
     setIsFileUploaded(false)
 
     if (!e.uuid) {
@@ -158,7 +158,7 @@ export default function SundayMassForm() {
                       await getUploadcareSignature()
                     }
                     localeDefinitionOverride={{
-                      en: esLocale,
+                      en: es,
                     }}
                     classNameUploader='uc-light'
                     pubkey={pubKey}
@@ -175,7 +175,7 @@ export default function SundayMassForm() {
                 </FormItem>
               )}
             />
-            
+
             {error && (
               <div className='rounded-lg border border-red-500 bg-red-50 p-4 text-sm font-medium text-destructive'>
                 {error}
@@ -183,9 +183,7 @@ export default function SundayMassForm() {
             )}
             <Button
               disabled={
-                !form.getValues('parish') ||
-                !isFileUploaded ||
-                isPending
+                !form.getValues('parish') || !isFileUploaded || isPending
               }
               type='submit'
             >

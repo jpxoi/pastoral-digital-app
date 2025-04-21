@@ -12,7 +12,7 @@ import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 export async function postNewMassRecord(
-  formValues: z.infer<typeof NewSundayMassFormSchema>,
+  formValues: z.infer<typeof NewSundayMassFormSchema>
 ) {
   const validatedFields = NewSundayMassFormSchema.safeParse(formValues)
 
