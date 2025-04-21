@@ -41,7 +41,6 @@ export default function SundayMassForm() {
     defaultValues: {
       parish: '',
       evidenceUrl: '',
-      evidenceFileHash: '',
     },
   })
 
@@ -51,7 +50,6 @@ export default function SundayMassForm() {
     cdnUrl: string
   }) => {
     form.setValue('evidenceUrl', file.cdnUrl)
-    form.setValue('evidenceFileHash', file.uuid)
     setIsFileUploaded(true)
     toast.success('Archivo subido correctamente.')
     setError(null)
@@ -83,7 +81,6 @@ export default function SundayMassForm() {
       })
       .finally(() => {
         form.resetField('evidenceUrl')
-        form.resetField('evidenceFileHash')
       })
   }
 

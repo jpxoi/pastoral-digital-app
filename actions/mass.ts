@@ -29,7 +29,7 @@ export async function postNewMassRecord(
     }
   }
 
-  const { parish, evidenceUrl, evidenceFileHash } = validatedFields.data
+  const { parish, evidenceUrl } = validatedFields.data
 
   const today = new Date()
 
@@ -49,7 +49,6 @@ export async function postNewMassRecord(
     parish,
     evidenceUrl,
     sundayDate: `${year}-${month}-${day}`,
-    evidenceFileHash,
   })
     .then(async () => {
       revalidatePath('/dashboard')
