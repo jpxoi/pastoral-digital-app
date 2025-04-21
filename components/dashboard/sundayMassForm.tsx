@@ -18,21 +18,20 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { UploadButton } from '@/lib/uploadthing'
-import { IconFile, IconLoader2, IconTrash } from '@tabler/icons-react'
+import esLocale from '@/lib/uploadcare/locale/es'
+import { IconLoader2 } from '@tabler/icons-react'
 
 import { toast } from 'sonner'
-import { FileInfoProps } from '@/types'
-import { deleteFile } from '@/actions/file'
+import { getUploadcareSignature, removeFile } from '@/actions/file'
 import { postNewMassRecord } from '@/actions/mass'
 
-export default function SundayMassForm() {
-  const [fileInfo, setFileInfo] = useState<FileInfoProps>({
-    name: '',
-    hash: '',
-    key: '',
-  })
+import { FileUploaderMinimal } from '@uploadcare/react-uploader/next'
+import '@uploadcare/react-uploader/core.css'
 
+const pubKey = process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY as string
+
+export default function SundayMassForm() {
+  const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false)
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
@@ -42,15 +41,58 @@ export default function SundayMassForm() {
     defaultValues: {
       parish: '',
       evidenceUrl: '',
+      evidenceFileHash: '',
     },
   })
+
+  const handleOnFileUploadSuccess = (file: {
+    name: string
+    uuid: string
+    cdnUrl: string
+  }) => {
+    form.setValue('evidenceUrl', file.cdnUrl)
+    form.setValue('evidenceFileHash', file.uuid)
+    setIsFileUploaded(true)
+    toast.success('Archivo subido correctamente.')
+    setError(null)
+  }
+
+  const handleOnFileRemoved = async (e: {uuid: string | null}) => {
+    setIsFileUploaded(false)
+
+    if (!e.uuid) {
+      toast.success(
+        'El archivo se eliminó correctamente de nuestros servidores.'
+      )
+      return
+    }
+
+    await removeFile(e.uuid)
+      .then((res) => {
+        if (!res.success) {
+          throw new Error(
+            'Ocurrió un error al eliminar el archivo. No te preocupes, aún puedes subir uno nuevo.'
+          )
+        }
+        toast.success(
+          'El archivo se eliminó correctamente de nuestros servidores.'
+        )
+      })
+      .catch((error) => {
+        toast.warning(error.message)
+      })
+      .finally(() => {
+        form.resetField('evidenceUrl')
+        form.resetField('evidenceFileHash')
+      })
+  }
 
   const onSubmit = async (data: z.infer<typeof NewSundayMassFormSchema>) => {
     setSuccess(null)
     setError(null)
 
     startTransition(async () => {
-      await postNewMassRecord(data, fileInfo.hash)
+      await postNewMassRecord(data)
         .then((response: { success?: string; error?: string }) => {
           if (response.error) {
             setError(response.error)
@@ -60,7 +102,6 @@ export default function SundayMassForm() {
           if (response.success) {
             setSuccess(response.success)
             form.reset()
-            setFileInfo({ name: '', hash: '', key: '' })
           }
         })
         .catch((error) => {
@@ -109,82 +150,22 @@ export default function SundayMassForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Evidencia</FormLabel>
-                  {field.value ? (
-                    <div className='flex flex-row items-center justify-between gap-4 rounded-md border border-dashed border-muted-foreground bg-muted p-2 text-primary'>
-                      <div className='flex flex-row items-center gap-2 text-muted-foreground'>
-                        <IconFile size={20} />
-                        <span className='max-w-56 truncate text-sm font-medium text-muted-foreground sm:max-w-80'>
-                          {fileInfo.name}
-                        </span>
-                      </div>
-                      <Button
-                        variant='ghost'
-                        size='sm'
-                        className='text-destructive hover:bg-destructive/10 hover:text-destructive'
-                        onClick={async () => {
-                          field.onChange('')
-                          await deleteFile(fileInfo.key)
-                            .then(() => {
-                              toast.success(
-                                'El archivo se eliminó correctamente.'
-                              )
-                            })
-                            .catch((error) => {
-                              toast.warning(
-                                'Ocurrió un error al eliminar el archivo. No te preocupes, aún puedes subir uno nuevo.'
-                              )
-                            })
-                            .finally(() => {
-                              setFileInfo({ name: '', hash: '', key: '' })
-                            })
-                        }}
-                      >
-                        <IconTrash className='size-4' />
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className='flex flex-row items-center justify-start gap-2'>
-                      <UploadButton
-                        className='ut-button:cursor-pointer ut-button:border ut-button:border-input ut-button:bg-background ut-button:text-sm ut-button:text-accent-foreground ut-button:hover:bg-accent ut-button:hover:text-accent-foreground ut-allowed-content:hidden ut-button:ut-readying:opacity-50'
-                        content={{
-                          button({ ready, uploadProgress, isUploading }) {
-                            if (isUploading) {
-                              if (uploadProgress === 100) {
-                                return (
-                                  <div className='z-50 text-white'>
-                                    <IconLoader2 className='animate-spin' />
-                                  </div>
-                                )
-                              }
-                              return <div>{uploadProgress}%</div>
-                            }
-                            if (ready) return <div>Subir archivo</div>
-                            return 'Cargando...'
-                          },
-                        }}
-                        endpoint='imageUploader'
-                        onUploadBegin={() => {
-                          setError(null)
-                        }}
-                        onClientUploadComplete={(res) => {
-                          field.onChange(res[0].ufsUrl)
-                          setFileInfo({
-                            name: res[0].name,
-                            hash: res[0].fileHash,
-                            key: res[0].key,
-                          })
-                          setError(null)
-                        }}
-                        onUploadError={(error: Error) => {
-                          field.onChange('')
-                          setFileInfo({ name: '', hash: '', key: '' })
-                          setError(
-                            'Ha ocurrido un error al subir el archivo. Asegúrate de que el archivo no exceda los 4 MB.'
-                          )
-                        }}
-                      />
-                    </div>
-                  )}
+                  <FileUploaderMinimal
+                    maxLocalFileSizeBytes={4000000}
+                    multiple={false}
+                    accept='image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                    secureUploadsSignatureResolver={async () =>
+                      await getUploadcareSignature()
+                    }
+                    localeDefinitionOverride={{
+                      en: esLocale,
+                    }}
+                    classNameUploader='uc-light'
+                    pubkey={pubKey}
+                    onFileUploadSuccess={handleOnFileUploadSuccess}
+                    onFileRemoved={handleOnFileRemoved}
+                    imageShrink='1440x1080 90%'
+                  />
                   <FormDescription>
                     Sube como evidencia de tu participación una foto de la
                     celebración, o un documento con tu reflexión sobre el
@@ -194,6 +175,7 @@ export default function SundayMassForm() {
                 </FormItem>
               )}
             />
+            
             {error && (
               <div className='rounded-lg border border-red-500 bg-red-50 p-4 text-sm font-medium text-destructive'>
                 {error}
@@ -202,7 +184,7 @@ export default function SundayMassForm() {
             <Button
               disabled={
                 !form.getValues('parish') ||
-                !form.getValues('evidenceUrl') ||
+                !isFileUploaded ||
                 isPending
               }
               type='submit'
