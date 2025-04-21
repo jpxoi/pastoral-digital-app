@@ -128,3 +128,7 @@ body {
     transform: translate(0) rotate(calc(var(--s, 1) * 180deg));
   }
 }
+
+uc-copyright {
+  display: none !important;
+}
