@@ -1,4 +1,4 @@
-export default es = {
+const es = {
   'locale-id': 'es',
   'social-source-lang': 'es',
   'upload-file': 'Subir archivo',
@@ -128,3 +128,5 @@ export default es = {
   'a11y-file-item-status': 'El archivo {{fileName}} está en estado {{status}}',
   'waiting-for': 'Esperando por {{source}}',
 }
+
+export default es
