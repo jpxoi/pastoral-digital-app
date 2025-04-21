@@ -13,11 +13,11 @@ export const ourFileRouter = {
       maxFileCount: 1,
     },
     pdf: {
-      maxFileSize: '1MB',
+      maxFileSize: '4MB',
       maxFileCount: 1,
     },
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
-      maxFileSize: '1MB',
+      maxFileSize: '4MB',
       maxFileCount: 1,
     },
   })

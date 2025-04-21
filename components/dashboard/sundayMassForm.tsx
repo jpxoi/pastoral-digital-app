@@ -159,17 +159,17 @@ export default function SundayMassForm() {
                           setFileName('')
                           setFileHash('')
                           setError(
-                            'Ha ocurrido un error al subir la imagen. Asegúrate de que la imagen no exceda los 4 MB.'
+                            'Ha ocurrido un error al subir el archivo. Asegúrate de que el archivo no exceda los 4 MB.'
                           )
                         }}
                       />
                     </div>
                   )}
-                  <FormDescription>
+                    <FormDescription>
                     Sube como evidencia de tu participación una foto de la
-                    celebración (máx. 4MB), o un documento con tu reflexión
-                    sobre el evangelio del día en formato PDF o Word (máx. 1MB).
-                  </FormDescription>
+                    celebración, o un documento con tu reflexión sobre el
+                    evangelio del día en formato PDF o Word (máx. 4 MB).
+                    </FormDescription>
                   <FormMessage />
                   {fileUploadError && (
                     <p className='text-sm font-medium text-destructive'>
