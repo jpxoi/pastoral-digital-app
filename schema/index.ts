@@ -13,10 +13,7 @@ export const OnboardingFormSchema = z.object({
     .trim()
     .nonempty('El apellido es requerido para crear un usuario.')
     .transform((val) => val.trim()),
-  nickname: z
-    .string()
-    .trim()
-    .optional(),
+  nickname: z.string().trim().optional(),
   username: z
     .string()
     .min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
@@ -87,4 +84,9 @@ export const NewSundayMassFormSchema = z.object({
     .trim()
     .nonempty('La evidencia de asistencia es requerida')
     .url('La URL de la evidencia no es válida'),
+  evidenceFileHash: z
+    .string()
+    .trim()
+    .nonempty('El hash de la evidencia es requerido')
+    .transform((val) => val.trim()),
 })
