@@ -21,10 +21,13 @@ import { UploadButton } from '@/lib/uploadthing'
 import { useState, useTransition } from 'react'
 import { IconFile, IconLoader2, IconTrash } from '@tabler/icons-react'
 import { postNewMassRecord } from '@/actions/mass'
+import { deleteFile } from '@/actions/file'
+import { toast } from 'sonner'
 
 export default function SundayMassForm() {
   const [fileName, setFileName] = useState<string>('')
   const [fileHash, setFileHash] = useState<string>('')
+  const [fileKey, setFileKey] = useState<string>('')
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [fileUploadError, setFileUploadError] = useState<string | null>(null)
@@ -55,6 +58,7 @@ export default function SundayMassForm() {
             setSuccess(response.success)
             form.reset()
             setFileName('')
+            setFileHash('')
             setFileUploadError(null)
           }
         })
@@ -116,9 +120,21 @@ export default function SundayMassForm() {
                         variant='ghost'
                         size='sm'
                         className='text-destructive hover:bg-destructive/10 hover:text-destructive'
-                        onClick={() => {
+                        onClick={async () => {
                           field.onChange('')
                           setFileName('')
+                          setFileHash('')
+                          await deleteFile(fileKey)
+                            .then(() => {
+                              toast.success(
+                                'El archivo se eliminó correctamente.'
+                              )
+                            })
+                            .catch((error) => {
+                              toast.warning(
+                                'Ocurrió un error al eliminar el archivo. No te preocupes, aún puedes subir uno nuevo.'
+                              )
+                            })
                         }}
                       >
                         <IconTrash className='size-4' />
@@ -151,6 +167,7 @@ export default function SundayMassForm() {
                         onClientUploadComplete={(res) => {
                           field.onChange(res[0].ufsUrl)
                           setFileName(res[0].name)
+                          setFileKey(res[0].key)
                           setFileHash(res[0].fileHash)
                           setFileUploadError(null)
                         }}
@@ -165,11 +182,11 @@ export default function SundayMassForm() {
                       />
                     </div>
                   )}
-                    <FormDescription>
+                  <FormDescription>
                     Sube como evidencia de tu participación una foto de la
                     celebración, o un documento con tu reflexión sobre el
                     evangelio del día en formato PDF o Word (máx. 4 MB).
-                    </FormDescription>
+                  </FormDescription>
                   <FormMessage />
                   {fileUploadError && (
                     <p className='text-sm font-medium text-destructive'>
