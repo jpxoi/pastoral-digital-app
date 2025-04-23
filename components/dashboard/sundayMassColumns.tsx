@@ -44,11 +44,7 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
       return (
         <div className='flex gap-2'>
           <a
-            href={
-              row.original.evidenceUrl.includes('ucarecdn')
-                ? `${row.original.evidenceUrl}-/format/auto/-/quality/smart_retina/`
-                : row.original.evidenceUrl
-            }
+            href={row.original.evidenceUrl}
             target='_blank'
             rel='noopener noreferrer'
             className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
