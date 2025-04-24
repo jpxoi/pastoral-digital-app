@@ -11,8 +11,8 @@ export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
       header: 'Evento',
       cell: ({ row }) => {
         const eventName = row.original.event.name
-        const checkInTime = row.original.checkInTime
-        const formattedTime = (checkInTime as Date).toLocaleDateString(
+        const checkInTime = new Date(row.original.checkInTime)
+        const formattedTime = checkInTime.toLocaleDateString(
           'es-PE',
           {
             day: 'numeric',

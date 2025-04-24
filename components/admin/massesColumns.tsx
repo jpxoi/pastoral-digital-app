@@ -98,18 +98,19 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Fecha y Hora' />
     ),
-    cell: ({ row }) => (
-      <div className='text-nowrap'>
-        {row.original.createdAt?.toLocaleDateString('es-PE', {
-          weekday: 'short',
-          day: 'numeric',
-          month: 'short',
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'America/Lima',
-        })}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const createdAt = new Date(row.original.createdAt)
+      const formattedTime = createdAt.toLocaleString('es-PE', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Lima',
+      })
+
+      return <div className='text-nowrap'>{formattedTime}</div>
+    },
   },
   {
     id: 'verificado',
