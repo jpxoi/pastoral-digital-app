@@ -33,7 +33,6 @@ export async function GET(request: NextRequest) {
   // Check cache first
   const cachedEvent = await redis.get(CACHE_KEY)
   if (cachedEvent) {
-    console.log(JSON.stringify(cachedEvent))
     if (
       JSON.stringify(cachedEvent) ===
       '{"error":"No hay ningún evento programado para hoy."}'
