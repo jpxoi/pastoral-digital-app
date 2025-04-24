@@ -1,6 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { redis } from './lib/upstash'
 
 const isHomeRoute = createRouteMatcher(['/'])
 
@@ -16,7 +15,7 @@ const isProtectedRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  const isInMaintenanceMode = await redis.get('isInMaintenanceMode')
+  const isInMaintenanceMode = false
 
   if (isInMaintenanceMode) {
     req.nextUrl.pathname = `/maintenance`
