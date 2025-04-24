@@ -188,7 +188,7 @@ export const getLastAttendanceRecord = async () => {
   })
 }
 
-export const getAttendanceRecordsByUserId = cache(
+export const getAttendanceRecordsByUserId = unstable_cache(
   async (userId: SelectUser['id']) => {
     return db.query.attendanceRecordsTable.findMany({
       where: eq(attendanceRecordsTable.userId, userId),
@@ -200,6 +200,11 @@ export const getAttendanceRecordsByUserId = cache(
       },
       limit: 100,
     })
+  },
+  ['getAttendanceRecordsByUserId'],
+  {
+    revalidate: CACHE_DURATION.HOUR,
+    tags: ['attendance'],
   }
 )
 
@@ -419,7 +424,7 @@ export const getAllMasses = unstable_cache(
   }
 )
 
-export const getSundayMassesRecordsByUserId = cache(
+export const getSundayMassesRecordsByUserId = unstable_cache(
   async (userId: SelectUser['id']) => {
     return db.query.sundayMassesTable.findMany({
       where: eq(sundayMassesTable.userId, userId),
@@ -430,5 +435,10 @@ export const getSundayMassesRecordsByUserId = cache(
       },
       limit: 100,
     })
+  },
+  ['getSundayMassesRecordsByUserId'],
+  {
+    revalidate: CACHE_DURATION.HOUR,
+    tags: ['sundayMasses'],
   }
 )
