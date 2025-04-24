@@ -57,6 +57,8 @@ export enum UserSchedule {
   FULL_TIME = 'full-time',
   PRIMERA_COMUNION = 'primera-comunion',
   CONFIRMACION = 'confirmacion',
+  LOGISTICA = 'logistica',
+  SEMILLEROS = 'semilleros',
 }
 
 export enum AttendanceRecordMethod {
