@@ -2,13 +2,13 @@ import { checkRole } from '@/lib/roles'
 import { getTodayEvent } from '@/queries/select'
 import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { redis } from '@/lib/upstash'
 
 const CACHE_KEY = 'today-event'
 const CACHE_EXPIRATION = 60 * 60 * 12 // 12 hours in seconds
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const { userId } = await auth()
   if (!userId) {
     return NextResponse.json(

@@ -2,9 +2,9 @@ import { checkRole } from '@/lib/roles'
 import { getAllUsers } from '@/queries/select'
 import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const { userId } = await auth()
   if (!userId) {
     return NextResponse.json(
