@@ -145,7 +145,9 @@ export default function QrScannerTab() {
 
             const eventDate =
               scannedUserSchedule.data === UserSchedule.FULL_TIME ||
-              scannedUserSchedule.data === UserSchedule.PRIMERA_COMUNION
+              scannedUserSchedule.data === UserSchedule.PRIMERA_COMUNION ||
+              scannedUserSchedule.data === UserSchedule.LOGISTICA ||
+              scannedUserSchedule.data === UserSchedule.SEMILLEROS
                 ? event.date
                 : event.secondTurnDate
 
