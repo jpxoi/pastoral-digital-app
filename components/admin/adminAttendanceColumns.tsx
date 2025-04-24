@@ -5,7 +5,7 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { FetchAttendancePropsWithEvent } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
-import { DataTableRowActions } from '../ui/data-table-row-actions'
+import { AdminAttendanceRowActions } from './adminAttendanceRowActions'
 
 export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
   [
@@ -82,7 +82,7 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
     {
       id: 'acciones',
       cell: ({ row }) => {
-        return <DataTableRowActions row={row} />
+        return <AdminAttendanceRowActions row={row} />
       },
     },
   ]
