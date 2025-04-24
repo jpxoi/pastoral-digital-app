@@ -109,16 +109,14 @@ export default function EventFillAbsenteesButton({
     } else {
       startTransition(() => {
         toast.promise(
-          registerAttendanceRecord(
-            {
-              eventId: eventId,
-              userId: values.userId,
-              registeredBy: registeredBy?.id || '',
-              checkInTime: new Date(),
-              method: AttendanceRecordMethod.MANUAL,
-              status: values.status,
-            }
-          ),
+          registerAttendanceRecord({
+            eventId: eventId,
+            userId: values.userId,
+            registeredBy: registeredBy?.id || '',
+            checkInTime: new Date(),
+            method: AttendanceRecordMethod.MANUAL,
+            status: values.status,
+          }),
           {
             loading: 'Registrando asistencia...',
             success: (data: { error?: string; success?: string }) => {

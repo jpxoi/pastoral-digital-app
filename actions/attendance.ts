@@ -18,9 +18,7 @@ import { AttendanceRecordMethod, AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
 
-export const registerAttendanceRecord = async (
-  data: InsertAttendance,
-) => {
+export const registerAttendanceRecord = async (data: InsertAttendance) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
@@ -47,9 +45,7 @@ export const registerAttendanceRecord = async (
     })
 }
 
-export const registerAttendanceRecords = async (
-  data: InsertAttendance[],
-) => {
+export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
@@ -75,7 +71,7 @@ export const registerAttendanceRecords = async (
 
 export const setAttendanceRecordStatus = async (
   status: AttendanceStatus,
-  recordId: string,
+  recordId: string
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para modificar asistencias.' }

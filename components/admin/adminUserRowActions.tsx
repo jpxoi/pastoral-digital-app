@@ -17,14 +17,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import {
-  IconCopy,
-  IconPencil,
-  IconQrcode,
-} from '@tabler/icons-react'
-import {
-  IconTrash,
-} from '@tabler/icons-react'
+import { IconCopy, IconPencil, IconQrcode } from '@tabler/icons-react'
+import { IconTrash } from '@tabler/icons-react'
 import { IconDots } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { UserSchedule } from '@/types'
@@ -39,7 +33,7 @@ interface DataTableRowActionsProps {
 
 const handleSetUserSchedule = async (
   schedule: UserSchedule,
-  userId: SelectUser['id'] 
+  userId: SelectUser['id']
 ) => {
   toast.promise(setUserSchedule(schedule, userId), {
     loading: 'Cambiando programa del catequista...',
