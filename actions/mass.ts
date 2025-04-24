@@ -8,7 +8,7 @@ import { NewSundayMassFormSchema } from '@/schema'
 import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidatePath } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
 export async function postNewMassRecord(
@@ -51,7 +51,7 @@ export async function postNewMassRecord(
     sundayDate: `${year}-${month}-${day}`,
   })
     .then(async () => {
-      revalidatePath('/dashboard')
+      revalidateTag('sundayMasses')
       return {
         success: 'Se ha enviado tu registro de asistencia a la misa con éxito.',
       }
@@ -89,7 +89,7 @@ export async function verifyMassRecord(massId: string) {
 
   return await updateSundayMassRecordVerification(massId, true, verifiedById)
     .then(async () => {
-      revalidatePath('/admin/masses')
+      revalidateTag('sundayMasses')
       return {
         success: 'Se ha verificado la asistencia a misa correctamente.',
       }
@@ -127,7 +127,7 @@ export async function rejectMassRecord(massId: string) {
 
   return await updateSundayMassRecordVerification(massId, false, verifiedById)
     .then(async () => {
-      revalidatePath('/admin/masses')
+      revalidateTag('sundayMasses')
       return {
         success: 'Se ha rechazado la asistencia a misa correctamente.',
       }
