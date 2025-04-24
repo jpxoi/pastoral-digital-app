@@ -141,7 +141,7 @@ export async function fetchUserSchedule(userId: string) {
     }
     
     // Cache the schedule for 1 month
-    await redis.set(cacheKey, user.schedule, { ex: 2592000 }) // 1 month in seconds
+    await redis.set(cacheKey, user.schedule, { ex: 3600 * 24 * 30 }) // 1 month in seconds
 
     return {
       success: 'Horario del usuario obtenido correctamente',

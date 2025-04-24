@@ -5,10 +5,6 @@ import { auth } from '@clerk/nextjs/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const eventIdParam = searchParams.get('eventId')
-  const eventId = eventIdParam ? parseInt(eventIdParam, 10) : null
-
   const { userId } = await auth()
   if (!userId) {
     return NextResponse.json(
