@@ -29,13 +29,13 @@ export default function UserTableSkeleton() {
           <TableHeader>
             <TableRow>
               <TableHead>Nombre Completo</TableHead>
-              <TableHead>Nombre de Usuario</TableHead>
               <TableHead>Correo Electrónico</TableHead>
               <TableHead>Número de Teléfono</TableHead>
               <TableHead>Fecha de Nacimiento</TableHead>
               <TableHead>Edad</TableHead>
               <TableHead>Código</TableHead>
               <TableHead>Categoría</TableHead>
+              <TableHead>Programa</TableHead>
               <TableHead>
                 <div></div>
               </TableHead>
@@ -46,9 +46,6 @@ export default function UserTableSkeleton() {
               <TableRow key={index}>
                 <TableCell>
                   <Skeleton className='h-5 w-72' />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className='h-5 w-28' />
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-5 w-48' />
@@ -64,6 +61,9 @@ export default function UserTableSkeleton() {
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-5 w-11' />
+                </TableCell>
+                <TableCell>
+                  <Skeleton className='h-5 w-20' />
                 </TableCell>
                 <TableCell>
                   <Skeleton className='h-5 w-20' />
