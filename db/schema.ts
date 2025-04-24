@@ -18,6 +18,7 @@ import {
   UserRole,
   UserSchedule,
 } from '@/types'
+import { v7 as uuidv7 } from 'uuid'
 
 /* Enums */
 
@@ -36,6 +37,8 @@ export const userScheduleEnum = pgEnum('user_schedule_enum', [
   UserSchedule.FULL_TIME,
   UserSchedule.PRIMERA_COMUNION,
   UserSchedule.CONFIRMACION,
+  UserSchedule.LOGISTICA,
+  UserSchedule.SEMILLEROS,
 ])
 
 export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
@@ -80,7 +83,9 @@ export const usersTable = pgTable('users', {
 export const attendanceRecordsTable = pgTable(
   'attendance_records',
   {
-    id: uuid().primaryKey().defaultRandom(),
+    id: uuid()
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
     userId: text('user_id')
       .references(() => usersTable.id, { onDelete: 'cascade' })
       .notNull(),
@@ -146,7 +151,9 @@ export const locationsTable = pgTable('locations', {
 export const sundayMassesTable = pgTable(
   'sunday_masses',
   {
-    id: uuid().primaryKey().defaultRandom(),
+    id: uuid()
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
     userId: text('user_id')
       .references(() => usersTable.id, { onDelete: 'cascade' })
       .notNull(),
@@ -177,6 +184,7 @@ export const attendanceRecordsRelations = relations(
       user: one(usersTable, {
         fields: [attendanceRecordsTable.userId],
         references: [usersTable.id],
+        relationName: 'user',
       }),
       event: one(eventsTable, {
         fields: [attendanceRecordsTable.eventId],
@@ -185,6 +193,7 @@ export const attendanceRecordsRelations = relations(
       registeredByUser: one(usersTable, {
         fields: [attendanceRecordsTable.registeredBy],
         references: [usersTable.id],
+        relationName: 'registeredByUser',
       }),
     }
   }
@@ -192,9 +201,16 @@ export const attendanceRecordsRelations = relations(
 
 export const usersRelations = relations(usersTable, ({ many }) => {
   return {
-    attendanceRecords: many(attendanceRecordsTable),
-    attendanceRecordsRegisteredBy: many(attendanceRecordsTable),
-    sundayMasses: many(sundayMassesTable),
+    attendanceRecords: many(attendanceRecordsTable, { relationName: 'user' }),
+    attendanceRecordsRegisteredBy: many(attendanceRecordsTable, {
+      relationName: 'registeredByUser',
+    }),
+    sundayMasses: many(sundayMassesTable, {
+      relationName: 'user',
+    }),
+    sundayMassesVerifiedBy: many(sundayMassesTable, {
+      relationName: 'verifier',
+    }),
   }
 })
 
@@ -219,10 +235,12 @@ export const sundayMassesRelations = relations(sundayMassesTable, ({ one }) => {
     user: one(usersTable, {
       fields: [sundayMassesTable.userId],
       references: [usersTable.id],
+      relationName: 'user',
     }),
     verifier: one(usersTable, {
       fields: [sundayMassesTable.verifiedBy],
       references: [usersTable.id],
+      relationName: 'verifier',
     }),
   }
 })
