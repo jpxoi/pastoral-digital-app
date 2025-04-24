@@ -4,7 +4,7 @@ import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { FetchAttendanceProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
-import { DataTableRowActions } from '../ui/data-table-row-actions'
+import { AdminAttendanceRowActions } from '../admin/adminAttendanceRowActions'
 
 export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
@@ -75,7 +75,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
     id: 'acciones',
     cell: ({ row }) => {
-      return <DataTableRowActions row={row} />
+      return <AdminAttendanceRowActions row={row} />
     },
   },
 ]
