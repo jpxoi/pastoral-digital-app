@@ -74,8 +74,9 @@ export const usersTable = pgTable('users', {
   studentCode: text('student_code'),
   role: userRoleEnum().default(UserRole.MEMBER).notNull(),
   schedule: userScheduleEnum().default(UserSchedule.FULL_TIME).notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
+    .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 })
@@ -100,8 +101,9 @@ export const attendanceRecordsTable = pgTable(
     method: AttendanceRecordMethodEnum()
       .default(AttendanceRecordMethod.QR)
       .notNull(),
-    createdAt: timestamp('created_at').defaultNow(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
+      .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
@@ -125,8 +127,9 @@ export const eventsTable = pgTable(
     locationId: integer('location_id')
       .references(() => locationsTable.id, { onDelete: 'cascade' })
       .notNull(),
-    createdAt: timestamp('created_at').defaultNow(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
+      .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
@@ -141,8 +144,9 @@ export const locationsTable = pgTable('locations', {
   postalCode: text('postal_code').notNull(),
   country: text('country').default('Perú').notNull(),
   googleMapsUrl: text('google_maps_url').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
+    .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
 })
@@ -163,8 +167,9 @@ export const sundayMassesTable = pgTable(
     verified: boolean('verified').default(false).notNull(),
     verifiedBy: text('verified_by').references(() => usersTable.id),
     verifiedAt: timestamp('verified_at'),
-    createdAt: timestamp('created_at').defaultNow(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
+      .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
   },
