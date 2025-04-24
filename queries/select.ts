@@ -9,25 +9,52 @@ import {
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
 import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
+import { unstable_cache } from 'next/cache'
+
+const CACHE_DURATION = {
+  HOUR: 3600,
+  DAY: 3600 * 24,
+  WEEK: 3600 * 24 * 7,
+  MONTH: 3600 * 24 * 28,
+}
 
 /* UsersTable */
-export const getAllUsers = async () => {
-  return db.query.usersTable.findMany({
-    orderBy: (fields) => [
-      sql`${fields.firstName} || ' ' || ${fields.lastName}`,
-    ],
-  })
-}
+export const getAllUsers = unstable_cache(
+  async () => {
+    return db.query.usersTable.findMany({
+      orderBy: (fields) => [
+        sql`${fields.firstName} || ' ' || ${fields.lastName}`,
+      ],
+    })
+  },
+  ['getAllUsers'],
+  {
+    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+    tags: ['users'],
+  }
+)
 
-export const getUserById = async (id: SelectUser['id']) => {
-  return db.query.usersTable.findFirst({
-    where: eq(usersTable.id, id),
-  })
-}
+export const getUserById = unstable_cache(
+  async (id: SelectUser['id']) => {
+    return db.query.usersTable.findFirst({
+      where: eq(usersTable.id, id),
+    })
+  },
+  ['getUserById'],
+  {
+    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+  }
+)
 
-export const countAllUsers = async () => {
-  return db.$count(usersTable)
-}
+export const countAllUsers = unstable_cache(
+  async () => {
+    return db.$count(usersTable)
+  },
+  ['countAllUsers'],
+  {
+    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+  }
+)
 
 export const getUserSchedule = async (userId: SelectUser['id']) => {
   return db.query.usersTable.findFirst({
@@ -38,34 +65,10 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
   })
 }
 
-export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
-  const [
-    stats = {
-      totalOnTime: 0,
-      totalLate: 0,
-      totalAbsences: 0,
-    },
-  ] = await db
-    .select({
-      totalOnTime: count(
-        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
-      ),
-      totalLate: count(
-        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
-      ),
-      totalAbsences: count(
-        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
-      ),
-    })
-    .from(attendanceRecordsTable)
-    .where(eq(attendanceRecordsTable.userId, userId))
-
-  return stats
-}
-
-export const getUserBirthdays = async () => {
-  return db.query.usersTable.findMany({
-    where: sql`
+export const getUserBirthdays = unstable_cache(
+  async () => {
+    return db.query.usersTable.findMany({
+      where: sql`
       (
         to_char(date_of_birth, 'MM-DD') BETWEEN 
           to_char(current_date, 'MM-DD') AND 
@@ -80,12 +83,49 @@ export const getUserBirthdays = async () => {
         )
       )
     `,
-    orderBy: () => [
-      sql`to_char(date_of_birth, 'MM-DD')`,
-      sql`to_char(date_of_birth, 'YYYY')`,
-    ],
-  })
-}
+      orderBy: () => [
+        sql`to_char(date_of_birth, 'MM-DD')`,
+        sql`to_char(date_of_birth, 'YYYY')`,
+      ],
+    })
+  },
+  ['getUserBirthdays'],
+  {
+    revalidate: CACHE_DURATION.WEEK,
+  }
+)
+
+export const getUserAttendanceStats = unstable_cache(
+  async (userId: SelectUser['id']) => {
+    const [
+      stats = {
+        totalOnTime: 0,
+        totalLate: 0,
+        totalAbsences: 0,
+      },
+    ] = await db
+      .select({
+        totalOnTime: count(
+          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
+        ),
+        totalLate: count(
+          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
+        ),
+        totalAbsences: count(
+          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
+        ),
+      })
+      .from(attendanceRecordsTable)
+      .where(eq(attendanceRecordsTable.userId, userId))
+
+    return stats
+  },
+  ['getUserAttendanceStats'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+    tags: ['attendance'],
+  }
+)
 
 export const getUsersWithNoAttendanceRecord = async (
   eventId: SelectEvent['id']
@@ -102,33 +142,45 @@ export const getUsersWithNoAttendanceRecord = async (
     .where(sql`${attendanceRecordsTable.id} IS NULL`)
 }
 
-export const countUsersWithNoAttendanceRecord = async (
-  eventId: SelectEvent['id']
-) => {
-  return db
-    .select({
-      count: count(usersTable.id),
-    })
-    .from(usersTable)
-    .leftJoin(
-      attendanceRecordsTable,
-      sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventId}`
-    )
-    .where(sql`${attendanceRecordsTable.id} IS NULL`)
-    .then((result) => result[0]?.count || 0)
-}
+export const countUsersWithNoAttendanceRecord = unstable_cache(
+  async (eventId: SelectEvent['id']) => {
+    return db
+      .select({
+        count: count(usersTable.id),
+      })
+      .from(usersTable)
+      .leftJoin(
+        attendanceRecordsTable,
+        sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventId}`
+      )
+      .where(sql`${attendanceRecordsTable.id} IS NULL`)
+      .then((result) => result[0]?.count || 0)
+  },
+  ['countUsersWithNoAttendanceRecord'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+    tags: ['attendance'],
+  }
+)
 
 /* AttendanceRecordsTable */
-export const getAllAttendanceRecords = async () => {
-  return db.query.attendanceRecordsTable.findMany({
-    with: {
-      user: true,
-      event: true,
-      registeredByUser: true,
-    },
-    orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
-  })
-}
+export const getAllAttendanceRecords = unstable_cache(
+  async () => {
+    return db.query.attendanceRecordsTable.findMany({
+      with: {
+        user: true,
+        event: true,
+        registeredByUser: true,
+      },
+      orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
+    })
+  },
+  ['getAllAttendanceRecords'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+    tags: ['attendance'],
+  }
+)
 
 export const getLastAttendanceRecord = async () => {
   return db.query.attendanceRecordsTable.findFirst({
@@ -140,192 +192,257 @@ export const getLastAttendanceRecord = async () => {
   })
 }
 
-export const getAttendanceRecordsByUserId = async (
-  userId: SelectUser['id']
-) => {
-  return db.query.attendanceRecordsTable.findMany({
-    where: eq(attendanceRecordsTable.userId, userId),
-    orderBy: (fields) => [desc(fields.id)],
-    with: {
-      user: true,
-      event: true,
-      registeredByUser: true,
-    },
-    limit: 100,
-  })
-}
-
-export const getAttendanceRecordsByEventId = async (
-  eventId: SelectEvent['id']
-) => {
-  return db.query.attendanceRecordsTable.findMany({
-    where: eq(attendanceRecordsTable.eventId, eventId),
-    orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
-    with: {
-      user: true,
-      registeredByUser: true,
-    },
-    limit: 200,
-  })
-}
-
-export const getAttendanceCalendar = async () => {
-  try {
-    // Get all data in a single query with proper joins
-    const calendarData = await db
-      .select({
-        userId: usersTable.id,
-        firstName: usersTable.firstName,
-        lastName: usersTable.lastName,
-        eventId: eventsTable.id,
-        eventDate: eventsTable.date,
-        status: attendanceRecordsTable.status,
-      })
-      .from(usersTable)
-      .leftJoin(eventsTable, sql`1=1`)
-      .leftJoin(
-        attendanceRecordsTable,
-        sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
-      )
-      .where(sql`${eventsTable.date} IS NOT NULL`)
-      .orderBy(
-        sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
-        eventsTable.date
-      )
-
-    // Group the data by user
-    const userMap = new Map<string, Record<string, string | null>>()
-
-    for (const record of calendarData) {
-      if (!userMap.has(record.userId)) {
-        const fullName =
-          record.firstName && record.lastName
-            ? `${record.firstName} ${record.lastName}`
-            : record.firstName || record.lastName || 'Sin nombre'
-
-        userMap.set(record.userId, {
-          id: record.userId,
-          fullName,
-        })
-      }
-
-      if (record.eventDate) {
-        const dateKey = record.eventDate.toISOString().split('T')[0]
-        userMap.get(record.userId)![dateKey] = record.status || null
-      }
-    }
-
-    return Array.from(userMap.values())
-  } catch (error) {
-    console.error('Error generating attendance calendar:', error)
-    return []
+export const getAttendanceRecordsByUserId = unstable_cache(
+  async (userId: SelectUser['id']) => {
+    return db.query.attendanceRecordsTable.findMany({
+      where: eq(attendanceRecordsTable.userId, userId),
+      orderBy: (fields) => [desc(fields.id)],
+      with: {
+        user: true,
+        event: true,
+        registeredByUser: true,
+      },
+      limit: 100,
+    })
+  },
+  ['getAttendanceRecordsByUserId'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+    tags: ['attendance'],
   }
-}
+)
+
+export const getAttendanceRecordsByEventId = unstable_cache(
+  async (eventId: SelectEvent['id']) => {
+    return db.query.attendanceRecordsTable.findMany({
+      where: eq(attendanceRecordsTable.eventId, eventId),
+      orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
+      with: {
+        user: true,
+        registeredByUser: true,
+      },
+      limit: 200,
+    })
+  },
+  ['getAttendanceRecordsByEventId'],
+  {
+    revalidate: CACHE_DURATION.HOUR,
+    tags: ['attendance'],
+  }
+)
+
+export const getAttendanceCalendar = unstable_cache(
+  async () => {
+    try {
+      // Get all data in a single query with proper joins
+      const calendarData = await db
+        .select({
+          userId: usersTable.id,
+          firstName: usersTable.firstName,
+          lastName: usersTable.lastName,
+          eventId: eventsTable.id,
+          eventDate: eventsTable.date,
+          status: attendanceRecordsTable.status,
+        })
+        .from(usersTable)
+        .leftJoin(eventsTable, sql`1=1`)
+        .leftJoin(
+          attendanceRecordsTable,
+          sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
+        )
+        .where(sql`${eventsTable.date} IS NOT NULL`)
+        .orderBy(
+          sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
+          eventsTable.date
+        )
+
+      // Group the data by user
+      const userMap = new Map<string, Record<string, string | null>>()
+
+      for (const record of calendarData) {
+        if (!userMap.has(record.userId)) {
+          const fullName =
+            record.firstName && record.lastName
+              ? `${record.firstName} ${record.lastName}`
+              : record.firstName || record.lastName || 'Sin nombre'
+
+          userMap.set(record.userId, {
+            id: record.userId,
+            fullName,
+          })
+        }
+
+        if (record.eventDate) {
+          const dateKey = record.eventDate.toISOString().split('T')[0]
+          userMap.get(record.userId)![dateKey] = record.status || null
+        }
+      }
+
+      return Array.from(userMap.values())
+    } catch (error) {
+      console.error('Error generating attendance calendar:', error)
+      return []
+    }
+  },
+  ['getAttendanceCalendar'],
+  {
+    revalidate: CACHE_DURATION.HOUR,
+    tags: ['attendance'],
+  }
+)
 
 /* EventsTable */
-export const getAllEvents = async () => {
-  return db.query.eventsTable.findMany({
-    orderBy: (fields) => [asc(fields.date)],
-  })
-}
+export const getAllEvents = unstable_cache(
+  async () => {
+    return db.query.eventsTable.findMany({
+      orderBy: (fields) => [asc(fields.date)],
+    })
+  },
+  ['getAllEvents'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+  }
+)
 
-export const getEventById = async (id: SelectEvent['id']) => {
-  return db.query.eventsTable.findFirst({
-    where: eq(eventsTable.id, id),
-  })
-}
+export const getEventById = unstable_cache(
+  async (id: SelectEvent['id']) => {
+    return db.query.eventsTable.findFirst({
+      where: eq(eventsTable.id, id),
+    })
+  },
+  ['getEventById'],
+  {
+    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+  }
+)
 
-export const getEventAttendanceStats = async (eventId: SelectEvent['id']) => {
-  const [
-    stats = {
-      totalOnTime: 0,
-      totalLate: 0,
-      totalLateJustified: 0,
-      totalAbsentees: 0,
-      totalAbsenteesJustified: 0,
-    },
-  ] = await db
-    .select({
-      totalOnTime: count(
-        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
-      ),
-      totalLate: count(
-        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
-      ),
-      totalLateJustified: count(
-        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.TARDANZA_JUSTIFICADA} then 1 end`
-      ),
-      totalAbsentees: count(
-        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
-      ),
-      totalAbsenteesJustified: count(
-        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.FALTA_JUSTIFICADA} then 1 end`
+export const getEventAttendanceStats = unstable_cache(
+  async (eventId: SelectEvent['id']) => {
+    const [
+      stats = {
+        totalOnTime: 0,
+        totalLate: 0,
+        totalLateJustified: 0,
+        totalAbsentees: 0,
+        totalAbsenteesJustified: 0,
+      },
+    ] = await db
+      .select({
+        totalOnTime: count(
+          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
+        ),
+        totalLate: count(
+          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
+        ),
+        totalLateJustified: count(
+          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.TARDANZA_JUSTIFICADA} then 1 end`
+        ),
+        totalAbsentees: count(
+          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
+        ),
+        totalAbsenteesJustified: count(
+          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.FALTA_JUSTIFICADA} then 1 end`
+        ),
+      })
+      .from(attendanceRecordsTable)
+      .where(eq(attendanceRecordsTable.eventId, eventId))
+      .groupBy() // Group all results together
+
+    return stats
+  },
+  ['getEventAttendanceStats'],
+  {
+    revalidate: CACHE_DURATION.HOUR,
+    tags: ['attendance'],
+  }
+)
+
+export const getUpcomingEvents = unstable_cache(
+  async () => {
+    return db.query.eventsTable.findMany({
+      where: sql`date >= current_date`,
+      orderBy: (fields) => [fields.date],
+      with: {
+        location: true,
+      },
+      limit: 10,
+    })
+  },
+  ['getUpcomingEvents'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+  }
+)
+
+export const getPastEvents = unstable_cache(
+  async () => {
+    return db.query.eventsTable.findMany({
+      where: sql`date < current_date`,
+      orderBy: (fields) => [desc(fields.date)],
+      with: {
+        location: true,
+      },
+      limit: 10,
+    })
+  },
+  ['getPastEvents'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+  }
+)
+
+export const getTodayEvent = unstable_cache(
+  async () => {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return db.query.eventsTable.findFirst({
+      where: between(
+        eventsTable.date,
+        today,
+        new Date(today.getTime() + 86400000)
       ),
     })
-    .from(attendanceRecordsTable)
-    .where(eq(attendanceRecordsTable.eventId, eventId))
-    .groupBy() // Group all results together
-
-  return stats
-}
-
-export const getUpcomingEvents = async () => {
-  return db.query.eventsTable.findMany({
-    where: sql`date >= current_date`,
-    orderBy: (fields) => [fields.date],
-    with: {
-      location: true,
-    },
-    limit: 10,
-  })
-}
-
-export const getPastEvents = async () => {
-  return db.query.eventsTable.findMany({
-    where: sql`date < current_date`,
-    orderBy: (fields) => [desc(fields.date)],
-    with: {
-      location: true,
-    },
-    limit: 10,
-  })
-}
-
-export const getTodayEvent = async () => {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  return db.query.eventsTable.findFirst({
-    where: between(
-      eventsTable.date,
-      today,
-      new Date(today.getTime() + 86400000)
-    ),
-  })
-}
+  },
+  ['getTodayEvent'],
+  {
+    revalidate: CACHE_DURATION.DAY,
+  }
+)
 
 /* MassesTable */
-export const getAllMasses = async () => {
-  return db.query.sundayMassesTable.findMany({
-    orderBy: (fields) => [desc(fields.id)],
-    with: {
-      user: true,
-      verifier: true,
-    },
-  })
-}
+export const getAllMasses = unstable_cache(
+  async () => {
+    return db.query.sundayMassesTable.findMany({
+      orderBy: (fields) => [desc(fields.id)],
+      with: {
+        user: true,
+        verifier: true,
+      },
+    })
+  },
+  ['getAllMasses'],
+  {
+    revalidate: 3600, // 1 hour
+    tags: ['sundayMasses'],
+  }
+)
 
-/* Sunday Masses Table */
-export const getSundayMassesRecordsByUserId = async (
-  userId: SelectUser['id']
-) => {
-  return db.query.sundayMassesTable.findMany({
-    where: eq(sundayMassesTable.userId, userId),
-    orderBy: (fields) => [desc(fields.id)],
-    with: {
-      user: true,
-      verifier: true,
-    },
-    limit: 100,
-  })
-}
+export const getSundayMassesRecordsByUserId = unstable_cache(
+  async (userId: SelectUser['id']) => {
+    return db.query.sundayMassesTable.findMany({
+      where: eq(sundayMassesTable.userId, userId),
+      orderBy: (fields) => [desc(fields.id)],
+      with: {
+        user: true,
+        verifier: true,
+      },
+      limit: 100,
+    })
+  },
+  ['getSundayMassesRecordsByUserId'],
+  {
+    revalidate: 3600 * 24, // 24 hours
+    tags: ['sundayMasses'],
+  }
+)
