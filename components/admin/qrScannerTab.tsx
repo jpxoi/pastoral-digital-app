@@ -53,7 +53,6 @@ export default function QrScannerTab() {
       const json = await data.json()
 
       if (!data.ok) {
-        console.log("Estoy corriendo el error basado en data.ok")
         toast.error(json.error)
         return
       }
