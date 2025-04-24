@@ -13,7 +13,10 @@ export default function Loading() {
             Esta es la lista de catequistas registrados en la aplicación.
           </p>
         </div>
-        <Skeleton className='h-9 w-full sm:w-32' />
+        <div className='grid grid-cols-2 gap-2 sm:flex sm:items-center'>
+          <Skeleton className='h-9 w-full sm:w-32' />
+          <Skeleton className='h-9 w-full sm:w-32' />
+        </div>
       </div>
 
       <UserTableSkeleton />

@@ -4,6 +4,7 @@ import OfflineAlert from '@/components/shared/offlineAlert'
 import UsersTable from '@/components/admin/usersTable'
 import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 import ExportToCsvUsers from '@/components/shared/exportToCsvUsers'
+import RevalidateButton from '@/components/shared/revalidateButton'
 
 export const metadata: Metadata = {
   title: 'Administrar Catequistas | Pastoral Digital App',
@@ -24,7 +25,10 @@ export default function Page() {
             Esta es la lista de catequistas registrados en la aplicación.
           </p>
         </div>
-        <ExportToCsvUsers />
+        <div className='grid grid-cols-2 gap-2 sm:flex sm:items-center'>
+          <RevalidateButton tag='users' />
+          <ExportToCsvUsers />
+        </div>
       </div>
       <Suspense fallback={<UserTableSkeleton />}>
         <UsersTable />
