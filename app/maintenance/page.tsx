@@ -1,12 +1,8 @@
 import MaintenanceScreen from '@/components/home/maintenanceScreen'
-import { redis } from '@/lib/upstash'
 import { IconBarrierBlock } from '@tabler/icons-react'
 
 export default async function MaintenancePage() {
-  const [startDateTime, endDateTime]: (string | null)[] = await Promise.all([
-    redis.get<string>('maintenanceStartDateTime'),
-    redis.get<string>('maintenanceEndDateTime'),
-  ])
+  const [startDateTime, endDateTime] = ['2025-04-22T10:00:00Z', '2025-04-25T10:00:00Z']
 
   return (
     <div className='flex max-w-md flex-col items-center'>
