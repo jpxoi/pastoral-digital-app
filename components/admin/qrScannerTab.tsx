@@ -48,8 +48,10 @@ export default function QrScannerTab() {
         headers: {
           'Content-Type': 'application/json',
         },
+        cache: 'force-cache',
         next: {
           revalidate: 60 * 60 * 12, // 12 hours
+          tags: ['events'],
         },
       })
 
