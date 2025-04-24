@@ -9,11 +9,10 @@ import {
   getUsersWithNoAttendanceRecord,
   getEventById,
   getLastAttendanceRecord,
-  getAttendanceRecordsByEventId,
 } from '@/queries/select'
 import { InsertAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidatePath } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { checkRole } from '@/lib/roles'
 import { AttendanceRecordMethod, AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
@@ -31,7 +30,7 @@ export const registerAttendanceRecord = async (
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
-      revalidatePath(path || '/admin/records')
+      revalidateTag('attendance')
 
       return {
         success: 'Asistencia registrada correctamente.',
@@ -62,7 +61,7 @@ export const registerAttendanceRecords = async (
 
   return await createAttendanceRecords(data)
     .then(async () => {
-      revalidatePath(path || '/admin/records')
+      revalidateTag('attendance')
 
       return {
         success: 'Asistencias registrada correctamente.',
@@ -93,7 +92,7 @@ export const setAttendanceRecordStatus = async (
 
   return updateAttendanceRecordStatus(status, recordId)
     .then(async () => {
-      revalidatePath(path || '/admin/records')
+      revalidateTag('attendance')
 
       return {
         success: 'Estado de asistencia modificado correctamente.',
@@ -148,7 +147,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
   try {
     await createAttendanceRecords(absenceRecords)
 
-    revalidatePath('/admin/records')
+    revalidateTag('attendance')
 
     return {
       success: 'Faltas rellenadas correctamente.',
@@ -159,21 +158,5 @@ export const fillAbsenceRecords = async (eventId: number) => {
       return { error: handleDbError(error) }
     }
     return { error: 'Ha ocurrido un error al rellenar las faltas del evento.' }
-  }
-}
-
-export const fetchAttendanceRecordsByEventId = async (eventId: number) => {
-  try {
-    const res = await getAttendanceRecordsByEventId(eventId)
-
-    return {
-      success: 'Registros de asistencia obtenidos correctamente.',
-      records: res,
-    }
-  } catch (error) {
-    console.error(error)
-    return {
-      error: 'Ha ocurrido un error al obtener los registros de asistencia.',
-    }
   }
 }
