@@ -117,8 +117,7 @@ export default function EventFillAbsenteesButton({
               checkInTime: new Date(),
               method: AttendanceRecordMethod.MANUAL,
               status: values.status,
-            },
-            `/admin/events/${eventId}`
+            }
           ),
           {
             loading: 'Registrando asistencia...',
