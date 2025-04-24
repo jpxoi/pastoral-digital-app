@@ -97,8 +97,8 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
       size='sm'
       className='max-sm:w-full'
     >
-      <IconFileTypeCsv className='mr-1 h-4 w-4' />
-      Exportar CSV
+      <IconFileTypeCsv className='h-4 w-4' />
+      <span>Exportar CSV</span>
     </Button>
   )
 }

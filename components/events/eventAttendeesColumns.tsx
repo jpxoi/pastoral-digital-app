@@ -29,9 +29,8 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
       <DataTableColumnHeader column={column} title='Hora de Ingreso' />
     ),
     cell: ({ row }) => {
-      const formattedTime = (
-        row.original.checkInTime as Date
-      ).toLocaleTimeString('es-PE', {
+      const checkInTime = new Date(row.original.checkInTime)
+      const formattedTime = checkInTime.toLocaleTimeString('es-PE', {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',

@@ -19,7 +19,6 @@ import {
 } from '@/components/admin/scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
 import { calculateStatus } from '@/lib/attendance'
-import { getEventOfTheDay } from '@/actions/event'
 import { fetchUserSchedule } from '@/actions/user'
 
 import useSound from 'use-sound'
@@ -44,17 +43,24 @@ export default function QrScannerTab() {
 
   useEffect(() => {
     const fetchEvent = async () => {
-      const data = await getEventOfTheDay()
+      const data = await fetch('/api/events/today', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
-      if (data?.error) {
-        toast.error(data.error)
+      const json = await data.json()
+
+      if (!data.ok) {
+        toast.error(json.error)
         return
       }
 
-      if (data?.success && data?.event) {
-        toast.message(`Evento: ${data.event.name}`, {
+      if (json.success && json.event) {
+        toast.message(`Evento: ${json.event.name}`, {
           description: `
-              Hoy a las ${new Date(data.event.date).toLocaleTimeString(
+              Hoy a las ${new Date(json.event.date).toLocaleTimeString(
                 'es-PE',
                 {
                   hour: 'numeric',
@@ -64,7 +70,7 @@ export default function QrScannerTab() {
               )}
             `,
         })
-        setEvent(data.event)
+        setEvent(json.event)
         return
       }
     }

@@ -12,16 +12,19 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
     accessorKey: 'parish',
     header: 'Parroquia',
     cell: ({ row }) => {
-      const createdAt = row.original.createdAt
-      const formattedTime = (createdAt as Date).toLocaleString('es-PE', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZone: 'America/Lima',
-      })
+      const createdAt = new Date(row.original.createdAt)
+      const formattedTime = createdAt.toLocaleString(
+        'es-PE',
+        {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZone: 'America/Lima',
+        }
+      )
 
       return (
         <div className='flex flex-col gap-1 text-left'>

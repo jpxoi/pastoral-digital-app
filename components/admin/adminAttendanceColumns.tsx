@@ -48,18 +48,15 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
         <DataTableColumnHeader column={column} title='Hora de Ingreso' />
       ),
       cell: ({ row }) => {
-        const checkInTime = row.original.checkInTime
-        const formattedTime = (checkInTime as Date).toLocaleDateString(
-          'es-PE',
-          {
-            day: 'numeric',
-            month: 'short',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            timeZone: 'America/Lima',
-          }
-        )
+        const checkInTime = new Date(row.original.checkInTime)
+        const formattedTime = checkInTime.toLocaleDateString('es-PE', {
+          day: 'numeric',
+          month: 'short',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZone: 'America/Lima',
+        })
 
         return <span className='text-nowrap text-left'>{formattedTime}</span>
       },

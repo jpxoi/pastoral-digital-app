@@ -85,8 +85,7 @@ export default function ExportToCsvMasses() {
 
   return (
     <Button onClick={() => handleClick()} size='sm' className='max-sm:w-full'>
-      <IconFileTypeCsv className='mr-1 h-4 w-4' />
-      Exportar CSV
-    </Button>
+      <IconFileTypeCsv className='h-4 w-4' />
+      <span>Exportar CSV</span>    </Button>
   )
 }
