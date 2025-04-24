@@ -18,6 +18,7 @@ import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
 import UserCategoryLabel from '../shared/userCategoryLabel'
+import UserScheduleLabel from '../shared/userScheduleLabel'
 
 export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
@@ -29,11 +30,6 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     cell: ({ row }) => (
       <span className='text-nowrap'>{row.getValue('nombreCompleto')}</span>
     ),
-  },
-  {
-    id: 'username',
-    accessorKey: 'username',
-    header: () => <span className='text-nowrap'>Nombre de Usuario</span>,
   },
   {
     id: 'email',
@@ -107,6 +103,12 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     accessorKey: 'category',
     header: () => <span className='text-nowrap'>Categoría</span>,
     cell: ({ row }) => <UserCategoryLabel category={row.original.category} />,
+  },
+  {
+    id: 'programa',
+    accessorKey: 'schedule',
+    header: () => <span className='text-nowrap'>Programa</span>,
+    cell: ({ row }) => <UserScheduleLabel schedule={row.original.schedule} />,
   },
   {
     id: 'actions',

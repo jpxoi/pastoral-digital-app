@@ -23,7 +23,7 @@ const badgeVariants = cva(
           'bg-orange-50 text-orange-700 hover:bg-orange-100 border-transparent',
         red: 'bg-red-50 text-red-700 hover:bg-red-100 border-transparent',
         purple:
-          'bg-purple-50 text-purple-700 hover:bg-purple-100 border-purple-700/50',
+          'bg-purple-50 text-purple-700 hover:bg-purple-100 border-transparent',
         blue: 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-transparent',
       },
     },
