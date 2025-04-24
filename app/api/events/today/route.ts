@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         {
           error: 'No hay ningún evento programado para hoy.',
         },
-        { status: 500 }
+        { status: 404 }
       )
     }
 
