@@ -126,13 +126,13 @@ export const getAllAttendanceRecords = async () => {
       event: true,
       registeredByUser: true,
     },
-    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
+    orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
   })
 }
 
 export const getLastAttendanceRecord = async () => {
   return db.query.attendanceRecordsTable.findFirst({
-    orderBy: (fields) => [desc(fields.checkInTime)],
+    orderBy: (fields) => [desc(fields.id)],
     with: {
       user: true,
       registeredByUser: true,
@@ -145,7 +145,7 @@ export const getAttendanceRecordsByUserId = async (
 ) => {
   return db.query.attendanceRecordsTable.findMany({
     where: eq(attendanceRecordsTable.userId, userId),
-    orderBy: (fields) => [desc(fields.checkInTime)],
+    orderBy: (fields) => [desc(fields.id)],
     with: {
       user: true,
       event: true,
@@ -160,7 +160,7 @@ export const getAttendanceRecordsByEventId = async (
 ) => {
   return db.query.attendanceRecordsTable.findMany({
     where: eq(attendanceRecordsTable.eventId, eventId),
-    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
+    orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
     with: {
       user: true,
       registeredByUser: true,
@@ -307,7 +307,7 @@ export const getTodayEvent = async () => {
 /* MassesTable */
 export const getAllMasses = async () => {
   return db.query.sundayMassesTable.findMany({
-    orderBy: (fields) => [desc(fields.createdAt)],
+    orderBy: (fields) => [desc(fields.id)],
     with: {
       user: true,
       verifier: true,
@@ -321,7 +321,7 @@ export const getSundayMassesRecordsByUserId = async (
 ) => {
   return db.query.sundayMassesTable.findMany({
     where: eq(sundayMassesTable.userId, userId),
-    orderBy: (fields) => [desc(fields.createdAt)],
+    orderBy: (fields) => [desc(fields.id)],
     with: {
       user: true,
       verifier: true,
