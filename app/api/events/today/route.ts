@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'No hay ningún evento programado para hoy.',
+          cache: 'HIT',
         },
         { status: 404 }
       )
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
       {
         success: 'Evento del día obtenido correctamente.',
         event: cachedEvent,
-        cached: true,
+        cache: 'HIT',
       },
       { status: 200 }
     )
@@ -67,6 +68,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
           {
             error: 'No hay ningún evento programado para hoy.',
+            cache: 'MISS',
           },
           { status: 404 }
         )
@@ -79,7 +81,7 @@ export async function GET(request: NextRequest) {
         {
           success: 'Evento del día obtenido correctamente.',
           event: event,
-          cached: false,
+          cache: 'MISS',
         },
         { status: 200 }
       )
