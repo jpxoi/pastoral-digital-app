@@ -20,7 +20,6 @@ import { updateAttendanceRecordStatus } from '@/queries/update'
 
 export const registerAttendanceRecord = async (
   data: InsertAttendance,
-  path?: string
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
@@ -50,7 +49,6 @@ export const registerAttendanceRecord = async (
 
 export const registerAttendanceRecords = async (
   data: InsertAttendance[],
-  path?: string
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
@@ -78,7 +76,6 @@ export const registerAttendanceRecords = async (
 export const setAttendanceRecordStatus = async (
   status: AttendanceStatus,
   recordId: string,
-  path?: string
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para modificar asistencias.' }
