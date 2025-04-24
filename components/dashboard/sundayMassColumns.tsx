@@ -39,8 +39,6 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
     accessorKey: 'evidenceUrl',
     header: 'Evidencia',
     cell: ({ row }) => {
-      const evidenceUrl = row.original.evidenceUrl
-      const fileName = evidenceUrl.split('/').pop()
       return (
         <div className='flex gap-2'>
           <a

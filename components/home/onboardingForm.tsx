@@ -53,8 +53,6 @@ export default function OnboardingForm({
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
   const [isPending, startTransition] = useTransition()
 
-  const router = useRouter()
-
   const form = useForm<z.infer<typeof OnboardingFormSchema>>({
     resolver: zodResolver(OnboardingFormSchema),
     defaultValues: {
