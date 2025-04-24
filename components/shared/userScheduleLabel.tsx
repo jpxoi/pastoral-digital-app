@@ -15,7 +15,7 @@ export default function UserScheduleLabel({
         <span className='ml-2 text-nowrap'>Completo</span>
       </Badge>
     ),
-    comunion: (
+    'primera-comunion': (
       <Badge variant={'orange'} className='h-8 rounded-lg'>
         <IconCross className='size-4' />
         <span className='ml-2 text-nowrap'>Comunión</span>
