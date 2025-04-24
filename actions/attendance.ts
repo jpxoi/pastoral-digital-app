@@ -37,16 +37,13 @@ export const registerAttendanceRecord = async (
         lastAttendanceRecord,
       }
     })
-    .catch((error: NeonDbError) => {
-      console.error(error)
-      return {
-        error: handleDbError(error),
-      }
-    })
     .catch((error) => {
       console.error(error)
       return {
-        error: 'Ha ocurrido un error al registrar la asistencia.',
+        error:
+          error instanceof NeonDbError
+            ? handleDbError(error)
+            : 'Ha ocurrido un error al registrar la asistencia.',
       }
     })
 }
@@ -67,16 +64,13 @@ export const registerAttendanceRecords = async (
         success: 'Asistencias registrada correctamente.',
       }
     })
-    .catch((error: NeonDbError) => {
-      console.error(error)
-      return {
-        error: handleDbError(error),
-      }
-    })
     .catch((error) => {
       console.error(error)
       return {
-        error: 'Ha ocurrido un error al registrar las asistencias.',
+        error:
+          error instanceof NeonDbError
+            ? handleDbError(error)
+            : 'Ha ocurrido un error al registrar las asistencias.',
       }
     })
 }
@@ -98,16 +92,13 @@ export const setAttendanceRecordStatus = async (
         success: 'Estado de asistencia modificado correctamente.',
       }
     })
-    .catch((error: NeonDbError) => {
-      console.error(error)
-      return {
-        error: handleDbError(error),
-      }
-    })
     .catch((error) => {
       console.error(error)
       return {
-        error: 'Ha ocurrido un error al modificar el estado de asistencia.',
+        error:
+          error instanceof NeonDbError
+            ? handleDbError(error)
+            : 'Ha ocurrido un error al modificar el estado de asistencia.',
       }
     })
 }
@@ -154,9 +145,11 @@ export const fillAbsenceRecords = async (eventId: number) => {
     }
   } catch (error) {
     console.error(error)
-    if (error instanceof NeonDbError) {
-      return { error: handleDbError(error) }
+    return {
+      error:
+        error instanceof NeonDbError
+          ? handleDbError(error)
+          : 'Ha ocurrido un error al rellenar las faltas del evento.',
     }
-    return { error: 'Ha ocurrido un error al rellenar las faltas del evento.' }
   }
 }
