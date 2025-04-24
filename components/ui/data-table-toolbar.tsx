@@ -8,17 +8,22 @@ import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
 import { DataTableFacetedFilter } from '@/components/ui/data-table-faceted-filter'
 import {
   IconBackpack,
+  IconCalendarBolt,
   IconCalendarHeart,
   IconCalendarX,
   IconClockCheck,
   IconClockExclamation,
   IconClockHeart,
   IconClockX,
+  IconCross,
+  IconFlame,
+  IconMoodKid,
+  IconPackageExport,
   IconSchool,
   IconSchoolOff,
   IconX,
 } from '@tabler/icons-react'
-import { AttendanceStatus } from '@/types'
+import { AttendanceStatus, UserCategory, UserSchedule } from '@/types'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -48,19 +53,52 @@ export function DataTableToolbar<TData>({
               options={[
                 {
                   label: 'Alumno',
-                  value: 'student',
+                  value: UserCategory.STUDENT,
                   icon: IconBackpack,
                 },
                 {
                   label: 'Exalumno',
-                  value: 'alumni',
+                  value: UserCategory.ALUMNI,
                   icon: IconSchoolOff,
                 },
                 {
                   label: 'Docente',
-                  value: 'teacher',
+                  value: UserCategory.TEACHER,
                   icon: IconSchool,
                 },
+              ]}
+            />
+          )}
+          {table.getAllColumns().some((col) => col.id === 'programa') && (
+            <DataTableFacetedFilter
+              column={table.getColumn('programa')}
+              title='Programa'
+              options={[
+                {
+                  label: 'Tiempo Completo',
+                  value: UserSchedule.FULL_TIME,
+                  icon: IconCalendarBolt,
+                },
+                {
+                  label: 'Primera Comunión',
+                  value: UserSchedule.PRIMERA_COMUNION,
+                  icon: IconCross,
+                },
+                {
+                  label: 'Confirmación',
+                  value: UserSchedule.CONFIRMACION,
+                  icon: IconFlame,
+                },
+                {
+                  label: 'Logística',
+                  value: UserSchedule.LOGISTICA,
+                  icon: IconPackageExport,
+                },
+                {
+                  label: 'Semilleros',
+                  value: UserSchedule.SEMILLEROS,
+                  icon: IconMoodKid,
+                }
               ]}
             />
           )}
