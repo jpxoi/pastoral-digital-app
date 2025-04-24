@@ -50,7 +50,7 @@ export async function postNewMassRecord(
     evidenceUrl,
     sundayDate: `${year}-${month}-${day}`,
   })
-    .then(async () => {
+    .then(() => {
       revalidateTag('sundayMasses')
       return {
         success: 'Se ha enviado tu registro de asistencia a la misa con éxito.',
@@ -85,7 +85,7 @@ export async function verifyMassRecord(massId: string) {
   }
 
   return await updateSundayMassRecordVerification(massId, true, verifiedById)
-    .then(async () => {
+    .then(() => {
       revalidateTag('sundayMasses')
       return {
         success: 'Se ha verificado la asistencia a misa correctamente.',
@@ -120,7 +120,7 @@ export async function rejectMassRecord(massId: string) {
   }
 
   return await updateSundayMassRecordVerification(massId, false, verifiedById)
-    .then(async () => {
+    .then(() => {
       revalidateTag('sundayMasses')
       return {
         success: 'Se ha rechazado la asistencia a misa correctamente.',

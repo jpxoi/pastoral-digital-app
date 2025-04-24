@@ -23,7 +23,7 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
 
-  return createAttendanceRecord(data)
+  return await createAttendanceRecord(data)
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
@@ -51,7 +51,7 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
   }
 
   return await createAttendanceRecords(data)
-    .then(async () => {
+    .then(() => {
       revalidateTag('attendance')
 
       return {
@@ -77,8 +77,8 @@ export const setAttendanceRecordStatus = async (
     return { error: 'No estas autorizado para modificar asistencias.' }
   }
 
-  return updateAttendanceRecordStatus(status, recordId)
-    .then(async () => {
+  return await updateAttendanceRecordStatus(status, recordId)
+    .then(() => {
       revalidateTag('attendance')
 
       return {
