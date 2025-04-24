@@ -5,9 +5,14 @@ import { createUser } from '@/queries/insert'
 import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
 import { checkRole } from '@/lib/roles'
-import { UserRole } from '@/types'
+import { UserRole, UserSchedule } from '@/types'
 import { getUserSchedule } from '@/queries/select'
 import { redis } from '@/lib/upstash'
+import { SelectUser } from '@/db/schema'
+import { updateUserSchedule } from '@/queries/update'
+import { handleDbError } from '@/lib/error'
+import { NeonDbError } from '@neondatabase/serverless'
+import { revalidateTag } from 'next/cache'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -108,6 +113,34 @@ export async function removeRole(formData: FormData) {
     console.error(err)
     return { error: 'Hubo un error al eliminar el rol.' }
   }
+}
+
+export async function setUserSchedule(
+  schedule: UserSchedule,
+  userId: SelectUser['id']
+) {
+  // Check that the user trying to set the schedule is an admin
+  if (!(await checkRole(UserRole.ADMIN))) {
+    return { error: 'No estás autorizado para realizar esta acción.' }
+  }
+
+  return await updateUserSchedule(userId, schedule)
+    .then(() => {
+      revalidateTag('users')
+
+      return {
+        success: 'Programa del catequista actualizado correctamente',
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return {
+        error:
+          error instanceof NeonDbError
+            ? handleDbError(error)
+            : 'Ocurrió un error al actualizar el programa del catequista.',
+      }
+    })
 }
 
 export async function fetchUserSchedule(userId: string) {
