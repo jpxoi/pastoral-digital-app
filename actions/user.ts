@@ -7,6 +7,7 @@ import { OnboardingFormSchema } from '@/schema'
 import { checkRole } from '@/lib/roles'
 import { UserRole } from '@/types'
 import { getUserSchedule } from '@/queries/select'
+import { redis } from '@/lib/upstash'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -111,6 +112,18 @@ export async function removeRole(formData: FormData) {
 
 export async function fetchUserSchedule(userId: string) {
   try {
+    // Try to get cached schedule
+    const cacheKey = `user-schedule:${userId}`
+    const cachedSchedule = await redis.get(cacheKey)
+    
+    if (cachedSchedule) {
+      return {
+        success: 'Horario del usuario obtenido correctamente (cached)',
+        data: cachedSchedule,
+      }
+    }
+    
+    // If not in cache, fetch from database
     const user = await getUserSchedule(userId)
 
     if (!user) {
@@ -126,6 +139,9 @@ export async function fetchUserSchedule(userId: string) {
           'No se encontró el horario del catequista en la base de datos. Por favor, contacta al administrador',
       }
     }
+    
+    // Cache the schedule for 1 month
+    await redis.set(cacheKey, user.schedule, { ex: 2592000 }) // 1 month in seconds
 
     return {
       success: 'Horario del usuario obtenido correctamente',
@@ -137,5 +153,20 @@ export async function fetchUserSchedule(userId: string) {
       error:
         'Ocurrió un error inesperado al obtener el horario del catequista. Por favor, inténtalo nuevamente.',
     }
+  }
+}
+
+/**
+ * Invalidates the cached schedule for a user
+ * Call this function whenever a user's schedule is updated
+ */
+export async function invalidateUserScheduleCache(userId: string) {
+  try {
+    const cacheKey = `user-schedule:${userId}`
+    await redis.del(cacheKey)
+    return { success: 'User schedule cache invalidated successfully' }
+  } catch (err) {
+    console.error('Error invalidating user schedule cache:', err)
+    return { error: 'Failed to invalidate user schedule cache' }
   }
 }
