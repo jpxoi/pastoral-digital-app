@@ -3,8 +3,6 @@ import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import AttendanceCalendarTable from '@/components/admin/attendanceCalendarTable'
 import AttendanceCalendarTableSkeleton from '@/components/admin/attendanceCalendarTableSkeleton'
-import { ErrorBoundary } from 'next/dist/client/components/error-boundary'
-import Error from '@/app/error'
 
 export const metadata: Metadata = {
   title: 'Calendario de Asistencias | Pastoral Digital App',
