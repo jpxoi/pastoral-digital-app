@@ -80,7 +80,7 @@ export default function ExportToCsvUsers() {
   return (
     <Button onClick={() => handleClick()} size='sm' className='max-sm:w-full'>
       <IconFileTypeCsv className='mr-1 h-4 w-4' />
-      Exportar CSV
+      <span>Exportar CSV</span>{' '}
     </Button>
   )
 }

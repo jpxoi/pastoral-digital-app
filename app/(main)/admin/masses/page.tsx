@@ -4,6 +4,7 @@ import OfflineAlert from '@/components/shared/offlineAlert'
 import MassesTable from '@/components/admin/massesTable'
 import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 import ExportToCsvMasses from '@/components/shared/exportToCsvMasses'
+import RevalidateButton from '@/components/shared/revalidateButton'
 
 export const metadata: Metadata = {
   title: 'Administrar Misas | Pastoral Digital App',
@@ -24,7 +25,10 @@ export default function Page() {
             Esta es la lista de misas registradas en la aplicación.
           </p>
         </div>
-        <ExportToCsvMasses />
+        <div className='grid grid-cols-2 sm:flex sm:items-center gap-2'>
+          <RevalidateButton tag='sundayMasses' />
+          <ExportToCsvMasses />
+        </div>
       </div>
       <Suspense fallback={<MassesTableSkeleton />}>
         <MassesTable />
