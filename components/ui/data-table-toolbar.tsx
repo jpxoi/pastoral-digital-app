@@ -7,23 +7,11 @@ import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
 import { DataTableFacetedFilter } from '@/components/ui/data-table-faceted-filter'
 import {
-  IconBackpack,
-  IconCalendarBolt,
-  IconCalendarHeart,
-  IconCalendarX,
-  IconClockCheck,
-  IconClockExclamation,
-  IconClockHeart,
-  IconClockX,
-  IconCross,
-  IconFlame,
-  IconMoodKid,
-  IconPackageExport,
-  IconSchool,
-  IconSchoolOff,
-  IconX,
-} from '@tabler/icons-react'
-import { AttendanceStatus, UserCategory, UserSchedule } from '@/types'
+  AttendanceStatusFilterOptions,
+  UserCategoryFilterOptions,
+  UserScheduleFilterOptions,
+} from '@/lib/filter'
+import { IconX } from '@tabler/icons-react'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -50,56 +38,14 @@ export function DataTableToolbar<TData>({
             <DataTableFacetedFilter
               column={table.getColumn('category')}
               title='Categoría'
-              options={[
-                {
-                  label: 'Alumno',
-                  value: UserCategory.STUDENT,
-                  icon: IconBackpack,
-                },
-                {
-                  label: 'Exalumno',
-                  value: UserCategory.ALUMNI,
-                  icon: IconSchoolOff,
-                },
-                {
-                  label: 'Docente',
-                  value: UserCategory.TEACHER,
-                  icon: IconSchool,
-                },
-              ]}
+              options={UserCategoryFilterOptions}
             />
           )}
           {table.getAllColumns().some((col) => col.id === 'programa') && (
             <DataTableFacetedFilter
               column={table.getColumn('programa')}
               title='Programa'
-              options={[
-                {
-                  label: 'Tiempo Completo',
-                  value: UserSchedule.FULL_TIME,
-                  icon: IconCalendarBolt,
-                },
-                {
-                  label: 'Primera Comunión',
-                  value: UserSchedule.PRIMERA_COMUNION,
-                  icon: IconCross,
-                },
-                {
-                  label: 'Confirmación',
-                  value: UserSchedule.CONFIRMACION,
-                  icon: IconFlame,
-                },
-                {
-                  label: 'Logística',
-                  value: UserSchedule.LOGISTICA,
-                  icon: IconPackageExport,
-                },
-                {
-                  label: 'Semilleros',
-                  value: UserSchedule.SEMILLEROS,
-                  icon: IconMoodKid,
-                },
-              ]}
+              options={UserScheduleFilterOptions}
             />
           )}
           {table.getAllColumns().some((col) => col.id === 'evento') && (
@@ -123,38 +69,7 @@ export function DataTableToolbar<TData>({
             <DataTableFacetedFilter
               column={table.getColumn('estado')}
               title='Estado'
-              options={[
-                {
-                  label: 'A TIEMPO',
-                  value: AttendanceStatus.A_TIEMPO,
-                  icon: IconClockCheck,
-                },
-                {
-                  label: 'TARDANZA',
-                  value: AttendanceStatus.TARDANZA,
-                  icon: IconClockExclamation,
-                },
-                {
-                  label: 'DOBLE TARDANZA',
-                  value: AttendanceStatus.DOBLE_TARDANZA,
-                  icon: IconClockX,
-                },
-                {
-                  label: 'FALTA JUSTIFICADA',
-                  value: AttendanceStatus.FALTA_JUSTIFICADA,
-                  icon: IconCalendarHeart,
-                },
-                {
-                  label: 'TARDANZA JUSTIFICADA',
-                  value: AttendanceStatus.TARDANZA_JUSTIFICADA,
-                  icon: IconClockHeart,
-                },
-                {
-                  label: 'FALTA NO JUSTIFICADA',
-                  value: AttendanceStatus.FALTA_INJUSTIFICADA,
-                  icon: IconCalendarX,
-                },
-              ]}
+              options={AttendanceStatusFilterOptions}
             />
           )}
           {isFiltered && (
