@@ -1,4 +1,10 @@
-import { IconCalendarBolt, IconCross, IconFlame, IconMoodKid, IconPackageExport } from '@tabler/icons-react'
+import {
+  IconCalendarBolt,
+  IconCross,
+  IconFlame,
+  IconMoodKid,
+  IconPackageExport,
+} from '@tabler/icons-react'
 import type { JSX } from 'react'
 import { Badge } from '../ui/badge'
 import { UserSchedule } from '@/types'

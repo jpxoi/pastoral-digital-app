@@ -48,6 +48,9 @@ export default function QrScannerTab() {
         headers: {
           'Content-Type': 'application/json',
         },
+        next: {
+          revalidate: 60 * 60 * 12, // 12 hours
+        },
       })
 
       const json = await data.json()

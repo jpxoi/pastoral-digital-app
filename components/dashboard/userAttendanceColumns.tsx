@@ -12,17 +12,14 @@ export const UserAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
       cell: ({ row }) => {
         const eventName = row.original.event.name
         const checkInTime = new Date(row.original.checkInTime)
-        const formattedTime = checkInTime.toLocaleDateString(
-          'es-PE',
-          {
-            day: 'numeric',
-            month: 'short',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            timeZone: 'America/Lima',
-          }
-        )
+        const formattedTime = checkInTime.toLocaleDateString('es-PE', {
+          day: 'numeric',
+          month: 'short',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          timeZone: 'America/Lima',
+        })
 
         return (
           <div className='flex flex-col gap-1 text-left'>

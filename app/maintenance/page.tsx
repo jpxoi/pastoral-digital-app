@@ -2,7 +2,10 @@ import MaintenanceScreen from '@/components/home/maintenanceScreen'
 import { IconBarrierBlock } from '@tabler/icons-react'
 
 export default async function MaintenancePage() {
-  const [startDateTime, endDateTime] = ['2025-04-22T10:00:00Z', '2025-04-25T10:00:00Z']
+  const [startDateTime, endDateTime] = [
+    '2025-04-22T10:00:00Z',
+    '2025-04-25T10:00:00Z',
+  ]
 
   return (
     <div className='flex max-w-md flex-col items-center'>

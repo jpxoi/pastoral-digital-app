@@ -38,7 +38,7 @@ export default async function EventCard({
     >
       <CardHeader>
         <CardTitle className='flex items-center justify-between'>
-          <h3 className='text-lg truncate'>{record.name}</h3>
+          <h3 className='truncate text-lg'>{record.name}</h3>
           {type === 'upcoming' && (
             <Button
               asChild

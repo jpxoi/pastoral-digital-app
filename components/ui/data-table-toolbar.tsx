@@ -98,7 +98,7 @@ export function DataTableToolbar<TData>({
                   label: 'Semilleros',
                   value: UserSchedule.SEMILLEROS,
                   icon: IconMoodKid,
-                }
+                },
               ]}
             />
           )}

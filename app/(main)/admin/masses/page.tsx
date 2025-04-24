@@ -25,7 +25,7 @@ export default function Page() {
             Esta es la lista de misas registradas en la aplicación.
           </p>
         </div>
-        <div className='grid grid-cols-2 sm:flex sm:items-center gap-2'>
+        <div className='grid grid-cols-2 gap-2 sm:flex sm:items-center'>
           <RevalidateButton tag='sundayMasses' />
           <ExportToCsvMasses />
         </div>
