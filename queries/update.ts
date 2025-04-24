@@ -3,10 +3,22 @@ import {
   attendanceRecordsTable,
   SelectAttendance,
   SelectSundayMass,
+  SelectUser,
   sundayMassesTable,
+  usersTable,
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
 import { eq } from 'drizzle-orm'
+
+export const updateUserSchedule = async (
+  userId: SelectUser['id'],
+  schedule: SelectUser['schedule']
+) => {
+  return db
+    .update(usersTable)
+    .set({ schedule, updatedAt: new Date() })
+    .where(eq(usersTable.id, userId))
+}
 
 export const updateAttendanceRecordStatus = async (
   status: AttendanceStatus,
