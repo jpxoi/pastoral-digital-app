@@ -10,6 +10,7 @@ import {
 import { AttendanceStatus } from '@/types'
 import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
 import { unstable_cache } from 'next/cache'
+import { cache } from 'react'
 
 const CACHE_DURATION = {
   HOUR: 3600,
@@ -95,7 +96,7 @@ export const getUserBirthdays = unstable_cache(
   }
 )
 
-export const getUserAttendanceStats = unstable_cache(
+export const getUserAttendanceStats = cache(
   async (userId: SelectUser['id']) => {
     const [
       stats = {
@@ -119,11 +120,6 @@ export const getUserAttendanceStats = unstable_cache(
       .where(eq(attendanceRecordsTable.userId, userId))
 
     return stats
-  },
-  ['getUserAttendanceStats'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
   }
 )
 
@@ -192,7 +188,7 @@ export const getLastAttendanceRecord = async () => {
   })
 }
 
-export const getAttendanceRecordsByUserId = unstable_cache(
+export const getAttendanceRecordsByUserId = cache(
   async (userId: SelectUser['id']) => {
     return db.query.attendanceRecordsTable.findMany({
       where: eq(attendanceRecordsTable.userId, userId),
@@ -204,11 +200,6 @@ export const getAttendanceRecordsByUserId = unstable_cache(
       },
       limit: 100,
     })
-  },
-  ['getAttendanceRecordsByUserId'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
   }
 )
 
@@ -428,7 +419,7 @@ export const getAllMasses = unstable_cache(
   }
 )
 
-export const getSundayMassesRecordsByUserId = unstable_cache(
+export const getSundayMassesRecordsByUserId = cache(
   async (userId: SelectUser['id']) => {
     return db.query.sundayMassesTable.findMany({
       where: eq(sundayMassesTable.userId, userId),
@@ -439,10 +430,5 @@ export const getSundayMassesRecordsByUserId = unstable_cache(
       },
       limit: 100,
     })
-  },
-  ['getSundayMassesRecordsByUserId'],
-  {
-    revalidate: 3600 * 24, // 24 hours
-    tags: ['sundayMasses'],
   }
 )
