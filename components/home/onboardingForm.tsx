@@ -39,7 +39,6 @@ import { useState, useTransition } from 'react'
 import { UserCategory, UserRole } from '@/types'
 import { registerUser } from '@/actions/user'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
 
 export default function OnboardingForm({
   userId,

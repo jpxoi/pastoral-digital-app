@@ -91,6 +91,7 @@ export default function QrScannerTab() {
           setCameraPermission(result.state as 'granted' | 'denied' | 'prompt')
         }
       } catch (error) {
+        console.error('Error checking camera permission:', error)
         toast.error(
           'No se pudo verificar el estado de los permisos de la cámara.'
         )
