@@ -63,6 +63,7 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
   const cachedSchedule = await redis.get(cacheKey)
 
   if (cachedSchedule) {
+    console.log('Cache hit for user schedule for userId:', userId)
     return {
       schedule: cachedSchedule as string,
     }
@@ -80,6 +81,7 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
     await redis.set(cacheKey, user.schedule, { ex: CACHE_DURATION.MONTH })
   }
 
+  console.log('Cache miss for user schedule for userId:', userId)
   return user || { schedule: null }
 }
 
@@ -115,7 +117,11 @@ export const getUserBirthdays = unstable_cache(
 
 export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
   const cacheKey = `user-attendance-stats:${userId}`
-  const cachedStats = await redis.get(cacheKey) as { totalOnTime: number; totalLate: number; totalAbsences: number } | null
+  const cachedStats = (await redis.get(cacheKey)) as {
+    totalOnTime: number
+    totalLate: number
+    totalAbsences: number
+  } | null
   if (cachedStats) {
     return cachedStats
   }
