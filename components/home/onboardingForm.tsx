@@ -64,15 +64,17 @@ export default function OnboardingForm({
       phoneNumber: '',
       dateOfBirth: undefined,
       category: undefined,
-      studentCode: '',
+      studentCode: undefined,
       role: UserRole.MEMBER,
     },
   })
 
-  function onSubmit(values: z.infer<typeof OnboardingFormSchema>) {
-    startTransition(() => {
-      registerUser(values)
+  const onSubmit = async (values: z.infer<typeof OnboardingFormSchema>) => {
+    toast.loading('Completando registro...')
+    startTransition(async () => {
+      await registerUser(values)
         .then((data: { success?: string; error?: string }) => {
+          toast.dismiss()
           if (data?.error) {
             throw new Error(data?.error)
           }
@@ -83,6 +85,7 @@ export default function OnboardingForm({
           }
         })
         .catch((error) => {
+          toast.dismiss()
           toast.error(error.message)
         })
     })
@@ -107,7 +110,6 @@ export default function OnboardingForm({
                   <Input
                     placeholder='Ingrese sus nombres'
                     {...field}
-                    required
                   />
                 </FormControl>
                 <FormDescription>
@@ -130,7 +132,6 @@ export default function OnboardingForm({
                   <Input
                     placeholder='Ingrese sus dos apellidos'
                     {...field}
-                    required
                   />
                 </FormControl>
                 <FormDescription>
@@ -169,7 +170,6 @@ export default function OnboardingForm({
                     <Input
                       placeholder='Ingrese su nombre de usuario'
                       {...field}
-                      required
                       disabled
                     />
                     <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
@@ -197,7 +197,6 @@ export default function OnboardingForm({
                     <Input
                       placeholder='Ingrese su dirección de correo electrónico'
                       {...field}
-                      required
                       disabled
                     />
                     <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
@@ -226,7 +225,6 @@ export default function OnboardingForm({
                       className='rounded-l-none'
                       placeholder='Ingrese su número de teléfono'
                       {...field}
-                      required
                     />
                   </div>
                 </FormControl>
@@ -362,7 +360,7 @@ export default function OnboardingForm({
             </p>
           </div>
         </div>
-        <Button disabled={!isConfirmed || isPending} type='submit' className=''>
+        <Button disabled={!isConfirmed || isPending} type='submit'>
           Completar Registro
         </Button>
       </form>
