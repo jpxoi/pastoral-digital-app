@@ -43,38 +43,22 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
                 'registered_by_full_name',
                 'method',
               ],
-              ...sortedAttendanceRecords.map(
-                (item: {
-                  id: any
-                  user: {
-                    id: any
-                    firstName: any
-                    lastName: any
-                    category: any
-                    studentCode: any
-                  }
-                  checkInTime: string | number | Date
-                  status: any
-                  registeredBy: any
-                  registeredByUser: { firstName: any; lastName: any }
-                  method: any
-                }) => [
-                  item.id,
-                  item.user.id,
-                  `${item.user.firstName} ${item.user.lastName}`,
-                  item.user.category,
-                  item.user.studentCode,
-                  new Intl.DateTimeFormat('es-PE', {
-                    timeZone: 'America/Lima',
-                    dateStyle: 'medium',
-                    timeStyle: 'long',
-                  }).format(new Date(item.checkInTime)),
-                  item.status,
-                  item.registeredBy,
-                  `${item.registeredByUser.firstName} ${item.registeredByUser.lastName}`,
-                  item.method,
-                ]
-              ),
+              ...sortedAttendanceRecords.map((item: FetchAttendanceProps) => [
+                item.id,
+                item.user.id,
+                `${item.user.firstName} ${item.user.lastName}`,
+                item.user.category,
+                item.user.studentCode,
+                new Intl.DateTimeFormat('es-PE', {
+                  timeZone: 'America/Lima',
+                  dateStyle: 'medium',
+                  timeStyle: 'long',
+                }).format(new Date(item.checkInTime)),
+                item.status,
+                item.registeredBy,
+                `${item.registeredByUser.firstName} ${item.registeredByUser.lastName}`,
+                item.method,
+              ]),
             ]
               .map((e) => e.join(';'))
               .join('\n')
