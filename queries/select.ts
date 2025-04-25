@@ -123,6 +123,7 @@ export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
     totalAbsences: number
   } | null
   if (cachedStats) {
+    console.log('Cache hit for user attendance stats for userId:', userId)
     return cachedStats
   }
 
@@ -149,6 +150,8 @@ export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
 
   // Store the stats in cache for 1 week
   await redis.set(cacheKey, stats, { ex: CACHE_DURATION.WEEK })
+  console.log('Cache miss for user attendance stats for userId:', userId)
+  
   return stats
 }
 
