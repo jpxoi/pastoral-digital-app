@@ -25,7 +25,7 @@ import { toast } from 'sonner'
 import { getUploadcareSignature, removeFile } from '@/actions/file'
 import { postNewMassRecord } from '@/actions/mass'
 
-import { FileUploaderMinimal } from '@uploadcare/react-uploader/next'
+import { FileUploaderMinimal } from '@uploadcare/react-uploader'
 import '@uploadcare/react-uploader/core.css'
 
 const pubKey = process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY as string
@@ -101,7 +101,7 @@ export default function SundayMassForm() {
             form.reset()
           }
         })
-        .catch((error) => {
+        .catch(() => {
           setError(
             'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.'
           )
@@ -144,7 +144,7 @@ export default function SundayMassForm() {
             <FormField
               control={form.control}
               name='evidenceUrl'
-              render={({ field }) => (
+              render={({}) => (
                 <FormItem>
                   <FormLabel>Evidencia</FormLabel>
                   <FileUploaderMinimal
