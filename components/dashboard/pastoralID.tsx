@@ -1,6 +1,8 @@
 import PastoralIdQRCode from '@/components/dashboard/pastoraldQrCode'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import PastoralIDSkeleton from './pastoralIDSkeleton'
+import { getUserSchedule } from '@/queries/select'
+import { UserSchedule } from '@/types'
 
 export default async function PastoralId() {
   const user = await currentUser()
@@ -8,6 +10,24 @@ export default async function PastoralId() {
   if (!user) {
     return <PastoralIDSkeleton />
   }
+
+  const userSchedule = (await getUserSchedule(user.id)) as {
+    schedule: UserSchedule | null
+  }
+
+  const scheduleLabels = {
+    [UserSchedule.FULL_TIME]: 'Catequista',
+    [UserSchedule.CONFIRMACION]: 'Catequista de Confirmación',
+    [UserSchedule.PRIMERA_COMUNION]: 'Catequista de Primera Comunión',
+    [UserSchedule.SEMILLEROS]: 'Mini Catequista',
+    [UserSchedule.COORDINADOR]: 'Coordinador',
+    [UserSchedule.LOGISTICA]: 'Logística',
+  }
+
+  const schedule =
+    userSchedule?.schedule && scheduleLabels[userSchedule.schedule]
+      ? scheduleLabels[userSchedule.schedule]
+      : 'Catequista'
 
   const isOnboarded =
     (await auth()).sessionClaims?.metadata.onboardingComplete === true
@@ -44,7 +64,7 @@ export default async function PastoralId() {
         <h3 className='text-2xl font-bold text-card-foreground md:text-3xl'>
           {user?.fullName}
         </h3>
-        <p className='text-base text-blue-950'>Catequista</p>
+        <p className='text-base text-blue-950'>{schedule}</p>
       </div>
     </div>
   )

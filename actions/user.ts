@@ -145,18 +145,6 @@ export async function setUserSchedule(
 
 export async function fetchUserSchedule(userId: string) {
   try {
-    // Try to get cached schedule
-    const cacheKey = `user-schedule:${userId}`
-    const cachedSchedule = await redis.get(cacheKey)
-
-    if (cachedSchedule) {
-      return {
-        success: 'Horario del usuario obtenido correctamente (cached)',
-        data: cachedSchedule,
-      }
-    }
-
-    // If not in cache, fetch from database
     const user = await getUserSchedule(userId)
 
     if (!user) {
@@ -172,9 +160,6 @@ export async function fetchUserSchedule(userId: string) {
           'No se encontró el horario del catequista en la base de datos. Por favor, contacta al administrador',
       }
     }
-
-    // Cache the schedule for 1 month
-    await redis.set(cacheKey, user.schedule, { ex: 3600 * 24 * 30 }) // 1 month in seconds
 
     return {
       success: 'Horario del usuario obtenido correctamente',

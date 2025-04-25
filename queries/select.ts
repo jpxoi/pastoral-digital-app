@@ -7,6 +7,7 @@ import {
   sundayMassesTable,
   usersTable,
 } from '@/db/schema'
+import { redis } from '@/lib/upstash'
 import { AttendanceStatus } from '@/types'
 import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
 import { unstable_cache } from 'next/cache'
@@ -58,12 +59,28 @@ export const countAllUsers = unstable_cache(
 )
 
 export const getUserSchedule = async (userId: SelectUser['id']) => {
-  return db.query.usersTable.findFirst({
+  const cacheKey = `user-schedule:${userId}`
+  const cachedSchedule = await redis.get(cacheKey)
+
+  if (cachedSchedule) {
+    return {
+      schedule: cachedSchedule as string,
+    }
+  }
+  // If not in cache, fetch from database
+  const user = await db.query.usersTable.findFirst({
     where: eq(usersTable.id, userId),
     columns: {
       schedule: true,
     },
   })
+
+  // Store the schedule in cache for 1 month
+  if (user?.schedule) {
+    await redis.set(cacheKey, user.schedule, { ex: CACHE_DURATION.MONTH })
+  }
+
+  return user || { schedule: null }
 }
 
 export const getUserBirthdays = unstable_cache(
