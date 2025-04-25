@@ -393,7 +393,7 @@ export const getUpcomingEvents = unstable_cache(
       with: {
         location: true,
       },
-      limit: 10,
+      limit: 6, // Multiple of 6
     })
   },
   ['getUpcomingEvents'],
@@ -411,7 +411,7 @@ export const getPastEvents = unstable_cache(
       with: {
         location: true,
       },
-      limit: 10,
+      limit: 24, // Multiple of 6
     })
   },
   ['getPastEvents'],
