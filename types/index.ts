@@ -59,6 +59,7 @@ export enum UserSchedule {
   CONFIRMACION = 'confirmacion',
   LOGISTICA = 'logistica',
   SEMILLEROS = 'semilleros',
+  COORDINADOR = 'coordinador',
 }
 
 export enum AttendanceRecordMethod {

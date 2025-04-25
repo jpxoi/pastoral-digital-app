@@ -15,6 +15,7 @@ import {
   IconPackageExport,
   IconSchool,
   IconSchoolOff,
+  IconUserStar,
 } from '@tabler/icons-react'
 
 export const UserCategoryFilterOptions = [
@@ -40,6 +41,11 @@ export const UserScheduleFilterOptions = [
     label: 'Tiempo Completo',
     value: UserSchedule.FULL_TIME,
     icon: IconCalendarBolt,
+  },
+  {
+    label: 'Coordinador',
+    value: UserSchedule.COORDINADOR,
+    icon: IconUserStar,
   },
   {
     label: 'Primera Comunión',

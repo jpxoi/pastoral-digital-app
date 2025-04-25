@@ -39,6 +39,7 @@ export const userScheduleEnum = pgEnum('user_schedule_enum', [
   UserSchedule.CONFIRMACION,
   UserSchedule.LOGISTICA,
   UserSchedule.SEMILLEROS,
+  UserSchedule.COORDINADOR,
 ])
 
 export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
