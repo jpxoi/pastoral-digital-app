@@ -113,32 +113,38 @@ export const getUserBirthdays = unstable_cache(
   }
 )
 
-export const getUserAttendanceStats = cache(
-  async (userId: SelectUser['id']) => {
-    const [
-      stats = {
-        totalOnTime: 0,
-        totalLate: 0,
-        totalAbsences: 0,
-      },
-    ] = await db
-      .select({
-        totalOnTime: count(
-          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
-        ),
-        totalLate: count(
-          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
-        ),
-        totalAbsences: count(
-          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
-        ),
-      })
-      .from(attendanceRecordsTable)
-      .where(eq(attendanceRecordsTable.userId, userId))
-
-    return stats
+export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
+  const cacheKey = `user-attendance-stats:${userId}`
+  const cachedStats = await redis.get(cacheKey)
+  if (cachedStats) {
+    return cachedStats
   }
-)
+
+  const [
+    stats = {
+      totalOnTime: 0,
+      totalLate: 0,
+      totalAbsences: 0,
+    },
+  ] = await db
+    .select({
+      totalOnTime: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
+      ),
+      totalLate: count(
+        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}, ${AttendanceStatus.DOBLE_TARDANZA}) then 1 end`
+      ),
+      totalAbsences: count(
+        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
+      ),
+    })
+    .from(attendanceRecordsTable)
+    .where(eq(attendanceRecordsTable.userId, userId))
+
+  // Store the stats in cache for 1 week
+  await redis.set(cacheKey, stats, { ex: CACHE_DURATION.WEEK })
+  return stats
+}
 
 export const getUsersWithNoAttendanceRecord = async (
   eventId: SelectEvent['id']
