@@ -20,7 +20,8 @@ const badgeVariants = cva(
           'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-transparent',
         orange:
           'bg-orange-50 text-orange-700 hover:bg-orange-100 border-transparent',
-        amber: 'bg-amber-50 text-amber-700 hover:bg-amber-100 border-transparent',
+        amber:
+          'bg-amber-50 text-amber-700 hover:bg-amber-100 border-transparent',
         yellow:
           'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border-transparent',
         green:
@@ -33,7 +34,8 @@ const badgeVariants = cva(
           'bg-purple-50 text-purple-700 hover:bg-purple-100 border-transparent',
         pink: 'bg-pink-50 text-pink-700 hover:bg-pink-100 border-transparent',
         rose: 'bg-rose-50 text-rose-700 hover:bg-rose-100 border-transparent',
-        slate: 'bg-slate-50 text-slate-700 hover:bg-slate-100 border-transparent',
+        slate:
+          'bg-slate-50 text-slate-700 hover:bg-slate-100 border-transparent',
       },
     },
     defaultVariants: {

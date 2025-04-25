@@ -125,8 +125,9 @@ export async function setUserSchedule(
   }
 
   return await updateUserSchedule(userId, schedule)
-    .then(() => {
+    .then(async () => {
       revalidateTag('users')
+      await invalidateUserScheduleCache(userId)
 
       return {
         success: 'Programa del catequista actualizado correctamente',
@@ -174,11 +175,7 @@ export async function fetchUserSchedule(userId: string) {
   }
 }
 
-/**
- * Invalidates the cached schedule for a user
- * Call this function whenever a user's schedule is updated
- */
-export async function invalidateUserScheduleCache(userId: string) {
+const invalidateUserScheduleCache = async (userId: string) => {
   try {
     const cacheKey = `user-schedule:${userId}`
     await redis.del(cacheKey)

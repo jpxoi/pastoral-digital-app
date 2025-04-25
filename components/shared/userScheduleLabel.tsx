@@ -22,7 +22,7 @@ export default function UserScheduleLabel({
         <span className='ml-2 text-nowrap'>Completo</span>
       </Badge>
     ),
-    'coordinador': (
+    coordinador: (
       <Badge variant={'emerald'} className='h-8 rounded-lg'>
         <IconUserStar className='size-4' />
         <span className='ml-2 text-nowrap'>Coordinador</span>
