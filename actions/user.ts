@@ -176,12 +176,13 @@ export async function fetchUserSchedule(userId: string) {
 }
 
 const invalidateUserScheduleCache = async (userId: string) => {
-  try {
-    const cacheKey = `user-schedule:${userId}`
-    await redis.del(cacheKey)
-    return { success: 'User schedule cache invalidated successfully' }
-  } catch (err) {
-    console.error('Error invalidating user schedule cache:', err)
-    return { error: 'Failed to invalidate user schedule cache' }
-  }
+  const cacheKey = `user-schedule:${userId}`
+  await redis
+    .del(cacheKey)
+    .then(() => {
+      console.log(`Cache key ${cacheKey} deleted successfully`)
+    })
+    .catch((error) => {
+      console.error(`Error deleting cache key ${cacheKey}:`, error)
+    })
 }

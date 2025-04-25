@@ -17,6 +17,7 @@ import { checkRole } from '@/lib/roles'
 import { AttendanceRecordMethod, AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
+import { redis } from '@/lib/upstash'
 
 export const registerAttendanceRecord = async (data: InsertAttendance) => {
   if (!(await checkRole(UserRole.ADMIN))) {
@@ -28,6 +29,7 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
       revalidateTag('attendance')
+      await invalidateUserAttendanceStatsCache(data.userId)
 
       return {
         success: 'Asistencia registrada correctamente.',
@@ -145,4 +147,16 @@ export const fillAbsenceRecords = async (eventId: number) => {
           : 'Ha ocurrido un error al rellenar las faltas del evento.',
     }
   }
+}
+
+const invalidateUserAttendanceStatsCache = async (userId: string) => {
+  const cacheKey = `user-attendance-stats:${userId}`
+  await redis
+    .del(cacheKey)
+    .then(() => {
+      console.log(`Cache key ${cacheKey} deleted successfully`)
+    })
+    .catch((error) => {
+      console.error(`Error deleting cache key ${cacheKey}:`, error)
+    })
 }
