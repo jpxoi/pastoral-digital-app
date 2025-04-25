@@ -61,7 +61,7 @@ export default async function Page({
           <div className='flex flex-col gap-0.5'>
             <h1 className='text-xl font-semibold sm:text-2xl'>{event.name}</h1>
             <p className='text-sm text-neutral-500'>
-              {event.date.toLocaleDateString('es-PE', {
+              {new Date(event.date).toLocaleDateString('es-PE', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',

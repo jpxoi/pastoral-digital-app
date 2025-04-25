@@ -28,7 +28,8 @@ export default async function EventCard({
   record: FetchEventProps
   type: 'upcoming' | 'past'
 }) {
-  const isToday = type === 'upcoming' ? isEventToday(record.date) : false
+  const isToday =
+    type === 'upcoming' ? isEventToday(new Date(record.date)) : false
   const isAdmin = await checkRole(UserRole.ADMIN)
 
   return (
@@ -47,7 +48,7 @@ export default async function EventCard({
               className='size-6 p-1 hover:bg-blue-50 hover:text-primary'
             >
               <a
-                href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${record.date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${record.endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=${record.description}&location=${record.location.name}&text=${record.name}`}
+                href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${new Date(record.date).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${new Date(record.endDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=${record.description}&location=${record.location.name}&text=${record.name}`}
                 target='_blank'
                 rel='noreferrer'
                 className='text-primary'
@@ -61,7 +62,7 @@ export default async function EventCard({
           <span className='flex items-center gap-1 text-ellipsis'>
             <IconCalendar className='size-4' />
             <span>
-              {record.date.toLocaleDateString('es-PE', {
+              {new Date(record.date).toLocaleDateString('es-PE', {
                 day: 'numeric',
                 month: 'short',
                 year: 'numeric',
@@ -71,13 +72,13 @@ export default async function EventCard({
           <span className='flex items-center gap-1 text-ellipsis'>
             <IconClock className='size-4' />
             <span>
-              {record.date.toLocaleTimeString('es-PE', {
+              {new Date(record.date).toLocaleTimeString('es-PE', {
                 hour: 'numeric',
                 minute: 'numeric',
                 timeZone: 'America/Lima',
               })}{' '}
               -{' '}
-              {record.endDate.toLocaleTimeString('es-PE', {
+              {new Date(record.endDate).toLocaleTimeString('es-PE', {
                 hour: 'numeric',
                 minute: 'numeric',
                 timeZone: 'America/Lima',
@@ -114,7 +115,7 @@ export default async function EventCard({
             </Button>
           ) : (
             <span className='text-sm text-muted-foreground'>
-              {getRelativeEventDate(record.date)}
+              {getRelativeEventDate(new Date(record.date))}
             </span>
           )}
         </div>

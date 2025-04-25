@@ -399,6 +399,7 @@ export const getUpcomingEvents = unstable_cache(
   ['getUpcomingEvents'],
   {
     revalidate: CACHE_DURATION.DAY,
+    tags: ['events'],
   }
 )
 
@@ -416,6 +417,7 @@ export const getPastEvents = unstable_cache(
   ['getPastEvents'],
   {
     revalidate: CACHE_DURATION.DAY,
+    tags: ['events'],
   }
 )
 
@@ -435,6 +437,7 @@ export const getTodayEvent = unstable_cache(
   ['getTodayEvent'],
   {
     revalidate: CACHE_DURATION.DAY,
+    tags: ['events'],
   }
 )
 
