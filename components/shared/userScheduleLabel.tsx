@@ -4,6 +4,7 @@ import {
   IconFlame,
   IconMoodKid,
   IconPackageExport,
+  IconUserStar,
 } from '@tabler/icons-react'
 import type { JSX } from 'react'
 import { Badge } from '../ui/badge'
@@ -16,13 +17,19 @@ export default function UserScheduleLabel({
 }) {
   const scheduleMapping: { [key: string]: JSX.Element } = {
     'full-time': (
-      <Badge variant={'emerald'} className='h-8 rounded-lg'>
+      <Badge variant={'slate'} className='h-8 rounded-lg'>
         <IconCalendarBolt className='size-4' />
         <span className='ml-2 text-nowrap'>Completo</span>
       </Badge>
     ),
+    'coordinador': (
+      <Badge variant={'emerald'} className='h-8 rounded-lg'>
+        <IconUserStar className='size-4' />
+        <span className='ml-2 text-nowrap'>Coordinador</span>
+      </Badge>
+    ),
     'primera-comunion': (
-      <Badge variant={'orange'} className='h-8 rounded-lg'>
+      <Badge variant={'amber'} className='h-8 rounded-lg'>
         <IconCross className='size-4' />
         <span className='ml-2 text-nowrap'>Comunión</span>
       </Badge>
@@ -40,7 +47,7 @@ export default function UserScheduleLabel({
       </Badge>
     ),
     semilleros: (
-      <Badge variant={'blue'} className='h-8 rounded-lg'>
+      <Badge variant={'sky'} className='h-8 rounded-lg'>
         <IconMoodKid className='size-4' />
         <span className='ml-2 text-nowrap'>Semilleros</span>
       </Badge>
