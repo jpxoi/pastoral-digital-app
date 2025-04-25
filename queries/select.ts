@@ -115,7 +115,7 @@ export const getUserBirthdays = unstable_cache(
 
 export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
   const cacheKey = `user-attendance-stats:${userId}`
-  const cachedStats = await redis.get(cacheKey)
+  const cachedStats = await redis.get(cacheKey) as { totalOnTime: number; totalLate: number; totalAbsences: number } | null
   if (cachedStats) {
     return cachedStats
   }
