@@ -82,7 +82,7 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
   }
 
   console.log('Cache miss for user schedule for userId:', userId)
-  return user || { schedule: null }
+  return user
 }
 
 export const getUserBirthdays = unstable_cache(
