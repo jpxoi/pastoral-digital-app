@@ -1,8 +1,6 @@
 import { cn } from '@/lib/utils'
-import { checkRole } from '@/lib/roles'
-import { getRelativeEventDate, isEventToday } from '@/lib/events'
-import { FetchEventProps, UserRole } from '@/types'
-import Link from 'next/link'
+import { isEventToday } from '@/lib/events'
+import { FetchEventProps } from '@/types'
 
 import {
   Card,
@@ -20,8 +18,11 @@ import {
   IconMapPin,
 } from '@tabler/icons-react'
 import { EventJustifyModal } from './eventJustifyModal'
+import { EventCardAction } from './eventCardAction'
+import { Suspense } from 'react'
+import { Skeleton } from '../ui/skeleton'
 
-export default async function EventCard({
+export default function EventCard({
   record,
   type,
 }: {
@@ -30,7 +31,6 @@ export default async function EventCard({
 }) {
   const isToday =
     type === 'upcoming' ? isEventToday(new Date(record.date)) : false
-  const isAdmin = await checkRole(UserRole.ADMIN)
 
   return (
     <Card
@@ -108,17 +108,9 @@ export default async function EventCard({
             Justificar Inasistencia
           </Button>
         )}
-        <div className='flex gap-2'>
-          {isAdmin ? (
-            <Button asChild variant='link' className='h-6 p-1 text-primary'>
-              <Link href={`/admin/events/${record.id}`}>Ver Asistencia</Link>
-            </Button>
-          ) : (
-            <span className='text-sm text-muted-foreground'>
-              {getRelativeEventDate(new Date(record.date))}
-            </span>
-          )}
-        </div>
+        <Suspense fallback={<Skeleton className='h-6 w-28' />}>
+          <EventCardAction id={record.id} date={new Date(record.date)} />
+        </Suspense>
       </CardContent>
     </Card>
   )

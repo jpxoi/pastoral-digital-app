@@ -1,5 +1,4 @@
 import EventCardGroupSkeleton from '@/components/events/eventCardGroupSkeleton'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function Loading() {
