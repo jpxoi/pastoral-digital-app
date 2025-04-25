@@ -17,7 +17,7 @@ export default function AttendanceStatusLabel({
 }) {
   const statusMapping: { [key: string]: JSX.Element } = {
     'A TIEMPO': (
-      <Badge variant={'emerald'} className='h-8 rounded-lg'>
+      <Badge variant={'green'} className='h-8 rounded-lg'>
         <IconClockCheck className='size-4' />
         <span className='ml-2 text-nowrap'>A TIEMPO</span>
       </Badge>
