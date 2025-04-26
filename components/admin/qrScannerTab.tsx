@@ -163,7 +163,7 @@ export default function QrScannerTab() {
                 ? event.date
                 : event.secondTurnDate
 
-            const status = calculateStatus(checkInTime, eventDate)
+            const status = calculateStatus(checkInTime, new Date(eventDate))
 
             if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
               toast.info(
