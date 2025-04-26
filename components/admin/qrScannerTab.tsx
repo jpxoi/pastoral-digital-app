@@ -171,7 +171,7 @@ export default function QrScannerTab() {
               )
             }
 
-            if (checkInTime > event.endDate) {
+            if (checkInTime > new Date(event.endDate)) {
               throw new Error(
                 'No puedes registrar asistencia después de la hora de finalización del evento.'
               )
