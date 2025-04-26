@@ -151,7 +151,7 @@ export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
   // Store the stats in cache for 1 week
   await redis.set(cacheKey, stats, { ex: CACHE_DURATION.WEEK })
   console.log('Cache miss for user attendance stats for userId:', userId)
-  
+
   return stats
 }
 
@@ -421,25 +421,18 @@ export const getPastEvents = unstable_cache(
   }
 )
 
-export const getTodayEvent = unstable_cache(
-  async () => {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+export const getTodayEvent = async () => {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-    return db.query.eventsTable.findFirst({
-      where: between(
-        eventsTable.date,
-        today,
-        new Date(today.getTime() + 86400000)
-      ),
-    })
-  },
-  ['getTodayEvent'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['events'],
-  }
-)
+  return db.query.eventsTable.findFirst({
+    where: between(
+      eventsTable.date,
+      today,
+      new Date(today.getTime() + 86400000)
+    ),
+  })
+}
 
 /* MassesTable */
 export const getAllMasses = unstable_cache(
