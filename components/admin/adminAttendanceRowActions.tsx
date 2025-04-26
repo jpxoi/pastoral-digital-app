@@ -21,7 +21,10 @@ import { IconTrash } from '@tabler/icons-react'
 import { IconDots } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { AttendanceStatus, FetchAttendanceProps } from '@/types'
-import { setAttendanceRecordStatus } from '@/actions/attendance'
+import {
+  removeAttendanceRecord,
+  setAttendanceRecordStatus,
+} from '@/actions/attendance'
 import { AttendanceStatusFilterOptions } from '@/lib/filter'
 import { SelectAttendance } from '@/db/schema'
 
@@ -46,6 +49,26 @@ const handleSetAttendanceRecordStatus = async (
     },
     error: (error) => {
       return error.message || 'Error al cambiar el estado de asistencia.'
+    },
+  })
+}
+
+const handleDeleteAttendanceRecord = async (
+  recordId: SelectAttendance['id']
+) => {
+  toast.promise(removeAttendanceRecord(recordId), {
+    loading: 'Eliminando asistencia...',
+    success: (data: { error?: string; success?: string }) => {
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      if (data.success) {
+        return data.success
+      }
+    },
+    error: (error) => {
+      return error.message || 'Error al eliminar la asistencia.'
     },
   })
 }
@@ -105,7 +128,10 @@ export function AdminAttendanceRowActions({ row }: DataTableRowActionsProps) {
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled className='text-red-500'>
+        <DropdownMenuItem
+          onClick={() => handleDeleteAttendanceRecord(row.original.id)}
+          className='text-red-500'
+        >
           <IconTrash />
           Eliminar registro
         </DropdownMenuItem>

@@ -18,6 +18,7 @@ import { AttendanceRecordMethod, AttendanceStatus, UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
 import { redis } from '@/lib/upstash'
+import { deleteAttendanceRecord } from '@/queries/delete'
 
 export const registerAttendanceRecord = async (data: InsertAttendance) => {
   if (!(await checkRole(UserRole.ADMIN))) {
@@ -147,6 +148,28 @@ export const fillAbsenceRecords = async (eventId: number) => {
           : 'Ha ocurrido un error al rellenar las faltas del evento.',
     }
   }
+}
+
+export const removeAttendanceRecord = async (recordId: string) => {
+  if (!(await checkRole(UserRole.ADMIN))) {
+    return { error: 'No estas autorizado para eliminar asistencias.' }
+  }
+  return await deleteAttendanceRecord(recordId)
+    .then(() => {
+      revalidateTag('attendance')
+      return {
+        success: 'Asistencia eliminada correctamente.',
+      }
+    })
+    .catch((error) => {
+      console.error(error)
+      return {
+        error:
+          error instanceof NeonDbError
+            ? handleDbError(error)
+            : 'Ha ocurrido un error al eliminar la asistencia.',
+      }
+    })
 }
 
 const invalidateUserAttendanceStatsCache = async (userId: string) => {
