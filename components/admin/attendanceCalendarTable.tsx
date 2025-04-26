@@ -68,8 +68,7 @@ export default async function AttendanceCalendarTable() {
                       >
                         A
                       </span>
-                    ) : row[key] === 'TARDANZA' ||
-                      row[key] === 'DOBLE TARDANZA' ? (
+                    ) : row[key] === 'TARDANZA' ? (
                       <span
                         className={cn(
                           attendanceBadgeClassName,
@@ -77,6 +76,15 @@ export default async function AttendanceCalendarTable() {
                         )}
                       >
                         T
+                      </span>
+                    ) : row[key] === 'DOBLE TARDANZA' ? (
+                      <span
+                        className={cn(
+                          attendanceBadgeClassName,
+                          'bg-orange-100 text-orange-800 hover:bg-orange-200 hover:text-orange-900'
+                        )}
+                      >
+                        TT
                       </span>
                     ) : row[key] === 'FALTA INJUSTIFICADA' ? (
                       <span
