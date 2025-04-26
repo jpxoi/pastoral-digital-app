@@ -166,7 +166,7 @@ export default function QrScannerTab() {
             const status = calculateStatus(checkInTime, new Date(eventDate))
 
             if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
-              toast.info(
+              toast.warning(
                 'Se procesará el registro como FALTA NO JUSTIFICADA. Este no podrá ser modificado.'
               )
             }
