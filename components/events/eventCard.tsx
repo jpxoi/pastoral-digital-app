@@ -100,7 +100,7 @@ export default function EventCard({
           <EventJustifyModal />
         ) : (
           <Button
-            variant='ghost'
+            variant='link'
             disabled
             className='h-6 cursor-not-allowed p-1 text-primary hover:bg-blue-50 hover:text-primary'
           >

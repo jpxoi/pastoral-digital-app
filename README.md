@@ -27,7 +27,6 @@ Los catequistas pueden hacer lo siguiente dentro de la aplicación:
 
 - 📲 **Pastoral Digital ID.** Identificador digital con código QR para registrar tu asistencia.
 - 📅 **Registro de asistencias.** Visualización de fechas, horas y estado de asistencias.
-- 📝 **Justificar inasistencias y tardanzas.** Pueden justificar sus inasistencias y tardanzas a los encuentros de catequesis, indicando el motivo mediante un formulario en la aplicación.
 - 👤 **Perfil de catequista.** Información personal, incluyendo nombre, foto y correo.
 
 ## 🆕 Novedades

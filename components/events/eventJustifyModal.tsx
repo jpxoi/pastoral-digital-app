@@ -14,8 +14,8 @@ export function EventJustifyModal() {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          variant='ghost'
-          className='h-6 p-1 text-primary hover:bg-blue-50 hover:text-primary'
+          variant='link'
+          className='h-6 p-1 text-primary hover:text-primary'
         >
           Justificar Inasistencia
         </Button>
