@@ -44,8 +44,7 @@ export default function EventCard({
             <Button
               asChild
               variant='ghost'
-              size='icon'
-              className='size-6 p-1 hover:bg-blue-50 hover:text-primary'
+              className='size-7 p-1 hover:bg-blue-50 hover:text-primary [&_svg]:size-5'
             >
               <a
                 href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${new Date(record.date).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${new Date(record.endDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=${record.description}&location=${record.location.name}&text=${record.name}`}
@@ -53,7 +52,7 @@ export default function EventCard({
                 rel='noreferrer'
                 className='text-primary'
               >
-                <IconCalendarPlus className='size-4' />
+                <IconCalendarPlus className='size-5' />
               </a>
             </Button>
           )}
