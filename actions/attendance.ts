@@ -10,7 +10,7 @@ import {
   getEventById,
   getLastAttendanceRecord,
 } from '@/queries/select'
-import { InsertAttendance } from '@/db/schema'
+import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidateTag } from 'next/cache'
 import { checkRole } from '@/lib/roles'
@@ -74,15 +74,17 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
 
 export const setAttendanceRecordStatus = async (
   status: AttendanceStatus,
-  recordId: string
+  recordId: SelectAttendance['id'],
+  userId: SelectAttendance['userId']
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para modificar asistencias.' }
   }
 
   return await updateAttendanceRecordStatus(status, recordId)
-    .then(() => {
+    .then(async () => {
       revalidateTag('attendance')
+      await invalidateUserAttendanceStatsCache(userId)
 
       return {
         success: 'Estado de asistencia modificado correctamente.',
@@ -150,13 +152,17 @@ export const fillAbsenceRecords = async (eventId: number) => {
   }
 }
 
-export const removeAttendanceRecord = async (recordId: string) => {
+export const removeAttendanceRecord = async (
+  recordId: SelectAttendance['id'],
+  userId: SelectAttendance['userId']
+) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para eliminar asistencias.' }
   }
   return await deleteAttendanceRecord(recordId)
-    .then(() => {
+    .then(async () => {
       revalidateTag('attendance')
+      await invalidateUserAttendanceStatsCache(userId)
       return {
         success: 'Asistencia eliminada correctamente.',
       }

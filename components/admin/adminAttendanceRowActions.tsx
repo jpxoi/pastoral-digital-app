@@ -34,9 +34,10 @@ interface DataTableRowActionsProps {
 
 const handleSetAttendanceRecordStatus = async (
   status: AttendanceStatus,
-  recordId: SelectAttendance['id']
+  recordId: SelectAttendance['id'],
+  userId: SelectAttendance['userId']
 ) => {
-  toast.promise(setAttendanceRecordStatus(status, recordId), {
+  toast.promise(setAttendanceRecordStatus(status, recordId, userId), {
     loading: 'Cambiando estado de asistencia...',
     success: (data: { error?: string; success?: string }) => {
       if (data.error) {
@@ -54,9 +55,10 @@ const handleSetAttendanceRecordStatus = async (
 }
 
 const handleDeleteAttendanceRecord = async (
-  recordId: SelectAttendance['id']
+  recordId: SelectAttendance['id'],
+  userId: SelectAttendance['userId']
 ) => {
-  toast.promise(removeAttendanceRecord(recordId), {
+  toast.promise(removeAttendanceRecord(recordId, userId), {
     loading: 'Eliminando asistencia...',
     success: (data: { error?: string; success?: string }) => {
       if (data.error) {
@@ -110,7 +112,8 @@ export function AdminAttendanceRowActions({ row }: DataTableRowActionsProps) {
               onValueChange={(value) => {
                 handleSetAttendanceRecordStatus(
                   value as AttendanceStatus,
-                  row.original.id
+                  row.original.id,
+                  row.original.userId
                 )
               }}
             >
@@ -129,7 +132,9 @@ export function AdminAttendanceRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => handleDeleteAttendanceRecord(row.original.id)}
+          onClick={() =>
+            handleDeleteAttendanceRecord(row.original.id, row.original.userId)
+          }
           className='text-red-500'
         >
           <IconTrash />
