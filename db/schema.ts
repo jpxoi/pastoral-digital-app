@@ -165,6 +165,7 @@ export const sundayMassesTable = pgTable(
     parish: text().notNull(),
     sundayDate: date('sunday_date').notNull().defaultNow(),
     evidenceUrl: text('evidence_url').notNull(),
+    evidenceMimeType: text('evidence_mime_type'),
     verified: boolean('verified').default(false).notNull(),
     verifiedBy: text('verified_by').references(() => usersTable.id),
     verifiedAt: timestamp('verified_at'),

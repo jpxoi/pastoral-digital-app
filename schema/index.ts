@@ -84,4 +84,5 @@ export const NewSundayMassFormSchema = z.object({
     .trim()
     .nonempty('La evidencia de asistencia es requerida')
     .url('La URL de la evidencia no es válida'),
+  evidenceMimeType: z.string().trim().optional(),
 })

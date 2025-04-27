@@ -51,6 +51,7 @@ export default function SundayMassForm() {
     mimeType: string
   }) => {
     form.setValue('evidenceUrl', file.cdnUrl)
+    form.setValue('evidenceMimeType', file.mimeType)
     setIsFileUploaded(true)
     toast.success('Archivo subido correctamente.')
     setError(null)
@@ -82,6 +83,7 @@ export default function SundayMassForm() {
       })
       .finally(() => {
         form.resetField('evidenceUrl')
+        form.resetField('evidenceMimeType')
       })
   }
 

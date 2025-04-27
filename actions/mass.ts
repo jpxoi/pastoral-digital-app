@@ -29,7 +29,7 @@ export async function postNewMassRecord(
     }
   }
 
-  const { parish, evidenceUrl } = validatedFields.data
+  const { parish, evidenceUrl, evidenceMimeType } = validatedFields.data
 
   const today = new Date()
 
@@ -48,6 +48,7 @@ export async function postNewMassRecord(
     userId,
     parish,
     evidenceUrl,
+    evidenceMimeType,
     sundayDate: `${year}-${month}-${day}`,
   })
     .then(() => {
