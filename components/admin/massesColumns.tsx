@@ -56,7 +56,6 @@ const handleRejectMass = async (id: string) => {
   })
 }
 
-// New component to add to the file
 const EvidenceFileIcon = memo(({ mimeType }: { mimeType?: string }) => {
   if (mimeType === 'image/png') {
     return <IconFileTypePng className='h-4 w-4' />
