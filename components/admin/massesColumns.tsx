@@ -18,6 +18,7 @@ import { FetchMassesProps } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import UserCategoryLabel from '../shared/userCategoryLabel'
 import { rejectMassRecord, verifyMassRecord } from '@/actions/mass'
+import { memo } from 'react'
 
 const handleVerifyMass = async (id: string) => {
   toast.promise(verifyMassRecord(id), {
@@ -54,6 +55,25 @@ const handleRejectMass = async (id: string) => {
     },
   })
 }
+
+// New component to add to the file
+const EvidenceFileIcon = memo(({ mimeType }: { mimeType?: string }) => {
+  if (mimeType === 'image/png') {
+    return <IconFileTypePng className='h-4 w-4' />
+  } else if (mimeType === 'image/jpeg' || mimeType === 'image/jpg') {
+    return <IconFileTypeJpg className='h-4 w-4' />
+  } else if (mimeType === 'application/pdf') {
+    return <IconFileTypePdf className='h-4 w-4' />
+  } else if (
+    mimeType ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+    mimeType === 'application/msword'
+  ) {
+    return <IconFileWord className='h-4 w-4' />
+  } else {
+    return <IconFileDownload className='h-4 w-4' />
+  }
+})
 
 export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
   {
@@ -98,20 +118,9 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
           rel='noopener noreferrer'
           className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
         >
-          {row.original.evidenceMimeType === 'image/png' ? (
-            <IconFileTypePng className='h-4 w-4' />
-          ) : row.original.evidenceMimeType === 'image/jpeg' ||
-            row.original.evidenceMimeType === 'image/jpg' ? (
-            <IconFileTypeJpg className='h-4 w-4' />
-          ) : row.original.evidenceMimeType === 'application/pdf' ? (
-            <IconFileTypePdf className='h-4 w-4' />
-          ) : row.original.evidenceMimeType ===
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-            row.original.evidenceMimeType === 'application/msword' ? (
-            <IconFileWord className='h-4 w-4' />
-          ) : (
-            <IconFileDownload className='h-4 w-4' />
-          )}
+          <EvidenceFileIcon
+            mimeType={row.original.evidenceMimeType as string}
+          />
           Descargar
         </a>
       </div>
