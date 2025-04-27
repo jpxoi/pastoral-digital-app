@@ -48,6 +48,7 @@ export default function SundayMassForm() {
     name: string
     uuid: string
     cdnUrl: string
+    mimeType: string
   }) => {
     form.setValue('evidenceUrl', file.cdnUrl)
     setIsFileUploaded(true)
