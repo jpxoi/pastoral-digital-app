@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '../ui/button'
-import { IconFileDownload } from '@tabler/icons-react'
+import { IconFileDownload, IconFileTypeJpg, IconFileTypePdf, IconFileTypePng, IconFileWord } from '@tabler/icons-react'
 
 export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
   {
@@ -47,20 +47,20 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
             rel='noopener noreferrer'
             className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
           >
-                      {row.original.evidenceMimeType === 'image/png' ? (
-            <IconFileTypePng className='h-4 w-4' />
-          ) : row.original.evidenceMimeType === 'image/jpeg' ||
-            row.original.evidenceMimeType === 'image/jpg' ? (
-            <IconFileTypeJpg className='h-4 w-4' />
-          ) : row.original.evidenceMimeType === 'application/pdf' ? (
-            <IconFileTypePdf className='h-4 w-4' />
-          ) : row.original.evidenceMimeType ===
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-            row.original.evidenceMimeType === 'application/msword' ? (
-            <IconFileWord className='h-4 w-4' />
-          ) : (
-            <IconFileDownload className='h-4 w-4' />
-          )}
+            {row.original.evidenceMimeType === 'image/png' ? (
+              <IconFileTypePng className='h-4 w-4' />
+            ) : row.original.evidenceMimeType === 'image/jpeg' ||
+              row.original.evidenceMimeType === 'image/jpg' ? (
+              <IconFileTypeJpg className='h-4 w-4' />
+            ) : row.original.evidenceMimeType === 'application/pdf' ? (
+              <IconFileTypePdf className='h-4 w-4' />
+            ) : row.original.evidenceMimeType ===
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+              row.original.evidenceMimeType === 'application/msword' ? (
+              <IconFileWord className='h-4 w-4' />
+            ) : (
+              <IconFileDownload className='h-4 w-4' />
+            )}
             Descargar
           </a>
         </div>
