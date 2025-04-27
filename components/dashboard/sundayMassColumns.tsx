@@ -5,7 +5,13 @@ import { ColumnDef } from '@tanstack/react-table'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '../ui/button'
-import { IconFileDownload, IconFileTypeJpg, IconFileTypePdf, IconFileTypePng, IconFileWord } from '@tabler/icons-react'
+import {
+  IconFileDownload,
+  IconFileTypeJpg,
+  IconFileTypePdf,
+  IconFileTypePng,
+  IconFileWord,
+} from '@tabler/icons-react'
 import { memo } from 'react'
 
 const EvidenceFileIcon = memo(({ mimeType }: { mimeType?: string }) => {
@@ -67,8 +73,8 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
             className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
           >
             <EvidenceFileIcon
-            mimeType={row.original.evidenceMimeType as string}
-          />
+              mimeType={row.original.evidenceMimeType as string}
+            />
             Descargar
           </a>
         </div>
