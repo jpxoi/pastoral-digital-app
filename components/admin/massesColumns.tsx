@@ -4,7 +4,15 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
-import { IconCheck, IconFileDownload, IconX } from '@tabler/icons-react'
+import {
+  IconCheck,
+  IconFileDownload,
+  IconFileTypeJpg,
+  IconFileTypePdf,
+  IconFileTypePng,
+  IconFileWord,
+  IconX,
+} from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { FetchMassesProps } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
@@ -81,12 +89,29 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     cell: ({ row }) => (
       <div className='flex gap-2'>
         <a
-          href={row.original.evidenceUrl}
+          href={
+            row.original.evidenceMimeType?.includes('image/')
+              ? `${row.original.evidenceUrl}-/format/auto/-/quality/smart/`
+              : row.original.evidenceUrl
+          }
           target='_blank'
           rel='noopener noreferrer'
           className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
         >
-          <IconFileDownload className='h-4 w-4' />
+          {row.original.evidenceMimeType === 'image/png' ? (
+            <IconFileTypePng className='h-4 w-4' />
+          ) : row.original.evidenceMimeType === 'image/jpeg' ||
+            row.original.evidenceMimeType === 'image/jpg' ? (
+            <IconFileTypeJpg className='h-4 w-4' />
+          ) : row.original.evidenceMimeType === 'application/pdf' ? (
+            <IconFileTypePdf className='h-4 w-4' />
+          ) : row.original.evidenceMimeType ===
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+            row.original.evidenceMimeType === 'application/msword' ? (
+            <IconFileWord className='h-4 w-4' />
+          ) : (
+            <IconFileDownload className='h-4 w-4' />
+          )}
           Descargar
         </a>
       </div>
