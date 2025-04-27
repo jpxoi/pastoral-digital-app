@@ -15,6 +15,8 @@ import { cache } from 'react'
 
 const CACHE_DURATION = {
   HOUR: 3600,
+  SIX_HOURS: 3600 * 6,
+  TWELVE_HOURS: 3600 * 12,
   DAY: 3600 * 24,
   WEEK: 3600 * 24 * 7,
   MONTH: 3600 * 24 * 28,
@@ -31,7 +33,7 @@ export const getAllUsers = unstable_cache(
   },
   ['getAllUsers'],
   {
-    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+    revalidate: CACHE_DURATION.MONTH,
     tags: ['users'],
   }
 )
@@ -44,7 +46,7 @@ export const getUserById = unstable_cache(
   },
   ['getUserById'],
   {
-    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+    revalidate: CACHE_DURATION.MONTH,
   }
 )
 
@@ -54,7 +56,7 @@ export const countAllUsers = unstable_cache(
   },
   ['countAllUsers'],
   {
-    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+    revalidate: CACHE_DURATION.MONTH,
   }
 )
 
@@ -111,7 +113,8 @@ export const getUserBirthdays = unstable_cache(
   },
   ['getUserBirthdays'],
   {
-    revalidate: CACHE_DURATION.WEEK,
+    revalidate: CACHE_DURATION.DAY,
+    tags: ['users'],
   }
 )
 
@@ -235,7 +238,7 @@ export const getAttendanceRecordsByUserId = unstable_cache(
   },
   ['getAttendanceRecordsByUserId'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.DAY,
     tags: ['attendance'],
   }
 )
@@ -254,7 +257,7 @@ export const getAttendanceRecordsByEventId = unstable_cache(
   },
   ['getAttendanceRecordsByEventId'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.DAY,
     tags: ['attendance'],
   }
 )
@@ -314,7 +317,7 @@ export const getAttendanceCalendar = unstable_cache(
   },
   ['getAttendanceCalendar'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.DAY,
     tags: ['attendance'],
   }
 )
@@ -328,7 +331,7 @@ export const getAllEvents = unstable_cache(
   },
   ['getAllEvents'],
   {
-    revalidate: CACHE_DURATION.DAY,
+    revalidate: CACHE_DURATION.SIX_HOURS,
   }
 )
 
@@ -340,7 +343,7 @@ export const getEventById = unstable_cache(
   },
   ['getEventById'],
   {
-    revalidate: CACHE_DURATION.WEEK, // Switch to MONTH in the future
+    revalidate: CACHE_DURATION.MONTH,
   }
 )
 
@@ -380,7 +383,7 @@ export const getEventAttendanceStats = unstable_cache(
   },
   ['getEventAttendanceStats'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.DAY,
     tags: ['attendance'],
   }
 )
@@ -398,7 +401,7 @@ export const getUpcomingEvents = unstable_cache(
   },
   ['getUpcomingEvents'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['events'],
   }
 )
@@ -416,7 +419,7 @@ export const getPastEvents = unstable_cache(
   },
   ['getPastEvents'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['events'],
   }
 )
@@ -447,7 +450,7 @@ export const getAllMasses = unstable_cache(
   },
   ['getAllMasses'],
   {
-    revalidate: 3600, // 1 hour
+    revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['sundayMasses'],
   }
 )
@@ -466,7 +469,7 @@ export const getSundayMassesRecordsByUserId = unstable_cache(
   },
   ['getSundayMassesRecordsByUserId'],
   {
-    revalidate: CACHE_DURATION.HOUR,
+    revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['sundayMasses'],
   }
 )
