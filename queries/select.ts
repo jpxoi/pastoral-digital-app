@@ -11,7 +11,6 @@ import { redis } from '@/lib/upstash'
 import { AttendanceStatus } from '@/types'
 import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
 import { unstable_cache } from 'next/cache'
-import { cache } from 'react'
 
 const CACHE_DURATION = {
   HOUR: 3600,
