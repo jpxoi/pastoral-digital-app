@@ -8,7 +8,6 @@ import {
   IconClockCheck,
   IconClockExclamation,
   IconClockHeart,
-  IconClockX,
   IconCross,
   IconFlame,
   IconMoodKid,
@@ -79,11 +78,6 @@ export const AttendanceStatusFilterOptions = [
     label: 'TARDANZA',
     value: AttendanceStatus.TARDANZA,
     icon: IconClockExclamation,
-  },
-  {
-    label: 'DOBLE TARDANZA',
-    value: AttendanceStatus.DOBLE_TARDANZA,
-    icon: IconClockX,
   },
   {
     label: 'FALTA JUSTIFICADA',
