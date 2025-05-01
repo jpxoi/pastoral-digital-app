@@ -45,6 +45,7 @@ export const userScheduleEnum = pgEnum('user_schedule_enum', [
 export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
   AttendanceStatus.A_TIEMPO,
   AttendanceStatus.TARDANZA,
+  AttendanceStatus.DOBLE_TARDANZA,
   AttendanceStatus.FALTA_JUSTIFICADA,
   AttendanceStatus.TARDANZA_JUSTIFICADA,
   AttendanceStatus.FALTA_INJUSTIFICADA,
