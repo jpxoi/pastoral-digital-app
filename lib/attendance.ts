@@ -9,10 +9,8 @@ export const calculateStatus = (
 
   if (minutesDifference <= 10) {
     return AttendanceStatus.A_TIEMPO
-  } else if (minutesDifference <= 15) {
-    return AttendanceStatus.TARDANZA
   } else if (minutesDifference <= 20) {
-    return AttendanceStatus.DOBLE_TARDANZA
+    return AttendanceStatus.TARDANZA
   } else {
     return AttendanceStatus.FALTA_INJUSTIFICADA
   }
