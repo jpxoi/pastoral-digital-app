@@ -23,15 +23,9 @@ export default function AttendanceStatusLabel({
       </Badge>
     ),
     TARDANZA: (
-      <Badge variant={'yellow'} className='h-8 rounded-lg'>
+      <Badge variant={'orange'} className='h-8 rounded-lg'>
         <IconClockExclamation className='size-4' />
         <span className='ml-2 text-nowrap'>TARDANZA</span>
-      </Badge>
-    ),
-    'DOBLE TARDANZA': (
-      <Badge variant={'orange'} className='h-8 rounded-lg'>
-        <IconClockX className='size-4' />
-        <span className='ml-2 text-nowrap'>DOBLE TARDANZA</span>
       </Badge>
     ),
     'FALTA INJUSTIFICADA': (
