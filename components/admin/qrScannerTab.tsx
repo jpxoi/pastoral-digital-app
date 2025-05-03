@@ -128,97 +128,92 @@ export default function QrScannerTab() {
   }
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
-    if (detectedCodes) {
-      const userScannedId = detectedCodes[0].rawValue
-      const checkInTime = new Date()
+    if (!detectedCodes) return
 
-      if (!event) {
-        handleError('No hay ningún evento programado para hoy.')
-        return
-      }
+    const userScannedId = detectedCodes[0].rawValue
+    const checkInTime = new Date()
 
-      if (!user) {
-        handleError(
-          'No se pudo obtener tu usuario. Por favor, cierra sesión y vuelve a iniciar sesión'
-        )
-        return
-      }
-
-      startTransition(() => {
-        toast.promise(
-          async () => {
-            const scannedUserSchedule = await fetchUserSchedule(userScannedId)
-
-            if (scannedUserSchedule.error) {
-              throw new Error(scannedUserSchedule.error)
-            }
-
-            const eventDate =
-              scannedUserSchedule.data === UserSchedule.FULL_TIME ||
-              scannedUserSchedule.data === UserSchedule.PRIMERA_COMUNION ||
-              scannedUserSchedule.data === UserSchedule.LOGISTICA ||
-              scannedUserSchedule.data === UserSchedule.SEMILLEROS
-                ? event.date
-                : event.secondTurnDate
-
-            const status = calculateStatus(checkInTime, new Date(eventDate))
-
-            if (checkInTime > new Date(event.endDate)) {
-              throw new Error(
-                'No puedes registrar asistencia después de la hora de finalización del evento.'
-              )
-            }
-
-            const newRecord = {
-              userId: userScannedId,
-              eventId: event.id as number,
-              checkInTime: checkInTime,
-              status: status,
-              registeredBy: user.id as string,
-            }
-
-            return registerAttendanceRecord(newRecord)
-          },
-          {
-            loading: 'Registrando asistencia del catequista...',
-            success: (data: {
-              error?: string
-              success?: string
-              warning?: string
-              lastAttendanceRecord?: FetchAttendanceProps
-            }) => {
-              if (data?.error) {
-                throw new Error(data.error)
-              }
-
-              if (
-                (data?.warning || data?.success) &&
-                data?.lastAttendanceRecord
-              ) {
-                setLastScanned(data.lastAttendanceRecord)
-
-                if (data?.warning) {
-                  handleWarning()
-                  toast.warning(data.warning)
-                  return
-                }
-
-                handleSuccess()
-                return `Asistencia registrada exitosamente para ${data.lastAttendanceRecord.user.firstName} ${data.lastAttendanceRecord.user.lastName}`
-              }
-            },
-            error: (error) => {
-              handleError()
-              return (
-                error.message ||
-                'Ha ocurrido un error al registrar la asistencia. Por favor, inténtalo nuevamente'
-              )
-            },
-          }
-        )
-      })
+    if (!event) {
+      handleError('No hay ningún evento programado para hoy.')
+      return
     }
+
+    if (!user) {
+      handleError(
+        'No se pudo obtener tu usuario. Por favor, cierra sesión y vuelve a iniciar sesión'
+      )
+      return
+    }
+
+    toast.loading('Registrando asistencia...')
+
+    startTransition(async () => {
+      try {
+        const scannedUserSchedule = await fetchUserSchedule(userScannedId)
+
+        if (scannedUserSchedule.error) {
+          throw new Error(scannedUserSchedule.error)
+        }
+
+        const eventDate =
+          scannedUserSchedule.data === UserSchedule.FULL_TIME ||
+          scannedUserSchedule.data === UserSchedule.PRIMERA_COMUNION ||
+          scannedUserSchedule.data === UserSchedule.LOGISTICA ||
+          scannedUserSchedule.data === UserSchedule.SEMILLEROS
+            ? event.date
+            : event.secondTurnDate
+
+        const status = calculateStatus(checkInTime, new Date(eventDate))
+
+        if (checkInTime > new Date(event.endDate)) {
+          throw new Error(
+            'No puedes registrar asistencia después de la hora de finalización del evento.'
+          )
+        }
+
+        const newRecord = {
+          userId: userScannedId,
+          eventId: event.id as number,
+          checkInTime: checkInTime,
+          status: status,
+          registeredBy: user.id as string,
+        }
+
+        const data = await registerAttendanceRecord(newRecord)
+
+        if (data.error) {
+          throw new Error(data.error)
+        }
+
+        toast.dismiss()
+
+        if (data.lastAttendanceRecord) {
+          setLastScanned(data.lastAttendanceRecord)
+        }
+
+        if (data.warning) {
+          handleWarning()
+          toast.warning(data.warning)
+          return
+        }
+
+        if (data.success) {
+          toast.success(data.success)
+          handleSuccess()
+          return
+        }
+      } catch (error) {
+        toast.dismiss()
+        handleError()
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : 'Ha ocurrido un error al registrar la asistencia.'
+        )
+      }
+    })
   }
+
   return (
     <>
       {error && <ScanErrorScreen />}

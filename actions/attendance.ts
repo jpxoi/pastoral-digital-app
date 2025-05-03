@@ -14,13 +14,25 @@ import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidateTag } from 'next/cache'
 import { checkRole } from '@/lib/roles'
-import { AttendanceRecordMethod, AttendanceStatus, UserRole } from '@/types'
+import {
+  AttendanceRecordMethod,
+  AttendanceStatus,
+  FetchAttendanceProps,
+  UserRole,
+} from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
 import { redis } from '@/lib/upstash'
 import { deleteAttendanceRecord } from '@/queries/delete'
 
-export const registerAttendanceRecord = async (data: InsertAttendance) => {
+export const registerAttendanceRecord = async (
+  data: InsertAttendance
+): Promise<{
+  success?: string
+  warning?: string
+  error?: string
+  lastAttendanceRecord?: FetchAttendanceProps
+}> => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
