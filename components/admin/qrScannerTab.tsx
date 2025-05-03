@@ -134,13 +134,6 @@ export default function QrScannerTab() {
         return
       }
 
-      if (userScannedId === (user.id as string)) {
-        handleError(
-          'No puedes registrar tu propia asistencia. Por favor, pide a otro administrador que registre tu asistencia'
-        )
-        return
-      }
-
       startTransition(() => {
         toast.promise(
           async () => {
@@ -162,7 +155,7 @@ export default function QrScannerTab() {
 
             if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
               toast.warning(
-                'Se procesará el registro como FALTA NO JUSTIFICADA. Este no podrá ser modificado.'
+                'El registro se procesará como FALTA NO JUSTIFICADA debido a que la entrada está fuera del horario permitido. Este registro no podrá ser modificado posteriormente.'
               )
             }
 
