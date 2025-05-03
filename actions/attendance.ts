@@ -32,7 +32,7 @@ export const registerAttendanceRecord = async (data: InsertAttendance) => {
       revalidateTag('attendance')
       await invalidateUserAttendanceStatsCache(data.userId)
 
-      if (data.status === AttendanceStatus.FALTA_INJUSTIFICADA) {
+      if (data.status === AttendanceStatus.A_TIEMPO) {
         return {
           warning:
             'El registro se procesará como FALTA NO JUSTIFICADA debido a que la entrada está fuera del horario permitido.',
