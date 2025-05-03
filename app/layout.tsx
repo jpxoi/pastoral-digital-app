@@ -124,6 +124,7 @@ export default function RootLayout({
             className='text-left'
             position='top-right'
             theme='light'
+            expand={true}
             richColors
           />
           <PostHogProvider>{children}</PostHogProvider>
