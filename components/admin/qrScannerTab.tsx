@@ -12,7 +12,7 @@ import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
-import { AttendanceStatus, FetchAttendanceProps, UserSchedule } from '@/types'
+import { FetchAttendanceProps, UserSchedule } from '@/types'
 import {
   ScanErrorScreen,
   ScanSuccessScreen,
