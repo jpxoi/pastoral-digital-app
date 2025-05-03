@@ -1,4 +1,4 @@
-import { IconCheck, IconX } from '@tabler/icons-react'
+import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons-react'
 
 export const ScanErrorScreen = () => {
   return (
@@ -12,6 +12,14 @@ export const ScanSuccessScreen = () => {
   return (
     <div className='absolute inset-0 z-50 flex items-center justify-center bg-green-600 text-white'>
       <IconCheck className='size-64 sm:size-72 md:size-80' />
+    </div>
+  )
+}
+
+export const ScanWarningScreen = () => {
+  return (
+    <div className='absolute inset-0 z-50 flex items-center justify-center bg-orange-600 text-white'>
+      <IconAlertTriangle className='size-64 sm:size-72 md:size-80' />
     </div>
   )
 }

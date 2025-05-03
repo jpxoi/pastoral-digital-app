@@ -16,6 +16,7 @@ import { AttendanceStatus, FetchAttendanceProps, UserSchedule } from '@/types'
 import {
   ScanErrorScreen,
   ScanSuccessScreen,
+  ScanWarningScreen,
 } from '@/components/admin/scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
 import { calculateStatus } from '@/lib/attendance'
@@ -27,6 +28,7 @@ export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
+  const [warning, setWarning] = useState(false)
   const [cameraPermission, setCameraPermission] = useState<
     'granted' | 'denied' | 'prompt'
   >('prompt')
@@ -39,6 +41,7 @@ export default function QrScannerTab() {
   const { user, isLoaded } = useUser()
 
   const [playSuccessSound] = useSound('/sounds/success.mp3')
+  const [playWarningSound] = useSound('/sounds/warning.mp3')
   const [playErrorSound] = useSound('/sounds/error.mp3')
 
   useEffect(() => {
@@ -113,6 +116,13 @@ export default function QrScannerTab() {
     playSuccessSound()
   }
 
+  const handleWarning = () => {
+    setWarning(true)
+    setTimeout(() => setWarning(false), 1000)
+
+    playWarningSound()
+  }
+
   const showError = (error: string) => {
     toast.error(error)
   }
@@ -153,12 +163,6 @@ export default function QrScannerTab() {
 
             const status = calculateStatus(checkInTime, new Date(eventDate))
 
-            if (status === AttendanceStatus.FALTA_INJUSTIFICADA) {
-              toast.warning(
-                'El registro se procesará como FALTA NO JUSTIFICADA debido a que la entrada está fuera del horario permitido. Este registro no podrá ser modificado posteriormente.'
-              )
-            }
-
             if (checkInTime > new Date(event.endDate)) {
               throw new Error(
                 'No puedes registrar asistencia después de la hora de finalización del evento.'
@@ -180,16 +184,27 @@ export default function QrScannerTab() {
             success: (data: {
               error?: string
               success?: string
+              warning?: string
               lastAttendanceRecord?: FetchAttendanceProps
             }) => {
               if (data?.error) {
                 throw new Error(data.error)
               }
 
-              if (data?.success && data?.lastAttendanceRecord) {
+              if (
+                (data?.warning || data?.success) &&
+                data?.lastAttendanceRecord
+              ) {
                 setLastScanned(data.lastAttendanceRecord)
+
+                if (data?.warning) {
+                  handleWarning()
+                  toast.warning(data.warning)
+                  return
+                }
+
                 handleSuccess()
-                return data.success
+                return `Asistencia registrada exitosamente para ${data.lastAttendanceRecord.user.firstName} ${data.lastAttendanceRecord.user.lastName}`
               }
             },
             error: (error) => {
@@ -208,6 +223,7 @@ export default function QrScannerTab() {
     <>
       {error && <ScanErrorScreen />}
       {success && <ScanSuccessScreen />}
+      {warning && <ScanWarningScreen />}
       <TabsContent value='scan' className='space-y-4'>
         {cameraPermission === 'denied' && (
           <ErrorAlert
