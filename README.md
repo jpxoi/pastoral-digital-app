@@ -2,6 +2,7 @@
 
 ![Pastoral Digital App](/app/opengraph-image.jpeg)
 [Reportar error](https://github.com/jpxoi/pastoral-digital-app/issues) · [Sugerir algo](https://github.com/jpxoi/pastoral-digital-app/issues)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/jpxoi/pastoral-digital-app)
 
 <details>
 
