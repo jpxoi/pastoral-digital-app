@@ -19,6 +19,7 @@ const CACHE_DURATION = {
   DAY: 3600 * 24,
   WEEK: 3600 * 24 * 7,
   MONTH: 3600 * 24 * 28,
+  YEAR: 3600 * 24 * 365,
 }
 
 /* UsersTable */
@@ -150,8 +151,8 @@ export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
     .from(attendanceRecordsTable)
     .where(eq(attendanceRecordsTable.userId, userId))
 
-  // Store the stats in cache for 1 week
-  await redis.set(cacheKey, stats, { ex: CACHE_DURATION.WEEK })
+  // Store the stats in cache for 1 year
+  await redis.set(cacheKey, stats, { ex: CACHE_DURATION.YEAR })
   console.log('Cache miss for user attendance stats for userId:', userId)
 
   return stats
