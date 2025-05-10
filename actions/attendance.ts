@@ -37,6 +37,12 @@ export const registerAttendanceRecord = async (
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
 
+  const suspendedUsers = await redis.lrange('suspended-users', 0, -1)
+
+  if (suspendedUsers.includes(data.userId)) {
+    return { error: 'El catequista está suspendido.' }
+  }
+
   return await createAttendanceRecord(data)
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
