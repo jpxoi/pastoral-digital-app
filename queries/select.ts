@@ -305,7 +305,7 @@ export const getAttendanceCalendar = unstable_cache(
         }
 
         if (record.eventDate) {
-          const dateKey = record.eventDate.toISOString().split('T')[0]
+          const dateKey = new Date(record.eventDate).toISOString().split('T')[0]
           userMap.get(record.userId)![dateKey] = record.status || null
         }
       }
