@@ -156,7 +156,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
   const absenceRecords = absentUsers.map((user) => ({
     userId: user.id,
     eventId,
-    checkInTime: event.endDate,
+    checkInTime: new Date(event.endDate),
     status: AttendanceStatus.FALTA_INJUSTIFICADA,
     registeredBy: registeredBy || '',
     method: AttendanceRecordMethod.MANUAL,
