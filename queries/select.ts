@@ -57,6 +57,7 @@ export const countAllUsers = unstable_cache(
   ['countAllUsers'],
   {
     revalidate: CACHE_DURATION.MONTH,
+    tags: ['users'],
   }
 )
 
