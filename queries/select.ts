@@ -114,7 +114,7 @@ export const getUserBirthdays = unstable_cache(
   },
   ['getUserBirthdays'],
   {
-    revalidate: CACHE_DURATION.DAY,
+    revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['users'],
   }
 )
