@@ -204,7 +204,7 @@ export const getAllAttendanceRecords = unstable_cache(
         event: true,
         registeredByUser: true,
       },
-      orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
+      orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
     })
   },
   ['getAllAttendanceRecords'],
@@ -228,7 +228,7 @@ export const getAttendanceRecordsByUserId = unstable_cache(
   async (userId: SelectUser['id']) => {
     return db.query.attendanceRecordsTable.findMany({
       where: eq(attendanceRecordsTable.userId, userId),
-      orderBy: (fields) => [desc(fields.id)],
+      orderBy: (fields) => [desc(fields.checkInTime), desc(fields.eventId)],
       with: {
         user: true,
         event: true,
@@ -248,7 +248,7 @@ export const getAttendanceRecordsByEventId = unstable_cache(
   async (eventId: SelectEvent['id']) => {
     return db.query.attendanceRecordsTable.findMany({
       where: eq(attendanceRecordsTable.eventId, eventId),
-      orderBy: (fields) => [desc(fields.id), desc(fields.userId)],
+      orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
       with: {
         user: true,
         registeredByUser: true,
