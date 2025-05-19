@@ -25,7 +25,11 @@ import { toast } from 'sonner'
 import { getUploadcareSignature, removeFile } from '@/actions/file'
 import { postNewMassRecord } from '@/actions/mass'
 
-import { FileUploaderMinimal } from '@uploadcare/react-uploader'
+import {
+  FileUploaderMinimal,
+  OutputError,
+  OutputFileErrorType,
+} from '@uploadcare/react-uploader'
 import '@uploadcare/react-uploader/core.css'
 
 const pubKey = process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY as string
@@ -45,6 +49,7 @@ export default function SundayMassForm() {
   })
 
   const handleOnFileUploadSuccess = (file: {
+    status: 'success'
     name: string
     uuid: string
     cdnUrl: string
@@ -55,6 +60,18 @@ export default function SundayMassForm() {
     setIsFileUploaded(true)
     toast.success('Archivo subido correctamente.')
     setError(null)
+  }
+
+  const handleOnFileUploadFailed = (res: {
+    errors: OutputError<OutputFileErrorType>[]
+  }) => {
+    // Dismiss all toast notifications
+    toast.dismiss()
+
+    form.resetField('evidenceUrl')
+    form.resetField('evidenceMimeType')
+    setIsFileUploaded(false)
+    toast.error(res.errors[0].message)
   }
 
   const handleOnFileRemoved = async (e: { uuid: string | null }) => {
@@ -162,6 +179,7 @@ export default function SundayMassForm() {
                     }}
                     classNameUploader='uc-light'
                     pubkey={pubKey}
+                    onFileUploadFailed={handleOnFileUploadFailed}
                     onFileUploadSuccess={handleOnFileUploadSuccess}
                     onFileRemoved={handleOnFileRemoved}
                     imageShrink='1440x1080 90%'
