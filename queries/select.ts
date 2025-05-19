@@ -282,7 +282,9 @@ export const getAttendanceCalendar = unstable_cache(
           attendanceRecordsTable,
           sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
         )
-        .where(sql`${eventsTable.date} IS NOT NULL`)
+        .where(
+          sql`${eventsTable.date} IS NOT NULL AND ${eventsTable.date} <= current_date`
+        )
         .orderBy(
           sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
           eventsTable.date
