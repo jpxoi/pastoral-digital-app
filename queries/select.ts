@@ -81,7 +81,7 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
 
   // Store the schedule in cache for 1 month
   if (user?.schedule) {
-    await redis.set(cacheKey, user.schedule, { ex: CACHE_DURATION.MONTH })
+    await redis.set(cacheKey, user.schedule, { ex: CACHE_DURATION.YEAR })
   }
 
   console.log('Cache miss for user schedule for userId:', userId)
