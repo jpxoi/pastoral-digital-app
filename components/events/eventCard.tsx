@@ -113,17 +113,19 @@ export default function EventCard({
           </Button>
         ) : (
           <a
-            href={`https://wa.me/51941952314?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${new Date(
-              record.date
-            ).toLocaleDateString('es-PE', {
-              day: 'numeric',
-              month: 'short',
-              year: 'numeric',
-            })}, a las ${new Date(record.date).toLocaleTimeString('es-PE', {
-              hour: 'numeric',
-              minute: 'numeric',
-              timeZone: 'America/Lima',
-            })}.`}
+            href={new URL(
+              `https://wa.me/51941952314?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${new Date(
+                record.date
+              ).toLocaleDateString('es-PE', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })} a las ${new Date(record.date).toLocaleTimeString('es-PE', {
+                hour: 'numeric',
+                minute: 'numeric',
+                timeZone: 'America/Lima',
+              })}`
+            ).toString()}
             target='_blank'
             rel='noreferrer'
             className={cn(
