@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 
 import {
   IconCalendar,
@@ -17,7 +17,6 @@ import {
   IconClock,
   IconMapPin,
 } from '@tabler/icons-react'
-import { EventJustifyModal } from './eventJustifyModal'
 import { EventCardAction } from './eventCardAction'
 import { Suspense } from 'react'
 import { Skeleton } from '../ui/skeleton'
@@ -32,10 +31,18 @@ export default function EventCard({
   const isToday =
     type === 'upcoming' ? isEventToday(new Date(record.date)) : false
 
+  const isHappeningNow =
+    new Date(record.date) <= new Date() &&
+    new Date(record.endDate) >= new Date()
+
   return (
     <Card
       key={record.id}
-      className={cn('text-left', isToday ? 'border-blue-700 bg-blue-50' : '')}
+      className={cn(
+        'text-left',
+        isToday ? 'border-blue-700 bg-blue-50' : '',
+        isHappeningNow ? 'border-emerald-700 bg-emerald-50' : ''
+      )}
     >
       <CardHeader>
         <CardTitle className='flex items-center justify-between'>
@@ -96,16 +103,36 @@ export default function EventCard({
         </CardDescription>
       </CardHeader>
       <CardContent className='flex items-center justify-between gap-2'>
-        {type === 'upcoming' ? (
-          <EventJustifyModal />
-        ) : (
+        {isHappeningNow || type === 'past' ? (
           <Button
             variant='link'
             disabled
             className='h-6 cursor-not-allowed p-1 text-primary hover:bg-blue-50 hover:text-primary'
           >
-            Justificar Inasistencia
+            {isHappeningNow ? 'Evento en curso' : 'Evento finalizado'}
           </Button>
+        ) : (
+          <a
+            href={`https://wa.me/51941952314?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${new Date(
+              record.date
+            ).toLocaleDateString('es-PE', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            })}, a las ${new Date(record.date).toLocaleTimeString('es-PE', {
+              hour: 'numeric',
+              minute: 'numeric',
+              timeZone: 'America/Lima',
+            })}.`}
+            target='_blank'
+            rel='noreferrer'
+            className={cn(
+              buttonVariants({ variant: 'link' }),
+              'h-6 p-1 text-primary hover:bg-blue-50 hover:text-primary'
+            )}
+          >
+            Justificar Inasistencia
+          </a>
         )}
         <Suspense fallback={<Skeleton className='h-6 w-28' />}>
           <EventCardAction id={record.id} date={new Date(record.date)} />
