@@ -32,6 +32,10 @@ export async function postNewMassRecord(
   const { parish, evidenceUrl, evidenceMimeType } = validatedFields.data
 
   const today = new Date()
+  
+  if (today.getDay() === 1) {
+    today.setDate(today.getDate() - 1) 
+  }
 
   const formattedDate = today.toLocaleDateString('en-CA', {
     year: 'numeric',
