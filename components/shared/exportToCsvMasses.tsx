@@ -33,12 +33,14 @@ export default function ExportToCsvMasses() {
                 'full_name',
                 'category',
                 'student_code',
+                'schedule',
                 'parish',
                 'evidence_url',
                 'verified',
                 'verfied_by_user_id',
                 'verified_by_full_name',
                 'verified_at',
+                'sunday_date',
                 'created_at',
               ],
               ...sundayMass.map((item) => [
@@ -47,9 +49,10 @@ export default function ExportToCsvMasses() {
                 `${item.user.firstName} ${item.user.lastName}`,
                 item.user.category,
                 item.user.studentCode,
+                item.user.schedule,
                 item.parish,
                 item.evidenceUrl,
-                item.verified ? 'Verificado' : 'Pendiente',
+                item.verified ? 'Verificado' : 'Rechazado',
                 item.verifiedBy,
                 item.verifier
                   ? `${item.verifier.firstName} ${item.verifier.lastName}`
@@ -57,14 +60,23 @@ export default function ExportToCsvMasses() {
                 item.verifiedAt
                   ? new Intl.DateTimeFormat('es-PE', {
                       timeZone: 'America/Lima',
-                      dateStyle: 'medium',
-                      timeStyle: 'long',
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
                     }).format(new Date(item.verifiedAt))
                   : '',
+                item.sundayDate,
                 new Intl.DateTimeFormat('es-PE', {
                   timeZone: 'America/Lima',
-                  dateStyle: 'medium',
-                  timeStyle: 'long',
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
                 }).format(new Date(item.createdAt as Date)),
               ]),
             ]

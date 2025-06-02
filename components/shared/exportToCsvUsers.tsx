@@ -58,8 +58,24 @@ export default function ExportToCsvUsers() {
                 item.studentCode,
                 item.role,
                 item.schedule,
-                item.createdAt,
-                item.updatedAt,
+                new Intl.DateTimeFormat('es-PE', {
+                  timeZone: 'America/Lima',
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                }).format(new Date(item.createdAt as Date)),
+                new Intl.DateTimeFormat('es-PE', {
+                  timeZone: 'America/Lima',
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                }).format(new Date(item.updatedAt as Date)),
               ]),
             ]
               .map((e) => e.join(';'))
