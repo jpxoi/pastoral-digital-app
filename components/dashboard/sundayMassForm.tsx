@@ -185,9 +185,10 @@ export default function SundayMassForm() {
                     imageShrink='1440x1080 90%'
                   />
                   <FormDescription>
-                    Sube como evidencia de tu participación una foto de la
-                    celebración, o un documento con tu reflexión sobre el
-                    evangelio del día en formato PDF o Word (máx. 4 MB).
+                    Sube como evidencia de tu participación una imagen de la
+                    celebración (JPG, PNG, HEIC, etc.) en la que aparezcas tú, o
+                    un documento con tu reflexión personal sobre el evangelio
+                    del día (PDF o Word). Máximo un archivo de 4 MB.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
