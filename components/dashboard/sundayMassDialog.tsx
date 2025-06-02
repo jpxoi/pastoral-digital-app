@@ -14,9 +14,11 @@ export default function SundayMassDialog() {
     new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
   )
 
-  const isSundayOrMonday = peruDate.getDay() === 0 || peruDate.getDay() === 1
+  const isValidTimeframe =
+    peruDate.getDay() === 0 || // Sunday
+    (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
 
-  if (!isSundayOrMonday) {
+  if (!isValidTimeframe) {
     return null
   }
 
