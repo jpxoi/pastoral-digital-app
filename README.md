@@ -51,6 +51,24 @@ Esta aplicación es una _Progressive Web App_ (PWA) y puede ser instalada en cua
 
 Si tienes alguna pregunta o problema con la instalación de la aplicación, por favor envía un correo electrónico a [pastoral@ps.edu.pe](mailto:pastoral@ps.edu.pe) para recibir asistencia.
 
+### Variables de entorno
+
+La aplicación utiliza variables de entorno para configurar su comportamiento. Estas variables se encuentran en el archivo `.env.local` y se pueden modificar según sea necesario.
+
+- `UPSTASH_REDIS_REST_TOKEN`: Token de Upstash para el almacenamiento de datos.
+- `UPSTASH_REDIS_REST_URL`: URL de Upstash para el almacenamiento de datos.
+- `NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY`: Clave pública de Uploadcare para el almacenamiento de archivos.
+- `UPLOADCARE_SECRET_KEY`: Clave secreta de Uploadcare para el almacenamiento de archivos.
+- `DATABASE_URL`: Connection string de la base de datos Neon.
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Clave pública de Clerk para el autenticación.
+- `CLERK_SECRET_KEY`: Clave secreta de Clerk para el autenticación.
+- `NEXT_PUBLIC_CLERK_SIGN_IN_URL`: URL de la página de inicio de sesión de Clerk. (Por defecto: `/sign-in`)
+- `NEXT_PUBLIC_CLERK_SIGN_UP_URL`: URL de la página de registro de Clerk. (Por defecto: `/sign-up`)
+- `NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL`: URL de redirección forzada de la página de inicio de sesión de Clerk. (Por defecto: `/dashboard`)
+- `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL`: URL de redirección de fallback de la página de inicio de sesión de Clerk. (Por defecto: `/dashboard`)
+- `NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL`: URL de redirección forzada de la página de registro de Clerk. (Por defecto: `/onboarding`)
+- `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`: URL de redirección de fallback de la página de registro de Clerk. (Por defecto: `/onboarding`)
+
 ## 🤝 Contribuir
 
 Las contribuciones a la aplicación son bienvenidas y pueden realizarse a través de _pull requests_ en este repositorio.
