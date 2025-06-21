@@ -80,8 +80,8 @@ export default async function AttendanceCalendarTable() {
                               title={`${unjustifiedAbsences} faltas injustificadas`}
                             />
                           </TooltipTrigger>
-                          <TooltipContent>
-                            <p className='text-xs text-destructive'>
+                          <TooltipContent className='bg-red-100'>
+                            <p className='text-xs text-red-800'>
                               Este catequista tiene más de 3 faltas no
                               justificadas.
                             </p>
