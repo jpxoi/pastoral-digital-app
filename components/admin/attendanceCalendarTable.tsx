@@ -7,6 +7,11 @@ import {
   TableBody,
   TableCell,
 } from '../ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { IconAlertCircle } from '@tabler/icons-react'
 
@@ -66,10 +71,20 @@ export default async function AttendanceCalendarTable() {
                   <div className='flex items-center gap-2'>
                     {row.fullName}
                     {showAlert && (
-                      <IconAlertCircle 
-                        className='h-4 w-4 text-red-500' 
-                        title={`${unjustifiedAbsences} faltas injustificadas`}
-                      />
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <IconAlertCircle
+                            className='h-4 w-4 text-red-500'
+                            title={`${unjustifiedAbsences} faltas injustificadas`}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>
+                            Este catequista tiene más de 3 faltas
+                            injustificadas.
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
                     )}
                   </div>
                 </TableCell>
