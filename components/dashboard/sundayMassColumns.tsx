@@ -31,7 +31,7 @@ const EvidenceFileIcon = memo(({ mimeType }: { mimeType?: string }) => {
     return <IconFileDownload className='h-4 w-4' />
   }
 })
-EvidenceFileIcon.displayName = 'EvidenceFileIcon';
+EvidenceFileIcon.displayName = 'EvidenceFileIcon'
 
 export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
   {

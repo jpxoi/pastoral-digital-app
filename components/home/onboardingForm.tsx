@@ -107,10 +107,7 @@ export default function OnboardingForm({
                   Nombres <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Ingrese sus nombres'
-                    {...field}
-                  />
+                  <Input placeholder='Ingrese sus nombres' {...field} />
                 </FormControl>
                 <FormDescription>
                   Ingresa tus nombres tal y como aparecen en tu documento de
@@ -129,10 +126,7 @@ export default function OnboardingForm({
                   Apellidos <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Ingrese sus dos apellidos'
-                    {...field}
-                  />
+                  <Input placeholder='Ingrese sus dos apellidos' {...field} />
                 </FormControl>
                 <FormDescription>
                   Escribe tus apellidos completos, según tu DNI.
