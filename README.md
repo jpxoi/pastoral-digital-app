@@ -55,8 +55,6 @@ Si tienes alguna pregunta o problema con la instalación de la aplicación, por 
 
 La aplicación utiliza variables de entorno para configurar su comportamiento. Estas variables se encuentran en el archivo `.env.local` y se pueden modificar según sea necesario.
 
-- `UPSTASH_REDIS_REST_TOKEN`: Token de Upstash para el almacenamiento de datos.
-- `UPSTASH_REDIS_REST_URL`: URL de Upstash para el almacenamiento de datos.
 - `NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY`: Clave pública de Uploadcare para el almacenamiento de archivos.
 - `UPLOADCARE_SECRET_KEY`: Clave secreta de Uploadcare para el almacenamiento de archivos.
 - `DATABASE_URL`: Connection string de la base de datos Neon.

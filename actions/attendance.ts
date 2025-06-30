@@ -22,7 +22,6 @@ import {
 } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
-import { redis } from '@/lib/upstash'
 import { deleteAttendanceRecord } from '@/queries/delete'
 
 export const registerAttendanceRecord = async (
@@ -37,21 +36,11 @@ export const registerAttendanceRecord = async (
     return { error: 'No estas autorizado para registrar asistencias.' }
   }
 
-  const suspendedUsers = await redis.lrange('suspended-users', 0, -1)
-
-  if (suspendedUsers.includes(data.userId)) {
-    return {
-      error:
-        'El catequista se encuentra suspendido y no tiene permitido el ingreso en este momento.',
-    }
-  }
-
   return await createAttendanceRecord(data)
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
       revalidateTag('attendance')
-      await invalidateUserAttendanceStatsCache(data.userId)
 
       if (data.status === AttendanceStatus.FALTA_JUSTIFICADA) {
         return {
@@ -113,7 +102,6 @@ export const setAttendanceRecordStatus = async (
   return await updateAttendanceRecordStatus(status, recordId)
     .then(async () => {
       revalidateTag('attendance')
-      await invalidateUserAttendanceStatsCache(userId)
 
       return {
         success: 'Estado de asistencia modificado correctamente.',
@@ -191,7 +179,6 @@ export const removeAttendanceRecord = async (
   return await deleteAttendanceRecord(recordId)
     .then(async () => {
       revalidateTag('attendance')
-      await invalidateUserAttendanceStatsCache(userId)
       return {
         success: 'Asistencia eliminada correctamente.',
       }
@@ -207,14 +194,3 @@ export const removeAttendanceRecord = async (
     })
 }
 
-const invalidateUserAttendanceStatsCache = async (userId: string) => {
-  const cacheKey = `user-attendance-stats:${userId}`
-  await redis
-    .del(cacheKey)
-    .then(() => {
-      console.log(`Cache key ${cacheKey} deleted successfully`)
-    })
-    .catch((error) => {
-      console.error(`Error deleting cache key ${cacheKey}:`, error)
-    })
-}

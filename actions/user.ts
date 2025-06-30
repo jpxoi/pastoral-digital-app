@@ -7,7 +7,6 @@ import { OnboardingFormSchema } from '@/schema'
 import { checkRole } from '@/lib/roles'
 import { UserRole, UserSchedule } from '@/types'
 import { getUserSchedule } from '@/queries/select'
-import { redis } from '@/lib/upstash'
 import { SelectUser } from '@/db/schema'
 import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
@@ -127,7 +126,6 @@ export async function setUserSchedule(
   return await updateUserSchedule(userId, schedule)
     .then(async () => {
       revalidateTag('users')
-      await invalidateUserScheduleCache(userId)
 
       return {
         success: 'Programa del catequista actualizado correctamente',
@@ -175,14 +173,3 @@ export async function fetchUserSchedule(userId: string) {
   }
 }
 
-const invalidateUserScheduleCache = async (userId: string) => {
-  const cacheKey = `user-schedule:${userId}`
-  await redis
-    .del(cacheKey)
-    .then(() => {
-      console.log(`Cache key ${cacheKey} deleted successfully`)
-    })
-    .catch((error) => {
-      console.error(`Error deleting cache key ${cacheKey}:`, error)
-    })
-}

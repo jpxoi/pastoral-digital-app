@@ -3,10 +3,6 @@ import { getTodayEvent } from '@/queries/select'
 import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-import { redis } from '@/lib/upstash'
-
-const CACHE_KEY = 'today-event'
-const CACHE_EXPIRATION = 60 * 60 * 12 // 12 hours in seconds
 
 export async function GET() {
   const { userId } = await auth()
@@ -30,58 +26,21 @@ export async function GET() {
     )
   }
 
-  // Check cache first
-  const cachedEvent = await redis.get(CACHE_KEY)
-  if (cachedEvent) {
-    if (
-      JSON.stringify(cachedEvent) ===
-      '{"error":"No hay ningún evento programado para hoy."}'
-    ) {
-      return NextResponse.json(
-        {
-          error: 'No hay ningún evento programado para hoy.',
-          cache: 'HIT',
-        },
-        { status: 404 }
-      )
-    }
-
-    return NextResponse.json(
-      {
-        success: 'Evento del día obtenido correctamente.',
-        event: cachedEvent,
-        cache: 'HIT',
-      },
-      { status: 200 }
-    )
-  }
-
-  // If not in cache, fetch from database
   return await getTodayEvent()
     .then(async (event) => {
       if (!event) {
-        await redis.set(
-          CACHE_KEY,
-          { error: 'No hay ningún evento programado para hoy.' },
-          { ex: CACHE_EXPIRATION }
-        )
         return NextResponse.json(
           {
             error: 'No hay ningún evento programado para hoy.',
-            cache: 'MISS',
           },
           { status: 404 }
         )
       }
 
-      // Store in cache for 24 hours
-      await redis.set(CACHE_KEY, event, { ex: CACHE_EXPIRATION })
-
       return NextResponse.json(
         {
           success: 'Evento del día obtenido correctamente.',
           event: event,
-          cache: 'MISS',
         },
         { status: 200 }
       )

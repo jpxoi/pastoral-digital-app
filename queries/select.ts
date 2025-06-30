@@ -7,7 +7,6 @@ import {
   sundayMassesTable,
   usersTable,
 } from '@/db/schema'
-import { redis } from '@/lib/upstash'
 import { AttendanceStatus } from '@/types'
 import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
 import { unstable_cache } from 'next/cache'
@@ -62,16 +61,6 @@ export const countAllUsers = unstable_cache(
 )
 
 export const getUserSchedule = async (userId: SelectUser['id']) => {
-  const cacheKey = `user-schedule:${userId}`
-  const cachedSchedule = await redis.get(cacheKey)
-
-  if (cachedSchedule) {
-    console.log('Cache hit for user schedule for userId:', userId)
-    return {
-      schedule: cachedSchedule as string,
-    }
-  }
-  // If not in cache, fetch from database
   const user = await db.query.usersTable.findFirst({
     where: eq(usersTable.id, userId),
     columns: {
@@ -79,12 +68,6 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
     },
   })
 
-  // Store the schedule in cache for 1 month
-  if (user?.schedule) {
-    await redis.set(cacheKey, user.schedule, { ex: CACHE_DURATION.YEAR })
-  }
-
-  console.log('Cache miss for user schedule for userId:', userId)
   return user
 }
 
@@ -120,17 +103,6 @@ export const getUserBirthdays = unstable_cache(
 )
 
 export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
-  const cacheKey = `user-attendance-stats:${userId}`
-  const cachedStats = (await redis.get(cacheKey)) as {
-    totalOnTime: number
-    totalLate: number
-    totalAbsences: number
-  } | null
-  if (cachedStats) {
-    console.log('Cache hit for user attendance stats for userId:', userId)
-    return cachedStats
-  }
-
   const [
     stats = {
       totalOnTime: 0,
@@ -151,10 +123,6 @@ export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
     })
     .from(attendanceRecordsTable)
     .where(eq(attendanceRecordsTable.userId, userId))
-
-  // Store the stats in cache for 1 year
-  await redis.set(cacheKey, stats, { ex: CACHE_DURATION.YEAR })
-  console.log('Cache miss for user attendance stats for userId:', userId)
 
   return stats
 }
