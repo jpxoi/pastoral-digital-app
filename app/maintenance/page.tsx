@@ -3,8 +3,8 @@ import { IconBarrierBlock } from '@tabler/icons-react'
 
 export default async function MaintenancePage() {
   const [startDateTime, endDateTime] = [
-    '2025-11-01T05:00:00Z',
-    '2030-12-31T23:59:59Z',
+    '2025-11-01T04:59:59Z',
+    '2025-11-01T04:59:59Z',
   ]
 
   return (
