@@ -18,7 +18,7 @@ export default function PastoralDigitalPage() {
       {/* Alerta de que la aplicación dejara de funcionar el 31 de octubre de 2025 */}
       <ErrorAlert
         title='Pastoral Digital App estará disponible hasta el 31 de octubre de 2025'
-        description='Gracias por formar parte de este proyecto y por todo lo compartido a través de la aplicación. El 31 de octubre la plataforma dejará de estar activa, pero el código quedará abierto para que, si en el futuro alguien desea continuar o mejorar la idea, tenga la libertad de hacerlo. ¡Gracias por la confianza y que Dios los bendiga siempre!'
+        description='Gracias por todo lo compartido a través de la aplicación. El 31 de octubre la plataforma dejará de estar activa, pero el código quedará abierto para que, si en el futuro alguien desea continuar o mejorar la idea, tenga la libertad de hacerlo. ¡Gracias por la confianza y que Dios los bendiga siempre!'
       />
 
       <Suspense fallback={null}>
