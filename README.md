@@ -12,6 +12,7 @@
 - [✨ Características](#-características)
 - [🆕 Novedades](#-novedades)
 - [🚀 Primeros Pasos](#-primeros-pasos)
+- [🚀 Desplegar la aplicación](#-desplegar-la-aplicación)
 - [🤝 Contribuir](#-contribuir)
 - [📜 Licencia](#-licencia)
 - [📞 Contacto](#-contacto)
@@ -51,21 +52,84 @@ Esta aplicación es una _Progressive Web App_ (PWA) y puede ser instalada en cua
 
 Si tienes alguna pregunta o problema con la instalación de la aplicación, por favor envía un correo electrónico a [pastoral@ps.edu.pe](mailto:pastoral@ps.edu.pe) para recibir asistencia.
 
-### Variables de entorno
+## 🚀 Desplegar la aplicación
 
-La aplicación utiliza variables de entorno para configurar su comportamiento. Estas variables se encuentran en el archivo `.env.local` y se pueden modificar según sea necesario.
+### 1. Clonar el repositorio
 
-- `NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY`: Clave pública de Uploadcare para el almacenamiento de archivos.
-- `UPLOADCARE_SECRET_KEY`: Clave secreta de Uploadcare para el almacenamiento de archivos.
-- `DATABASE_URL`: Connection string de la base de datos Neon.
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`: Clave pública de Clerk para el autenticación.
-- `CLERK_SECRET_KEY`: Clave secreta de Clerk para el autenticación.
-- `NEXT_PUBLIC_CLERK_SIGN_IN_URL`: URL de la página de inicio de sesión de Clerk. (Por defecto: `/sign-in`)
-- `NEXT_PUBLIC_CLERK_SIGN_UP_URL`: URL de la página de registro de Clerk. (Por defecto: `/sign-up`)
-- `NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL`: URL de redirección forzada de la página de inicio de sesión de Clerk. (Por defecto: `/dashboard`)
-- `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL`: URL de redirección de fallback de la página de inicio de sesión de Clerk. (Por defecto: `/dashboard`)
-- `NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL`: URL de redirección forzada de la página de registro de Clerk. (Por defecto: `/onboarding`)
-- `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL`: URL de redirección de fallback de la página de registro de Clerk. (Por defecto: `/onboarding`)
+```bash
+git clone https://github.com/jpxoi/pastoral-digital-app.git
+cd pastoral-digital-app
+```
+
+### 2. Instalar las dependencias
+
+```bash
+pnpm install
+```
+
+### 3. Prerequisitos
+
+La aplicación depende de los siguientes servicios:
+
+- [Neon](https://neon.tech/) - Base de datos
+- [Uploadcare](https://uploadcare.com/) - Almacenamiento de archivos
+- [Clerk](https://clerk.com/) - Autenticación
+- [PostHog](https://posthog.com/) - Analítica
+- [Upstash](https://upstash.com/) - Caché
+
+Asegúrate de tener las credenciales de cada servicio y configurarlas en el archivo `.env`, como se especifica en el siguiente punto.
+
+### 4. Configurar las variables de entorno
+
+La aplicación utiliza variables de entorno para configurar su comportamiento. Estas variables se encuentran en el archivo `.env` y se pueden modificar según sea necesario. Si no tienes un archivo `.env`, puedes crearlo como el siguiente:
+
+```env
+DATABASE_URL=<your-database-url>
+
+NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY=<your-uploadcare-public-key>
+UPLOADCARE_SECRET_KEY=<your-uploadcare-secret-key>
+
+UPSTASH_REDIS_REST_URL=<your-upstash-redis-rest-url>
+UPSTASH_REDIS_REST_TOKEN=<your-upstash-redis-rest-token>
+
+NEXT_PUBLIC_POSTHOG_HOST=<your-posthog-host_url>
+NEXT_PUBLIC_POSTHOG_KEY=<your-posthog-key>
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
+CLERK_SECRET_KEY=<your-clerk-secret-key>
+
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
+NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/onboarding
+NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
+```
+
+### 5. Generar las migraciones de la base de datos
+
+La aplicación utiliza Drizzle para la generación de las migraciones de la base de datos. Para generar las migraciones, puedes ejecutar el siguiente comando:
+
+```bash
+pnpm db:generate
+pnpm db:migrate
+```
+
+### 6. Desplegar la aplicación
+
+La aplicación se puede desplegar en cualquier servidor que tenga Node.js y npm instalado. Para desplegar la aplicación, puedes ejecutar el siguiente comando:
+
+```bash
+pnpm build
+pnpm start
+```
+
+Como alternativa, puedes utilizar el servicio de [Vercel](https://vercel.com/) para desplegar la aplicación. Para desplegar la aplicación en Vercel, puedes seguir los siguientes pasos:
+
+1. Ingresar a la consola de Vercel en [https://vercel.com/](https://vercel.com/).
+2. Crear una nueva proyecto.
+3. Importar el repositorio de la aplicación.
+4. Desplegar la aplicación.
 
 ## 🤝 Contribuir
 
