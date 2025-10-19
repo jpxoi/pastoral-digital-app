@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import EventsGrid from '@/components/events/eventsGrid'
 import { Suspense } from 'react'
+import ErrorAlert from '@/components/shared/errorAlert'
 
 export const metadata: Metadata = {
   title: 'Eventos | Pastoral Digital App',
@@ -10,6 +11,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <main className='flex h-full w-full flex-1 flex-col gap-4 overflow-y-scroll rounded-tl-2xl border border-neutral-200 bg-white p-4 pb-8 max-sm:max-h-[calc(100vh-3rem)] md:p-8'>
+      {/* Alerta de que la aplicación dejara de funcionar el 31 de octubre de 2025 */}
+      <ErrorAlert
+        title='Pastoral Digital App estará disponible hasta el 31 de octubre de 2025'
+        description='Gracias por todo lo compartido a través de la aplicación. El 31 de octubre la plataforma dejará de estar activa, pero el código quedará abierto para que, si en el futuro alguien desea continuar o mejorar la idea, tenga la libertad de hacerlo. ¡Gracias por la confianza y que Dios los bendiga siempre!'
+      />
       <Suspense fallback={null}>
         <OfflineAlert />
       </Suspense>
