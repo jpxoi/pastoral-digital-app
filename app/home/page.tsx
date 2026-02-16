@@ -34,7 +34,7 @@ export default function LandingPage() {
 
         <div className='flex-1'>
           {/* Hero Section */}
-          <section className='flex w-screen items-center justify-center bg-primary px-8 py-12 text-white md:py-24 lg:py-32 xl:py-48'>
+          <section className='bg-primary flex w-screen items-center justify-center px-8 py-12 text-white md:py-24 lg:py-32 xl:py-48'>
             <Background />
             <div className='container px-4 md:px-6'>
               <div className='grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2'>
@@ -43,7 +43,7 @@ export default function LandingPage() {
                     <h1 className='text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none'>
                       Productividad y Colaboración para Catequistas
                     </h1>
-                    <p className='max-w-[600px] text-muted-foreground md:text-xl'>
+                    <p className='text-muted-foreground max-w-[600px] md:text-xl'>
                       Nuestra plataforma ofrece un conjunto completo de
                       herramientas para ayudarte en las actividades de la
                       Pastoral.
@@ -85,18 +85,18 @@ export default function LandingPage() {
           {/* Features Section */}
           <section
             id='features'
-            className='flex w-full items-center justify-center bg-muted py-12 md:py-24 lg:py-32'
+            className='bg-muted flex w-full items-center justify-center py-12 md:py-24 lg:py-32'
           >
             <div className='container px-4 md:px-6'>
               <div className='flex flex-col items-center justify-center space-y-4 text-center'>
                 <div className='space-y-2'>
-                  <div className='inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground'>
+                  <div className='bg-primary text-primary-foreground inline-block rounded-lg px-3 py-1 text-sm'>
                     Características
                   </div>
                   <h2 className='text-3xl font-bold tracking-tighter md:text-4xl/tight'>
                     Todo lo que necesitas en un solo lugar
                   </h2>
-                  <p className='max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>
+                  <p className='text-muted-foreground max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>
                     Nuestra plataforma ofrece un conjunto completo de
                     herramientas para ayudarte en las actividades de la
                     Pastoral.
@@ -106,11 +106,11 @@ export default function LandingPage() {
               <div className='mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3'>
                 {/* Feature 1 */}
                 <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-xs'>
-                  <div className='rounded-full bg-primary/10 p-3'>
-                    <IconCircleCheck className='h-6 w-6 text-primary' />
+                  <div className='bg-primary/10 rounded-full p-3'>
+                    <IconCircleCheck className='text-primary h-6 w-6' />
                   </div>
                   <h3 className='text-xl font-bold'>Pastoral Digital ID</h3>
-                  <p className='text-center text-muted-foreground'>
+                  <p className='text-muted-foreground text-center'>
                     Tu identidad digital para acceder y verificar tu identidad
                     en los eventos de la Pastoral.
                   </p>
@@ -118,11 +118,11 @@ export default function LandingPage() {
 
                 {/* Feature 2 */}
                 <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-xs'>
-                  <div className='rounded-full bg-primary/10 p-3'>
-                    <IconCircleCheck className='h-6 w-6 text-primary' />
+                  <div className='bg-primary/10 rounded-full p-3'>
+                    <IconCircleCheck className='text-primary h-6 w-6' />
                   </div>
                   <h3 className='text-xl font-bold'>Registro de Asistencias</h3>
-                  <p className='text-center text-muted-foreground'>
+                  <p className='text-muted-foreground text-center'>
                     Detalles de los eventos a los que has asistido y los que
                     están por venir.
                   </p>
@@ -130,13 +130,13 @@ export default function LandingPage() {
 
                 {/* Feature 3 */}
                 <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-xs'>
-                  <div className='rounded-full bg-primary/10 p-3'>
-                    <IconCircleCheck className='h-6 w-6 text-primary' />
+                  <div className='bg-primary/10 rounded-full p-3'>
+                    <IconCircleCheck className='text-primary h-6 w-6' />
                   </div>
                   <h3 className='text-xl font-bold'>
                     Justificación de Inasistencias
                   </h3>
-                  <p className='text-center text-muted-foreground'>
+                  <p className='text-muted-foreground text-center'>
                     Si no puedes asistir a un evento, puedes justificar tu
                     inasistencia y enviarla a los organizadores desde la
                     plataforma.

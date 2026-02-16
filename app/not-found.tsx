@@ -17,7 +17,7 @@ export default async function NotFound() {
           </p>
           <Link
             href='/'
-            className='my-4 inline-flex rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-hidden focus:ring-4 focus:ring-blue-300'
+            className='my-4 inline-flex rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-hidden'
           >
             Volver al inicio
           </Link>

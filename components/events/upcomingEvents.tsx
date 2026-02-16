@@ -10,7 +10,7 @@ export default async function UpcomingEvents() {
           <EventCard key={record.id} record={record} type='upcoming' />
         ))
       ) : (
-        <div className='col-span-full flex items-center justify-start pt-4 text-muted-foreground'>
+        <div className='text-muted-foreground col-span-full flex items-center justify-start pt-4'>
           <p className='text-sm'>
             No hay eventos programados en este momento. Por favor verifica más
             tarde.

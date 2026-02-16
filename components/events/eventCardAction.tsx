@@ -17,11 +17,11 @@ export async function EventCardAction({
   return (
     <div className='flex gap-2'>
       {isAdmin ? (
-        <Button asChild variant='link' className='h-6 p-1 text-primary'>
+        <Button asChild variant='link' className='text-primary h-6 p-1'>
           <Link href={`/admin/events/${id}`}>Ver Asistencia</Link>
         </Button>
       ) : (
-        <span className='text-sm text-muted-foreground'>
+        <span className='text-muted-foreground text-sm'>
           {getRelativeEventDate(new Date(date))}
         </span>
       )}

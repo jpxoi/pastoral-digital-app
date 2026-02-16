@@ -19,7 +19,7 @@ export default async function RegisterAlert() {
 
   if (!isOnboarded) {
     return (
-      <Card className='mb-2 border-l-4 border-yellow-400 bg-yellow-50 text-left text-card-foreground'>
+      <Card className='text-card-foreground mb-2 border-l-4 border-yellow-400 bg-yellow-50 text-left'>
         <CardHeader>
           <CardTitle className='text-lg'>{salutation}</CardTitle>
           <CardDescription className='text-card-foreground'>

@@ -196,7 +196,7 @@ export default function SundayMassForm() {
             />
 
             {error && (
-              <div className='rounded-lg border border-red-500 bg-red-50 p-4 text-sm font-medium text-destructive'>
+              <div className='text-destructive rounded-lg border border-red-500 bg-red-50 p-4 text-sm font-medium'>
                 {error}
               </div>
             )}

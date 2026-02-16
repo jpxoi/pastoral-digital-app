@@ -279,7 +279,7 @@ export default function QrScannerTab() {
                 <h2 className='text-left text-lg font-semibold'>
                   {lastScanned.user.firstName} {lastScanned.user.lastName}
                 </h2>
-                <p className='text-left text-xs text-muted-foreground'>
+                <p className='text-muted-foreground text-left text-xs'>
                   {lastScanned.checkInTime?.toLocaleDateString('es-PE', {
                     day: 'numeric',
                     month: 'short',

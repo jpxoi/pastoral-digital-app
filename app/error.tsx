@@ -14,7 +14,7 @@ export default function Error({
 }) {
   const [showError, setShowError] = useState(false)
   return (
-    <main className='flex min-h-screen w-full flex-col items-center justify-center bg-destructive'>
+    <main className='bg-destructive flex min-h-screen w-full flex-col items-center justify-center'>
       <div
         role='alert'
         className='animate-fade-in flex w-full max-w-(--breakpoint-sm) flex-col items-center justify-center gap-10 rounded-2xl border border-red-200 bg-white/95 p-8 shadow-2xl backdrop-blur-lg md:p-14'

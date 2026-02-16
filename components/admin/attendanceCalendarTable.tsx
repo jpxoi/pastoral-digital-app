@@ -22,7 +22,7 @@ export default async function AttendanceCalendarTable() {
 
   if (!attendanceCalendar || attendanceCalendar.length === 0) {
     return (
-      <div className='flex items-center justify-start pt-2 text-muted-foreground'>
+      <div className='text-muted-foreground flex items-center justify-start pt-2'>
         <p className='text-sm'>
           No hay asistencias registradas en este momento. Por favor verifica más
           tarde.
@@ -68,7 +68,7 @@ export default async function AttendanceCalendarTable() {
 
             return (
               <TableRow key={row.id}>
-                <TableCell className='text-nowrap font-medium'>
+                <TableCell className='font-medium text-nowrap'>
                   <div className='flex items-center gap-2'>
                     {row.fullName}
                     {showAlert && (
@@ -76,11 +76,11 @@ export default async function AttendanceCalendarTable() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <IconAlertCircle
-                              className='h-4 w-4 text-destructive'
+                              className='text-destructive h-4 w-4'
                               title={`${unjustifiedAbsences} faltas injustificadas`}
                             />
                           </TooltipTrigger>
-                          <TooltipContent className='bg-red-100 border-red-800'>
+                          <TooltipContent className='border-red-800 bg-red-100'>
                             <p className='text-xs text-red-800'>
                               Este catequista tiene más de 3 faltas no
                               justificadas.

@@ -25,7 +25,7 @@ export default function AttendanceCalendarTableSkeleton() {
         <TableBody>
           {Array.from({ length: 100 }).map((_, index) => (
             <TableRow key={index}>
-              <TableCell className='text-nowrap font-medium'>
+              <TableCell className='font-medium text-nowrap'>
                 <Skeleton className='h-5 w-32' />
               </TableCell>
               {Array.from({ length: 10 }).map((_, index) => (

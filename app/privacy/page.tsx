@@ -128,7 +128,7 @@ export default function PrivacyPolicyPage() {
                 <strong>
                   Información que recopilamos cuando utiliza nuestros servicios:
                 </strong>
-                <ul className='ml-6 mt-2 list-inside list-disc space-y-1 text-gray-700'>
+                <ul className='mt-2 ml-6 list-inside list-disc space-y-1 text-gray-700'>
                   <li>
                     Información del dispositivo (modelo de hardware, versión del
                     sistema operativo)

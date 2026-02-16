@@ -24,7 +24,7 @@ export default function LoginPrompt() {
           <SignInButton>
             <Button
               size='lg'
-              className='w-full max-sm:bg-primary-foreground max-sm:text-primary max-sm:hover:bg-accent max-sm:hover:text-accent-foreground'
+              className='max-sm:bg-primary-foreground max-sm:text-primary max-sm:hover:bg-accent max-sm:hover:text-accent-foreground w-full'
             >
               Iniciar sesión
             </Button>
@@ -33,7 +33,7 @@ export default function LoginPrompt() {
             <Button
               size='lg'
               variant='outline'
-              className='w-full max-sm:bg-transparent max-sm:text-primary-foreground'
+              className='max-sm:text-primary-foreground w-full max-sm:bg-transparent'
             >
               Registrarse
             </Button>

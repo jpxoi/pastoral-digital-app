@@ -54,7 +54,7 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
           <span className='max-w-80 truncate font-medium'>
             {row.original.parish}
           </span>
-          <span className='text-nowrap text-xs text-gray-500'>
+          <span className='text-xs text-nowrap text-gray-500'>
             {formattedTime}
           </span>
         </div>

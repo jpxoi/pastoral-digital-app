@@ -25,7 +25,7 @@ export default function EventCardSkeleton() {
             <Skeleton className='size-4' />
             <Skeleton className='h-5 w-36' />
           </span>
-          <span className='flex items-center gap-1 text-ellipsis text-primary hover:underline'>
+          <span className='text-primary flex items-center gap-1 text-ellipsis hover:underline'>
             <Skeleton className='size-4' />
             <Skeleton className='h-5 w-1/2' />
           </span>

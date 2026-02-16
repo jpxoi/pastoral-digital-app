@@ -16,8 +16,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<
+  TData,
+  TValue,
+> extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>
   title: string
 }
@@ -38,7 +40,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <Button
             variant='ghost'
             size='sm'
-            className='-ml-3 h-8 data-[state=open]:bg-accent'
+            className='data-[state=open]:bg-accent -ml-3 h-8'
           >
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
@@ -52,18 +54,18 @@ export function DataTableColumnHeader<TData, TValue>({
         </DropdownMenuTrigger>
         <DropdownMenuContent align='start'>
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <IconArrowUp className='h-3.5 w-3.5 text-muted-foreground/70' />
+            <IconArrowUp className='text-muted-foreground/70 h-3.5 w-3.5' />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <IconArrowDown className='h-3.5 w-3.5 text-muted-foreground/70' />
+            <IconArrowDown className='text-muted-foreground/70 h-3.5 w-3.5' />
             Desc
           </DropdownMenuItem>
           {column.getIsSorted() && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => column.clearSorting()}>
-                <IconSelector className='h-3.5 w-3.5 text-muted-foreground/70' />
+                <IconSelector className='text-muted-foreground/70 h-3.5 w-3.5' />
                 Ninguno
               </DropdownMenuItem>
             </>
@@ -72,7 +74,7 @@ export function DataTableColumnHeader<TData, TValue>({
             <>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-                <IconEyeOff className='h-3.5 w-3.5 text-muted-foreground/70' />
+                <IconEyeOff className='text-muted-foreground/70 h-3.5 w-3.5' />
                 Ocultar
               </DropdownMenuItem>
             </>

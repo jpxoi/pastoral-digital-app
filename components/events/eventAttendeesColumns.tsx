@@ -15,7 +15,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className='text-nowrap font-medium'>
+        <span className='font-medium text-nowrap'>
           {row.getValue('catequista')}
         </span>
       )
@@ -48,7 +48,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className='text-nowrap text-muted-foreground'>
+        <span className='text-muted-foreground text-nowrap'>
           {row.getValue('registradoPor')}
         </span>
       )

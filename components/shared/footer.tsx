@@ -5,7 +5,7 @@ import { IconBrandInstagram } from '@tabler/icons-react'
 export function FooterNarrow() {
   return (
     <div className={`flex flex-col items-center justify-center`}>
-      <p className='mt-4 w-full max-w-full text-balance px-4 text-sm text-gray-300 sm:max-w-sm'>
+      <p className='mt-4 w-full max-w-full px-4 text-sm text-balance text-gray-300 sm:max-w-sm'>
         <a
           property='dct:title'
           className='font-medium text-white transition-colors duration-300 hover:text-gray-200'
@@ -45,7 +45,7 @@ export function FooterNarrow() {
 export function FooterWide() {
   return (
     <div className={`flex flex-col items-center justify-center`}>
-      <p className='mt-4 w-full max-w-full text-balance px-4 text-sm text-gray-600'>
+      <p className='mt-4 w-full max-w-full px-4 text-sm text-balance text-gray-600'>
         <a
           property='dct:title'
           className='font-medium text-blue-900 transition-colors duration-300 hover:text-blue-600'
@@ -93,7 +93,7 @@ export function MainFooter() {
             </div>
           </div>
           <div className='space-y-4'>
-            <h4 className='text-sm font-bold uppercase tracking-wider'>
+            <h4 className='text-sm font-bold tracking-wider uppercase'>
               Legal
             </h4>
             <ul className='space-y-2'>
@@ -121,7 +121,7 @@ export function MainFooter() {
           </div>
         </div>
         <div className='mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row'>
-          <p className='text-sm text-muted-foreground'>
+          <p className='text-muted-foreground text-sm'>
             © {new Date().getFullYear()} Pastoral Mariana. Todos los derechos
             reservados.
           </p>

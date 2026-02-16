@@ -13,7 +13,7 @@ export default function OnboardingPromptSkeleton() {
               Nombres <span className='text-red-500'>*</span>
             </Label>
             <Skeleton className='h-10 w-full' />
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm'>
               Ingresa tus nombres tal y como aparecen en tu documento de
               identidad (DNI).
             </p>
@@ -23,7 +23,7 @@ export default function OnboardingPromptSkeleton() {
               Apellidos <span className='text-red-500'>*</span>
             </Label>
             <Skeleton className='h-10 w-full' />
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm'>
               Escribe tus apellidos completos, según tu DNI.
             </p>
           </div>
@@ -75,10 +75,10 @@ export default function OnboardingPromptSkeleton() {
         <div className='items-top flex space-x-2'>
           <Skeleton className='h-4 w-4' />
           <div className='grid gap-1.5 leading-none'>
-            <h3 className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+            <h3 className='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
               Sacramento de la confirmación
             </h3>
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm'>
               Doy fe de que he recibido el sacramento de la confirmación.
             </p>
           </div>

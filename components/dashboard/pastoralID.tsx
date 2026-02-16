@@ -54,14 +54,14 @@ export default async function PastoralId() {
           <>
             <PastoralIdQRCode userId={user.id} />
             <div className='m-0 mx-auto h-auto w-full rounded-lg bg-white p-0 sm:max-w-sm'>
-              <span className='text-sm text-muted-foreground'>{user?.id}</span>
+              <span className='text-muted-foreground text-sm'>{user?.id}</span>
             </div>
           </>
         )}
       </div>
 
       <div className='flex w-full flex-col items-center justify-center'>
-        <h3 className='text-2xl font-bold text-card-foreground md:text-3xl'>
+        <h3 className='text-card-foreground text-2xl font-bold md:text-3xl'>
           {user?.fullName}
         </h3>
         <p className='text-base text-blue-950'>{schedule}</p>

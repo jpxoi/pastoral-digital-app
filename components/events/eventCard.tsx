@@ -51,7 +51,7 @@ export default function EventCard({
             <Button
               asChild
               variant='ghost'
-              className='size-7 p-1 hover:bg-blue-50 hover:text-primary [&_svg]:size-5'
+              className='hover:text-primary size-7 p-1 hover:bg-blue-50 [&_svg]:size-5'
             >
               <a
                 href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${new Date(record.date).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${new Date(record.endDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=${record.description}&location=${record.location.name}&text=${record.name}`}
@@ -95,7 +95,7 @@ export default function EventCard({
             href={record.location.googleMapsUrl}
             target='_blank'
             rel='noreferrer'
-            className='flex items-start gap-1 text-ellipsis text-primary hover:underline'
+            className='text-primary flex items-start gap-1 text-ellipsis hover:underline'
           >
             <IconMapPin className='mt-0.5 size-4 min-w-4' />
             <span>{record.location.name}</span>
@@ -107,7 +107,7 @@ export default function EventCard({
           <Button
             variant='link'
             disabled
-            className='h-6 cursor-not-allowed p-1 text-primary hover:bg-blue-50 hover:text-primary'
+            className='text-primary hover:text-primary h-6 cursor-not-allowed p-1 hover:bg-blue-50'
           >
             {isHappeningNow ? 'Evento en curso' : 'Evento finalizado'}
           </Button>
@@ -130,7 +130,7 @@ export default function EventCard({
             rel='noreferrer'
             className={cn(
               buttonVariants({ variant: 'link' }),
-              'h-6 p-1 text-primary hover:bg-blue-50 hover:text-primary'
+              'text-primary hover:text-primary h-6 p-1 hover:bg-blue-50'
             )}
           >
             Justificar Inasistencia
