@@ -31,10 +31,6 @@ export default function OnboardingPromptSkeleton() {
 
         <div className='grid gap-4 sm:grid-cols-2'>
           <div className='space-y-2'>
-            <Label>Apelativo</Label>
-            <Skeleton className='h-10 w-full' />
-          </div>
-          <div className='space-y-2'>
             <Label>
               Nombre de usuario <span className='text-red-500'>*</span>
             </Label>

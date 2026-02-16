@@ -30,7 +30,7 @@ export default async function PastoralId() {
       : 'Catequista'
 
   const isOnboarded =
-    (await auth()).sessionClaims?.metadata.onboardingComplete === true
+    (await auth()).sessionClaims?.metadata?.onboardingComplete === true
 
   return (
     <div

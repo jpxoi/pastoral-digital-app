@@ -59,7 +59,6 @@ export default function OnboardingForm({
       id: userId,
       firstName: '',
       lastName: '',
-      nickname: '',
       username: userUsername,
       email: userEmail,
       phoneNumber: '',
@@ -139,19 +138,6 @@ export default function OnboardingForm({
         </div>
 
         <div className='grid gap-4 sm:grid-cols-2'>
-          <FormField
-            control={form.control}
-            name='nickname'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Apelativo</FormLabel>
-                <FormControl>
-                  <Input placeholder='Apelativo' {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name='username'

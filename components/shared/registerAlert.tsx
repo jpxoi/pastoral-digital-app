@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 export default async function RegisterAlert() {
   const isOnboarded =
-    (await auth()).sessionClaims?.metadata.onboardingComplete === true
+    (await auth()).sessionClaims?.metadata?.onboardingComplete === true
   const user = await currentUser()
   const salutation = user?.firstName
     ? `¡Hola, ${user.firstName as string}!`

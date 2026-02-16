@@ -15,7 +15,7 @@ const isProtectedRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  const isInMaintenanceMode = true
+  const isInMaintenanceMode = false
 
   if (isInMaintenanceMode) {
     req.nextUrl.pathname = `/maintenance`

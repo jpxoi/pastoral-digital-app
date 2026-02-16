@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 }
 
 export default async function OnboardingPage() {
-  if ((await auth()).sessionClaims?.metadata.onboardingComplete === true) {
+  if ((await auth()).sessionClaims?.metadata?.onboardingComplete === true) {
     redirect('/dashboard')
   }
 
