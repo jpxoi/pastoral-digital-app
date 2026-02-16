@@ -40,7 +40,7 @@ export const registerAttendanceRecord = async (
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
-      revalidateTag('attendance')
+      revalidateTag('attendance', 'max')
 
       if (data.status === AttendanceStatus.FALTA_JUSTIFICADA) {
         return {
@@ -73,7 +73,7 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
 
   return await createAttendanceRecords(data)
     .then(() => {
-      revalidateTag('attendance')
+      revalidateTag('attendance', 'max')
 
       return {
         success: 'Asistencias registrada correctamente.',
@@ -101,7 +101,7 @@ export const setAttendanceRecordStatus = async (
 
   return await updateAttendanceRecordStatus(status, recordId)
     .then(async () => {
-      revalidateTag('attendance')
+      revalidateTag('attendance', 'max')
 
       return {
         success: 'Estado de asistencia modificado correctamente.',
@@ -153,7 +153,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
   try {
     await createAttendanceRecords(absenceRecords)
 
-    revalidateTag('attendance')
+    revalidateTag('attendance', 'max')
 
     return {
       success: 'Faltas rellenadas correctamente.',
@@ -178,7 +178,7 @@ export const removeAttendanceRecord = async (
   }
   return await deleteAttendanceRecord(recordId)
     .then(async () => {
-      revalidateTag('attendance')
+      revalidateTag('attendance', 'max')
       return {
         success: 'Asistencia eliminada correctamente.',
       }
@@ -193,4 +193,3 @@ export const removeAttendanceRecord = async (
       }
     })
 }
-

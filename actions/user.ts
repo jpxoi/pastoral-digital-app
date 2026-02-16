@@ -125,7 +125,7 @@ export async function setUserSchedule(
 
   return await updateUserSchedule(userId, schedule)
     .then(async () => {
-      revalidateTag('users')
+      revalidateTag('users', 'max')
 
       return {
         success: 'Programa del catequista actualizado correctamente',
@@ -172,4 +172,3 @@ export async function fetchUserSchedule(userId: string) {
     }
   }
 }
-

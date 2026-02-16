@@ -212,7 +212,7 @@ export default function OnboardingForm({
                 </FormLabel>
                 <FormControl>
                   <div className='flex'>
-                    <div className='flex items-center justify-center rounded-l-md border border-r-0 bg-muted px-3 text-muted-foreground'>
+                    <div className='bg-muted text-muted-foreground flex items-center justify-center rounded-l-md border border-r-0 px-3'>
                       +51
                     </div>
                     <Input
@@ -345,11 +345,11 @@ export default function OnboardingForm({
           <div className='grid gap-1.5 leading-none'>
             <label
               htmlFor='terms1'
-              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+              className='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
             >
               Sacramento de la confirmación
             </label>
-            <p className='text-sm text-muted-foreground'>
+            <p className='text-muted-foreground text-sm'>
               Doy fe de que he recibido el sacramento de la confirmación.
             </p>
           </div>
