@@ -3,6 +3,12 @@ import { z } from 'zod'
 
 export const OnboardingFormSchema = z.object({
   id: z.string().trim().nonempty('El ID es requerido para crear un usuario'),
+  dni: z
+    .string()
+    .trim()
+    .length(8, 'El DNI debe tener 8 caracteres')
+    .regex(/^[0-9]{8}$/, 'El DNI debe contener solo números')
+    .transform((val) => val.trim()),
   firstName: z
     .string()
     .trim()
@@ -13,9 +19,6 @@ export const OnboardingFormSchema = z.object({
     .trim()
     .nonempty('El apellido es requerido para crear un usuario.')
     .transform((val) => val.trim()),
-  username: z
-    .string()
-    .min(3, 'El nombre de usuario debe tener al menos 3 caracteres'),
   email: z.string().email('Correo electrónico inválido'),
   phoneNumber: z
     .string()

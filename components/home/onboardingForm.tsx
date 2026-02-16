@@ -43,11 +43,9 @@ import { toast } from 'sonner'
 
 export default function OnboardingForm({
   userId,
-  userUsername,
   userEmail,
 }: {
   userId: string
-  userUsername: string
   userEmail: string
 }) {
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
@@ -57,9 +55,9 @@ export default function OnboardingForm({
     resolver: zodResolver(OnboardingFormSchema),
     defaultValues: {
       id: userId,
+      dni: '',
       firstName: '',
       lastName: '',
-      username: userUsername,
       email: userEmail,
       phoneNumber: '',
       dateOfBirth: '',
@@ -97,6 +95,33 @@ export default function OnboardingForm({
         onSubmit={form.handleSubmit(onSubmit)}
         className='max-w-(--breakpoint-sm) space-y-4 text-left'
       >
+        <div id='dni-lookup' className='grid items-center gap-4 sm:grid-cols-3'>
+          <FormField
+            control={form.control}
+            name='dni'
+            render={({ field }) => (
+              <FormItem className='col-span-2'>
+                <FormLabel>
+                  DNI <span className='text-red-500'>*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder='Ingrese su número de DNI' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type='button'
+            className='mt-6'
+            disabled={form.watch('dni').length !== 8}
+          >
+            Buscar
+          </Button>
+          <Button type='button' variant='outline' className='mt-6'>
+            No tengo DNI
+          </Button>
+        </div>
         <div className='grid gap-4 sm:grid-cols-2'>
           <FormField
             control={form.control}
@@ -131,33 +156,6 @@ export default function OnboardingForm({
                 <FormDescription>
                   Escribe tus apellidos completos, según tu DNI.
                 </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className='grid gap-4 sm:grid-cols-2'>
-          <FormField
-            control={form.control}
-            name='username'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Nombre de usuario <span className='text-red-500'>*</span>
-                </FormLabel>
-                <FormControl>
-                  <div className='relative'>
-                    <Input
-                      placeholder='Ingrese su nombre de usuario'
-                      {...field}
-                      disabled
-                    />
-                    <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3'>
-                      <IconCheck className='size-5 text-green-500' />
-                    </div>
-                  </div>
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}

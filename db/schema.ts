@@ -64,10 +64,9 @@ export const AttendanceRecordMethodEnum = pgEnum(
 
 export const usersTable = pgTable('users', {
   id: text().primaryKey(),
+  dni: text(),
   firstName: text('first_name').notNull(),
   lastName: text('last_name').notNull(),
-  nickname: text(),
-  username: text().notNull().unique(),
   email: text().notNull().unique(),
   phoneNumber: text('phone_number').notNull(),
   dateOfBirth: date('date_of_birth').notNull(),
