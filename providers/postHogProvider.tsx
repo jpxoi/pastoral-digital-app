@@ -55,7 +55,6 @@ function PostHogPageView() {
         name:
           user.fullName ||
           `${user.firstName || ''} ${user.lastName || ''}`.trim(),
-        username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
       })
