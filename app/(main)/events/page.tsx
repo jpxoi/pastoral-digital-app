@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import OfflineAlert from '@/components/shared/offlineAlert'
 import EventsGrid from '@/components/events/eventsGrid'
 import { Suspense } from 'react'
-import ErrorAlert from '@/components/shared/errorAlert'
 
 export const metadata: Metadata = {
   title: 'Eventos | Pastoral Digital App',

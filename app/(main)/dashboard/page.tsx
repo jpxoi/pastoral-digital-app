@@ -6,7 +6,6 @@ import { Suspense } from 'react'
 
 import PastoralIdDialog from '@/components/dashboard/pastoralIdDialog'
 import SundayMassDialog from '@/components/dashboard/sundayMassDialog'
-import ErrorAlert from '@/components/shared/errorAlert'
 
 export const metadata: Metadata = {
   title: 'Inicio | Pastoral Digital App',

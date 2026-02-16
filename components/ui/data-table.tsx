@@ -5,6 +5,7 @@ import { useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
+  GlobalFilterTableState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -40,7 +41,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [globalFilter, setGlobalFilter] = useState<any>([])
+  const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 

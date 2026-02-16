@@ -3,7 +3,6 @@ import OfflineAlert from '@/components/shared/offlineAlert'
 import BirthdayGrid from '@/components/birthdays/birthdayGrid'
 import BirthdayGridSkeleton from '@/components/birthdays/birthdayGridSkeleton'
 import { Suspense } from 'react'
-import ErrorAlert from '@/components/shared/errorAlert'
 
 export const metadata: Metadata = {
   title: 'Cumpleaños | Pastoral Digital App',

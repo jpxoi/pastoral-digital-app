@@ -39,7 +39,7 @@ export default async function AttendanceCalendarTable() {
   })
 
   // Function to count "FALTA INJUSTIFICADA" occurrences for a user
-  const countUnjustifiedAbsences = (row: any) => {
+  const countUnjustifiedAbsences = (row: Record<string, string | null>) => {
     return dateColumns.reduce((count, dateKey) => {
       return count + (row[dateKey] === 'FALTA INJUSTIFICADA' ? 1 : 0)
     }, 0)
