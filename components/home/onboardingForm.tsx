@@ -259,7 +259,7 @@ export default function OnboardingForm({
                   <PopoverContent className='w-auto p-0' align='start'>
                     <Calendar
                       mode='single'
-                      captionLayout='dropdown-buttons'
+                      captionLayout='dropdown'
                       selected={new Date(field.value)}
                       onSelect={field.onChange}
                       disabled={(date) => {
