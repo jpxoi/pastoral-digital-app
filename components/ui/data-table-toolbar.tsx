@@ -59,7 +59,7 @@ export function DataTableToolbar<TData>({
                     number
                   >
                 ).entries()
-              ).map(([value, _]) => ({
+              ).map(([value]) => ({
                 label: value,
                 value,
               }))}

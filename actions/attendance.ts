@@ -92,8 +92,7 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
 
 export const setAttendanceRecordStatus = async (
   status: AttendanceStatus,
-  recordId: SelectAttendance['id'],
-  userId: SelectAttendance['userId']
+  recordId: SelectAttendance['id']
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para modificar asistencias.' }
@@ -170,8 +169,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
 }
 
 export const removeAttendanceRecord = async (
-  recordId: SelectAttendance['id'],
-  userId: SelectAttendance['userId']
+  recordId: SelectAttendance['id']
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estas autorizado para eliminar asistencias.' }
