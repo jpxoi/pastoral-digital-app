@@ -89,9 +89,6 @@ DATABASE_URL=<your-database-url>
 NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY=<your-uploadcare-public-key>
 UPLOADCARE_SECRET_KEY=<your-uploadcare-secret-key>
 
-UPSTASH_REDIS_REST_URL=<your-upstash-redis-rest-url>
-UPSTASH_REDIS_REST_TOKEN=<your-upstash-redis-rest-token>
-
 NEXT_PUBLIC_POSTHOG_HOST=<your-posthog-host_url>
 NEXT_PUBLIC_POSTHOG_KEY=<your-posthog-key>
 
