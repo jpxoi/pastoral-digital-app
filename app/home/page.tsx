@@ -16,7 +16,7 @@ export default function LandingPage() {
     <main className='h-screen overflow-y-scroll'>
       <div className='flex min-h-screen flex-col items-center justify-center'>
         {/* Header */}
-        <header className='sticky top-0 z-50 flex w-full items-center justify-center bg-white backdrop-blur'>
+        <header className='sticky top-0 z-50 flex w-full items-center justify-center bg-white backdrop-blur-sm'>
           <div className='container flex h-16 items-center justify-between'>
             <div className='flex items-center gap-2'>
               <LogoImageWide width={100} />
@@ -51,8 +51,8 @@ export default function LandingPage() {
                   </div>
                   <div className='flex flex-col gap-2 min-[400px]:flex-row'>
                     <ClerkLoading>
-                      <div className='h-[3.125rem] w-full animate-pulse rounded-md bg-gray-200'></div>
-                      <div className='h-[3.125rem] w-full animate-pulse rounded-md bg-gray-200'></div>
+                      <div className='h-12.5 w-full animate-pulse rounded-md bg-gray-200'></div>
+                      <div className='h-12.5 w-full animate-pulse rounded-md bg-gray-200'></div>
                     </ClerkLoading>
                     <ClerkLoaded>
                       <SignUpButton>
@@ -105,7 +105,7 @@ export default function LandingPage() {
               </div>
               <div className='mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3'>
                 {/* Feature 1 */}
-                <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-sm'>
+                <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-xs'>
                   <div className='rounded-full bg-primary/10 p-3'>
                     <IconCircleCheck className='h-6 w-6 text-primary' />
                   </div>
@@ -117,7 +117,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Feature 2 */}
-                <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-sm'>
+                <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-xs'>
                   <div className='rounded-full bg-primary/10 p-3'>
                     <IconCircleCheck className='h-6 w-6 text-primary' />
                   </div>
@@ -129,7 +129,7 @@ export default function LandingPage() {
                 </div>
 
                 {/* Feature 3 */}
-                <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-sm'>
+                <div className='flex flex-col items-center space-y-4 rounded-lg border p-6 shadow-xs'>
                   <div className='rounded-full bg-primary/10 p-3'>
                     <IconCircleCheck className='h-6 w-6 text-primary' />
                   </div>

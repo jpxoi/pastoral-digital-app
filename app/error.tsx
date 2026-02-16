@@ -17,11 +17,11 @@ export default function Error({
     <main className='flex min-h-screen w-full flex-col items-center justify-center bg-destructive'>
       <div
         role='alert'
-        className='animate-fade-in flex w-full max-w-screen-sm flex-col items-center justify-center gap-10 rounded-2xl border border-red-200 bg-white/95 p-8 shadow-2xl backdrop-blur-lg md:p-14'
+        className='animate-fade-in flex w-full max-w-(--breakpoint-sm) flex-col items-center justify-center gap-10 rounded-2xl border border-red-200 bg-white/95 p-8 shadow-2xl backdrop-blur-lg md:p-14'
       >
         <div className='flex flex-col items-center justify-center gap-3'>
           <div className='flex items-center gap-3'>
-            <h1 className='text-3xl font-extrabold text-red-700 drop-shadow-sm'>
+            <h1 className='text-3xl font-extrabold text-red-700 drop-shadow-xs'>
               ¡Algo salió mal!
             </h1>
           </div>
@@ -29,7 +29,7 @@ export default function Error({
             {`Error ${error.digest || 'desconocido'}`}
           </h2>
           <button
-            className='text-xs text-blue-700 underline transition-colors hover:text-blue-900 focus:outline-none'
+            className='text-xs text-blue-700 underline transition-colors hover:text-blue-900 focus:outline-hidden'
             onClick={() => setShowError(!showError)}
             aria-expanded={showError}
             aria-controls='error-details-section'

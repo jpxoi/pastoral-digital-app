@@ -88,7 +88,7 @@ export default function MaintenanceScreen({
       </div>
 
       {/* Estimated completion time */}
-      <div className='flex items-center justify-center gap-2 rounded-lg bg-white/5 p-4 backdrop-blur-sm'>
+      <div className='flex items-center justify-center gap-2 rounded-lg bg-white/5 p-4 backdrop-blur-xs'>
         <IconClock className='text-white/90' size={20} />
         <p className='text-center text-sm font-semibold text-white'>
           Finaliza {formattedDate} a las {formattedTime}
@@ -96,7 +96,7 @@ export default function MaintenanceScreen({
       </div>
 
       {timeRemaining.hours > 0 || timeRemaining.minutes > 0 ? (
-        <div className='mt-4 flex items-center justify-center gap-3 rounded-lg bg-white/5 p-4 backdrop-blur-sm'>
+        <div className='mt-4 flex items-center justify-center gap-3 rounded-lg bg-white/5 p-4 backdrop-blur-xs'>
           <div>
             <p className='text-center text-sm text-white/90'>
               Tiempo restante:

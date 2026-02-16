@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default function OnboardingPromptSkeleton() {
   return (
     <CardContent>
-      <div className='max-w-screen-sm space-y-4 text-left'>
+      <div className='max-w-(--breakpoint-sm) space-y-4 text-left'>
         <div className='grid gap-4 sm:grid-cols-2'>
           <div className='space-y-2'>
             <Label>

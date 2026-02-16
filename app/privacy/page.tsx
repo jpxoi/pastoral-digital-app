@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
   const lastUpdated = '14 de marzo de 2025'
 
   return (
-    <div className='h-screen overflow-y-scroll bg-gradient-to-b from-gray-50 to-gray-100 print:bg-white'>
+    <div className='h-screen overflow-y-scroll bg-linear-to-b from-gray-50 to-gray-100 print:bg-white'>
       <div className='mx-auto max-w-5xl px-4 py-12'>
         <div className='mb-6 flex items-center justify-between'>
           <Link
@@ -107,7 +107,7 @@ export default function PrivacyPolicyPage() {
           {/* Recopilación de datos */}
           <section
             id='recopilación-de-datos'
-            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconDatabase className='mr-2 h-6 w-6 text-indigo-500' />
@@ -152,7 +152,7 @@ export default function PrivacyPolicyPage() {
           {/* Cookies */}
           <section
             id='cookies-y-tecnologías'
-            className='rounded-xl border-l-4 border-yellow-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-yellow-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconServer className='mr-2 h-6 w-6 text-yellow-500' />
@@ -190,7 +190,7 @@ export default function PrivacyPolicyPage() {
           {/* Servicios de Terceros */}
           <section
             id='servicios-de-terceros'
-            className='rounded-xl border-l-4 border-green-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-green-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconExternalLink className='mr-2 h-6 w-6 text-green-500' />
@@ -250,7 +250,7 @@ export default function PrivacyPolicyPage() {
           {/* Uso de la Información */}
           <section
             id='uso-de-la-información'
-            className='rounded-xl border-l-4 border-purple-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-purple-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconUsers className='mr-2 h-6 w-6 text-purple-500' />
@@ -293,7 +293,7 @@ export default function PrivacyPolicyPage() {
           {/* Derechos del usuario */}
           <section
             id='derechos-del-usuario'
-            className='rounded-xl border-l-4 border-blue-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-blue-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconShield className='mr-2 h-6 w-6 text-blue-500' />
@@ -344,7 +344,7 @@ export default function PrivacyPolicyPage() {
           {/* Menores de edad */}
           <section
             id='menores-de-edad'
-            className='rounded-xl border-l-4 border-orange-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-orange-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconUsers className='mr-2 h-6 w-6 text-orange-500' />
@@ -370,7 +370,7 @@ export default function PrivacyPolicyPage() {
           {/* Seguridad */}
           <section
             id='seguridad'
-            className='rounded-xl border-l-4 border-red-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-red-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconLock className='mr-2 h-6 w-6 text-red-500' />
@@ -413,7 +413,7 @@ export default function PrivacyPolicyPage() {
           {/* Cambios en la Política */}
           <section
             id='cambios-en-la-política'
-            className='rounded-xl border-l-4 border-teal-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-teal-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconRefresh className='mr-2 h-6 w-6 text-teal-500' />
@@ -455,7 +455,7 @@ export default function PrivacyPolicyPage() {
           {/* Contacto */}
           <section
             id='contacto'
-            className='rounded-xl border-l-4 border-pink-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-pink-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconMail className='mr-2 h-6 w-6 text-pink-500' />
@@ -491,7 +491,7 @@ export default function PrivacyPolicyPage() {
           {/* Cumplimiento de Normativas */}
           <section
             id='cumplimiento-de-normativas'
-            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconShield className='mr-2 h-6 w-6 text-indigo-500' />

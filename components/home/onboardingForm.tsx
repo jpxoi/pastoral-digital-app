@@ -95,7 +95,7 @@ export default function OnboardingForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='max-w-screen-sm space-y-4 text-left'
+        className='max-w-(--breakpoint-sm) space-y-4 text-left'
       >
         <div className='grid gap-4 sm:grid-cols-2'>
           <FormField
