@@ -25,24 +25,19 @@ export const OnboardingFormSchema = z.object({
       'Formato de número de teléfono peruano inválido. Debe ser un número móvil de 9 dígitos'
     )
     .transform((val) => val.replace(/\D/g, '')), // Strip non-digits for consistent storage
-  dateOfBirth: z.coerce
-    .date()
-    .refine(
-      (date) => date < new Date(),
-      'La fecha de nacimiento no puede ser en el futuro'
-    )
-    .refine((date) => {
+  dateOfBirth: z
+    .string()
+    .date('Fecha de nacimiento inválida')
+    .refine((val) => {
+      const date = new Date(val)
       const today = new Date()
       const minAge = new Date(
         today.getFullYear() - 13,
         today.getMonth(),
         today.getDate()
       )
-      return date <= minAge
-    }, 'Debes tener al menos 13 años de edad para registrarte')
-    .transform((date) => {
-      return date.toISOString().split('T')[0]
-    }),
+      return date < today && date <= minAge
+    }, 'Debes tener al menos 13 años de edad para registrarte'),
   category: z.enum(
     [UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER],
     {
@@ -59,7 +54,7 @@ export const OnboardingFormSchema = z.object({
       (code) => !code || /^[SP][156][A-H]\d{2}$/.test(code),
       'El código de estudiante debe seguir el formato del colegio. (Ej. S5A01)'
     ),
-  role: z.enum([UserRole.ADMIN, UserRole.MEMBER]).default(UserRole.MEMBER),
+  role: z.enum([UserRole.ADMIN, UserRole.MEMBER]),
 })
 
 export const NewAttendanceRecordFormSchema = z.object({

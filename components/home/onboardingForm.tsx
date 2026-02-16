@@ -62,7 +62,7 @@ export default function OnboardingForm({
       username: userUsername,
       email: userEmail,
       phoneNumber: '',
-      dateOfBirth: undefined,
+      dateOfBirth: '',
       category: undefined,
       studentCode: undefined,
       role: UserRole.MEMBER,
@@ -260,8 +260,12 @@ export default function OnboardingForm({
                     <Calendar
                       mode='single'
                       captionLayout='dropdown'
-                      selected={new Date(field.value)}
-                      onSelect={field.onChange}
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(date) =>
+                        field.onChange(
+                          date ? date.toISOString().split('T')[0] : ''
+                        )
+                      }
                       disabled={(date) => {
                         const today = new Date()
                         const minAgeDate = new Date()
