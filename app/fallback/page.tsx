@@ -5,7 +5,6 @@ import { IconWifiOff } from '@tabler/icons-react'
 
 export default function OfflinePage() {
   return (
-    // Use a neutral background
     <div className='bg-primary flex min-h-screen w-full flex-col items-center justify-center p-4'>
       <div className='bg-background flex max-w-md flex-col items-center justify-center gap-6 rounded-lg p-10 text-center shadow-lg transition-shadow duration-300'>
         <IconWifiOff className='text-destructive h-20 w-20' stroke={2} />

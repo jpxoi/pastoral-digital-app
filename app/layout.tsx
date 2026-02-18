@@ -106,9 +106,7 @@ export const viewport: Viewport = {
 }
 
 const clerkAppearance = {
-  variables: {
-    colorPrimary: '#07309B',
-  },
+  variables: { colorPrimary: '#07309B' },
 }
 
 export default function RootLayout({
