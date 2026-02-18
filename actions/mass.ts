@@ -16,35 +16,40 @@ export async function postNewMassRecord(
 ) {
   const validatedFields = NewSundayMassFormSchema.safeParse(formValues)
 
-  if (!validatedFields.success) {
+  if (!validatedFields.success)
     return { error: 'Algunos de los campos son inválidos.' }
-  }
 
   const { userId } = await auth()
 
-  if (!userId) {
+  if (!userId)
     return {
       error:
         'No se pudo obtener el usuario. Por favor, vuelve a iniciar sesión.',
     }
-  }
 
   const { parish, evidenceFileKey, evidenceFileHash } = validatedFields.data
 
-  const today = new Date()
-
-  if (today.getDay() === 1) {
-    today.setDate(today.getDate() - 1)
-  }
-
-  const formattedDate = today.toLocaleDateString('en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
+  const peruDateString = new Date().toLocaleString('en-US', {
     timeZone: 'America/Lima',
   })
 
-  const [year, month, day] = formattedDate.split('-')
+  const peruDate = new Date(peruDateString)
+  const isValidTimeframe =
+    peruDate.getDay() === 0 || // Sunday
+    (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
+  if (!isValidTimeframe)
+    return {
+      error:
+        'El registro de misa solo está disponible los domingos y lunes hasta las 6:00 PM.',
+    }
+
+  if (peruDate.getDay() === 1) {
+    peruDate.setDate(peruDate.getDate() - 1)
+  }
+
+  const year = peruDate.getFullYear()
+  const month = String(peruDate.getMonth() + 1).padStart(2, '0')
+  const day = String(peruDate.getDate()).padStart(2, '0')
 
   return await createSundayMass({
     userId,

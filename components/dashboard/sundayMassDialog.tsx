@@ -10,17 +10,17 @@ import { IconBuildingChurch } from '@tabler/icons-react'
 import SundayMassForm from './sundayMassForm'
 
 export default function SundayMassDialog() {
-  // const peruDate = new Date(
-  //   new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
-  // )
+  const peruDate = new Date(
+    new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
+  )
 
-  // const isValidTimeframe =
-  //   peruDate.getDay() === 0 || // Sunday
-  //   (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
+  const isValidTimeframe =
+    peruDate.getDay() === 0 || // Sunday
+    (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
 
-  // if (!isValidTimeframe) {
-  //   return null
-  // }
+  if (!isValidTimeframe) {
+    return null
+  }
 
   return (
     <Dialog>
