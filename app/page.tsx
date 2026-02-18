@@ -1,5 +1,3 @@
-'use client'
-
 import Background from '@/components/shared/background'
 import WelcomeScreen from '@/components/home/welcomeScreen'
 
