@@ -1,4 +1,5 @@
 import { AttendanceStatus, UserCategory, UserRole } from '@/types'
+import { isValidPhoneNumber } from 'libphonenumber-js'
 import { z } from 'zod'
 
 export const OnboardingFormSchema = z.object({
@@ -6,9 +7,11 @@ export const OnboardingFormSchema = z.object({
   dni: z
     .string()
     .trim()
-    .length(8, 'El DNI debe tener 8 caracteres')
-    .regex(/^[0-9]{8}$/, 'El DNI debe contener solo números')
-    .transform((val) => val.trim()),
+    .nonempty('El DNI es requerido para crear un usuario.')
+    .refine(
+      (val) => val.length === 8 && /^[0-9]+$/.test(val),
+      'El DNI proporcionado es inválido'
+    ),
   firstName: z
     .string()
     .trim()
@@ -22,20 +25,20 @@ export const OnboardingFormSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
   phoneNumber: z
     .string()
-    .regex(
-      /^(?:(?:\+|00)51|51)?[9]\d{8}$/,
-      'Formato de número de teléfono peruano inválido. Debe ser un número móvil de 9 dígitos'
-    )
-    .transform((val) => val.replace(/\D/g, '')), // Strip non-digits for consistent storage
-  dateOfBirth: z.date().refine((val) => {
-    const today = new Date()
-    const minAge = new Date(
-      today.getFullYear() - 13,
-      today.getMonth(),
-      today.getDate()
-    )
-    return val < today && val <= minAge
-  }, 'Debes tener al menos 13 años de edad para registrarte'),
+    .refine(isValidPhoneNumber, 'Número de teléfono inválido'),
+  dateOfBirth: z
+    .date({
+      errorMap: () => ({ message: 'La fecha de nacimiento es requerida' }),
+    })
+    .refine((val) => {
+      const today = new Date()
+      const minAge = new Date(
+        today.getFullYear() - 13,
+        today.getMonth(),
+        today.getDate()
+      )
+      return val < today && val <= minAge
+    }, 'Debes tener al menos 13 años de edad para registrarte'),
   category: z.enum(
     [UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER],
     {
