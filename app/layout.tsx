@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
+import { shadcn } from '@clerk/themes'
 import { Toaster } from '@/components/ui/sonner'
 import { PostHogProvider } from '@/providers/postHogProvider'
 
@@ -106,6 +107,7 @@ export const viewport: Viewport = {
 }
 
 const clerkAppearance = {
+  theme: shadcn,
   variables: { colorPrimary: '#07309B' },
 }
 
