@@ -13,8 +13,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from '@/components/ui/empty'
 import { cn } from '@/lib/utils'
-import { IconAlertCircle } from '@tabler/icons-react'
+import { IconAlertCircle, IconCalendarCancel } from '@tabler/icons-react'
 
 export default async function AttendanceCalendarTable() {
   const attendanceCalendar = await getAttendanceCalendar()
@@ -22,12 +29,18 @@ export default async function AttendanceCalendarTable() {
 
   if (!attendanceCalendar || attendanceCalendar.length === 0) {
     return (
-      <div className='text-muted-foreground flex items-center justify-start pt-2'>
-        <p className='text-sm'>
-          No hay asistencias registradas en este momento. Por favor verifica más
-          tarde.
-        </p>
-      </div>
+      <Empty>
+        <EmptyMedia variant='icon'>
+          <IconCalendarCancel />
+        </EmptyMedia>
+        <EmptyHeader>
+          <EmptyTitle>No hay asistencias</EmptyTitle>
+          <EmptyDescription className='max-w-xs text-pretty'>
+            No hay asistencias para mostrar en el calendario. Por favor verifica
+            más tarde.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 

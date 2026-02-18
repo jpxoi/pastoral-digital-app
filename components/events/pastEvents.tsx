@@ -1,5 +1,6 @@
 import { getPastEvents } from '@/queries/select'
 import EventCard from './eventCard'
+import EmptyEvents from './emptyEvents'
 
 export default async function PastEvents() {
   const pastEvents = await getPastEvents()
@@ -10,11 +11,10 @@ export default async function PastEvents() {
           <EventCard key={record.id} record={record} type='past' />
         ))
       ) : (
-        <div className='text-muted-foreground col-span-full flex items-center justify-start pt-4'>
-          <p className='text-sm'>
-            No hay eventos en esta sección. Por favor verifica más tarde.
-          </p>
-        </div>
+        <EmptyEvents
+          title='No hay eventos pasados'
+          description='Aún no hay eventos pasados en este momento. Por favor verifica más tarde.'
+        />
       )}
     </div>
   )
