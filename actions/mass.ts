@@ -8,7 +8,7 @@ import { NewSundayMassFormSchema } from '@/schema'
 import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidateTag } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { z } from 'zod'
 
 export async function postNewMassRecord(
@@ -59,7 +59,7 @@ export async function postNewMassRecord(
     sundayDate: `${year}-${month}-${day}`,
   })
     .then(() => {
-      revalidateTag('sundayMasses', 'max')
+      updateTag('sundayMasses')
       return {
         success: 'Se ha enviado tu registro de asistencia a la misa con éxito.',
       }
@@ -94,7 +94,7 @@ export async function verifyMassRecord(massId: string) {
 
   return await updateSundayMassRecordVerification(massId, true, verifiedById)
     .then(() => {
-      revalidateTag('sundayMasses', 'max')
+      updateTag('sundayMasses')
       return {
         success: 'Se ha verificado la asistencia a misa correctamente.',
       }
@@ -129,7 +129,7 @@ export async function rejectMassRecord(massId: string) {
 
   return await updateSundayMassRecordVerification(massId, false, verifiedById)
     .then(() => {
-      revalidateTag('sundayMasses', 'max')
+      updateTag('sundayMasses')
       return {
         success: 'Se ha rechazado la asistencia a misa correctamente.',
       }

@@ -12,7 +12,7 @@ import {
 } from '@/queries/select'
 import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidateTag } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { checkRole } from '@/lib/roles'
 import {
   AttendanceRecordMethod,
@@ -40,7 +40,7 @@ export const registerAttendanceRecord = async (
     .then(async () => {
       const lastAttendanceRecord = await getLastAttendanceRecord()
 
-      revalidateTag('attendance', 'max')
+      updateTag('attendance')
 
       if (data.status === AttendanceStatus.FALTA_JUSTIFICADA) {
         return {
@@ -73,7 +73,7 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
 
   return await createAttendanceRecords(data)
     .then(() => {
-      revalidateTag('attendance', 'max')
+      updateTag('attendance')
 
       return {
         success: 'Asistencias registrada correctamente.',
@@ -100,7 +100,7 @@ export const setAttendanceRecordStatus = async (
 
   return await updateAttendanceRecordStatus(status, recordId)
     .then(async () => {
-      revalidateTag('attendance', 'max')
+      updateTag('attendance')
 
       return {
         success: 'Estado de asistencia modificado correctamente.',
@@ -152,7 +152,7 @@ export const fillAbsenceRecords = async (eventId: number) => {
   try {
     await createAttendanceRecords(absenceRecords)
 
-    revalidateTag('attendance', 'max')
+    updateTag('attendance')
 
     return {
       success: 'Faltas rellenadas correctamente.',
@@ -176,7 +176,7 @@ export const removeAttendanceRecord = async (
   }
   return await deleteAttendanceRecord(recordId)
     .then(async () => {
-      revalidateTag('attendance', 'max')
+      updateTag('attendance')
       return {
         success: 'Asistencia eliminada correctamente.',
       }

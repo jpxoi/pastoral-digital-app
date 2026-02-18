@@ -11,7 +11,7 @@ import { SelectUser } from '@/db/schema'
 import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidateTag } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { formatISO } from 'date-fns'
 
 export const registerUser = async (
@@ -137,7 +137,7 @@ export async function setUserSchedule(
 
   return await updateUserSchedule(userId, schedule)
     .then(async () => {
-      revalidateTag('users', 'max')
+      updateTag('users')
 
       return {
         success: 'Programa del catequista actualizado correctamente',
