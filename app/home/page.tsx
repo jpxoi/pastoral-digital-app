@@ -4,7 +4,6 @@ import Image from 'next/image'
 import { MainFooter } from '@/components/shared/footer'
 import { LogoImageWide } from '@/components/shared/logoImage'
 import { ClerkLoaded, SignInButton, SignUpButton } from '@clerk/nextjs'
-import Background from '@/components/shared/background'
 import Link from 'next/link'
 import {
   IconId,
