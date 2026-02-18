@@ -15,6 +15,9 @@ import EventAttendeesTable from '@/components/events/eventAttendeesTable'
 import EventAttendeesTableSkeleton from '@/components/events/eventAttendeesTableSkeleton'
 import EventPageActionButtons from '@/components/events/eventPageActionButtons'
 import Link from 'next/link'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+import { tz } from '@date-fns/tz'
 
 export default async function Page({
   params,
@@ -48,14 +51,9 @@ export default async function Page({
                   {event.name}
                 </h1>
                 <p className='text-sm text-neutral-500'>
-                  {new Date(event.date).toLocaleDateString('es-PE', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                    weekday: 'long',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    timeZone: 'America/Lima',
+                  {format(new Date(event.date), 'PPPPpp', {
+                    locale: es,
+                    in: tz('America/Lima'),
                   })}
                 </p>
               </div>

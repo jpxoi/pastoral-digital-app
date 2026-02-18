@@ -2,7 +2,10 @@
 
 import { Button } from '../ui/button'
 import { FetchMassesProps } from '@/types'
+import { tz } from '@date-fns/tz'
 import { IconFileTypeCsv } from '@tabler/icons-react'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { toast } from 'sonner'
 
 export default function ExportToCsvMasses() {
@@ -62,26 +65,16 @@ export default function ExportToCsvMasses() {
                   ? `${item.verifier.firstName} ${item.verifier.lastName}`
                   : '',
                 item.verifiedAt
-                  ? new Intl.DateTimeFormat('es-PE', {
-                      timeZone: 'America/Lima',
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                    }).format(new Date(item.verifiedAt))
+                  ? format(new Date(item.verifiedAt), 'Ppp', {
+                      locale: es,
+                      in: tz('America/Lima'),
+                    })
                   : '',
                 item.sundayDate,
-                new Intl.DateTimeFormat('es-PE', {
-                  timeZone: 'America/Lima',
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                }).format(new Date(item.createdAt as Date)),
+                format(new Date(item.createdAt as Date), 'Ppp', {
+                  locale: es,
+                  in: tz('America/Lima'),
+                }),
               ]),
             ]
               .map((e) => e.join(';'))

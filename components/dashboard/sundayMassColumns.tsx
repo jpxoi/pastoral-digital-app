@@ -6,6 +6,9 @@ import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '../ui/button'
 import { IconPhoto } from '@tabler/icons-react'
+import { es } from 'date-fns/locale'
+import { tz } from '@date-fns/tz'
+import { format } from 'date-fns'
 
 export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
   {
@@ -13,14 +16,10 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
     header: 'Parroquia',
     cell: ({ row }) => {
       const createdAt = new Date(row.original.createdAt)
-      const formattedTime = createdAt.toLocaleString('es-PE', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZone: 'America/Lima',
+
+      const formattedTime = format(createdAt, 'PP pp', {
+        locale: es,
+        in: tz('America/Lima'),
       })
 
       return (

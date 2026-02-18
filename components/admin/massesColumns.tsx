@@ -10,6 +10,9 @@ import { FetchMassesProps } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import UserCategoryLabel from '../shared/userCategoryLabel'
 import { rejectMassRecord, verifyMassRecord } from '@/actions/mass'
+import { es } from 'date-fns/locale'
+import { tz } from '@date-fns/tz'
+import { format } from 'date-fns'
 
 const handleVerifyMass = async (id: string) => {
   toast.promise(verifyMassRecord(id), {
@@ -100,13 +103,9 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     ),
     cell: ({ row }) => {
       const createdAt = new Date(row.original.createdAt)
-      const formattedTime = createdAt.toLocaleString('es-PE', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'America/Lima',
+      const formattedTime = format(createdAt, 'PP pp', {
+        locale: es,
+        in: tz('America/Lima'),
       })
 
       return <div className='text-nowrap'>{formattedTime}</div>

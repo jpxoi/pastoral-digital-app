@@ -20,6 +20,9 @@ import {
 import { EventCardAction } from './eventCardAction'
 import { Suspense } from 'react'
 import { Skeleton } from '../ui/skeleton'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+import { tz } from '@date-fns/tz'
 
 export default function EventCard({
   record,
@@ -68,26 +71,23 @@ export default function EventCard({
           <span className='flex items-center gap-1 text-ellipsis'>
             <IconCalendar className='size-4' />
             <span>
-              {new Date(record.date).toLocaleDateString('es-PE', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
+              {format(record.date, 'PPP', {
+                locale: es,
+                in: tz('America/Lima'),
               })}
             </span>
           </span>
           <span className='flex items-center gap-1 text-ellipsis'>
             <IconClock className='size-4' />
             <span>
-              {new Date(record.date).toLocaleTimeString('es-PE', {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: 'America/Lima',
+              {format(record.date, 'p', {
+                locale: es,
+                in: tz('America/Lima'),
               })}{' '}
               -{' '}
-              {new Date(record.endDate).toLocaleTimeString('es-PE', {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: 'America/Lima',
+              {format(record.endDate, 'p', {
+                locale: es,
+                in: tz('America/Lima'),
               })}
             </span>
           </span>
@@ -114,16 +114,16 @@ export default function EventCard({
         ) : (
           <a
             href={new URL(
-              `https://wa.me/51941952314?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${new Date(
-                record.date
-              ).toLocaleDateString('es-PE', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-              })} a las ${new Date(record.date).toLocaleTimeString('es-PE', {
-                hour: 'numeric',
-                minute: 'numeric',
-                timeZone: 'America/Lima',
+              `https://wa.me/51941952314?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${format(
+                record.date,
+                'PPP',
+                {
+                  locale: es,
+                  in: tz('America/Lima'),
+                }
+              )} a las ${format(record.date, 'p', {
+                locale: es,
+                in: tz('America/Lima'),
               })}`
             ).toString()}
             target='_blank'

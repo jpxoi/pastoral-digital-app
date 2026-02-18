@@ -9,6 +9,7 @@ import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NeonDbError } from '@neondatabase/serverless'
 import { updateTag } from 'next/cache'
+import { TZDate } from '@date-fns/tz'
 import { z } from 'zod'
 
 export async function postNewMassRecord(
@@ -29,14 +30,12 @@ export async function postNewMassRecord(
 
   const { parish, evidenceFileKey, evidenceFileHash } = validatedFields.data
 
-  const peruDateString = new Date().toLocaleString('en-US', {
-    timeZone: 'America/Lima',
-  })
+  const peruDate = new TZDate(new Date(), 'America/Lima')
 
-  const peruDate = new Date(peruDateString)
   const isValidTimeframe =
     peruDate.getDay() === 0 || // Sunday
     (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
+
   if (!isValidTimeframe)
     return {
       error:

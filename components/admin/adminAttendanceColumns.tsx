@@ -6,6 +6,9 @@ import { FetchAttendancePropsWithEvent } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 import { AdminAttendanceRowActions } from './adminAttendanceRowActions'
+import { format } from 'date-fns'
+import { tz } from '@date-fns/tz'
+import { es } from 'date-fns/locale'
 
 export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] =
   [
@@ -49,13 +52,9 @@ export const AdminAttendanceColumns: ColumnDef<FetchAttendancePropsWithEvent>[] 
       ),
       cell: ({ row }) => {
         const checkInTime = new Date(row.original.checkInTime)
-        const formattedTime = checkInTime.toLocaleDateString('es-PE', {
-          day: 'numeric',
-          month: 'short',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          timeZone: 'America/Lima',
+        const formattedTime = format(checkInTime, 'PP pp', {
+          locale: es,
+          in: tz('America/Lima'),
         })
 
         return <span className='text-left text-nowrap'>{formattedTime}</span>
