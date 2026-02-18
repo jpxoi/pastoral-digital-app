@@ -25,9 +25,15 @@ export const registerUser = async (
     }
   }
 
-  return await createUser(validatedFields.data)
+  return await createUser({
+    ...validatedFields.data,
+    dateOfBirth: validatedFields.data.dateOfBirth.toISOString(),
+  })
     .then(async () => {
-      const onboardingResult = await completeOnboarding()
+      const onboardingResult = await completeOnboarding(
+        validatedFields.data.firstName,
+        validatedFields.data.lastName
+      )
 
       if (onboardingResult.error) {
         throw new Error(onboardingResult.error)
@@ -45,7 +51,10 @@ export const registerUser = async (
     })
 }
 
-export const completeOnboarding = async () => {
+export const completeOnboarding = async (
+  firstName: string,
+  lastName: string
+) => {
   const { userId } = await auth()
 
   if (!userId) {
@@ -60,6 +69,8 @@ export const completeOnboarding = async () => {
         role: UserRole.MEMBER,
         onboardingComplete: true,
       },
+      firstName,
+      lastName,
     })
 
     return { success: 'Metadata del usuario actualizada exitosamente.' }
