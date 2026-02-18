@@ -249,8 +249,9 @@ export default function OnboardingForm({
                     <Calendar
                       mode='single'
                       captionLayout='dropdown'
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date)}
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      autoFocus
                     />
                   </PopoverContent>
                 </Popover>

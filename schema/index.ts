@@ -27,19 +27,15 @@ export const OnboardingFormSchema = z.object({
       'Formato de número de teléfono peruano inválido. Debe ser un número móvil de 9 dígitos'
     )
     .transform((val) => val.replace(/\D/g, '')), // Strip non-digits for consistent storage
-  dateOfBirth: z
-    .string()
-    .date('Fecha de nacimiento inválida')
-    .refine((val) => {
-      const date = new Date(val)
-      const today = new Date()
-      const minAge = new Date(
-        today.getFullYear() - 13,
-        today.getMonth(),
-        today.getDate()
-      )
-      return date < today && date <= minAge
-    }, 'Debes tener al menos 13 años de edad para registrarte'),
+  dateOfBirth: z.date().refine((val) => {
+    const today = new Date()
+    const minAge = new Date(
+      today.getFullYear() - 13,
+      today.getMonth(),
+      today.getDate()
+    )
+    return val < today && val <= minAge
+  }, 'Debes tener al menos 13 años de edad para registrarte'),
   category: z.enum(
     [UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER],
     {
