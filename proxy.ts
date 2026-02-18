@@ -1,18 +1,20 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-const isHomeRoute = createRouteMatcher(['/'])
-
+const isOnboardingRoute = createRouteMatcher(['/onboarding'])
 const isMaintenanceRoute = createRouteMatcher(['/maintenance'])
-
-const isProtectedRoute = createRouteMatcher([
-  '/dashboard(.*)',
-  '/birthdays(.*)',
-  '/admin(.*)',
-  '/onboarding(.*)',
-])
-
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
+
+const isPublicRoute = createRouteMatcher([
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/fallback(.*)',
+  '/api(.*)',
+  '/home(.*)',
+  '/maintenance(.*)',
+  '/privacy(.*)',
+  '/terms(.*)',
+])
 
 export default clerkMiddleware(async (auth, req) => {
   const isInMaintenanceMode = false
@@ -27,21 +29,31 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(url)
   }
 
-  if (isProtectedRoute(req)) await auth.protect()
+  const { isAuthenticated, sessionClaims, redirectToSignIn } = await auth()
 
-  if (isHomeRoute(req) && (await auth()).sessionClaims) {
-    const url = new URL('/dashboard', req.url)
-    return NextResponse.redirect(url)
+  if (isAuthenticated && isOnboardingRoute(req)) {
+    return NextResponse.next()
+  }
+
+  if (!isAuthenticated && !isPublicRoute(req))
+    return redirectToSignIn({ returnBackUrl: req.url })
+
+  if (isAuthenticated && !sessionClaims?.metadata?.onboardingComplete) {
+    const onboardingUrl = new URL('/onboarding', req.url)
+    return NextResponse.redirect(onboardingUrl)
   }
 
   if (
+    isAuthenticated &&
     isAdminRoute(req) &&
-    (await auth()).sessionClaims?.metadata?.role !== 'admin' &&
-    (await auth()).sessionClaims?.metadata?.role !== 'manager'
+    sessionClaims?.metadata?.role !== 'admin' &&
+    sessionClaims?.metadata?.role !== 'manager'
   ) {
     const url = new URL('/dashboard', req.url)
     return NextResponse.redirect(url)
   }
+
+  if (isAuthenticated && !isPublicRoute(req)) return NextResponse.next()
 })
 
 export const config = {
