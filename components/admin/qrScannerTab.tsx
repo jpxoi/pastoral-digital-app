@@ -6,6 +6,14 @@ import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
 import { SelectEvent } from '@/db/schema'
 
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
+
 import { useState, useEffect, useTransition } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
@@ -22,6 +30,7 @@ import { calculateStatus } from '@/lib/attendance'
 import { fetchUserSchedule } from '@/actions/user'
 
 import useSound from 'use-sound'
+import { IconCalendar, IconUser } from '@tabler/icons-react'
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
@@ -31,9 +40,11 @@ export default function QrScannerTab() {
   const [cameraPermission, setCameraPermission] = useState<
     'granted' | 'denied' | 'prompt'
   >('prompt')
+
   const [lastScanned, setLastScanned] = useState<FetchAttendanceProps | null>(
     null
   )
+
   const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
   const [isRegistrationPending, startTransition] = useTransition()
 
@@ -225,8 +236,8 @@ export default function QrScannerTab() {
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />
         )}
-        <div className='grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8'>
-          <Card>
+        <div className='flex flex-col gap-4 lg:gap-8'>
+          <Card className='w-full'>
             <CardHeader>
               <div className='mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl border border-gray-200'>
                 {scanning ? (
@@ -272,8 +283,31 @@ export default function QrScannerTab() {
             </CardFooter>
           </Card>
 
+          {event ? (
+            <div>
+              <Item variant='muted'>
+                <ItemContent>
+                  <ItemMedia variant='icon'>
+                    <IconCalendar />
+                  </ItemMedia>
+                  <ItemTitle className='line-clamp-1'>{event.name}</ItemTitle>
+                  <ItemDescription>
+                    {new Date(event.date).toLocaleDateString('es-PE', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      timeZone: 'America/Lima',
+                    })}
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            </div>
+          ) : null}
+
           {lastScanned ? (
-            <Card>
+            <Card size='sm'>
               <CardHeader className='flex h-full flex-col items-center justify-center'>
                 <h2 className='text-left text-lg font-semibold'>
                   {lastScanned.user.firstName} {lastScanned.user.lastName}
