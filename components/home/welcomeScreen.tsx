@@ -1,5 +1,6 @@
 import { LogoImageWide } from '@/components/shared/logoImage'
 import LoginPrompt from '@/components/home/loginPrompt'
+import OfflineAlert from '@/components/shared/offlineAlert'
 
 export default function WelcomeScreen() {
   return (
@@ -13,7 +14,7 @@ export default function WelcomeScreen() {
           App
         </h1>
 
-        <div className='p-4 pb-8 text-white sm:p-8 sm:text-black'>
+        <div className='space-y-6 p-4 pb-8 text-white sm:p-8 sm:text-black'>
           <LogoImageWide
             variant='light'
             className='mx-auto block max-w-60 sm:hidden'
@@ -22,6 +23,7 @@ export default function WelcomeScreen() {
             variant='dark'
             className='mx-auto hidden max-w-50 sm:block'
           />
+          <OfflineAlert />
           <LoginPrompt />
         </div>
       </div>

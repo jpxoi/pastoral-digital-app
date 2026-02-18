@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
-import OfflineAlert from '@/components/shared/offlineAlert'
 import MassesTable from '@/components/admin/massesTable'
 import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 import ExportToCsvMasses from '@/components/shared/exportToCsvMasses'

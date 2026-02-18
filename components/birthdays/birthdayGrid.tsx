@@ -3,13 +3,12 @@ import BirthdayCard from '@/components/birthdays/birthdayCard'
 import { SelectUser } from '@/db/schema'
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { IconCake, IconCakeOff } from '@tabler/icons-react'
+import { IconCakeOff } from '@tabler/icons-react'
 
 export default async function BirthdayGrid() {
   const userBirthdays = await getUserBirthdays()

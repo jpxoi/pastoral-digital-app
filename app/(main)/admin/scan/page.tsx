@@ -2,13 +2,10 @@
 
 import QrScannerTab from '@/components/admin/qrScannerTab'
 
-import OfflineAlert from '@/components/shared/offlineAlert'
-
 export default function Page() {
   return (
     <>
       <div className='flex flex-col gap-2 text-left'>
-        <OfflineAlert />
         <h1 className='text-xl font-semibold sm:text-2xl'>
           Escanear Código QR
         </h1>
