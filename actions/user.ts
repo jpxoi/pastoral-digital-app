@@ -52,10 +52,7 @@ export const registerUser = async (
     })
 }
 
-export const completeOnboarding = async (
-  firstName: string,
-  lastName: string
-) => {
+const completeOnboarding = async (firstName: string, lastName: string) => {
   const { userId } = await auth()
 
   if (!userId) {
@@ -78,51 +75,6 @@ export const completeOnboarding = async (
   } catch (err) {
     console.error(err)
     return { error: 'Hubo un error al actualizar los metadatos del usuario.' }
-  }
-}
-
-export async function setRole(formData: FormData) {
-  const client = await clerkClient()
-
-  // Check that the user trying to set the role is an admin
-  if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estás autorizado para realizar esta acción.' }
-  }
-
-  try {
-    const res = await client.users.updateUserMetadata(
-      formData.get('id') as string,
-      {
-        publicMetadata: {
-          role: formData.get('role'),
-          onboardingComplete: true,
-        },
-      }
-    )
-    return {
-      success: 'Rol actualizado correctamente',
-      data: res.publicMetadata,
-    }
-  } catch (err) {
-    console.error(err)
-    return { error: 'Hubo un error al actualizar el rol.' }
-  }
-}
-
-export async function removeRole(formData: FormData) {
-  const client = await clerkClient()
-
-  try {
-    const res = await client.users.updateUserMetadata(
-      formData.get('id') as string,
-      {
-        publicMetadata: { role: null, onboardingComplete: true },
-      }
-    )
-    return { success: 'Rol eliminado correctamente', data: res.publicMetadata }
-  } catch (err) {
-    console.error(err)
-    return { error: 'Hubo un error al eliminar el rol.' }
   }
 }
 

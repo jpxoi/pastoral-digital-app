@@ -18,7 +18,7 @@ export default function SundayMassDialog() {
     peruDate.getDay() === 0 || // Sunday
     (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
 
-  if (!isValidTimeframe) {
+  if (isValidTimeframe) {
     return null
   }
 
