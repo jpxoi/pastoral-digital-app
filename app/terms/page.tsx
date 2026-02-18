@@ -22,8 +22,7 @@ export const metadata: Metadata = {
 }
 
 export default function TermsAndConditionsPage() {
-  // Fecha de última actualización
-  const lastUpdated = '10 de febrero de 2026'
+  const lastUpdated = '18 de febrero de 2026'
 
   return (
     <div className='h-screen overflow-y-scroll bg-linear-to-b from-gray-50 to-gray-100 print:bg-white'>
