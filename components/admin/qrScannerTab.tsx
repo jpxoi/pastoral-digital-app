@@ -8,6 +8,7 @@ import { SelectEvent } from '@/db/schema'
 
 import {
   Item,
+  ItemActions,
   ItemContent,
   ItemDescription,
   ItemMedia,
@@ -19,7 +20,7 @@ import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { registerAttendanceRecord } from '@/actions/attendance'
-import { FetchAttendanceProps, UserSchedule } from '@/types'
+import { UserSchedule } from '@/types'
 import {
   ScanErrorScreen,
   ScanSuccessScreen,
@@ -30,7 +31,38 @@ import { calculateStatus } from '@/lib/attendance'
 import { fetchUserSchedule } from '@/actions/user'
 
 import useSound from 'use-sound'
-import { IconCalendar, IconUser } from '@tabler/icons-react'
+import {
+  IconCalendar,
+  IconCalendarOff,
+  IconUser,
+  IconUserOff,
+} from '@tabler/icons-react'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '../ui/empty'
+import { useLastScannedStore } from '@/stores/last-scanned-store'
+import { format } from 'date-fns'
+import { tz } from '@date-fns/tz'
+import { es } from 'date-fns/locale'
+import { Badge } from '../ui/badge'
+import useSWR from 'swr'
+import { Spinner } from '../ui/spinner'
+import { Skeleton } from '../ui/skeleton'
+
+const fetcher = async (url: string) => {
+  const data = await fetch(url)
+  const json = await data.json()
+
+  if (!data.ok) {
+    throw new Error(json.error)
+  }
+
+  return json
+}
 
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
@@ -41,53 +73,22 @@ export default function QrScannerTab() {
     'granted' | 'denied' | 'prompt'
   >('prompt')
 
-  const [lastScanned, setLastScanned] = useState<FetchAttendanceProps | null>(
-    null
-  )
+  const lastScanned = useLastScannedStore((state) => state.lastScanned)
+  const addLastScanned = useLastScannedStore((state) => state.addLastScanned)
 
-  const [event, setEvent] = useState<SelectEvent | undefined>(undefined)
   const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
+  const { data: event, isLoading: eventIsLoading } = useSWR<SelectEvent>(
+    '/api/events/today',
+    fetcher
+  )
 
   const [playSuccessSound] = useSound('/sounds/success.mp3')
   const [playWarningSound] = useSound('/sounds/warning.mp3')
   const [playErrorSound] = useSound('/sounds/error.mp3')
 
   useEffect(() => {
-    const fetchEvent = async () => {
-      const data = await fetch('/api/events/today', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      const json = await data.json()
-
-      if (!data.ok) {
-        toast.error(json.error)
-        return
-      }
-
-      if (json.success && json.event) {
-        toast.message(`Evento: ${json.event.name}`, {
-          description: `
-              Hoy a las ${new Date(json.event.date).toLocaleTimeString(
-                'es-PE',
-                {
-                  hour: 'numeric',
-                  minute: 'numeric',
-                  timeZone: 'America/Lima',
-                }
-              )}
-            `,
-        })
-        setEvent(json.event)
-        return
-      }
-    }
-
     const checkCameraPermission = async () => {
       try {
         const result = await navigator.permissions.query({
@@ -106,12 +107,10 @@ export default function QrScannerTab() {
       }
     }
 
-    fetchEvent()
     checkCameraPermission()
   }, [])
 
   const handleError = (error?: string) => {
-    setLastScanned(null)
     setError(true)
     setTimeout(() => setError(false), 1000)
 
@@ -197,8 +196,8 @@ export default function QrScannerTab() {
 
         toast.dismiss()
 
-        if (data.lastAttendanceRecord) {
-          setLastScanned(data.lastAttendanceRecord)
+        if (data.lastAttendanceRecord !== undefined) {
+          addLastScanned(data.lastAttendanceRecord)
         }
 
         if (data.warning) {
@@ -236,7 +235,45 @@ export default function QrScannerTab() {
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />
         )}
-        <div className='flex flex-col gap-4 lg:gap-8'>
+        <Item variant='outline'>
+          <ItemMedia variant='icon'>
+            {eventIsLoading ? (
+              <Spinner />
+            ) : event ? (
+              <IconCalendar />
+            ) : (
+              <IconCalendarOff className='text-destructive' />
+            )}
+          </ItemMedia>
+          <ItemContent>
+            {eventIsLoading ? (
+              <>
+                <Skeleton className='h-4.75 w-1/2 max-w-60' />
+                <Skeleton className='h-5.25 w-1/4 max-w-40' />
+              </>
+            ) : (
+              <>
+                <ItemTitle className='line-clamp-1 text-left'>
+                  {event ? event.name : 'No se encontró ningún evento'}
+                </ItemTitle>
+                <ItemDescription className='line-clamp-1 text-left'>
+                  {event
+                    ? format(new Date(event.date), 'PP pp', {
+                        locale: es,
+                        in: tz('America/Lima'),
+                      })
+                    : 'No hay ningún evento programado para hoy.'}
+                </ItemDescription>
+              </>
+            )}
+          </ItemContent>
+          {event && (
+            <ItemActions>
+              <Badge variant='default'>Evento del día</Badge>
+            </ItemActions>
+          )}
+        </Item>
+        <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
           <Card className='w-full'>
             <CardHeader>
               <div className='mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl border border-gray-200'>
@@ -282,51 +319,46 @@ export default function QrScannerTab() {
               </Button>
             </CardFooter>
           </Card>
-
-          {event ? (
-            <div>
-              <Item variant='muted'>
-                <ItemContent>
+          <div className='flex w-full flex-col gap-4'>
+            {lastScanned.length > 0 ? (
+              lastScanned.map((record) => (
+                <Item key={record.id} variant='muted'>
                   <ItemMedia variant='icon'>
-                    <IconCalendar />
+                    <IconUser />
                   </ItemMedia>
-                  <ItemTitle className='line-clamp-1'>{event.name}</ItemTitle>
-                  <ItemDescription>
-                    {new Date(event.date).toLocaleDateString('es-PE', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      timeZone: 'America/Lima',
-                    })}
-                  </ItemDescription>
-                </ItemContent>
-              </Item>
-            </div>
-          ) : null}
-
-          {lastScanned ? (
-            <Card size='sm'>
-              <CardHeader className='flex h-full flex-col items-center justify-center'>
-                <h2 className='text-left text-lg font-semibold'>
-                  {lastScanned.user.firstName} {lastScanned.user.lastName}
-                </h2>
-                <p className='text-muted-foreground text-left text-xs'>
-                  {lastScanned.checkInTime?.toLocaleDateString('es-PE', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    timeZone: 'America/Lima',
-                  })}
-                </p>
-
-                <AttendanceStatusLabel status={lastScanned.status} />
-              </CardHeader>
-            </Card>
-          ) : null}
+                  <ItemContent>
+                    <ItemTitle className='line-clamp-1 text-left'>
+                      {record.user.firstName} {record.user.lastName}
+                    </ItemTitle>
+                    <ItemDescription className='line-clamp-1 text-left'>
+                      {format(new Date(record.checkInTime), 'PP pp', {
+                        locale: es,
+                        in: tz('America/Lima'),
+                      })}
+                    </ItemDescription>
+                  </ItemContent>
+                  <ItemActions>
+                    <AttendanceStatusLabel status={record.status} />
+                  </ItemActions>
+                </Item>
+              ))
+            ) : (
+              <Empty className='bg-muted/30'>
+                <EmptyHeader>
+                  <EmptyMedia variant='icon'>
+                    <IconUserOff />
+                  </EmptyMedia>
+                  <EmptyTitle>
+                    No hay registros de asistencia recientes
+                  </EmptyTitle>
+                  <EmptyDescription>
+                    Por favor, escanee el código QR de un usuario para registrar
+                    su asistencia.
+                  </EmptyDescription>
+                </EmptyHeader>
+              </Empty>
+            )}
+          </div>
         </div>
       </div>
     </>
