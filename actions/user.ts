@@ -12,6 +12,7 @@ import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
 import { revalidateTag } from 'next/cache'
+import { format } from 'date-fns'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -27,7 +28,7 @@ export const registerUser = async (
 
   return await createUser({
     ...validatedFields.data,
-    dateOfBirth: validatedFields.data.dateOfBirth.toISOString(),
+    dateOfBirth: format(validatedFields.data.dateOfBirth, 'yyyy-mm-dd'),
   })
     .then(async () => {
       const onboardingResult = await completeOnboarding(
