@@ -4,7 +4,7 @@ import Link, { LinkProps } from 'next/link'
 import React, { useState, createContext, useContext } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { IconMenu2, IconX } from '@tabler/icons-react'
-import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
+import { UserButton } from '@clerk/nextjs'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface Links {
@@ -120,23 +120,21 @@ export const MobileSidebar = ({
         {...props}
       >
         <div className='z-20 flex w-full items-center justify-between'>
-          <ClerkLoading>
-            <div className='flex items-center justify-center gap-2'>
-              <Skeleton className='size-7 rounded-full' />
-              <Skeleton className='h-4 w-32' />
-            </div>
-          </ClerkLoading>
-          <ClerkLoaded>
-            <UserButton
-              showName={true}
-              appearance={{
-                elements: {
-                  userButtonBox: 'flex-row-reverse',
-                  userButtonOuterIdentifier: 'text-white',
-                },
-              }}
-            />
-          </ClerkLoaded>
+          <UserButton
+            showName={true}
+            fallback={
+              <div className='flex items-center justify-center gap-2'>
+                <Skeleton className='size-7 rounded-full' />
+                <Skeleton className='h-4 w-32' />
+              </div>
+            }
+            appearance={{
+              elements: {
+                userButtonBox: 'flex-row-reverse',
+                userButtonOuterIdentifier: 'text-white',
+              },
+            }}
+          />
           <IconMenu2
             className='text-neutral-100'
             onClick={() => setOpen(!open)}
