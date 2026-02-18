@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { IconCalendar, IconCheck } from '@tabler/icons-react'
+import { IconCalendar, IconCheck, IconSearch } from '@tabler/icons-react'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -48,6 +48,7 @@ export default function OnboardingForm({
   userId: string
   userEmail: string
 }) {
+  const [allowCustomName, setAllowCustomName] = useState<boolean>(false)
   const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
   const [isPending, startTransition] = useTransition()
 
@@ -60,7 +61,7 @@ export default function OnboardingForm({
       lastName: '',
       email: userEmail,
       phoneNumber: '',
-      dateOfBirth: '',
+      dateOfBirth: undefined,
       category: undefined,
       studentCode: undefined,
       role: UserRole.MEMBER,
@@ -101,9 +102,7 @@ export default function OnboardingForm({
             name='dni'
             render={({ field }) => (
               <FormItem className='col-span-2'>
-                <FormLabel>
-                  DNI <span className='text-red-500'>*</span>
-                </FormLabel>
+                <FormLabel>DNI</FormLabel>
                 <FormControl>
                   <Input placeholder='Ingrese su número de DNI' {...field} />
                 </FormControl>
@@ -116,10 +115,7 @@ export default function OnboardingForm({
             className='mt-6'
             disabled={form.watch('dni').length !== 8}
           >
-            Buscar
-          </Button>
-          <Button type='button' variant='outline' className='mt-6'>
-            No tengo DNI
+            <IconSearch className='size-4' />
           </Button>
         </div>
         <div className='grid gap-4 sm:grid-cols-2'>
@@ -132,7 +128,11 @@ export default function OnboardingForm({
                   Nombres <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder='Ingrese sus nombres' {...field} />
+                  <Input
+                    placeholder='Ingrese sus nombres'
+                    {...field}
+                    disabled={!allowCustomName}
+                  />
                 </FormControl>
                 <FormDescription>
                   Ingresa tus nombres tal y como aparecen en tu documento de
@@ -151,7 +151,11 @@ export default function OnboardingForm({
                   Apellidos <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder='Ingrese sus dos apellidos' {...field} />
+                  <Input
+                    placeholder='Ingrese sus dos apellidos'
+                    {...field}
+                    disabled={!allowCustomName}
+                  />
                 </FormControl>
                 <FormDescription>
                   Escribe tus apellidos completos, según tu DNI.
@@ -246,22 +250,7 @@ export default function OnboardingForm({
                       mode='single'
                       captionLayout='dropdown'
                       selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) =>
-                        field.onChange(
-                          date ? date.toISOString().split('T')[0] : ''
-                        )
-                      }
-                      disabled={(date) => {
-                        const today = new Date()
-                        const minAgeDate = new Date()
-                        minAgeDate.setFullYear(today.getFullYear() - 13)
-                        return (
-                          date > minAgeDate || date < new Date('1900-01-01')
-                        )
-                      }}
-                      fromYear={1900}
-                      toYear={new Date().getFullYear() - 13}
-                      initialFocus
+                      onSelect={(date) => field.onChange(date)}
                     />
                   </PopoverContent>
                 </Popover>
