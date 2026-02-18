@@ -68,7 +68,6 @@ export default function LandingPage() {
         <div className='flex-1'>
           {/* Hero Section */}
           <section className='relative flex min-h-[calc(100vh-4rem)] w-full items-center justify-center overflow-hidden py-12 md:py-24 lg:py-32'>
-            <Background />
             <div className='pointer-events-none absolute inset-0 bg-linear-to-b from-blue-900/10 to-transparent' />
 
             <div className='relative z-10 container px-4 md:px-6'>
