@@ -29,7 +29,7 @@ export async function postNewMassRecord(
     }
   }
 
-  const { parish, evidenceUrl, evidenceMimeType } = validatedFields.data
+  const { parish, evidenceFileKey, evidenceFileHash } = validatedFields.data
 
   const today = new Date()
 
@@ -44,15 +44,13 @@ export async function postNewMassRecord(
     timeZone: 'America/Lima',
   })
 
-  console.log('Formatted date:', formattedDate)
-
   const [year, month, day] = formattedDate.split('-')
 
   return await createSundayMass({
     userId,
     parish,
-    evidenceUrl,
-    evidenceMimeType,
+    evidenceFileKey,
+    evidenceFileHash,
     sundayDate: `${year}-${month}-${day}`,
   })
     .then(() => {

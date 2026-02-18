@@ -76,10 +76,12 @@ export const NewSundayMassFormSchema = z.object({
     .max(45, 'El nombre de la parroquia no puede exceder los 45 caracteres')
     .nonempty('El nombre de la parroquia es requerido')
     .transform((val) => val.trim()),
-  evidenceUrl: z
+  evidenceFileKey: z
     .string()
     .trim()
-    .nonempty('La evidencia de asistencia es requerida')
-    .url('La URL de la evidencia no es válida'),
-  evidenceMimeType: z.string().trim().optional(),
+    .nonempty('La evidencia de asistencia es requerida'),
+  evidenceFileHash: z
+    .string()
+    .trim()
+    .nonempty('El hash del archivo es requerido'),
 })

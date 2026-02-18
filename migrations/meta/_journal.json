@@ -15,6 +15,13 @@
       "when": 1771266140356,
       "tag": "0001_opposite_fat_cobra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771375852958,
+      "tag": "0002_previous_blindfold",
+      "breakpoints": true
     }
   ]
 }
