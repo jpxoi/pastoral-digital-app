@@ -4,21 +4,12 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
-import {
-  IconCheck,
-  IconFileDownload,
-  IconFileTypeJpg,
-  IconFileTypePdf,
-  IconFileTypePng,
-  IconFileWord,
-  IconX,
-} from '@tabler/icons-react'
+import { IconCheck, IconPhoto, IconX } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { FetchMassesProps } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import UserCategoryLabel from '../shared/userCategoryLabel'
 import { rejectMassRecord, verifyMassRecord } from '@/actions/mass'
-import { memo } from 'react'
 
 const handleVerifyMass = async (id: string) => {
   toast.promise(verifyMassRecord(id), {
@@ -56,25 +47,6 @@ const handleRejectMass = async (id: string) => {
   })
 }
 
-const EvidenceFileIcon = memo(({ mimeType }: { mimeType?: string }) => {
-  if (mimeType === 'image/png') {
-    return <IconFileTypePng className='h-4 w-4' />
-  } else if (mimeType === 'image/jpeg' || mimeType === 'image/jpg') {
-    return <IconFileTypeJpg className='h-4 w-4' />
-  } else if (mimeType === 'application/pdf') {
-    return <IconFileTypePdf className='h-4 w-4' />
-  } else if (
-    mimeType ===
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-    mimeType === 'application/msword'
-  ) {
-    return <IconFileWord className='h-4 w-4' />
-  } else {
-    return <IconFileDownload className='h-4 w-4' />
-  }
-})
-EvidenceFileIcon.displayName = 'EvidenceFileIcon'
-
 export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
   {
     id: 'nombreCompleto',
@@ -104,24 +76,18 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
   },
   {
     id: 'evidencia',
-    accessorKey: 'evidenceUrl',
+    accessorKey: 'evidenceFileKey',
     header: () => <span className='text-nowrap'>Evidencia</span>,
     cell: ({ row }) => (
       <div className='flex gap-2'>
         <a
-          href={
-            row.original.evidenceMimeType?.includes('image/')
-              ? `${row.original.evidenceUrl}-/format/auto/-/quality/smart/`
-              : row.original.evidenceUrl
-          }
+          href={`https://fymwpl3ap9.ufs.sh/${row.original.evidenceFileKey}`}
           target='_blank'
           rel='noopener noreferrer'
           className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
         >
-          <EvidenceFileIcon
-            mimeType={row.original.evidenceMimeType as string}
-          />
-          Descargar
+          <IconPhoto className='h-4 w-4' />
+          Ver
         </a>
       </div>
     ),

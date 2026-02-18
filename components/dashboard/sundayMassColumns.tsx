@@ -5,33 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '../ui/button'
-import {
-  IconFileDownload,
-  IconFileTypeJpg,
-  IconFileTypePdf,
-  IconFileTypePng,
-  IconFileWord,
-} from '@tabler/icons-react'
-import { memo } from 'react'
-
-const EvidenceFileIcon = memo(({ mimeType }: { mimeType?: string }) => {
-  if (mimeType === 'image/png') {
-    return <IconFileTypePng className='h-4 w-4' />
-  } else if (mimeType === 'image/jpeg' || mimeType === 'image/jpg') {
-    return <IconFileTypeJpg className='h-4 w-4' />
-  } else if (mimeType === 'application/pdf') {
-    return <IconFileTypePdf className='h-4 w-4' />
-  } else if (
-    mimeType ===
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-    mimeType === 'application/msword'
-  ) {
-    return <IconFileWord className='h-4 w-4' />
-  } else {
-    return <IconFileDownload className='h-4 w-4' />
-  }
-})
-EvidenceFileIcon.displayName = 'EvidenceFileIcon'
+import { IconPhoto } from '@tabler/icons-react'
 
 export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
   {
@@ -68,15 +42,13 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
       return (
         <div className='flex gap-2'>
           <a
-            href={row.original.evidenceUrl}
+            href={`https://fymwpl3ap9.ufs.sh/${row.original.evidenceFileKey}`}
             target='_blank'
             rel='noopener noreferrer'
             className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
           >
-            <EvidenceFileIcon
-              mimeType={row.original.evidenceMimeType as string}
-            />
-            Descargar
+            <IconPhoto className='h-4 w-4' />
+            Ver
           </a>
         </div>
       )
