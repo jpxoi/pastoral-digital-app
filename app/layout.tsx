@@ -108,7 +108,6 @@ export const viewport: Viewport = {
 
 const clerkAppearance = {
   theme: shadcn,
-  variables: { colorPrimary: '#07309B' },
 }
 
 export default function RootLayout({
