@@ -1,7 +1,4 @@
-import {
-  LogoImageWideLight,
-  LogoImageWideDark,
-} from '@/components/shared/logoImage'
+import { LogoImageWide } from '@/components/shared/logoImage'
 import LoginPrompt from '@/components/home/loginPrompt'
 
 export default function WelcomeScreen() {
@@ -17,8 +14,14 @@ export default function WelcomeScreen() {
         </h1>
 
         <div className='p-4 pb-8 text-white sm:p-8 sm:text-black'>
-          <LogoImageWideLight />
-          <LogoImageWideDark />
+          <LogoImageWide
+            variant='light'
+            className='mx-auto block max-w-60 sm:hidden'
+          />
+          <LogoImageWide
+            variant='dark'
+            className='mx-auto hidden max-w-50 sm:block'
+          />
           <LoginPrompt />
         </div>
       </div>

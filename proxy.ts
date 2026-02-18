@@ -6,6 +6,7 @@ const isMaintenanceRoute = createRouteMatcher(['/maintenance'])
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
 const isPublicRoute = createRouteMatcher([
+  '/',
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/fallback(.*)',

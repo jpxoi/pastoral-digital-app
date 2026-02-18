@@ -17,12 +17,11 @@ import PrintButton from '@/components/shared/printButton'
 export const metadata: Metadata = {
   title: 'Política de Privacidad | Pastoral Mariana',
   description:
-    'Descubra cómo Pastoral Mariana recopila, utiliza y protege sus datos personales. Última actualización: 14 de marzo de 2025.',
+    'Descubra cómo Pastoral Mariana recopila, utiliza y protege sus datos personales. Última actualización: 18 de febrero de 2026.',
 }
 
 export default function PrivacyPolicyPage() {
-  // Fecha de última actualización
-  const lastUpdated = '14 de marzo de 2025'
+  const lastUpdated = '18 de febrero de 2026'
 
   return (
     <div className='h-screen overflow-y-scroll bg-linear-to-b from-gray-50 to-gray-100 print:bg-white'>

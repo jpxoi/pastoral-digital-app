@@ -2,7 +2,6 @@
 
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { TabsContent } from '@/components/ui/tabs'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
 
 import { SelectEvent } from '@/db/schema'
@@ -219,7 +218,7 @@ export default function QrScannerTab() {
       {error && <ScanErrorScreen />}
       {success && <ScanSuccessScreen />}
       {warning && <ScanWarningScreen />}
-      <TabsContent value='scan' className='space-y-4'>
+      <div className='space-y-4'>
         {cameraPermission === 'denied' && (
           <ErrorAlert
             title='Acceso a la cámara denegado'
@@ -295,7 +294,7 @@ export default function QrScannerTab() {
             </Card>
           ) : null}
         </div>
-      </TabsContent>
+      </div>
     </>
   )
 }

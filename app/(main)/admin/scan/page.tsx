@@ -24,15 +24,7 @@ export default function Page() {
           Registra la asistencia de los catequistas escaneando su código QR.
         </p>
       </div>
-      <Tabs defaultValue='scan' className='w-full'>
-        <TabsList className='mb-4 grid w-full grid-cols-2'>
-          <TabsTrigger value='scan'>Escanear QR</TabsTrigger>
-          <TabsTrigger disabled value='nfc'>
-            Escanear NFC
-          </TabsTrigger>
-        </TabsList>
-        <QrScannerTab />
-      </Tabs>
+      <QrScannerTab />
     </main>
   )
 }
