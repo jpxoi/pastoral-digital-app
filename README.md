@@ -71,11 +71,11 @@ pnpm install
 
 La aplicación depende de los siguientes servicios:
 
-- [Neon](https://neon.tech/) - Base de datos
-- [Uploadcare](https://uploadcare.com/) - Almacenamiento de archivos
-- [Clerk](https://clerk.com/) - Autenticación
-- [PostHog](https://posthog.com/) - Analítica
-- [Upstash](https://upstash.com/) - Caché
+- [Neon](https://neon.tech/) - Base de datos (PostgreSQL)
+- [Clerk](https://clerk.com/) - Autenticación (Auth)
+- [Uploadthing](https://uploadthing.com/) - Almacenamiento de archivos (Storage)
+- [Decolecta API](https://decolecta.com/) - Consulta de identidad (DNI)
+- [PostHog](https://posthog.com/) - Analítica de eventos (Analytics)
 
 Asegúrate de tener las credenciales de cada servicio y configurarlas en el archivo `.env`, como se especifica en el siguiente punto.
 
@@ -84,13 +84,7 @@ Asegúrate de tener las credenciales de cada servicio y configurarlas en el arch
 La aplicación utiliza variables de entorno para configurar su comportamiento. Estas variables se encuentran en el archivo `.env` y se pueden modificar según sea necesario. Si no tienes un archivo `.env`, puedes crearlo como el siguiente:
 
 ```env
-DATABASE_URL=<your-database-url>
-
-NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY=<your-uploadcare-public-key>
-UPLOADCARE_SECRET_KEY=<your-uploadcare-secret-key>
-
-NEXT_PUBLIC_POSTHOG_HOST=<your-posthog-host_url>
-NEXT_PUBLIC_POSTHOG_KEY=<your-posthog-key>
+DATABASE_URL=<your-neon-database-url>
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
@@ -101,6 +95,13 @@ NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
 NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
 NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/onboarding
 NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
+
+UPLOADTHING_TOKEN=<your-uploadthing-token>
+
+DECOLECTA_API_TOKEN=<your-decolecta-api-token>
+
+NEXT_PUBLIC_POSTHOG_HOST=<your-posthog-host_url>
+NEXT_PUBLIC_POSTHOG_KEY=<your-posthog-key>
 ```
 
 ### 5. Generar las migraciones de la base de datos
