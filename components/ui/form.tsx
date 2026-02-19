@@ -1,8 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import * as LabelPrimitive from '@radix-ui/react-label'
-import { Slot } from '@radix-ui/react-slot'
+import { Label as LabelPrimitive, Slot as SlotPrimitive } from 'radix-ui'
+
 import {
   Controller,
   FormProvider,
@@ -104,13 +104,13 @@ const FormLabel = React.forwardRef<
 FormLabel.displayName = 'FormLabel'
 
 const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
+  React.ElementRef<typeof SlotPrimitive.Slot>,
+  React.ComponentPropsWithoutRef<typeof SlotPrimitive.Slot>
 >(({ ...props }, ref) => {
   const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
 
   return (
-    <Slot
+    <SlotPrimitive.Slot
       ref={ref}
       id={formItemId}
       aria-describedby={
@@ -135,7 +135,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-sm text-muted-foreground', className)}
+      className={cn('text-muted-foreground text-sm', className)}
       {...props}
     />
   )
@@ -157,7 +157,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-sm font-medium text-destructive', className)}
+      className={cn('text-destructive text-sm font-medium', className)}
       {...props}
     >
       {body}

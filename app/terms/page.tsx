@@ -18,15 +18,14 @@ import PrintButton from '@/components/shared/printButton'
 export const metadata: Metadata = {
   title: 'Términos y Condiciones | Pastoral Mariana',
   description:
-    'Términos y condiciones de uso de la plataforma Pastoral Digital App. Última actualización: 10 de marzo de 2025.',
+    'Términos y condiciones de uso de la plataforma Pastoral Digital App. Última actualización: 18 de febrero de 2026.',
 }
 
 export default function TermsAndConditionsPage() {
-  // Fecha de última actualización
-  const lastUpdated = '10 de marzo de 2025'
+  const lastUpdated = '18 de febrero de 2026'
 
   return (
-    <div className='h-screen overflow-y-scroll bg-gradient-to-b from-gray-50 to-gray-100 print:bg-white'>
+    <div className='h-screen overflow-y-scroll bg-linear-to-b from-gray-50 to-gray-100 print:bg-white'>
       <div className='mx-auto max-w-5xl px-4 py-12'>
         <div className='mb-6 flex items-center justify-between'>
           <Link
@@ -108,7 +107,7 @@ export default function TermsAndConditionsPage() {
           {/* Aceptación de Términos */}
           <section
             id='aceptación-de-términos'
-            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconCircleCheck className='mr-2 h-6 w-6 text-indigo-500' />
@@ -135,7 +134,7 @@ export default function TermsAndConditionsPage() {
           {/* Registro y Cuentas */}
           <section
             id='registro-y-cuentas'
-            className='rounded-xl border-l-4 border-yellow-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-yellow-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconUser className='mr-2 h-6 w-6 text-yellow-500' />
@@ -172,7 +171,7 @@ export default function TermsAndConditionsPage() {
           {/* Propiedad Intelectual */}
           <section
             id='propiedad-intelectual'
-            className='rounded-xl border-l-4 border-green-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-green-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconShield className='mr-2 h-6 w-6 text-green-500' />
@@ -201,7 +200,7 @@ export default function TermsAndConditionsPage() {
           {/* Uso Aceptable */}
           <section
             id='uso-aceptable'
-            className='rounded-xl border-l-4 border-purple-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-purple-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconCircleCheck className='mr-2 h-6 w-6 text-purple-500' />
@@ -249,7 +248,7 @@ export default function TermsAndConditionsPage() {
           {/* Contenido del Usuario */}
           <section
             id='contenido-del-usuario'
-            className='rounded-xl border-l-4 border-blue-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-blue-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconMessageChatbot className='mr-2 h-6 w-6 text-blue-500' />
@@ -284,7 +283,7 @@ export default function TermsAndConditionsPage() {
           {/* Limitación de Responsabilidad */}
           <section
             id='limitación-de-responsabilidad'
-            className='rounded-xl border-l-4 border-orange-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-orange-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconAlertTriangle className='mr-2 h-6 w-6 text-orange-500' />
@@ -321,7 +320,7 @@ export default function TermsAndConditionsPage() {
           {/* Enlaces a Terceros */}
           <section
             id='enlaces-a-terceros'
-            className='rounded-xl border-l-4 border-red-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-red-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconExternalLink className='mr-2 h-6 w-6 text-red-500' />
@@ -348,7 +347,7 @@ export default function TermsAndConditionsPage() {
           {/* Terminación de Acceso */}
           <section
             id='terminación-de-acceso'
-            className='rounded-xl border-l-4 border-teal-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-teal-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconBan className='mr-2 h-6 w-6 text-teal-500' />
@@ -377,7 +376,7 @@ export default function TermsAndConditionsPage() {
           {/* Modificaciones */}
           <section
             id='modificaciones'
-            className='rounded-xl border-l-4 border-pink-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-pink-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconFileText className='mr-2 h-6 w-6 text-pink-500' />
@@ -413,7 +412,7 @@ export default function TermsAndConditionsPage() {
           {/* Legislación Aplicable */}
           <section
             id='legislación-aplicable'
-            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-sm'
+            className='rounded-xl border-l-4 border-indigo-500 bg-white p-8 text-left shadow-xs'
           >
             <h2 className='mb-4 flex items-center text-2xl font-semibold text-gray-800'>
               <IconScale className='mr-2 h-6 w-6 text-indigo-500' />

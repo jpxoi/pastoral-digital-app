@@ -1,5 +1,6 @@
 import { getUpcomingEvents } from '@/queries/select'
 import EventCard from './eventCard'
+import EmptyEvents from './emptyEvents'
 
 export default async function UpcomingEvents() {
   const upcomingEvents = await getUpcomingEvents()
@@ -10,12 +11,7 @@ export default async function UpcomingEvents() {
           <EventCard key={record.id} record={record} type='upcoming' />
         ))
       ) : (
-        <div className='col-span-full flex items-center justify-start pt-4 text-muted-foreground'>
-          <p className='text-sm'>
-            No hay eventos programados en este momento. Por favor verifica más
-            tarde.
-          </p>
-        </div>
+        <EmptyEvents />
       )}
     </div>
   )

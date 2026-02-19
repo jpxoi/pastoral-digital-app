@@ -5,6 +5,9 @@ import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { FetchAttendanceProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import { AdminAttendanceRowActions } from '../admin/adminAttendanceRowActions'
+import { format } from 'date-fns'
+import { tz } from '@date-fns/tz'
+import { es } from 'date-fns/locale'
 
 export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
@@ -15,7 +18,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className='text-nowrap font-medium'>
+        <span className='font-medium text-nowrap'>
           {row.getValue('catequista')}
         </span>
       )
@@ -30,11 +33,9 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
     ),
     cell: ({ row }) => {
       const checkInTime = new Date(row.original.checkInTime)
-      const formattedTime = checkInTime.toLocaleTimeString('es-PE', {
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        timeZone: 'America/Lima',
+      const formattedTime = format(checkInTime, 'ppp', {
+        locale: es,
+        in: tz('America/Lima'),
       })
       return <span>{formattedTime}</span>
     },
@@ -48,7 +49,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <span className='text-nowrap text-muted-foreground'>
+        <span className='text-muted-foreground text-nowrap'>
           {row.getValue('registradoPor')}
         </span>
       )

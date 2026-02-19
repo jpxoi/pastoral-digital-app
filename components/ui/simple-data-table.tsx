@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 'use client'
 
 import {
@@ -70,7 +71,7 @@ export function SimpleDataTable<TData, TValue>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className='h-24 text-center text-muted-foreground'
+                className='text-muted-foreground h-24 text-center'
               >
                 No hay registros.
               </TableCell>

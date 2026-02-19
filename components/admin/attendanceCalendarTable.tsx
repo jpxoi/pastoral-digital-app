@@ -13,8 +13,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+} from '@/components/ui/empty'
 import { cn } from '@/lib/utils'
-import { IconAlertCircle } from '@tabler/icons-react'
+import { IconAlertCircle, IconCalendarCancel } from '@tabler/icons-react'
 
 export default async function AttendanceCalendarTable() {
   const attendanceCalendar = await getAttendanceCalendar()
@@ -22,12 +29,18 @@ export default async function AttendanceCalendarTable() {
 
   if (!attendanceCalendar || attendanceCalendar.length === 0) {
     return (
-      <div className='flex items-center justify-start pt-2 text-muted-foreground'>
-        <p className='text-sm'>
-          No hay asistencias registradas en este momento. Por favor verifica más
-          tarde.
-        </p>
-      </div>
+      <Empty>
+        <EmptyMedia variant='icon'>
+          <IconCalendarCancel />
+        </EmptyMedia>
+        <EmptyHeader>
+          <EmptyTitle>No hay asistencias</EmptyTitle>
+          <EmptyDescription className='max-w-xs text-pretty'>
+            No hay asistencias para mostrar en el calendario. Por favor verifica
+            más tarde.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 
@@ -39,7 +52,7 @@ export default async function AttendanceCalendarTable() {
   })
 
   // Function to count "FALTA INJUSTIFICADA" occurrences for a user
-  const countUnjustifiedAbsences = (row: any) => {
+  const countUnjustifiedAbsences = (row: Record<string, string | null>) => {
     return dateColumns.reduce((count, dateKey) => {
       return count + (row[dateKey] === 'FALTA INJUSTIFICADA' ? 1 : 0)
     }, 0)
@@ -68,7 +81,7 @@ export default async function AttendanceCalendarTable() {
 
             return (
               <TableRow key={row.id}>
-                <TableCell className='text-nowrap font-medium'>
+                <TableCell className='font-medium text-nowrap'>
                   <div className='flex items-center gap-2'>
                     {row.fullName}
                     {showAlert && (
@@ -76,11 +89,11 @@ export default async function AttendanceCalendarTable() {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <IconAlertCircle
-                              className='h-4 w-4 text-destructive'
+                              className='text-destructive h-4 w-4'
                               title={`${unjustifiedAbsences} faltas injustificadas`}
                             />
                           </TooltipTrigger>
-                          <TooltipContent className='bg-red-100 border-red-800'>
+                          <TooltipContent className='border-red-800 bg-red-100'>
                             <p className='text-xs text-red-800'>
                               Este catequista tiene más de 3 faltas no
                               justificadas.

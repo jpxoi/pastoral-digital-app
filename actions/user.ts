@@ -11,7 +11,8 @@ import { SelectUser } from '@/db/schema'
 import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
-import { revalidateTag } from 'next/cache'
+import { updateTag } from 'next/cache'
+import { formatISO } from 'date-fns'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -25,9 +26,15 @@ export const registerUser = async (
     }
   }
 
-  return await createUser(validatedFields.data)
+  return await createUser({
+    ...validatedFields.data,
+    dateOfBirth: formatISO(validatedFields.data.dateOfBirth),
+  })
     .then(async () => {
-      const onboardingResult = await completeOnboarding()
+      const onboardingResult = await completeOnboarding(
+        validatedFields.data.firstName,
+        validatedFields.data.lastName
+      )
 
       if (onboardingResult.error) {
         throw new Error(onboardingResult.error)
@@ -45,7 +52,7 @@ export const registerUser = async (
     })
 }
 
-export const completeOnboarding = async () => {
+const completeOnboarding = async (firstName: string, lastName: string) => {
   const { userId } = await auth()
 
   if (!userId) {
@@ -60,57 +67,14 @@ export const completeOnboarding = async () => {
         role: UserRole.MEMBER,
         onboardingComplete: true,
       },
+      firstName,
+      lastName,
     })
 
     return { success: 'Metadata del usuario actualizada exitosamente.' }
   } catch (err) {
     console.error(err)
     return { error: 'Hubo un error al actualizar los metadatos del usuario.' }
-  }
-}
-
-export async function setRole(formData: FormData) {
-  const client = await clerkClient()
-
-  // Check that the user trying to set the role is an admin
-  if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estás autorizado para realizar esta acción.' }
-  }
-
-  try {
-    const res = await client.users.updateUserMetadata(
-      formData.get('id') as string,
-      {
-        publicMetadata: {
-          role: formData.get('role'),
-          onboardingComplete: true,
-        },
-      }
-    )
-    return {
-      success: 'Rol actualizado correctamente',
-      data: res.publicMetadata,
-    }
-  } catch (err) {
-    console.error(err)
-    return { error: 'Hubo un error al actualizar el rol.' }
-  }
-}
-
-export async function removeRole(formData: FormData) {
-  const client = await clerkClient()
-
-  try {
-    const res = await client.users.updateUserMetadata(
-      formData.get('id') as string,
-      {
-        publicMetadata: { role: null, onboardingComplete: true },
-      }
-    )
-    return { success: 'Rol eliminado correctamente', data: res.publicMetadata }
-  } catch (err) {
-    console.error(err)
-    return { error: 'Hubo un error al eliminar el rol.' }
   }
 }
 
@@ -125,7 +89,7 @@ export async function setUserSchedule(
 
   return await updateUserSchedule(userId, schedule)
     .then(async () => {
-      revalidateTag('users')
+      updateTag('users')
 
       return {
         success: 'Programa del catequista actualizado correctamente',
@@ -172,4 +136,3 @@ export async function fetchUserSchedule(userId: string) {
     }
   }
 }
-

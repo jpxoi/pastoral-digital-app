@@ -4,6 +4,9 @@ import { FetchAttendanceProps } from '@/types'
 import { Button } from '../ui/button'
 import { IconFileTypeCsv } from '@tabler/icons-react'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+import { tz } from '@date-fns/tz'
 
 export default function ExportToCsv({ eventId }: { eventId: number }) {
   const handleClick = async (eventId: number) => {
@@ -49,15 +52,10 @@ export default function ExportToCsv({ eventId }: { eventId: number }) {
                 `${item.user.firstName} ${item.user.lastName}`,
                 item.user.category,
                 item.user.studentCode,
-                new Intl.DateTimeFormat('es-PE', {
-                  timeZone: 'America/Lima',
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                }).format(new Date(item.checkInTime)),
+                format(new Date(item.checkInTime), 'Ppp', {
+                  locale: es,
+                  in: tz('America/Lima'),
+                }),
                 item.status,
                 item.registeredBy,
                 `${item.registeredByUser.firstName} ${item.registeredByUser.lastName}`,

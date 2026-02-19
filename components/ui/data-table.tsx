@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 'use client'
 
 import { useState } from 'react'
@@ -5,6 +6,7 @@ import { useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
+  GlobalFilterTableState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -40,7 +42,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [globalFilter, setGlobalFilter] = useState<any>([])
+  const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -112,7 +114,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center text-muted-foreground'
+                  className='text-muted-foreground h-24 text-center'
                 >
                   No hay registros.
                 </TableCell>

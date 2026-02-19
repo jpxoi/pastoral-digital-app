@@ -4,6 +4,9 @@ import { SelectUser } from '@/db/schema'
 import { Button } from '../ui/button'
 import { IconFileTypeCsv } from '@tabler/icons-react'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+import { tz } from '@date-fns/tz'
 
 export default function ExportToCsvUsers() {
   const handleClick = async () => {
@@ -32,8 +35,6 @@ export default function ExportToCsvUsers() {
                 'first_name',
                 'last_name',
                 'full_name',
-                'nickname',
-                'username',
                 'email',
                 'phone_number',
                 'date_of_birth',
@@ -49,8 +50,6 @@ export default function ExportToCsvUsers() {
                 item.firstName,
                 item.lastName,
                 `${item.firstName} ${item.lastName}`,
-                item.nickname,
-                item.username,
                 item.email,
                 item.phoneNumber,
                 item.dateOfBirth,
@@ -58,24 +57,14 @@ export default function ExportToCsvUsers() {
                 item.studentCode,
                 item.role,
                 item.schedule,
-                new Intl.DateTimeFormat('es-PE', {
-                  timeZone: 'America/Lima',
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                }).format(new Date(item.createdAt as Date)),
-                new Intl.DateTimeFormat('es-PE', {
-                  timeZone: 'America/Lima',
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                }).format(new Date(item.updatedAt as Date)),
+                format(new Date(item.createdAt as Date), 'Ppp', {
+                  locale: es,
+                  in: tz('America/Lima'),
+                }),
+                format(new Date(item.updatedAt as Date), 'Ppp', {
+                  locale: es,
+                  in: tz('America/Lima'),
+                }),
               ]),
             ]
               .map((e) => e.join(';'))

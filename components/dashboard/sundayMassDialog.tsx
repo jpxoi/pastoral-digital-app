@@ -8,11 +8,10 @@ import {
 import { Button } from '../ui/button'
 import { IconBuildingChurch } from '@tabler/icons-react'
 import SundayMassForm from './sundayMassForm'
+import { TZDate } from '@date-fns/tz'
 
 export default function SundayMassDialog() {
-  const peruDate = new Date(
-    new Date().toLocaleString('en-US', { timeZone: 'America/Lima' })
-  )
+  const peruDate = new TZDate(new Date(), 'America/Lima')
 
   const isValidTimeframe =
     peruDate.getDay() === 0 || // Sunday

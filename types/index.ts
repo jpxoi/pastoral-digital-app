@@ -6,12 +6,6 @@ import {
   SelectUser,
 } from '@/db/schema'
 
-export interface TableRow {
-  row: {
-    [key: string]: string
-  }
-}
-
 export interface FetchAttendanceProps extends SelectAttendance {
   user: SelectUser
   registeredByUser: SelectUser
