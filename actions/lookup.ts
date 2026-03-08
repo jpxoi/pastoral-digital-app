@@ -1,7 +1,7 @@
 'use server'
 
-const endpoint = 'https://api.decolecta.com'
-const token = process.env.DECOLECTA_API_TOKEN!
+const endpoint = 'https://api.yupay.dev'
+const token = process.env.YUPAY_API_KEY!
 
 function toTitleCase(str: string): string {
   if (!str) return str
@@ -27,9 +27,8 @@ export async function lookupDni(dni: string) {
     }
   }
 
-  const response = await fetch(`${endpoint}/v1/reniec/dni?numero=${dni}`, {
+  const response = await fetch(`${endpoint}/v1/dni/${encodeURIComponent(dni)}`, {
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   })
@@ -42,17 +41,17 @@ export async function lookupDni(dni: string) {
   }
 
   const data = (await response.json()) as {
-    first_name: string
-    first_last_name: string
-    second_last_name: string
-    full_name: string
-    document_number: string
+    dni: string
+    nombres: string
+    apellidoPaterno: string
+    apellidoMaterno: string
+    nombreCompleto: string
   }
 
-  const firstName = toTitleCase(data.first_name)
-  const firstLastName = toTitleCase(data.first_last_name)
-  const secondLastName = toTitleCase(data.second_last_name)
-  const fullName = toTitleCase(data.full_name)
+  const firstName = toTitleCase(data.nombres)
+  const firstLastName = toTitleCase(data.apellidoPaterno)
+  const secondLastName = toTitleCase(data.apellidoMaterno)
+  const fullName = toTitleCase(data.nombreCompleto)
   const lastName = [firstLastName, secondLastName].filter(Boolean).join(' ')
 
   return {
@@ -63,7 +62,7 @@ export async function lookupDni(dni: string) {
       firstLastName,
       secondLastName,
       fullName,
-      documentNumber: data.document_number,
+      documentNumber: data.dni,
     },
   }
 }
