@@ -39,7 +39,7 @@ La aplicación se encuentra en constante desarrollo, por lo que se irán añadie
 
 Esta aplicación es una _Progressive Web App_ (PWA) y puede ser instalada en cualquier dispositivo con un navegador web moderno. Para instalar la aplicación en tu dispositivo, sigue los siguientes pasos:
 
-1. Abre la aplicación en tu navegador web favorito ingresando a la siguiente URL: [https://pastoralid.jpxoi.com](https://pastoralid.jpxoi.com).
+1. Abre la aplicación en tu navegador web favorito ingresando a la siguiente URL: [https://pastoral.jpxoi.com](https://pastoral.jpxoi.com).
 
 2. Una vez que la aplicación haya cargado, busca la opción de "Instalar" en el menú de tu navegador. En Google Chrome, esta opción se encuentra en el menú de tres puntos verticales en la esquina superior derecha de la pantalla.
 
