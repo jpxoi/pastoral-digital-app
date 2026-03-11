@@ -5,7 +5,6 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { shadcn } from '@clerk/themes'
 import { Toaster } from '@/components/ui/sonner'
-import { PostHogProvider } from '@/providers/postHogProvider'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -126,7 +125,7 @@ export default function RootLayout({
             expand={true}
             richColors
           />
-          <PostHogProvider>{children}</PostHogProvider>
+          {children}
         </body>
       </html>
     </ClerkProvider>

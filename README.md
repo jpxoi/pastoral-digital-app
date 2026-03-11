@@ -75,7 +75,6 @@ La aplicación depende de los siguientes servicios:
 - [Clerk](https://clerk.com/) - Autenticación (Auth)
 - [Uploadthing](https://uploadthing.com/) - Almacenamiento de archivos (Storage)
 - [Yupay API](https://yupay.dev/) - Consulta de identidad (DNI)
-- [PostHog](https://posthog.com/) - Analítica de eventos (Analytics)
 
 Asegúrate de tener las credenciales de cada servicio y configurarlas en el archivo `.env`, como se especifica en el siguiente punto.
 
@@ -99,9 +98,6 @@ NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
 UPLOADTHING_TOKEN=<your-uploadthing-token>
 
 YUPAY_API_KEY=<your-yupay-api-key>
-
-NEXT_PUBLIC_POSTHOG_HOST=<your-posthog-host_url>
-NEXT_PUBLIC_POSTHOG_KEY=<your-posthog-key>
 ```
 
 ### 5. Generar las migraciones de la base de datos
