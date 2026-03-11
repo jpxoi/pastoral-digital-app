@@ -5,7 +5,6 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { shadcn } from '@clerk/themes'
 import { Toaster } from '@/components/ui/sonner'
-import { PostHogProvider } from '@/providers/postHogProvider'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -13,7 +12,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://pastoralid.jpxoi.com'),
+  metadataBase: new URL('https://pastoral.jpxoi.com'),
   title: 'Pastoral Digital App',
   description:
     'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
     title: 'Pastoral Digital App',
     description:
       'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
-    url: 'https://pastoralid.jpxoi.com',
+    url: 'https://pastoral.jpxoi.com',
     siteName: 'Pastoral Digital App',
   },
   appleWebApp: {
@@ -126,7 +125,7 @@ export default function RootLayout({
             expand={true}
             richColors
           />
-          <PostHogProvider>{children}</PostHogProvider>
+          {children}
         </body>
       </html>
     </ClerkProvider>

@@ -27,11 +27,14 @@ export async function lookupDni(dni: string) {
     }
   }
 
-  const response = await fetch(`${endpoint}/v1/dni/${encodeURIComponent(dni)}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  const response = await fetch(
+    `${endpoint}/v1/dni/${encodeURIComponent(dni)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
 
   if (!response.ok) {
     return {
