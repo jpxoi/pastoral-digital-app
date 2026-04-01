@@ -28,7 +28,7 @@ export const OnboardingFormSchema = z.object({
     .refine(isValidPhoneNumber, 'Número de teléfono inválido'),
   dateOfBirth: z
     .date({
-      errorMap: () => ({ message: 'La fecha de nacimiento es requerida' }),
+      error: () => ({ message: 'La fecha de nacimiento es requerida' }),
     })
     .refine((val) => {
       const today = new Date()
@@ -42,7 +42,7 @@ export const OnboardingFormSchema = z.object({
   category: z.enum(
     [UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER],
     {
-      errorMap: () => ({
+      error: () => ({
         message: 'Debes seleccionar tu vínculo con la institución',
       }),
     }
@@ -60,8 +60,8 @@ export const OnboardingFormSchema = z.object({
 
 export const NewAttendanceRecordFormSchema = z.object({
   userId: z.string().nonempty('El ID de usuario es requerido'),
-  status: z.nativeEnum(AttendanceStatus, {
-    errorMap: () => ({
+  status: z.enum(AttendanceStatus, {
+    error: () => ({
       message: 'Debes seleccionar un estado para el registro',
     }),
   }),

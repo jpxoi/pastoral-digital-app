@@ -3,7 +3,7 @@ import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
-import { shadcn } from '@clerk/themes'
+import { shadcn } from '@clerk/ui/themes'
 import { Toaster } from '@/components/ui/sonner'
 
 const poppins = Poppins({
@@ -115,9 +115,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider localization={esMX} appearance={clerkAppearance}>
-      <html lang='es' suppressHydrationWarning>
-        <body className={`${poppins.className} antialiased`}>
+    <html lang='es' suppressHydrationWarning>
+      <body className={`${poppins.className} antialiased`}>
+        <ClerkProvider localization={esMX} appearance={clerkAppearance}>
           <Toaster
             className='text-left'
             position='top-right'
@@ -126,8 +126,8 @@ export default function RootLayout({
             richColors
           />
           {children}
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   )
 }

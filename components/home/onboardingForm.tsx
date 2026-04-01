@@ -108,9 +108,7 @@ export default function OnboardingForm({
     mode: 'onChange',
   })
 
-  const isDniValid = (dni: string) => {
-    return dni.length === 8 && /^[0-9]+$/.test(dni)
-  }
+  const isDniValid = (dni: string) => dni.length === 8 && /^[0-9]+$/.test(dni)
 
   const handleNextButton = async () => {
     const currentFields = steps[currentStep].fields
