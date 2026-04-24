@@ -44,21 +44,22 @@ CREATE TABLE "sunday_masses" (
 	"user_id" text NOT NULL,
 	"parish" text NOT NULL,
 	"sunday_date" date DEFAULT now() NOT NULL,
-	"evidence_url" text NOT NULL,
-	"evidence_mime_type" text,
+	"evidence_file_key" text NOT NULL,
+	"evidence_file_hash" text NOT NULL,
 	"verified" boolean DEFAULT false NOT NULL,
 	"verified_by" text,
 	"verified_at" timestamp,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "sunday_masses_evidence_file_key_unique" UNIQUE("evidence_file_key"),
+	CONSTRAINT "sunday_masses_evidence_file_hash_unique" UNIQUE("evidence_file_hash")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
 	"id" text PRIMARY KEY NOT NULL,
+	"dni" text,
 	"first_name" text NOT NULL,
 	"last_name" text NOT NULL,
-	"nickname" text,
-	"username" text NOT NULL,
 	"email" text NOT NULL,
 	"phone_number" text NOT NULL,
 	"date_of_birth" date NOT NULL,
@@ -68,7 +69,6 @@ CREATE TABLE "users" (
 	"schedule" "user_schedule_enum" DEFAULT 'full-time' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
