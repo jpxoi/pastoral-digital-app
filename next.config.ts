@@ -16,10 +16,7 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    // ...
-  },
-  skipTrailingSlashRedirect: true,
+  // custom config here
 };
 
 export default withPWA(nextConfig);
