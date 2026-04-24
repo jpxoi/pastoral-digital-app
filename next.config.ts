@@ -19,29 +19,7 @@ const nextConfig: NextConfig = {
   turbopack: {
     // ...
   },
-skipTrailingSlashRedirect: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'cdn.jpxoi.com',
-        port: '',
-        pathname: '/media/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'img.clerk.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'fymwpl3ap9.ufs.sh',
-        port: '',
-        pathname: '/f/**',
-      }
-    ],
-  },
+  skipTrailingSlashRedirect: true,
 };
 
 export default withPWA(nextConfig);
