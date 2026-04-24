@@ -13,7 +13,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://pastoral.jpxoi.com'),
+  metadataBase: new URL('https://id.pastoralmarianaps.net.pe'),
   title: 'Pastoral Digital App',
   description:
     'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'Pastoral Digital App',
     description:
       'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
-    url: 'https://pastoral.jpxoi.com',
+    url: 'https://id.pastoralmarianaps.net.pe',
     siteName: 'Pastoral Digital App',
   },
   appleWebApp: {
