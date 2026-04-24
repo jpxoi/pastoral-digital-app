@@ -1,5 +1,5 @@
 {
-  "id": "a2f873ca-a74e-4e93-b187-7fef44f3cf3e",
+  "id": "b347a990-a168-48bd-a7e1-4462de38ee0e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -406,17 +406,17 @@
           "notNull": true,
           "default": "now()"
         },
-        "evidence_url": {
-          "name": "evidence_url",
+        "evidence_file_key": {
+          "name": "evidence_file_key",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "evidence_mime_type": {
-          "name": "evidence_mime_type",
+        "evidence_file_hash": {
+          "name": "evidence_file_hash",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "verified": {
           "name": "verified",
@@ -534,7 +534,22 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "sunday_masses_evidence_file_key_unique": {
+          "name": "sunday_masses_evidence_file_key_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "evidence_file_key"
+          ]
+        },
+        "sunday_masses_evidence_file_hash_unique": {
+          "name": "sunday_masses_evidence_file_hash_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "evidence_file_hash"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -549,6 +564,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "dni": {
+          "name": "dni",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "first_name": {
           "name": "first_name",
           "type": "text",
@@ -557,18 +578,6 @@
         },
         "last_name": {
           "name": "last_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "nickname": {
-          "name": "nickname",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "username": {
-          "name": "username",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -639,13 +648,6 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_username_unique": {
-          "name": "users_username_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "username"
-          ]
-        },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
