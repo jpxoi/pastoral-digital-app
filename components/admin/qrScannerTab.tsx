@@ -287,9 +287,16 @@ export default function QrScannerTab() {
                     onError={() =>
                       showError('Ha ocurrido un error al iniciar el escáner.')
                     }
-                    constraints={{ facingMode: 'environment' }}
+                    constraints={{ facingMode: 'environment', aspectRatio: 1 }}
+                    components={{
+                      onOff: true, // Show camera on/off button
+                      torch: true, // Show torch/flashlight button (if supported)
+                      zoom: true, // Show zoom control (if supported)
+                      finder: true, // Show finder overlay
+                    }}
                     formats={['qr_code']}
                     scanDelay={1000}
+                    allowMultiple={false}
                   />
                 ) : (
                   <div className='flex h-full items-center justify-center bg-gray-100'>
