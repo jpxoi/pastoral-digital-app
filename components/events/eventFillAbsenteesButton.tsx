@@ -45,7 +45,7 @@ export default function EventFillAbsenteesButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant='destructive' size='sm' disabled={isPending}>
+        <Button variant='destructive' className='text-white' size='sm' disabled={isPending}>
           Rellenar Faltas
         </Button>
       </AlertDialogTrigger>
