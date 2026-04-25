@@ -59,8 +59,8 @@ export const registerAttendanceRecord = async (
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al registrar la asistencia.',
       }
     })
@@ -83,8 +83,8 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al registrar las asistencias.',
       }
     })
@@ -110,8 +110,8 @@ export const setAttendanceRecordStatus = async (
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al modificar el estado de asistencia.',
       }
     })
@@ -161,8 +161,8 @@ export const fillAbsenceRecords = async (eventId: number) => {
     console.error(error)
     return {
       error:
-        error instanceof NeonDbError
-          ? handleDbError(error)
+        error instanceof Error && error.cause instanceof NeonDbError
+          ? handleDbError(error.cause)
           : 'Ha ocurrido un error al rellenar las faltas del evento.',
     }
   }
@@ -185,8 +185,8 @@ export const removeAttendanceRecord = async (
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al eliminar la asistencia.',
       }
     })

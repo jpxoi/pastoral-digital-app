@@ -99,8 +99,8 @@ export async function setUserSchedule(
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ocurrió un error al actualizar el programa del catequista.',
       }
     })

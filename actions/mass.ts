@@ -67,8 +67,8 @@ export async function postNewMassRecord(
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al registrar la misa.',
       }
     })
@@ -102,8 +102,8 @@ export async function verifyMassRecord(massId: string) {
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al verificar la misa.',
       }
     })
@@ -137,8 +137,8 @@ export async function rejectMassRecord(massId: string) {
       console.error(error)
       return {
         error:
-          error instanceof NeonDbError
-            ? handleDbError(error)
+          error.cause instanceof NeonDbError
+            ? handleDbError(error.cause)
             : 'Ha ocurrido un error al rechazar la misa.',
       }
     })
