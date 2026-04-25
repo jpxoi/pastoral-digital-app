@@ -1,262 +1,428 @@
 'use client'
 
-import type { TablerIcon } from '@tabler/icons-react'
 import {
-  IconDots,
-  IconShare2,
-  IconSquarePlus,
-  IconX,
-} from '@tabler/icons-react'
-import { type ReactNode, useEffect, useId, useState } from 'react'
+  IosSFChevronDown,
+  IosSFEllipsisHorizontal,
+  IosSFIconFrame,
+  IosSFPlusSquare,
+  IosSFSquareAndArrowUp,
+} from '@/components/shared/ios-sf-symbol-icons'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import {
+  getSafariMajorVersion,
+  isAppleHandheldViewport,
+  isAppleTouchDevice,
+  isHandheldViewport,
+  isIosOtherBrowser,
+  isRunningAsInstalledPwa,
+} from '@/lib/pwa-platform'
 import { cn } from '@/lib/utils'
+import { IconX } from '@tabler/icons-react'
+import Image from 'next/image'
+import * as React from 'react'
 
-const STORAGE_KEY = 'pastoral-digital-ios-install-prompt-dismissed'
+const IOS_DISMISS_KEY = 'pastoral-digital-ios-install-dismissed'
+const ANDROID_DISMISS_KEY = 'pastoral-digital-android-install-dismissed'
+/** Safari `Version/x` ≥ este valor: flujo por menú (⋯ → Compartir → Ver más), alineado con iOS 26+. */
+const SAFARI_MENU_UI_MAJOR = 26
 
-function getSafariMajorVersion(): number | null {
-  if (typeof navigator === 'undefined') return null
-  const m = /Version\/(\d+)/.exec(navigator.userAgent)
-  return m ? Number.parseInt(m[1], 10) : null
-}
+/** Chips con texto: altura `h-6`, esquinas `rounded-md`; el ellipsis va aparte en `size-6` + `rounded-full`. */
+const IOS_CHIP_ROW =
+  'inline-flex h-6 min-h-6 max-w-full shrink-0 items-center gap-1.5 text-sm font-medium leading-none'
+const IOS_CHIP_BORDER =
+  'border border-zinc-300 bg-zinc-100 text-zinc-800 shadow-sm'
 
-/** Evita `navigator.platform` (deprecado): iPadOS suele declararse como Macintosh en el UA. */
-function isIosDevice(): boolean {
-  if (typeof window === 'undefined') return false
-  const ua = window.navigator.userAgent
-  if (/iPad|iPhone|iPod/i.test(ua)) return true
-  return /\bMacintosh\b/i.test(ua) && navigator.maxTouchPoints > 1
-}
-
-function isIosSystemSafari(): boolean {
-  if (!isIosDevice()) return false
-  const ua = navigator.userAgent
-  if (
-    /CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|DuckDuckGo|GSA\/|Instagram|FBAN|FBAV|Line\/|MicroMessenger/.test(
-      ua
-    )
-  ) {
-    return false
-  }
-  return /Safari/i.test(ua) && /AppleWebKit/i.test(ua)
-}
-
-function isRunningAsInstalledPwa(): boolean {
-  if (typeof window === 'undefined') return false
-  const standalone = (window.navigator as Navigator & { standalone?: boolean })
-    .standalone
-  return (
-    window.matchMedia('(display-mode: standalone)').matches ||
-    standalone === true
-  )
-}
-
-type PromptVariant = 'safari26' | 'safari-legacy' | 'ios-other-browser'
-
-function StepBadge({ n }: { n: number }) {
+/** Solo `ellipsis`: cuadrado **size-6**, **rounded-full**, icono centrado. */
+function IosEllipsisMenuPill({ className }: { className?: string }) {
   return (
     <span
-      className='flex h-5 min-h-5 w-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-blue-900/10 text-[10px] leading-none font-semibold text-blue-900'
+      className={cn(
+        'inline-flex size-6 shrink-0 items-center justify-center rounded-full align-middle',
+        IOS_CHIP_BORDER,
+        className
+      )}
       aria-hidden
     >
-      {n}
+      <IosSFIconFrame className='size-4'>
+        <IosSFEllipsisHorizontal width={12} />
+      </IosSFIconFrame>
     </span>
   )
 }
 
-/**
- * Icono + etiqueta alineados al mismo eje que el texto corrido (inline-flex + align-middle).
- * El icono usa altura en em para seguir el tamaño de fuente del paso.
- */
-function ActionLabel({
-  icon: Icon,
-  children,
+/** `square.and.arrow.up` / `chevron.down` / `plus.square` + etiqueta: **h-6**, **rounded-md**. */
+function IosPillChipWithIcon({
+  icon,
+  label,
 }: {
-  icon: TablerIcon
-  children: string
+  icon: React.ReactNode
+  label: string
 }) {
   return (
     <span
       className={cn(
-        'mx-0.5 inline-flex max-w-full align-middle',
-        'items-center gap-1.5 rounded-sm px-0.5 font-medium text-blue-900',
-        'first:ml-0 last:mr-0'
+        'inline-flex rounded-md pr-2 pl-1.5 align-middle',
+        IOS_CHIP_ROW,
+        IOS_CHIP_BORDER
       )}
     >
-      <Icon
-        className='size-[1.15em] shrink-0 text-blue-900 opacity-90'
-        stroke={1.75}
-        aria-hidden
-      />
-      <span className='leading-snug'>{children}</span>
+      <IosSFIconFrame className='size-3.5'>{icon}</IosSFIconFrame>
+      <span className='truncate pr-px'>{label}</span>
     </span>
   )
 }
 
-function StepRow({ n, children }: { n: number; children: ReactNode }) {
+/** `square.and.arrow.up` en barra Safari: **size-6**, **rounded-md**. */
+function IosShareToolbarIcon({ className }: { className?: string }) {
   return (
-    <li className='flex items-start gap-3'>
-      <span className='shrink-0 pt-[0.35em]'>
-        <StepBadge n={n} />
-      </span>
-      <div className='min-w-0 flex-1 leading-relaxed text-pretty'>
-        {children}
-      </div>
-    </li>
+    <span
+      className={cn(
+        'inline-flex size-6 shrink-0 items-center justify-center rounded-md border border-zinc-300 bg-zinc-100 text-zinc-800 shadow-sm',
+        className
+      )}
+      aria-hidden
+    >
+      <IosSFIconFrame className='size-4'>
+        <IosSFSquareAndArrowUp size={14} />
+      </IosSFIconFrame>
+    </span>
   )
 }
 
-export function IosInstallPrompt() {
-  const [variant, setVariant] = useState<PromptVariant | null>(null)
-  const titleId = useId()
+function IosAddToHomeChip() {
+  return (
+    <IosPillChipWithIcon
+      icon={<IosSFPlusSquare size={14} />}
+      label='Añadir a pantalla de inicio'
+    />
+  )
+}
 
-  useEffect(() => {
+/** Pasos estilo captura “menú”: `ellipsis` → `square.and.arrow.up` + Compartir → `chevron.down` + Ver más → `plus.square` (Chrome iOS, Safari 26+, etc.). */
+function IosMenuBasedInstallSteps({ menuPhrase }: { menuPhrase: string }) {
+  return (
+    <ol className='list-decimal space-y-5 pl-5 text-sm leading-relaxed text-zinc-700 marker:font-medium marker:text-zinc-900'>
+      <li className='pl-1'>
+        Pulsa <IosEllipsisMenuPill className='mx-0.5' /> para abrir el menú{' '}
+        {menuPhrase}.
+      </li>
+      <li className='pl-1'>
+        Toca{' '}
+        <IosPillChipWithIcon
+          icon={<IosSFSquareAndArrowUp size={14} />}
+          label='Compartir'
+        />{' '}
+        y, a continuación,{' '}
+        <IosPillChipWithIcon
+          icon={<IosSFChevronDown size={12} />}
+          label='Ver más'
+        />
+        .
+      </li>
+      <li className='pl-1'>
+        Selecciona <IosAddToHomeChip />.
+      </li>
+    </ol>
+  )
+}
+
+function AppInfoCard({ name, host }: { name: string; host: string }) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-3 rounded-2xl p-3',
+        'border border-zinc-200 bg-zinc-50'
+      )}
+    >
+      <Image
+        src='/web-app-manifest-192x192.png'
+        alt=''
+        width={48}
+        height={48}
+        className='size-12 shrink-0 rounded-xl'
+      />
+      <div className='min-w-0'>
+        <p className={cn('truncate font-semibold', 'text-zinc-900')}>{name}</p>
+        <p className={cn('truncate text-sm', 'text-zinc-600')}>{host}</p>
+      </div>
+    </div>
+  )
+}
+
+type IosPromptKind = 'other-browser' | 'safari-legacy' | 'safari-new'
+
+function useIosPromptKind(): IosPromptKind | null {
+  const [kind, setKind] = React.useState<IosPromptKind | null>(null)
+
+  React.useEffect(() => {
+    function compute() {
+      const ua = navigator.userAgent
+      if (
+        !isAppleTouchDevice(ua, navigator.platform, navigator.maxTouchPoints)
+      ) {
+        setKind(null)
+        return
+      }
+      if (!isHandheldViewport(window.innerWidth)) {
+        setKind(null)
+        return
+      }
+      if (isIosOtherBrowser(ua)) {
+        setKind('other-browser')
+        return
+      }
+      const major = getSafariMajorVersion(ua)
+      if (major !== null && major >= SAFARI_MENU_UI_MAJOR) setKind('safari-new')
+      else setKind('safari-legacy')
+    }
+    compute()
+    window.addEventListener('resize', compute)
+    return () => window.removeEventListener('resize', compute)
+  }, [])
+
+  return kind
+}
+
+export function IosInstallPrompt() {
+  const [mounted, setMounted] = React.useState(false)
+  const iosKind = useIosPromptKind()
+
+  const [iosOpen, setIosOpen] = React.useState(false)
+  const [androidOpen, setAndroidOpen] = React.useState(false)
+  const [host, setHost] = React.useState('')
+
+  const deferredAndroidPrompt = React.useRef<BeforeInstallPromptEvent | null>(
+    null
+  )
+
+  React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only gate after hydration
+    setMounted(true)
+    setHost(window.location.host)
+  }, [])
+
+  React.useEffect(() => {
+    if (!mounted || isRunningAsInstalledPwa()) return
+
+    const ua = navigator.userAgent
+    const appleOk = isAppleHandheldViewport(
+      ua,
+      navigator.platform,
+      navigator.maxTouchPoints,
+      window.innerWidth
+    )
+    /** En iPhone/iPad (mano) no usamos `beforeinstallprompt`; en Mac/Windows/Android sí. */
+    const listenChromiumInstall =
+      !appleOk && !localStorage.getItem(ANDROID_DISMISS_KEY)
+
+    let timer: number | undefined
+
+    const onBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+      e.preventDefault()
+      deferredAndroidPrompt.current = e
+      setAndroidOpen(true)
+    }
+
+    if (appleOk && iosKind && !localStorage.getItem(IOS_DISMISS_KEY)) {
+      timer = window.setTimeout(() => setIosOpen(true), 600)
+    }
+
+    if (listenChromiumInstall) {
+      window.addEventListener('beforeinstallprompt', onBeforeInstallPrompt)
+    }
+
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer)
+      window.removeEventListener('beforeinstallprompt', onBeforeInstallPrompt)
+    }
+  }, [mounted, iosKind])
+
+  const dismissIos = React.useCallback(() => {
     try {
-      if (localStorage.getItem(STORAGE_KEY) === '1') return
+      localStorage.setItem(IOS_DISMISS_KEY, '1')
     } catch {
       /* private mode */
     }
-
-    if (!isIosDevice() || isRunningAsInstalledPwa()) return
-
-    const safariMajor = getSafariMajorVersion()
-    const systemSafari = isIosSystemSafari()
-
-    let next: PromptVariant
-    if (systemSafari && safariMajor !== null && safariMajor >= 26) {
-      next = 'safari26'
-    } else if (systemSafari) {
-      next = 'safari-legacy'
-    } else {
-      next = 'ios-other-browser'
-    }
-
-    const showTimer = window.setTimeout(() => setVariant(next), 1600)
-    return () => window.clearTimeout(showTimer)
+    setIosOpen(false)
   }, [])
 
-  function dismiss() {
-    setVariant(null)
+  const dismissAndroid = React.useCallback(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, '1')
+      localStorage.setItem(ANDROID_DISMISS_KEY, '1')
     } catch {
-      /* ignore */
+      /* private mode */
     }
-  }
+    setAndroidOpen(false)
+  }, [])
 
-  if (!variant) return null
+  const runAndroidInstall = React.useCallback(async () => {
+    const ev = deferredAndroidPrompt.current
+    if (!ev) return
+    try {
+      await ev.prompt()
+      await ev.userChoice
+      deferredAndroidPrompt.current = null
+      dismissAndroid()
+    } catch {
+      /* InvalidStateError si el evento ya se usó, u otro fallo */
+      deferredAndroidPrompt.current = null
+      setAndroidOpen(false)
+    }
+  }, [dismissAndroid])
+
+  if (!mounted) return null
+
+  const appName = 'Pastoral Digital'
+  const ua = typeof navigator !== 'undefined' ? navigator.userAgent : ''
+  const appleHandheld = isAppleHandheldViewport(
+    ua,
+    typeof navigator !== 'undefined' ? navigator.platform : '',
+    typeof navigator !== 'undefined' ? navigator.maxTouchPoints : 0,
+    typeof window !== 'undefined' ? window.innerWidth : 0
+  )
+  const showChromiumInstallSheet =
+    androidOpen && !isRunningAsInstalledPwa() && !appleHandheld
 
   return (
-    <div
-      aria-live='polite'
-      className={cn(
-        'pointer-events-none fixed inset-x-0 bottom-0 z-1000 flex justify-center p-4',
-        'pb-[max(1rem,env(safe-area-inset-bottom,0px))]'
-      )}
-    >
-      <Card
-        role='region'
-        aria-labelledby={titleId}
-        size='sm'
-        className={cn(
-          'pointer-events-auto w-full max-w-md shadow-lg',
-          'border-neutral-200 bg-white text-left',
-          'gap-0'
-        )}
-      >
-        <CardHeader>
-          <CardTitle id={titleId} className='text-blue-900'>
-            Instala Pastoral Digital
-          </CardTitle>
-          <CardDescription>Instala la app en tu dispositivo.</CardDescription>
-          <CardAction>
-            <Button
-              type='button'
-              variant='ghost'
-              size='icon'
-              className='-mr-1 text-slate-500 hover:bg-slate-100 hover:text-slate-800'
-              onClick={dismiss}
-              aria-label='Cerrar'
-            >
-              <IconX className='h-5 w-5' />
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          {variant === 'safari26' && (
-            <ol className='list-none space-y-3 text-sm text-slate-700'>
-              <StepRow n={1}>
-                Toca <ActionLabel icon={IconDots}>Menú</ActionLabel>
-                al lado de la barra de direcciones.
-              </StepRow>
-              <StepRow n={2}>
-                Pulsa <ActionLabel icon={IconShare2}>Compartir</ActionLabel>,
-                desplázate hacia abajo y selecciona{' '}
-                <ActionLabel icon={IconSquarePlus}>
-                  Añadir a pantalla de inicio
-                </ActionLabel>
-                .
-              </StepRow>
-              <StepRow n={3}>
-                Pulsa <span className='font-medium'>Añadir</span> para finalizar
-                la instalación.
-              </StepRow>
-            </ol>
-          )}
-          {variant === 'safari-legacy' && (
-            <ol className='list-none space-y-3 text-sm text-slate-700'>
-              <StepRow n={1}>
-                Busca <ActionLabel icon={IconShare2}>Compartir</ActionLabel>{' '}
-                (icono de flecha hacia arriba). Si no aparece, entra primero en{' '}
-                <ActionLabel icon={IconDots}>Menú</ActionLabel> y selecciona
-                Compartir.
-              </StepRow>
-              <StepRow n={2}>
-                Pulsa{' '}
-                <ActionLabel icon={IconSquarePlus}>
-                  Añadir a pantalla de inicio
-                </ActionLabel>{' '}
-                y termina con <span className='font-medium'>Añadir</span>.
-              </StepRow>
-            </ol>
-          )}
-          {variant === 'ios-other-browser' && (
-            <div className='space-y-3 text-sm leading-relaxed text-pretty text-slate-700'>
-              <p>
-                <span className='font-medium text-blue-900'>En Safari:</span>{' '}
-                <ActionLabel icon={IconShare2}>Compartir</ActionLabel> o{' '}
-                <ActionLabel icon={IconDots}>Menú</ActionLabel>, luego{' '}
-                <span className='font-medium'>Añadir a pantalla de inicio</span>{' '}
-                y confirma.
-              </p>
-              <p className='text-slate-600'>
-                <span className='font-medium text-slate-700'>
-                  En este navegador:
-                </span>{' '}
-                suele bastar con Compartir o con el menú (⋯); el nombre exacto
-                puede cambiar según la app.
-              </p>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter className='border-t-0 bg-white'>
-          <Button
-            type='button'
-            className='bg-primary hover:bg-primary/90 w-full'
-            onClick={dismiss}
+    <>
+      {/* iOS / iPadOS en mano */}
+      {iosKind && !isRunningAsInstalledPwa() ? (
+        <Sheet
+          open={iosOpen}
+          onOpenChange={(o) => {
+            if (!o) dismissIos()
+            else setIosOpen(o)
+          }}
+        >
+          <SheetContent
+            side='bottom'
+            showCloseButton={false}
+            className='rounded-t-3xl border-0 border-t border-zinc-200 bg-white px-4 pt-5 pb-8 text-zinc-900 sm:max-w-lg'
           >
-            Entendido
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
+            <div className='flex items-start justify-between gap-3'>
+              <SheetHeader className='flex-1 space-y-0 p-0 text-left'>
+                <SheetTitle className='text-lg font-semibold text-zinc-900'>
+                  Instala la app
+                </SheetTitle>
+                <SheetDescription className='sr-only'>
+                  Pasos para añadir la aplicación web a la pantalla de inicio
+                </SheetDescription>
+              </SheetHeader>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-8 w-8 shrink-0 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
+                onClick={() => dismissIos()}
+                aria-label='Cerrar'
+              >
+                <IconX stroke={2} className='h-5 w-5' />
+              </Button>
+            </div>
+
+            <div className='mt-4 space-y-5'>
+              <AppInfoCard name={appName} host={host} />
+
+              {iosKind === 'other-browser' ? (
+                <IosMenuBasedInstallSteps menuPhrase='del navegador' />
+              ) : iosKind === 'safari-new' ? (
+                <IosMenuBasedInstallSteps menuPhrase='de Safari' />
+              ) : (
+                <ol className='list-decimal space-y-5 pl-5 text-sm leading-relaxed text-zinc-700 marker:font-medium marker:text-zinc-900'>
+                  <li className='pl-1'>
+                    Pulsa{' '}
+                    <IosShareToolbarIcon className='mx-0.5 align-middle' /> en
+                    la barra de herramientas del navegador.
+                  </li>
+                  <li className='pl-1'>
+                    Desplázate hacia abajo y elige <IosAddToHomeChip />.
+                  </li>
+                  <li className='pl-1'>
+                    <span className='inline-flex flex-wrap items-center gap-x-1.5 gap-y-1'>
+                      Busca el icono de la app en tu pantalla de inicio:
+                      <span className='inline-flex size-6 items-center justify-center rounded-md border border-zinc-300 bg-zinc-100 p-0.5 align-middle shadow-sm'>
+                        <Image
+                          src='/web-app-manifest-192x192.png'
+                          alt=''
+                          width={20}
+                          height={20}
+                          className='size-5 rounded-sm'
+                        />
+                      </span>
+                    </span>
+                  </li>
+                </ol>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : null}
+
+      {/* Chromium: Mac, Windows, Android, etc. (`beforeinstallprompt`) — no en Apple handheld (flujo iOS arriba). */}
+      {showChromiumInstallSheet ? (
+        <Sheet
+          open={androidOpen}
+          onOpenChange={(o) => {
+            if (!o) dismissAndroid()
+            else setAndroidOpen(o)
+          }}
+        >
+          <SheetContent
+            side='bottom'
+            showCloseButton={false}
+            className='rounded-t-3xl border-t border-zinc-200 bg-white px-4 pt-5 pb-8 text-zinc-900 sm:max-w-lg'
+          >
+            <div className='flex items-start justify-between gap-3'>
+              <SheetHeader className='flex-1 space-y-1 p-0 text-left'>
+                <SheetTitle className='text-lg font-semibold text-zinc-900'>
+                  Instala la app
+                </SheetTitle>
+                <SheetDescription className='text-zinc-600'>
+                  Añade {appName} a tu pantalla de inicio o al dock para un
+                  acceso más rápido.
+                </SheetDescription>
+              </SheetHeader>
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                className='h-8 w-8 shrink-0 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
+                onClick={() => dismissAndroid()}
+                aria-label='Cerrar'
+              >
+                <IconX stroke={2} className='h-5 w-5' />
+              </Button>
+            </div>
+            <div className='mt-4'>
+              <AppInfoCard name={appName} host={host} />
+            </div>
+            <div className='mt-6 flex flex-col gap-2'>
+              <Button
+                type='button'
+                className='h-12 w-full rounded-2xl text-base font-medium'
+                onClick={() => void runAndroidInstall()}
+              >
+                Instalar aplicación
+              </Button>
+              <Button
+                type='button'
+                variant='outline'
+                className='h-11 rounded-2xl'
+                onClick={() => dismissAndroid()}
+              >
+                Ahora no
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : null}
+    </>
   )
 }
