@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/sheet'
 import {
   getSafariMajorVersion,
+  isAndroidDevice,
   isAppleHandheldViewport,
   isAppleTouchDevice,
   isHandheldViewport,
@@ -217,9 +218,9 @@ export function IosInstallPrompt() {
       navigator.maxTouchPoints,
       window.innerWidth
     )
-    /** En iPhone/iPad (mano) no usamos `beforeinstallprompt`; en Mac/Windows/Android sí. */
+    /** Solo Android usa `beforeinstallprompt` aquí; en Chrome Mac/Windows no mostramos el sheet. */
     const listenChromiumInstall =
-      !appleOk && !localStorage.getItem(ANDROID_DISMISS_KEY)
+      isAndroidDevice(ua) && !localStorage.getItem(ANDROID_DISMISS_KEY)
 
     let timer: number | undefined
 
@@ -287,7 +288,10 @@ export function IosInstallPrompt() {
     typeof window !== 'undefined' ? window.innerWidth : 0
   )
   const showChromiumInstallSheet =
-    androidOpen && !isRunningAsInstalledPwa() && !appleHandheld
+    androidOpen &&
+    !isRunningAsInstalledPwa() &&
+    !appleHandheld &&
+    isAndroidDevice(ua)
 
   return (
     <>
@@ -364,7 +368,7 @@ export function IosInstallPrompt() {
         </Sheet>
       ) : null}
 
-      {/* Chromium: Mac, Windows, Android, etc. (`beforeinstallprompt`) — no en Apple handheld (flujo iOS arriba). */}
+      {/* Chromium: solo Android (`beforeinstallprompt`). iOS/iPadOS arriba; escritorio sin sheet automático. */}
       {showChromiumInstallSheet ? (
         <Sheet
           open={androidOpen}
