@@ -493,7 +493,7 @@ export default function OnboardingForm({
   }
 
   return (
-    <Card className='sm:min-w-md'>
+    <Card className='w-full max-w-md'>
       <CardHeader className='space-y-4'>
         <div className='space-y-2'>
           <div className='flex items-center justify-between'>
