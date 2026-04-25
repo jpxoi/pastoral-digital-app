@@ -294,7 +294,7 @@ export default function QrScannerTab() {
                     onError={() =>
                       showError('Ha ocurrido un error al iniciar el escáner.')
                     }
-                    constraints={{ facingMode: 'environment', aspectRatio: 1 }}
+                    constraints={{ facingMode: 'environment' }}
                     formats={['qr_code']}
                     scanDelay={1000}
                   />
