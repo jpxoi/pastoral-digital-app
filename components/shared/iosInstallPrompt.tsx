@@ -109,7 +109,7 @@ function IosAddToHomeChip() {
 /** Pasos estilo captura “menú”: `ellipsis` → `square.and.arrow.up` + Compartir → `chevron.down` + Ver más → `plus.square` (Chrome iOS, Safari 26+, etc.). */
 function IosMenuBasedInstallSteps({ menuPhrase }: { menuPhrase: string }) {
   return (
-    <ol className='list-decimal space-y-5 pl-5 text-sm leading-relaxed text-zinc-700 marker:font-medium marker:text-zinc-900'>
+    <ol className='text-left list-decimal space-y-5 pl-5 text-sm leading-relaxed text-zinc-700 marker:font-medium marker:text-zinc-900'>
       <li className='pl-1'>
         Pulsa <IosEllipsisMenuPill className='mx-0.5' /> para abrir el menú{' '}
         {menuPhrase}.
@@ -149,7 +149,7 @@ function AppInfoCard({ name, host }: { name: string; host: string }) {
         height={48}
         className='size-12 shrink-0 rounded-xl'
       />
-      <div className='min-w-0'>
+      <div className='min-w-0 text-left'>
         <p className={cn('truncate font-semibold', 'text-zinc-900')}>{name}</p>
         <p className={cn('truncate text-sm', 'text-zinc-600')}>{host}</p>
       </div>
@@ -338,7 +338,7 @@ export function IosInstallPrompt() {
               ) : iosKind === 'safari-new' ? (
                 <IosMenuBasedInstallSteps menuPhrase='de Safari' />
               ) : (
-                <ol className='list-decimal space-y-5 pl-5 text-sm leading-relaxed text-zinc-700 marker:font-medium marker:text-zinc-900'>
+                <ol className='text-left list-decimal space-y-5 pl-5 text-sm leading-relaxed text-zinc-700 marker:font-medium marker:text-zinc-900'>
                   <li className='pl-1'>
                     Pulsa{' '}
                     <IosShareToolbarIcon className='mx-0.5 align-middle' /> en
