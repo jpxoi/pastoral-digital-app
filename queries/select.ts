@@ -302,7 +302,7 @@ export const getAllEvents = unstable_cache(
   },
   ['getAllEvents'],
   {
-    revalidate: CACHE_DURATION.SIX_HOURS,
+    revalidate: CACHE_DURATION.HOUR,
   }
 )
 
