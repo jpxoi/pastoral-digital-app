@@ -114,7 +114,7 @@ export default function EventCard({
         ) : (
           <a
             href={new URL(
-              `https://wa.me/51941952314?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${format(
+              `https://wa.me/51936523900?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${format(
                 record.date,
                 'PPP',
                 {
