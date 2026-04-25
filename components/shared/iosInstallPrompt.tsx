@@ -176,9 +176,7 @@ export function IosInstallPrompt() {
           <CardTitle id={titleId} className='text-blue-900'>
             Instala Pastoral Digital
           </CardTitle>
-          <CardDescription>
-            Instala la app en tu dispositivo.
-          </CardDescription>
+          <CardDescription>Instala la app en tu dispositivo.</CardDescription>
           <CardAction>
             <Button
               type='button'
@@ -200,14 +198,16 @@ export function IosInstallPrompt() {
                 al lado de la barra de direcciones.
               </StepRow>
               <StepRow n={2}>
-                Pulsa <ActionLabel icon={IconShare2}>Compartir</ActionLabel>, desplázate hacia abajo y selecciona{' '}
+                Pulsa <ActionLabel icon={IconShare2}>Compartir</ActionLabel>,
+                desplázate hacia abajo y selecciona{' '}
                 <ActionLabel icon={IconSquarePlus}>
                   Añadir a pantalla de inicio
                 </ActionLabel>
                 .
               </StepRow>
               <StepRow n={3}>
-                Pulsa <span className='font-medium'>Añadir</span> para finalizar la instalación.
+                Pulsa <span className='font-medium'>Añadir</span> para finalizar
+                la instalación.
               </StepRow>
             </ol>
           )}
@@ -220,7 +220,11 @@ export function IosInstallPrompt() {
                 Compartir.
               </StepRow>
               <StepRow n={2}>
-                Pulsa <ActionLabel icon={IconSquarePlus}>Añadir a pantalla de inicio</ActionLabel> y termina con <span className='font-medium'>Añadir</span>.
+                Pulsa{' '}
+                <ActionLabel icon={IconSquarePlus}>
+                  Añadir a pantalla de inicio
+                </ActionLabel>{' '}
+                y termina con <span className='font-medium'>Añadir</span>.
               </StepRow>
             </ol>
           )}
