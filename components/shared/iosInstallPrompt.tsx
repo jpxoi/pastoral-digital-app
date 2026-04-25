@@ -25,7 +25,7 @@ import {
   isRunningAsInstalledPwa,
 } from '@/lib/pwa-platform'
 import { cn } from '@/lib/utils'
-import { IconX } from '@tabler/icons-react'
+import { IconCheck, IconCopy, IconX } from '@tabler/icons-react'
 import Image from 'next/image'
 import * as React from 'react'
 
@@ -159,6 +159,67 @@ function AppInfoCard({ name, host }: { name: string; host: string }) {
 
 type IosPromptKind = 'other-browser' | 'safari-legacy' | 'safari-new'
 
+type CopyLinkFeedback = 'idle' | 'copied' | 'error'
+
+function IosOtherBrowserCopySection({ pageUrl }: { pageUrl: string }) {
+  const [feedback, setFeedback] = React.useState<CopyLinkFeedback>('idle')
+
+  React.useEffect(() => {
+    if (feedback === 'idle') return
+    const t = window.setTimeout(() => setFeedback('idle'), 2800)
+    return () => window.clearTimeout(t)
+  }, [feedback])
+
+  const handleCopy = React.useCallback(async () => {
+    if (!pageUrl) {
+      setFeedback('error')
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(pageUrl)
+      setFeedback('copied')
+    } catch {
+      setFeedback('error')
+    }
+  }, [pageUrl])
+
+  const label =
+    feedback === 'copied'
+      ? '¡Copiado!'
+      : feedback === 'error'
+        ? 'No se pudo copiar — reintentar'
+        : 'Copiar enlace'
+
+  return (
+    <div className='flex flex-col items-stretch gap-5' aria-live='polite'>
+      <p className='px-0.5 text-center text-sm leading-relaxed text-zinc-600'>
+        Es posible que tu navegador actual no sea compatible con instalar la app
+        desde aquí. Copia el enlace y pégalo en{' '}
+        <span className='font-semibold text-zinc-900'>Safari</span> para
+        continuar.
+      </p>
+      <Button
+        type='button'
+        className='h-12 w-full gap-2 rounded-2xl text-base font-medium'
+        onClick={() => void handleCopy()}
+      >
+        {feedback === 'copied' ? (
+          <IconCheck stroke={2} className='size-5 shrink-0 text-emerald-700' />
+        ) : (
+          <IconCopy stroke={2} className='size-5 shrink-0' />
+        )}
+        {label}
+      </Button>
+      {feedback === 'error' ? (
+        <p className='text-center text-xs text-red-600' role='status'>
+          Si sigue fallando, copia la URL manualmente desde la barra de
+          direcciones o abre el enlace en Safari.
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
 function useIosPromptKind(): IosPromptKind | null {
   const [kind, setKind] = React.useState<IosPromptKind | null>(null)
 
@@ -198,6 +259,7 @@ export function IosInstallPrompt() {
   const [iosOpen, setIosOpen] = React.useState(false)
   const [androidOpen, setAndroidOpen] = React.useState(false)
   const [host, setHost] = React.useState('')
+  const [pageUrl, setPageUrl] = React.useState('')
 
   const deferredAndroidPrompt = React.useRef<BeforeInstallPromptEvent | null>(
     null
@@ -206,6 +268,7 @@ export function IosInstallPrompt() {
   React.useEffect(() => {
     setMounted(true)
     setHost(window.location.host)
+    setPageUrl(window.location.href)
   }, [])
 
   React.useEffect(() => {
@@ -307,15 +370,19 @@ export function IosInstallPrompt() {
           <SheetContent
             side='bottom'
             showCloseButton={false}
-            className='rounded-t-3xl border-0 border-t border-zinc-200 bg-white px-4 pt-5 pb-8 text-zinc-900 sm:max-w-lg'
+            className='rounded-t-3xl border-0 border-t border-zinc-200 bg-white px-4 pt-5 pb-8 text-zinc-900 scheme-light sm:max-w-lg'
           >
             <div className='flex items-start justify-between gap-3'>
               <SheetHeader className='flex-1 space-y-0 p-0 text-left'>
                 <SheetTitle className='text-lg font-semibold text-zinc-900'>
-                  Instala la app
+                  {iosKind === 'other-browser'
+                    ? 'Navegador incompatible'
+                    : 'Instala la app'}
                 </SheetTitle>
                 <SheetDescription className='sr-only'>
-                  Pasos para añadir la aplicación web a la pantalla de inicio
+                  {iosKind === 'other-browser'
+                    ? 'Tu navegador puede no permitir la instalación; copia el enlace y ábrelo en Safari.'
+                    : 'Pasos para añadir la aplicación web a la pantalla de inicio'}
                 </SheetDescription>
               </SheetHeader>
               <Button
@@ -334,7 +401,7 @@ export function IosInstallPrompt() {
               <AppInfoCard name={appName} host={host} />
 
               {iosKind === 'other-browser' ? (
-                <IosMenuBasedInstallSteps menuPhrase='del navegador' />
+                <IosOtherBrowserCopySection pageUrl={pageUrl} />
               ) : iosKind === 'safari-new' ? (
                 <IosMenuBasedInstallSteps menuPhrase='de Safari' />
               ) : (
@@ -380,7 +447,7 @@ export function IosInstallPrompt() {
           <SheetContent
             side='bottom'
             showCloseButton={false}
-            className='rounded-t-3xl border-t border-zinc-200 bg-white px-4 pt-5 pb-8 text-zinc-900 sm:max-w-lg'
+            className='rounded-t-3xl border-t border-zinc-200 bg-white px-4 pt-5 pb-8 text-zinc-900 scheme-light sm:max-w-lg'
           >
             <div className='flex items-start justify-between gap-3'>
               <SheetHeader className='flex-1 space-y-1 p-0 text-left'>
