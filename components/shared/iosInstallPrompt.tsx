@@ -142,8 +142,8 @@ function AppInfoCard({ name, host }: { name: string; host: string }) {
       )}
     >
       <Image
-        src='/web-app-manifest-192x192.png'
-        alt=''
+        src='/icons/icon-192x192.png'
+        alt='Pastoral Digital Logo'
         width={48}
         height={48}
         className='size-12 shrink-0 rounded-xl'
@@ -348,8 +348,8 @@ export function IosInstallPrompt() {
                       Busca el icono de la app en tu pantalla de inicio:
                       <span className='inline-flex size-6 items-center justify-center rounded-md border border-zinc-300 bg-zinc-100 p-0.5 align-middle shadow-sm'>
                         <Image
-                          src='/web-app-manifest-192x192.png'
-                          alt=''
+                          src='/icons/icon-192x192.png'
+                          alt='Pastoral Digital Logo'
                           width={20}
                           height={20}
                           className='size-5 rounded-sm'
