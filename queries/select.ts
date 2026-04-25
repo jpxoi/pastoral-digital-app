@@ -78,14 +78,14 @@ export const getUserBirthdays = unstable_cache(
       (
         to_char(date_of_birth, 'MM-DD') BETWEEN 
           to_char(current_date, 'MM-DD') AND 
-          to_char(current_date + interval '45 days', 'MM-DD')
+          to_char(current_date + interval '60 days', 'MM-DD')
       )
       OR
       (
-        to_char(current_date + interval '45 days', 'MM-DD') < to_char(current_date, 'MM-DD') AND
+        to_char(current_date + interval '60 days', 'MM-DD') < to_char(current_date, 'MM-DD') AND
         (
           to_char(date_of_birth, 'MM-DD') >= to_char(current_date, 'MM-DD') OR
-          to_char(date_of_birth, 'MM-DD') <= to_char(current_date + interval '45 days', 'MM-DD')
+          to_char(date_of_birth, 'MM-DD') <= to_char(current_date + interval '60 days', 'MM-DD')
         )
       )
     `,
