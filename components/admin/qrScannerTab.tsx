@@ -81,7 +81,11 @@ export default function QrScannerTab() {
   const { user, isLoaded } = useUser()
   const { data: event, isLoading: eventIsLoading } = useSWR<SelectEvent>(
     '/api/events/today',
-    fetcher
+    fetcher,
+    {
+      // Disable revalidation on focus to prevent unnecessary revalidations
+      revalidateOnFocus: false,
+    }
   )
 
   const [playSuccessSound] = useSound('/sounds/success.mp3')
