@@ -18,7 +18,7 @@ declare global {
     }>
     prompt(): Promise<void>
   }
-  
+
   interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent
   }

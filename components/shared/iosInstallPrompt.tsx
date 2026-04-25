@@ -203,7 +203,6 @@ export function IosInstallPrompt() {
   )
 
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only gate after hydration
     setMounted(true)
     setHost(window.location.host)
   }, [])
