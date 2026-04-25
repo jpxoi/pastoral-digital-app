@@ -64,6 +64,8 @@ const fetcher = async (url: string) => {
   return json
 }
 
+const seenUserIds = new Set<string>()
+
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -144,6 +146,11 @@ export default function QrScannerTab() {
     if (!detectedCodes) return
 
     const userScannedId = detectedCodes[0].rawValue
+
+    if (seenUserIds.has(userScannedId)) return
+
+    seenUserIds.add(userScannedId)
+
     const checkInTime = new Date()
 
     if (!event) {
@@ -288,15 +295,8 @@ export default function QrScannerTab() {
                       showError('Ha ocurrido un error al iniciar el escáner.')
                     }
                     constraints={{ facingMode: 'environment', aspectRatio: 1 }}
-                    components={{
-                      onOff: true, // Show camera on/off button
-                      torch: true, // Show torch/flashlight button (if supported)
-                      zoom: true, // Show zoom control (if supported)
-                      finder: true, // Show finder overlay
-                    }}
                     formats={['qr_code']}
                     scanDelay={1000}
-                    allowMultiple={false}
                   />
                 ) : (
                   <div className='flex h-full items-center justify-center bg-gray-100'>
