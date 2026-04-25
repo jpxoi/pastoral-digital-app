@@ -5,7 +5,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { esMX } from '@clerk/localizations'
 import { shadcn } from '@clerk/ui/themes'
 import { Toaster } from '@/components/ui/sonner'
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from '@vercel/analytics/next'
 
 const poppins = Poppins({
   subsets: ['latin'],

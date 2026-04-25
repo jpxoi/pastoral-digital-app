@@ -3,8 +3,8 @@
 @import 'uploadthing/tw/v4';
 @source '../node_modules/@uploadthing/react/dist';
 @import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
 @import '@clerk/ui/themes/shadcn.css';
+@import 'shadcn/tailwind.css';
 
 @layer base {
   * {
