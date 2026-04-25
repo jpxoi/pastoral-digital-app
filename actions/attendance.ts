@@ -33,7 +33,7 @@ export const registerAttendanceRecord = async (
   lastAttendanceRecord?: FetchAttendanceProps
 }> => {
   if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estas autorizado para registrar asistencias.' }
+    return { error: 'No estás autorizado para registrar asistencias.' }
   }
 
   return await createAttendanceRecord(data)
@@ -68,7 +68,7 @@ export const registerAttendanceRecord = async (
 
 export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
   if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estas autorizado para registrar asistencias.' }
+    return { error: 'No estás autorizado para registrar asistencias.' }
   }
 
   return await createAttendanceRecords(data)
@@ -95,7 +95,7 @@ export const setAttendanceRecordStatus = async (
   recordId: SelectAttendance['id']
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estas autorizado para modificar asistencias.' }
+    return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
   return await updateAttendanceRecordStatus(status, recordId)
@@ -119,7 +119,7 @@ export const setAttendanceRecordStatus = async (
 
 export const fillAbsenceRecords = async (eventId: number) => {
   if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estas autorizado para modificar asistencias.' }
+    return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
   const event = await getEventById(eventId)
@@ -172,7 +172,7 @@ export const removeAttendanceRecord = async (
   recordId: SelectAttendance['id']
 ) => {
   if (!(await checkRole(UserRole.ADMIN))) {
-    return { error: 'No estas autorizado para eliminar asistencias.' }
+    return { error: 'No estás autorizado para eliminar asistencias.' }
   }
   return await deleteAttendanceRecord(recordId)
     .then(async () => {

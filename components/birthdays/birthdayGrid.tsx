@@ -29,7 +29,7 @@ export default async function BirthdayGrid() {
             <IconCakeOff />
           </EmptyMedia>
           <EmptyHeader>
-            <EmptyTitle>No hay cumpleaños proximos</EmptyTitle>
+            <EmptyTitle>No hay cumpleaños próximos</EmptyTitle>
             <EmptyDescription className='max-w-xs text-pretty'>
               No hay cumpleaños para mostrar en los próximos días. Por favor
               verifica más tarde.
