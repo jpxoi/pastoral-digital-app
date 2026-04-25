@@ -119,7 +119,7 @@ export const MobileSidebar = ({
         )}
         {...props}
       >
-        <div className='z-20 flex w-full items-center justify-between'>
+        <div className='z-20 flex w-full items-center justify-between gap-4'>
           <UserButton
             showName={true}
             fallback={
@@ -130,8 +130,8 @@ export const MobileSidebar = ({
             }
             appearance={{
               elements: {
-                userButtonBox: 'flex-row-reverse',
-                userButtonOuterIdentifier: 'text-white',
+                userButtonBox: 'flex-row-reverse!',
+                userButtonOuterIdentifier: 'text-white! line-clamp-1! text-left!',
               },
             }}
           />

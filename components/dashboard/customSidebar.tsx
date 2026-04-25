@@ -124,8 +124,8 @@ export function CustomSidebar() {
                 showName={open}
                 appearance={{
                   elements: {
-                    userButtonBox: 'flex-row-reverse',
-                    userButtonOuterIdentifier: 'text-white text-nowrap',
+                    userButtonBox: 'flex-row-reverse!',
+                    userButtonOuterIdentifier: 'text-white! line-clamp-1! text-left!',
                   },
                 }}
               />
