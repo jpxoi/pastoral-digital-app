@@ -203,7 +203,7 @@
   height: 11px;
   display: block;
   /* Rainbow effect disabled for clarity, static color used instead */
-  background: #07309B;
+  background: #07309b;
   /* Hack to style the browser UI while making it invisible to the user */
   mask-image: linear-gradient(to right, transparent, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, transparent);

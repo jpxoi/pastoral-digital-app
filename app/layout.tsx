@@ -128,8 +128,8 @@ export default function RootLayout({
             richColors
           />
           <Analytics />
-          <div className="topbar" aria-hidden="true"></div>
-          <div className="bottombar" aria-hidden="true"></div>
+          <div className='topbar' aria-hidden='true'></div>
+          <div className='bottombar' aria-hidden='true'></div>
           {children}
         </ClerkProvider>
       </body>
