@@ -6,6 +6,7 @@ import { esMX } from '@clerk/localizations'
 import { shadcn } from '@clerk/ui/themes'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/next'
+import { IosInstallPrompt } from '@/components/shared/iosInstallPrompt'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -281,6 +282,7 @@ export default function RootLayout({
           <Analytics />
           <div className='topbar' aria-hidden='true'></div>
           <div className='bottombar' aria-hidden='true'></div>
+          <IosInstallPrompt />
           {children}
         </ClerkProvider>
       </body>
