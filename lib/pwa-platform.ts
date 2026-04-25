@@ -6,9 +6,14 @@ export function getSafariMajorVersion(ua: string): number | null {
   return Number.isFinite(n) ? n : null
 }
 
-const IOS_IN_APP_OR_ALTERNATE_BROWSER = /CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|Brave\/|DuckDuckGo|Instagram|FBAN|FBAV|Line\//i
+const IOS_IN_APP_OR_ALTERNATE_BROWSER =
+  /CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|Brave\/|DuckDuckGo|Instagram|FBAN|FBAV|Line\//i
 
-export function isAppleTouchDevice(ua: string, platform: string, maxTouchPoints: number): boolean {
+export function isAppleTouchDevice(
+  ua: string,
+  platform: string,
+  maxTouchPoints: number
+): boolean {
   if (/iPhone|iPod/i.test(ua)) return true
   if (/iPad/i.test(ua)) return true
   if (platform === 'MacIntel' && maxTouchPoints > 1) return true
@@ -35,6 +40,14 @@ export function isHandheldViewport(width: number): boolean {
 }
 
 /** iPhone / iPod / iPad en viewport “mano”; ahí usamos el flujo iOS, no `beforeinstallprompt`. */
-export function isAppleHandheldViewport(ua: string, platform: string, maxTouchPoints: number, width: number): boolean {
-  return isAppleTouchDevice(ua, platform, maxTouchPoints) && isHandheldViewport(width)
+export function isAppleHandheldViewport(
+  ua: string,
+  platform: string,
+  maxTouchPoints: number,
+  width: number
+): boolean {
+  return (
+    isAppleTouchDevice(ua, platform, maxTouchPoints) &&
+    isHandheldViewport(width)
+  )
 }

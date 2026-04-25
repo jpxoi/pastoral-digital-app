@@ -6,12 +6,18 @@ import { cn } from '@/lib/utils'
 import type { ReactNode } from 'react'
 
 /** Cuadrado de referencia: centra el SVG y fija el box para alinear chips / barras sin “magia” en cada sitio. */
-export function IosSFIconFrame({ className, children }: { className?: string; children: ReactNode }) {
+export function IosSFIconFrame({
+  className,
+  children,
+}: {
+  className?: string
+  children: ReactNode
+}) {
   return (
     <span
       className={cn(
         'inline-flex shrink-0 items-center justify-center [&_svg]:block [&_svg]:max-h-full [&_svg]:max-w-full [&_svg]:shrink-0',
-        className,
+        className
       )}
       aria-hidden
     >
@@ -27,7 +33,13 @@ const VB_CHEVRON = { w: 17.3242, h: 10.4004 }
 /** El arte CoreSVG del chevron deja mucho aire horizontal; se ve más ancho que share/plus al mismo `size`. */
 const CHEVRON_WIDTH_OPTICAL = 0.78
 
-export function IosSFEllipsisHorizontal({ width = 20, className }: { width?: number; className?: string }) {
+export function IosSFEllipsisHorizontal({
+  width = 20,
+  className,
+}: {
+  width?: number
+  className?: string
+}) {
   const h = (width * VB_ELLIPSIS.h) / VB_ELLIPSIS.w
   return (
     <svg
@@ -47,7 +59,13 @@ export function IosSFEllipsisHorizontal({ width = 20, className }: { width?: num
 }
 
 /** SF Symbol `plus.square` */
-export function IosSFPlusSquare({ size, className }: { size: number; className?: string }) {
+export function IosSFPlusSquare({
+  size,
+  className,
+}: {
+  size: number
+  className?: string
+}) {
   const w = (size * VB_PLUS_SQUARE.w) / VB_PLUS_SQUARE.h
   return (
     <svg
@@ -66,7 +84,13 @@ export function IosSFPlusSquare({ size, className }: { size: number; className?:
 }
 
 /** SF Symbol `square.and.arrow.up` */
-export function IosSFSquareAndArrowUp({ size, className }: { size: number; className?: string }) {
+export function IosSFSquareAndArrowUp({
+  size,
+  className,
+}: {
+  size: number
+  className?: string
+}) {
   const w = (size * VB_SHARE.w) / VB_SHARE.h
   return (
     <svg
@@ -85,7 +109,13 @@ export function IosSFSquareAndArrowUp({ size, className }: { size: number; class
 }
 
 /** SF Symbol `chevron.down` — `size` ≈ ancho deseado en px (proporción del viewBox conservada). */
-export function IosSFChevronDown({ size, className }: { size: number; className?: string }) {
+export function IosSFChevronDown({
+  size,
+  className,
+}: {
+  size: number
+  className?: string
+}) {
   const w = size * CHEVRON_WIDTH_OPTICAL
   const h = (w * VB_CHEVRON.h) / VB_CHEVRON.w
   return (
