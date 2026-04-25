@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     siteName: 'Pastoral Digital App',
   },
   appleWebApp: {
-    capable: true,
     title: 'Pastoral Digital',
-    statusBarStyle: 'default',
+    capable: true,
+    statusBarStyle: 'black-translucent',
     startupImage: [
       {
         url: '/splash/apple-launch-750x1334.png',
