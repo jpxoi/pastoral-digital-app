@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     title: 'Pastoral Digital',
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     startupImage: [
       {
         url: '/splash/apple-launch-750x1334.png',
@@ -128,6 +128,8 @@ export default function RootLayout({
             richColors
           />
           <Analytics />
+          <div className="topbar" aria-hidden="true"></div>
+          <div className="bottombar" aria-hidden="true"></div>
           {children}
         </ClerkProvider>
       </body>

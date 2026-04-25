@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { IconWifiOff } from '@tabler/icons-react'
+import './fallback.css'
 
 export default function OfflinePage() {
   return (

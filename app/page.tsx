@@ -2,6 +2,7 @@ import Background from '@/components/shared/background'
 import WelcomeScreen from '@/components/home/welcomeScreen'
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import './(auth)/auth.css'
 
 export default async function Home() {
   const { userId } = await auth()

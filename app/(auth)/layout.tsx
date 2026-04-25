@@ -1,4 +1,5 @@
 import Background from '@/components/shared/background'
+import './auth.css'
 
 export default function RootLayout({
   children,

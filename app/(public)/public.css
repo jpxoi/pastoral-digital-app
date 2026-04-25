@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+.topbar {
+  @apply bg-gray-50!;
+}
+
+.bottombar {
+  background: transparent !important;
+}

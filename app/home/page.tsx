@@ -11,6 +11,7 @@ import {
   IconUserExclamation,
   IconArrowRight,
 } from '@tabler/icons-react'
+import './home.css'
 import { motion } from 'motion/react'
 
 export default function LandingPage() {

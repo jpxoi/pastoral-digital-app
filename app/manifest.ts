@@ -8,7 +8,7 @@ export default function manifest() {
     id: '/',
     lang: 'es',
     display: 'standalone',
-    background_color: '#07309B',
+    background_color: '#ffffff',
     theme_color: '#07309B',
     orientation: 'portrait',
     display_override: ['window-controls-overlay'],
