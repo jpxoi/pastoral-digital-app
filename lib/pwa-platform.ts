@@ -28,6 +28,11 @@ export function isAndroidPhone(ua: string): boolean {
   return /Android/i.test(ua) && /Mobile/i.test(ua)
 }
 
+/** Android (teléfono o tablet); para prompts PWA vía `beforeinstallprompt`, no escritorio Mac/Windows. */
+export function isAndroidDevice(ua: string): boolean {
+  return /Android/i.test(ua)
+}
+
 export function isRunningAsInstalledPwa(): boolean {
   if (typeof window === 'undefined') return false
   if (window.matchMedia('(display-mode: standalone)').matches) return true
