@@ -7,6 +7,7 @@ import { calculateAge } from '@/lib/birthday'
 import UserCategoryLabel from '../shared/userCategoryLabel'
 import UserScheduleLabel from '../shared/userScheduleLabel'
 import { AdminUserRowActions } from './adminUserRowActions'
+import { formatPhoneNumberIntl } from 'react-phone-number-input'
 
 export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   {
@@ -40,15 +41,12 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     header: () => <span className='text-nowrap'>Número de Teléfono</span>,
     cell: ({ row }) => (
       <a
-        href={`https://wa.me/51${row.original.phoneNumber}`}
+        href={`https://wa.me/${row.original.phoneNumber.trim().replace('+', '')}`}
         target='_blank'
         rel='noreferrer'
         className='text-nowrap hover:underline'
       >
-        {`+51 ${String(row.original.phoneNumber).replace(
-          /(\d{3})(\d{3})(\d{3})/,
-          '$1 $2 $3'
-        )}`}
+        {formatPhoneNumberIntl(row.original.phoneNumber)}
       </a>
     ),
   },
@@ -62,6 +60,7 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
           day: 'numeric',
           month: 'short',
           year: 'numeric',
+          timeZone: 'UTC',
         })}
       </span>
     ),
