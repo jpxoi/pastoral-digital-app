@@ -8,6 +8,13 @@
       "when": 1777068834589,
       "tag": "0000_lame_queen_noir",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778101195264,
+      "tag": "0001_spotty_the_twelve",
+      "breakpoints": true
     }
   ]
 }

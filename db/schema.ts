@@ -90,7 +90,7 @@ export const attendanceRecordsTable = pgTable(
     userId: text('user_id')
       .references(() => usersTable.id, { onDelete: 'cascade' })
       .notNull(),
-    eventId: integer('event_id')
+    eventId: uuid('event_id')
       .references(() => eventsTable.id, { onDelete: 'cascade' })
       .notNull(),
     checkInTime: timestamp('check_in_time').defaultNow().notNull(),
@@ -118,7 +118,9 @@ export const attendanceRecordsTable = pgTable(
 export const eventsTable = pgTable(
   'events',
   {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    id: uuid()
+      .primaryKey()
+      .$defaultFn(() => uuidv7()),
     name: text().notNull(),
     description: text(),
     date: timestamp('date').notNull(),
