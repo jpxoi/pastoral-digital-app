@@ -6,7 +6,7 @@ import EventAddRecordsButton from './eventAddRecordButton'
 export default async function EventPageActionButtons({
   eventId,
 }: {
-  eventId: number
+  eventId: string
 }) {
   const absentUsers = await countUsersWithNoAttendanceRecord(eventId)
 

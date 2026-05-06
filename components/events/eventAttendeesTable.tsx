@@ -5,7 +5,7 @@ import { EventAttendeesColumns } from './eventAttendeesColumns'
 export default async function EventAttendeesTable({
   eventId,
 }: {
-  eventId: number
+  eventId: string
 }) {
   const attendanceRecords = await getAttendanceRecordsByEventId(eventId)
 

@@ -10,7 +10,7 @@ import {
 export default async function EventDashboardCards({
   eventId,
 }: {
-  eventId: number
+  eventId: string
 }) {
   const totalExpected = await countAllUsers()
   const {

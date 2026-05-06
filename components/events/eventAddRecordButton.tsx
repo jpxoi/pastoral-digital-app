@@ -47,7 +47,7 @@ import { useUser } from '@clerk/nextjs'
 export default function EventFillAbsenteesButton({
   eventId,
 }: {
-  eventId: number
+  eventId: string
 }) {
   const [isPending, startTransition] = useTransition()
 

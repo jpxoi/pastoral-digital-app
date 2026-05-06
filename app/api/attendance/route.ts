@@ -9,8 +9,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const eventIdParam = searchParams.get('eventId')
-  const eventId = eventIdParam ? parseInt(eventIdParam, 10) : null
+  const eventId = searchParams.get('eventId')
 
   const { userId } = await auth()
   if (!userId) {

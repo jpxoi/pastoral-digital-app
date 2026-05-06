@@ -117,7 +117,7 @@ export const setAttendanceRecordStatus = async (
     })
 }
 
-export const fillAbsenceRecords = async (eventId: number) => {
+export const fillAbsenceRecords = async (eventId: string) => {
   if (!(await checkRole(UserRole.ADMIN))) {
     return { error: 'No estás autorizado para modificar asistencias.' }
   }

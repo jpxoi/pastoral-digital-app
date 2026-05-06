@@ -193,7 +193,7 @@ export default function QrScannerTab() {
 
         const newRecord = {
           userId: userScannedId,
-          eventId: event.id as number,
+          eventId: event.id,
           checkInTime: checkInTime,
           status: status,
           registeredBy: user.id as string,

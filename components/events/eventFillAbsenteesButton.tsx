@@ -19,11 +19,11 @@ import { toast } from 'sonner'
 export default function EventFillAbsenteesButton({
   eventId,
 }: {
-  eventId: number
+  eventId: string
 }) {
   const [isPending, startTransition] = useTransition()
 
-  const handleClick = async (eventId: number) => {
+  const handleClick = async (eventId: string) => {
     startTransition(() => {
       toast.promise(fillAbsenceRecords(eventId), {
         loading: 'Rellenando faltas...',

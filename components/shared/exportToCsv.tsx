@@ -8,8 +8,8 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
 
-export default function ExportToCsv({ eventId }: { eventId: number }) {
-  const handleClick = async (eventId: number) => {
+export default function ExportToCsv({ eventId }: { eventId: string }) {
+  const handleClick = async (eventId: string) => {
     toast.promise(
       fetch(`/api/attendance?eventId=${eventId}`, {
         method: 'GET',
