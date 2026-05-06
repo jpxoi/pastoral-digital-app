@@ -6,7 +6,7 @@ CREATE TYPE "public"."user_schedule_enum" AS ENUM('full-time', 'primera-comunion
 CREATE TABLE "attendance_records" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"user_id" text NOT NULL,
-	"event_id" integer NOT NULL,
+	"event_id" uuid NOT NULL,
 	"check_in_time" timestamp DEFAULT now() NOT NULL,
 	"status" "attendance_status_enum" DEFAULT 'A TIEMPO' NOT NULL,
 	"registered_by" text NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE "attendance_records" (
 );
 --> statement-breakpoint
 CREATE TABLE "events" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "events_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"id" uuid PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
 	"date" timestamp NOT NULL,
