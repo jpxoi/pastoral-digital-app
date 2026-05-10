@@ -58,7 +58,7 @@ export default function ExportToCsvMasses() {
                 item.parish,
                 item.evidenceFileKey,
                 item.evidenceFileHash,
-                `https://fymwpl3ap9.ufs.sh/${item.evidenceFileKey}`,
+                `https://jox4e78o3v.ufs.sh/${item.evidenceFileKey}`,
                 item.verified ? 'Verificado' : 'Rechazado',
                 item.verifiedBy,
                 item.verifier

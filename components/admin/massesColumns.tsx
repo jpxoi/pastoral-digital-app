@@ -84,7 +84,7 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     cell: ({ row }) => (
       <div className='flex gap-2'>
         <a
-          href={`https://fymwpl3ap9.ufs.sh/${row.original.evidenceFileKey}`}
+          href={`https://jox4e78o3v.ufs.sh/${row.original.evidenceFileKey}`}
           target='_blank'
           rel='noopener noreferrer'
           className={cn(buttonVariants({ variant: 'link' }), 'h-6 p-0')}
