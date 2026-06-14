@@ -6,7 +6,7 @@ import { esMX } from '@clerk/localizations'
 import { shadcn } from '@clerk/ui/themes'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { IosInstallPrompt } from '@/components/shared/iosInstallPrompt'
 
 const poppins = Poppins({
