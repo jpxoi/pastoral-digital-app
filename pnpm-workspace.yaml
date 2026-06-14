@@ -1,0 +1,10 @@
+allowBuilds:
+  '@clerk/shared': true
+  bufferutil: false
+  core-js: false
+  esbuild: false
+  msgpackr-extract: false
+  msw: false
+  sharp: false
+  unrs-resolver: false
+  utf-8-validate: false
