@@ -84,3 +84,50 @@ export const NewSundayMassFormSchema = z.object({
     .trim()
     .nonempty('El hash del archivo es requerido'),
 })
+
+const localDateTimeSchema = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'Ingresa una fecha y hora válidas.')
+  .refine((value) => {
+    const [date, time] = value.split('T')
+    const [year, month, day] = date.split('-').map(Number)
+    const [hours, minutes] = time.split(':').map(Number)
+    const normalized = new Date(Date.UTC(year, month - 1, day, hours, minutes))
+
+    return (
+      normalized.getUTCFullYear() === year &&
+      normalized.getUTCMonth() === month - 1 &&
+      normalized.getUTCDate() === day &&
+      normalized.getUTCHours() === hours &&
+      normalized.getUTCMinutes() === minutes
+    )
+  }, 'Ingresa una fecha y hora válidas.')
+
+export const NewEventFormSchema = z
+  .object({
+    name: z.string().trim().min(1, 'El nombre del evento es obligatorio.'),
+    description: z.string().trim(),
+    firstTurnDate: localDateTimeSchema,
+    secondTurnDate: z.union([z.literal(''), localDateTimeSchema]),
+    endDate: localDateTimeSchema,
+    locationId: z.string().min(1, 'Selecciona una ubicación.'),
+  })
+  .superRefine((values, context) => {
+    const secondTurnDate = values.secondTurnDate || values.firstTurnDate
+
+    if (secondTurnDate < values.firstTurnDate) {
+      context.addIssue({
+        code: 'custom',
+        path: ['secondTurnDate'],
+        message: 'El segundo turno no puede ser anterior al primero.',
+      })
+    }
+
+    if (values.endDate < secondTurnDate) {
+      context.addIssue({
+        code: 'custom',
+        path: ['endDate'],
+        message: 'El fin debe ser posterior o igual al último turno.',
+      })
+    }
+  })

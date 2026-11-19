@@ -2,6 +2,7 @@ import { db } from '@/db/drizzle'
 import {
   attendanceRecordsTable,
   eventsTable,
+  locationsTable,
   SelectEvent,
   SelectUser,
   sundayMassesTable,
@@ -298,13 +299,23 @@ export const getAllEvents = unstable_cache(
   async () => {
     return db.query.eventsTable.findMany({
       orderBy: (fields) => [asc(fields.date)],
+      with: {
+        location: true,
+      },
     })
   },
   ['getAllEvents'],
   {
     revalidate: CACHE_DURATION.HOUR,
+    tags: ['events'],
   }
 )
+
+export const getAllLocations = async () => {
+  return db.query.locationsTable.findMany({
+    orderBy: (fields) => [asc(fields.name)],
+  })
+}
 
 export const getEventById = unstable_cache(
   async (id: SelectEvent['id']) => {
