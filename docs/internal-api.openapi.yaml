@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: Pastoral Digital Internal API
+  version: 1.0.0
+  description: >-
+    Read-only endpoints for trusted internal tools. Call these endpoints only
+    from a backend. Never expose INTERNAL_API_TOKEN in browser code, mobile
+    apps, public clients, or NEXT_PUBLIC_* environment variables.
+servers:
+  - url: https://id.pastoralmarianaps.net.pe
+    description: Production
+security:
+  - bearerAuth: []
+paths:
+  /api/internal/catechists:
+    get:
+      operationId: listCatechists
+      summary: List catechists
+      description: >-
+        Lists rows from the users table. The database does not have a separate
+        catechist flag, so all user rows are returned. Results are ordered by
+        firstName, lastName, and userId. Uses one database round trip for the
+        page and total count.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: A page of catechists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatechistListResponse'
+              example:
+                success: true
+                data:
+                  - userId: user_2abc123
+                    firstName: Ana
+                    lastName: García
+                    email: ana@example.org
+                    category: teacher
+                    schedule: confirmacion
+                pagination:
+                  limit: 100
+                  offset: 0
+                  total: 1
+                  hasMore: false
+        '400':
+          $ref: '#/components/responses/InvalidPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /api/internal/events:
+    get:
+      operationId: listEvents
+      summary: List events
+      description: >-
+        Lists all events with their location details. Results are ordered by
+        date and eventId. Uses one database round trip for the page and total
+        count.
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+      responses:
+        '200':
+          description: A page of events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponse'
+              example:
+                success: true
+                data:
+                  - eventId: 0190abcd-1234-7abc-8def-123456789abc
+                    name: Reunión general
+                    description: Reunión mensual de catequistas
+                    date: '2026-11-22T15:00:00.000Z'
+                    secondTurnDate: '2026-11-22T17:00:00.000Z'
+                    endDate: '2026-11-22T19:00:00.000Z'
+                    location:
+                      locationId: 1
+                      name: Auditorio
+                      address: Av. Ejemplo 123
+                      city: Trujillo
+                      postalCode: '13001'
+                      country: Perú
+                      googleMapsUrl: https://maps.example.org/location
+                pagination:
+                  limit: 100
+                  offset: 0
+                  total: 1
+                  hasMore: false
+        '400':
+          $ref: '#/components/responses/InvalidPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/ServerError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque API token
+      description: >-
+        Supply INTERNAL_API_TOKEN in Authorization: Bearer <token>. Generate
+        256 bits with `openssl rand -hex 32`. Store it in the calling backend's
+        secret store. These endpoints are backend-only; do not call them from
+        browser or mobile clients.
+
+  parameters:
+    limit:
+      name: limit
+      in: query
+      required: false
+      description: Number of records to return. Defaults to 100.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 500
+        default: 100
+    offset:
+      name: offset
+      in: query
+      required: false
+      description: Number of records to skip. Defaults to 0.
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+
+  schemas:
+    Pagination:
+      type: object
+      required: [limit, offset, total, hasMore]
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+        total:
+          type: integer
+          description: Total number of records before pagination.
+        hasMore:
+          type: boolean
+
+    Catechist:
+      type: object
+      required: [userId, firstName, lastName, email, category, schedule]
+      properties:
+        userId:
+          type: string
+          description: User ID from the application database (Clerk user ID).
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        category:
+          type: string
+          enum: [student, alumni, teacher]
+        schedule:
+          type: string
+          enum:
+            - full-time
+            - primera-comunion
+            - confirmacion
+            - logistica
+            - semilleros
+            - coordinador
+
+    EventLocation:
+      type: object
+      required:
+        - locationId
+        - name
+        - address
+        - city
+        - postalCode
+        - country
+        - googleMapsUrl
+      properties:
+        locationId:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+        googleMapsUrl:
+          type: string
+          format: uri
+
+    Event:
+      type: object
+      required:
+        - eventId
+        - name
+        - description
+        - date
+        - secondTurnDate
+        - endDate
+        - location
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: [string, 'null']
+        date:
+          type: string
+          format: date-time
+        secondTurnDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        location:
+          $ref: '#/components/schemas/EventLocation'
+
+    CatechistListResponse:
+      type: object
+      required: [success, data, pagination]
+      properties:
+        success:
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Catechist'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    EventListResponse:
+      type: object
+      required: [success, data, pagination]
+      properties:
+        success:
+          const: true
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    ErrorResponse:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          const: false
+        error:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+
+  responses:
+    InvalidPagination:
+      description: limit or offset failed Zod validation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Invalid pagination parameters
+            details:
+              - field: limit
+                message: Invalid input
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      headers:
+        WWW-Authenticate:
+          schema:
+            type: string
+          example: Bearer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Unauthorized
+    ServerError:
+      description: Database query failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Failed to fetch events
+    NotConfigured:
+      description: INTERNAL_API_TOKEN is missing or shorter than 32 characters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error: Internal API is not configured

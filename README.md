@@ -88,6 +88,8 @@ DATABASE_URL=<your-neon-database-url>
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
 
+INTERNAL_API_TOKEN=<your-256-bit-random-token>
+
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
@@ -99,6 +101,8 @@ UPLOADTHING_TOKEN=<your-uploadthing-token>
 
 YUPAY_API_KEY=<your-yupay-api-key>
 ```
+
+Las APIs internas requieren el encabezado `Authorization: Bearer <INTERNAL_API_TOKEN>`. Mantén ese token solo en el servidor de la herramienta interna; no lo incluyas en código del navegador ni en variables `NEXT_PUBLIC_*`. Genéralo con `openssl rand -hex 32`, que produce un token aleatorio de 256 bits (64 caracteres hexadecimales). La especificación OpenAPI y los modelos de respuesta están en [`docs/internal-api.openapi.yaml`](docs/internal-api.openapi.yaml). Los endpoints disponibles son `GET /api/internal/catechists` y `GET /api/internal/events`.
 
 ### 5. Generar las migraciones de la base de datos
 
