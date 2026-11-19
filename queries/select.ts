@@ -2,7 +2,6 @@ import { db } from '@/db/drizzle'
 import {
   attendanceRecordsTable,
   eventsTable,
-  locationsTable,
   SelectEvent,
   SelectUser,
   sundayMassesTable,
