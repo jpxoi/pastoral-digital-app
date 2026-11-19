@@ -46,7 +46,7 @@ export function authorizeInternalRequest(request: Request) {
   if (!expectedToken || expectedToken.length < MIN_TOKEN_LENGTH) {
     console.error('INTERNAL_API_TOKEN is missing or too short')
     return jsonResponse(
-      { success: false, error: 'Internal API is not configured' },
+      { success: false, error: 'Internal API is misconfigured' },
       503
     )
   }

@@ -88,7 +88,7 @@ DATABASE_URL=<your-neon-database-url>
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your-clerk-publishable-key>
 CLERK_SECRET_KEY=<your-clerk-secret-key>
 
-INTERNAL_API_TOKEN=<your-256-bit-random-token>
+INTERNAL_API_TOKEN=<token-aleatorio-de-256-bits>
 
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
