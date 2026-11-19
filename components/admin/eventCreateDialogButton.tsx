@@ -158,36 +158,38 @@ export default function EventCreateDialogButton({
                       Comunión
                     </span>
                   </div>
-                  <FormField
-                    control={form.control}
-                    name='firstTurnDate'
-                    render={({ field }) => (
-                      <FormItem className='text-left'>
-                        <FormLabel className='block w-full text-left'>
-                          Fecha
-                        </FormLabel>
-                        <FormControl>
-                          <Input type='date' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='firstTurnTime'
-                    render={({ field }) => (
-                      <FormItem className='text-left'>
-                        <FormLabel className='block w-full text-left'>
-                          Hora
-                        </FormLabel>
-                        <FormControl>
-                          <Input type='time' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
+                    <FormField
+                      control={form.control}
+                      name='firstTurnDate'
+                      render={({ field }) => (
+                        <FormItem className='text-left'>
+                          <FormLabel className='block w-full text-left'>
+                            Fecha
+                          </FormLabel>
+                          <FormControl>
+                            <Input type='date' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='firstTurnTime'
+                      render={({ field }) => (
+                        <FormItem className='text-left'>
+                          <FormLabel className='block w-full text-left'>
+                            Hora
+                          </FormLabel>
+                          <FormControl>
+                            <Input type='time' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </section>
 
                 <section className='space-y-3'>
@@ -220,36 +222,38 @@ export default function EventCreateDialogButton({
                       Confirmación
                     </span>
                   </div>
-                  <FormField
-                    control={form.control}
-                    name='secondTurnDate'
-                    render={({ field }) => (
-                      <FormItem className='text-left'>
-                        <FormLabel className='block w-full text-left'>
-                          Fecha
-                        </FormLabel>
-                        <FormControl>
-                          <Input type='date' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='secondTurnTime'
-                    render={({ field }) => (
-                      <FormItem className='text-left'>
-                        <FormLabel className='block w-full text-left'>
-                          Hora
-                        </FormLabel>
-                        <FormControl>
-                          <Input type='time' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
+                    <FormField
+                      control={form.control}
+                      name='secondTurnDate'
+                      render={({ field }) => (
+                        <FormItem className='text-left'>
+                          <FormLabel className='block w-full text-left'>
+                            Fecha
+                          </FormLabel>
+                          <FormControl>
+                            <Input type='date' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='secondTurnTime'
+                      render={({ field }) => (
+                        <FormItem className='text-left'>
+                          <FormLabel className='block w-full text-left'>
+                            Hora
+                          </FormLabel>
+                          <FormControl>
+                            <Input type='time' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <p className='text-muted-foreground text-left text-sm'>
                     Deja ambos campos vacíos para usar el horario del primer
                     turno.
@@ -259,7 +263,7 @@ export default function EventCreateDialogButton({
 
               <section className='space-y-3'>
                 <h3 className='text-sm font-semibold'>Fin del evento</h3>
-                <div className='grid gap-4 sm:grid-cols-2'>
+                <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
                   <FormField
                     control={form.control}
                     name='endDate'
@@ -301,15 +305,16 @@ export default function EventCreateDialogButton({
                     <FormLabel className='block w-full text-left'>
                       Ubicación
                     </FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder='Selecciona una ubicación' />
                         </SelectTrigger>
-                        <SelectContent>
+                      </FormControl>
+                      <SelectContent>
                         {locations.map((location) => (
                             <SelectItem
                               key={location.id}
@@ -318,9 +323,8 @@ export default function EventCreateDialogButton({
                               {location.name} — {location.address}
                             </SelectItem>
                         ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
