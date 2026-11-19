@@ -2,8 +2,8 @@ import { timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
 import { NextResponse } from 'next/server'
 
-const MAX_LIMIT = 500
-const DEFAULT_LIMIT = 100
+const MAX_LIMIT = 100
+const DEFAULT_LIMIT = 50
 const MIN_TOKEN_LENGTH = 32
 
 const integerQueryParam = z

@@ -43,7 +43,7 @@ paths:
                     category: teacher
                     schedule: confirmacion
                 pagination:
-                  limit: 100
+                  limit: 50
                   offset: 0
                   total: 1
                   hasMore: false
@@ -93,7 +93,7 @@ paths:
                       country: Perú
                       googleMapsUrl: https://maps.example.org/location
                 pagination:
-                  limit: 100
+                  limit: 50
                   offset: 0
                   total: 1
                   hasMore: false
@@ -126,12 +126,12 @@ components:
       name: limit
       in: query
       required: false
-      description: Cantidad de registros a devolver. El valor predeterminado es 100.
+      description: Cantidad de registros a devolver. El valor predeterminado es 50.
       schema:
         type: integer
         minimum: 1
-        maximum: 500
-        default: 100
+        maximum: 100
+        default: 50
     offset:
       name: offset
       in: query
