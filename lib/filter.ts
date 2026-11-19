@@ -1,4 +1,4 @@
-import { AttendanceStatus, UserCategory, UserSchedule } from '@/types'
+import { AttendanceStatus, UserCategory, UserRole, UserSchedule } from '@/types'
 
 import {
   IconBackpack,
@@ -15,7 +15,25 @@ import {
   IconSchool,
   IconSchoolOff,
   IconUserStar,
+  IconUser,
+  IconShield,
+  IconQrcode,
+  IconUsers,
+  IconCalendar,
 } from '@tabler/icons-react'
+
+export const UserRoleFilterOptions = [
+  { label: 'Catequista', value: UserRole.MEMBER, icon: IconUser },
+  {
+    label: 'Responsable de asistencia',
+    value: UserRole.SCANNER,
+    icon: IconQrcode,
+  },
+  { label: 'Coordinador', value: UserRole.COORDINATOR, icon: IconUsers },
+  { label: 'Docente', value: UserRole.TEACHER, icon: IconSchool },
+  { label: 'Encargado de misas', value: UserRole.MANAGER, icon: IconCalendar },
+  { label: 'Administrador', value: UserRole.ADMIN, icon: IconShield },
+]
 
 export const UserCategoryFilterOptions = [
   {

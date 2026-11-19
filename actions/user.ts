@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
 import { checkPermission } from '@/lib/roles'
 import { UserRole, UserSchedule } from '@/types'
-import { getUserSchedule } from '@/queries/select'
+import { getUserForRoleChange, getUserSchedule } from '@/queries/select'
 import { SelectUser } from '@/db/schema'
 import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
@@ -126,14 +126,50 @@ export async function setUserRole(userId: string, role: UserRole) {
   }
 
   try {
+    const dbUser = await getUserForRoleChange(userId)
+    if (!dbUser) {
+      return { error: 'No se encontró al catequista en la base de datos.' }
+    }
+
     const client = await clerkClient()
     const user = await client.users.getUser(userId)
-    await client.users.updateUser(userId, {
-      publicMetadata: { ...user.publicMetadata, role },
+    const previousRole = user.publicMetadata.role ?? null
+    await client.users.updateUserMetadata(userId, {
+      publicMetadata: { role },
     })
-    const updatedUsers = await updateUserRole(userId, role)
-    if (updatedUsers.length === 0) {
-      return { error: 'No se encontró al catequista en la base de datos.' }
+
+    try {
+      const updatedUsers = await updateUserRole(userId, role)
+      if (updatedUsers.length === 0) {
+        throw new Error('No se encontró al catequista en la base de datos.')
+      }
+    } catch (error) {
+      console.error('Failed to update user role in database:', {
+        userId,
+        role,
+        error,
+      })
+      try {
+        await client.users.updateUserMetadata(userId, {
+          publicMetadata: { role: previousRole },
+        })
+      } catch (rollbackError) {
+        console.error('Failed to restore Clerk role after database failure:', {
+          userId,
+          previousRole,
+          databaseRole: dbUser.role,
+          requestedRole: role,
+          rollbackError,
+        })
+        return {
+          error:
+            'No se pudo completar el cambio ni restaurar el rol anterior. Revisa el rol del catequista antes de reintentar.',
+        }
+      }
+      return {
+        error:
+          'No se pudo guardar el cambio en la base de datos. Se restauró el rol anterior en Clerk.',
+      }
     }
     updateTag('users')
     return { success: 'Rol del catequista actualizado correctamente.' }

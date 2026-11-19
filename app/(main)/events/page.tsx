@@ -15,7 +15,7 @@ export default async function Page() {
       <div className='flex flex-col gap-2 text-left'>
         <h1 className='text-xl font-semibold sm:text-2xl'>Eventos</h1>
         <p className='text-sm text-neutral-500'>
-          Aquí puedes ver la lista de eventos.
+          Consulta los próximos eventos.
         </p>
       </div>
       <EventsGrid />

@@ -1,3 +1,4 @@
+import { PastoralIdBackground } from './pastoralIdBackground'
 import PastoralIdQRCode from '@/components/dashboard/pastoraldQrCode'
 import { currentUser } from '@clerk/nextjs/server'
 import PastoralIDSkeleton from './pastoralIDSkeleton'
@@ -30,21 +31,19 @@ export default async function PastoralId() {
       : 'Catequista'
 
   return (
-    <div
-      className='-mx-6 flex aspect-9/11 w-[calc(100%+3rem)] flex-col gap-2 bg-cover bg-center p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'
-      style={{
-        backgroundImage: 'url(/graphics/id-bg.svg)',
-      }}
-    >
+    <div className='relative isolate flex w-full min-w-0 flex-col gap-2 bg-white p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'>
+      <PastoralIdBackground className='pointer-events-none absolute inset-0 -z-10 size-full' />
       <div className='flex grow flex-col items-center justify-start gap-2'>
         <PastoralIdQRCode userId={user.id} />
         <div className='m-0 mx-auto h-auto w-full rounded-lg bg-white p-0 sm:max-w-sm'>
-          <span className='text-muted-foreground text-sm'>{user?.id}</span>
+          <span className='text-muted-foreground block text-xs break-all'>
+            {user?.id}
+          </span>
         </div>
       </div>
 
       <div className='flex w-full flex-col items-center justify-center'>
-        <h3 className='text-card-foreground text-2xl font-bold md:text-3xl'>
+        <h3 className='text-card-foreground text-center text-xl font-bold break-words sm:text-2xl'>
           {user?.fullName}
         </h3>
         <p className='text-base text-blue-950'>{schedule}</p>

@@ -9,11 +9,38 @@ import UserScheduleLabel from '../shared/userScheduleLabel'
 import { AdminUserRowActions } from './adminUserRowActions'
 import { formatPhoneNumberIntl } from 'react-phone-number-input'
 import { UserRole } from '@/types'
+import { Badge, type BadgeProps } from '@/components/ui/badge'
+import {
+  IconUser,
+  IconShield,
+  IconQrcode,
+  IconSchool,
+  IconUsers,
+  IconCalendar,
+} from '@tabler/icons-react'
+
+const roleIcons = {
+  [UserRole.MEMBER]: IconUser,
+  [UserRole.ADMIN]: IconShield,
+  [UserRole.SCANNER]: IconQrcode,
+  [UserRole.TEACHER]: IconSchool,
+  [UserRole.COORDINATOR]: IconUsers,
+  [UserRole.MANAGER]: IconCalendar,
+}
+
+const roleVariants: Record<UserRole, BadgeProps['variant']> = {
+  [UserRole.MEMBER]: 'slate',
+  [UserRole.ADMIN]: 'red',
+  [UserRole.SCANNER]: 'sky',
+  [UserRole.TEACHER]: 'violet',
+  [UserRole.COORDINATOR]: 'emerald',
+  [UserRole.MANAGER]: 'amber',
+}
 
 const roleLabels: Record<UserRole, string> = {
-  [UserRole.MEMBER]: 'Miembro',
-  [UserRole.ADMIN]: 'Admin',
-  [UserRole.SCANNER]: 'Scanner',
+  [UserRole.MEMBER]: 'Catequista',
+  [UserRole.ADMIN]: 'Administrador',
+  [UserRole.SCANNER]: 'Responsable de asistencia',
   [UserRole.TEACHER]: 'Docente',
   [UserRole.COORDINATOR]: 'Coordinador',
   [UserRole.MANAGER]: 'Encargado de misas',
@@ -106,10 +133,20 @@ export const getAdminUserColumns = (
   {
     id: 'role',
     accessorKey: 'role',
+    filterFn: (row, id, values: string[]) => values.includes(row.getValue(id)),
     header: () => <span className='text-nowrap'>Rol</span>,
-    cell: ({ row }) => (
-      <span className='text-nowrap'>{roleLabels[row.original.role]}</span>
-    ),
+    cell: ({ row }) => {
+      const Icon = roleIcons[row.original.role]
+      return (
+        <Badge
+          variant={roleVariants[row.original.role]}
+          className='h-8 rounded-lg text-nowrap'
+        >
+          <Icon className='mr-2 size-4' />
+          {roleLabels[row.original.role]}
+        </Badge>
+      )
+    },
   },
   {
     id: 'programa',

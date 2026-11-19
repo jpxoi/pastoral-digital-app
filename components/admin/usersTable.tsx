@@ -1,6 +1,5 @@
 import { getAllUsers } from '@/queries/select'
-import { DataTable } from '@/components/ui/data-table'
-import { getAdminUserColumns } from '@/components/admin/adminUserColumns'
+import UsersTableClient from '@/components/admin/usersTableClient'
 
 export default async function UsersTable({
   canSetRole,
@@ -9,9 +8,5 @@ export default async function UsersTable({
 }) {
   const userRecords = await getAllUsers()
 
-  return (
-    <>
-      <DataTable columns={getAdminUserColumns(canSetRole)} data={userRecords} />
-    </>
-  )
+  return <UsersTableClient canSetRole={canSetRole} userRecords={userRecords} />
 }

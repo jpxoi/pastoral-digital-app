@@ -24,7 +24,7 @@ import { toast } from 'sonner'
 import { UserRole, UserSchedule } from '@/types'
 import { SelectUser } from '@/db/schema'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
-import { UserScheduleFilterOptions } from '@/lib/filter'
+import { UserRoleFilterOptions, UserScheduleFilterOptions } from '@/lib/filter'
 import { setUserRole, setUserSchedule } from '@/actions/user'
 
 interface DataTableRowActionsProps {
@@ -63,15 +63,6 @@ const handleSetUserRole = async (role: UserRole, userId: SelectUser['id']) => {
     error: (error) => error.message || 'Error al cambiar el rol.',
   })
 }
-
-const roleOptions = [
-  { label: 'Miembro', value: UserRole.MEMBER },
-  { label: 'Scanner', value: UserRole.SCANNER },
-  { label: 'Coordinador', value: UserRole.COORDINATOR },
-  { label: 'Docente', value: UserRole.TEACHER },
-  { label: 'Encargado de misas', value: UserRole.MANAGER },
-  { label: 'Admin', value: UserRole.ADMIN },
-]
 
 export function AdminUserRowActions({
   row,
@@ -147,16 +138,23 @@ export function AdminUserRowActions({
                   Cambiar rol
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
-                  {roleOptions.map((option) => (
-                    <DropdownMenuItem
-                      key={option.value}
-                      onClick={() =>
-                        handleSetUserRole(option.value, row.original.id)
-                      }
-                    >
-                      {option.label}
-                    </DropdownMenuItem>
-                  ))}
+                  <DropdownMenuRadioGroup
+                    value={row.original.role}
+                    onValueChange={(value) =>
+                      handleSetUserRole(value as UserRole, row.original.id)
+                    }
+                  >
+                    {UserRoleFilterOptions.map((option) => (
+                      <DropdownMenuRadioItem
+                        key={option.value}
+                        value={option.value}
+                        disabled={row.original.role === option.value}
+                      >
+                        <option.icon className='mr-2 size-4' />
+                        {option.label}
+                      </DropdownMenuRadioItem>
+                    ))}
+                  </DropdownMenuRadioGroup>
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
             )}

@@ -1,25 +1,38 @@
-import Image from 'next/image'
-import BackgroundImageNarrow from '@/public/graphics/narrow-wave.svg'
-import BackgroundImageWide from '@/public/graphics/wide-wave.svg'
+import type { ComponentProps } from 'react'
+import { cn } from '@/lib/utils'
 
-export default function Background() {
+export default function Background({
+  className,
+  ...props
+}: ComponentProps<'svg'>) {
   return (
-    <>
-      <Image
-        alt='Background Waves Portrait'
-        className='bg-primary z-[-100] object-cover sm:hidden'
-        src={BackgroundImageNarrow}
-        unoptimized={true}
-        fill
+    <svg
+      viewBox='0 0 900 675'
+      preserveAspectRatio='xMidYMid slice'
+      aria-hidden='true'
+      focusable='false'
+      className={cn(
+        'bg-primary pointer-events-none absolute inset-0 -z-100 size-full',
+        className
+      )}
+      {...props}
+    >
+      <path
+        d='M0 538L30 545.2C60 552.3 120 566.7 180 575.7C240 584.7 300 588.3 360 591C420 593.7 480 595.3 540 577C600 558.7 660 520.3 720 518.5C780 516.7 840 551.3 870 568.7L900 586L900 0L870 0C840 0 780 0 720 0C660 0 600 0 540 0C480 0 420 0 360 0C300 0 240 0 180 0C120 0 60 0 30 0L0 0Z'
+        fill='#1d5fd3'
       />
-
-      <Image
-        alt='Background Waves Landscape'
-        className='bg-primary z-[-100] hidden object-cover sm:block'
-        src={BackgroundImageWide}
-        unoptimized={true}
-        fill
+      <path
+        d='M0 340L30 339.3C60 338.7 120 337.3 180 348.8C240 360.3 300 384.7 360 403.8C420 423 480 437 540 424.7C600 412.3 660 373.7 720 361.7C780 349.7 840 364.3 870 371.7L900 379L900 0L870 0C840 0 780 0 720 0C660 0 600 0 540 0C480 0 420 0 360 0C300 0 240 0 180 0C120 0 60 0 30 0L0 0Z'
+        fill='#174fc0'
       />
-    </>
+      <path
+        d='M0 285L30 287.7C60 290.3 120 295.7 180 290C240 284.3 300 267.7 360 263.7C420 259.7 480 268.3 540 264.5C600 260.7 660 244.3 720 249.8C780 255.3 840 282.7 870 296.3L900 310L900 0L870 0C840 0 780 0 720 0C660 0 600 0 540 0C480 0 420 0 360 0C300 0 240 0 180 0C120 0 60 0 30 0L0 0Z'
+        fill='#103fae'
+      />
+      <path
+        d='M0 179L30 171.3C60 163.7 120 148.3 180 147C240 145.7 300 158.3 360 152.8C420 147.3 480 123.7 540 119.2C600 114.7 660 129.3 720 122.3C780 115.3 840 86.7 870 72.3L900 58L900 0L870 0C840 0 780 0 720 0C660 0 600 0 540 0C480 0 420 0 360 0C300 0 240 0 180 0C120 0 60 0 30 0L0 0Z'
+        fill='#07309b'
+      />
+    </svg>
   )
 }

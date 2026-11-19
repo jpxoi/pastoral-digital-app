@@ -109,7 +109,10 @@ export default function EventCreateDialogButton({
           </p>
         ) : (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className='flex flex-col gap-5'
+            >
               <FormField
                 control={form.control}
                 name='name'
@@ -151,7 +154,7 @@ export default function EventCreateDialogButton({
               />
 
               <div className='grid gap-5 sm:grid-cols-2'>
-                <section className='space-y-3'>
+                <section className='flex flex-col gap-3'>
                   <div className='flex items-center justify-between gap-3'>
                     <h3 className='text-sm font-semibold'>Primer turno</h3>
                     <span className='rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-800'>
@@ -164,8 +167,8 @@ export default function EventCreateDialogButton({
                       name='firstTurnDate'
                       render={({ field }) => (
                         <FormItem className='text-left'>
-                          <FormLabel className='block w-full text-left'>
-                            Fecha
+                          <FormLabel className='sr-only'>
+                            Fecha del primer turno
                           </FormLabel>
                           <FormControl>
                             <Input type='date' {...field} />
@@ -179,8 +182,8 @@ export default function EventCreateDialogButton({
                       name='firstTurnTime'
                       render={({ field }) => (
                         <FormItem className='text-left'>
-                          <FormLabel className='block w-full text-left'>
-                            Hora
+                          <FormLabel className='sr-only'>
+                            Hora del primer turno
                           </FormLabel>
                           <FormControl>
                             <Input type='time' {...field} />
@@ -192,7 +195,7 @@ export default function EventCreateDialogButton({
                   </div>
                 </section>
 
-                <section className='space-y-3'>
+                <section className='flex flex-col gap-3'>
                   <div className='flex items-center justify-between gap-3'>
                     <div className='flex items-center gap-1.5'>
                       <h3 className='text-sm font-semibold'>Segundo turno</h3>
@@ -208,12 +211,9 @@ export default function EventCreateDialogButton({
                             </button>
                           </TooltipTrigger>
                           <TooltipContent className='max-w-72'>
-                            <p>
-                              El primer turno aplica a Comunión y el segundo a
-                              Confirmación. Si ambos ingresos son a la misma
-                              hora, repite aquí la fecha y hora del primer
-                              turno.
-                            </p>
+                            Completa ambos campos para definir un horario
+                            distinto. Déjalos vacíos para usar el horario del
+                            primer turno.
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -228,8 +228,8 @@ export default function EventCreateDialogButton({
                       name='secondTurnDate'
                       render={({ field }) => (
                         <FormItem className='text-left'>
-                          <FormLabel className='block w-full text-left'>
-                            Fecha
+                          <FormLabel className='sr-only'>
+                            Fecha del segundo turno
                           </FormLabel>
                           <FormControl>
                             <Input type='date' {...field} />
@@ -243,8 +243,8 @@ export default function EventCreateDialogButton({
                       name='secondTurnTime'
                       render={({ field }) => (
                         <FormItem className='text-left'>
-                          <FormLabel className='block w-full text-left'>
-                            Hora
+                          <FormLabel className='sr-only'>
+                            Hora del segundo turno
                           </FormLabel>
                           <FormControl>
                             <Input type='time' {...field} />
@@ -254,14 +254,10 @@ export default function EventCreateDialogButton({
                       )}
                     />
                   </div>
-                  <p className='text-muted-foreground text-left text-sm'>
-                    Deja ambos campos vacíos para usar el horario del primer
-                    turno.
-                  </p>
                 </section>
               </div>
 
-              <section className='space-y-3'>
+              <section className='flex flex-col gap-3'>
                 <h3 className='text-sm font-semibold'>Fin del evento</h3>
                 <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
                   <FormField
@@ -269,8 +265,8 @@ export default function EventCreateDialogButton({
                     name='endDate'
                     render={({ field }) => (
                       <FormItem className='text-left'>
-                        <FormLabel className='block w-full text-left'>
-                          Fecha
+                        <FormLabel className='sr-only'>
+                          Fecha de fin del evento
                         </FormLabel>
                         <FormControl>
                           <Input type='date' {...field} />
@@ -284,8 +280,8 @@ export default function EventCreateDialogButton({
                     name='endTime'
                     render={({ field }) => (
                       <FormItem className='text-left'>
-                        <FormLabel className='block w-full text-left'>
-                          Hora
+                        <FormLabel className='sr-only'>
+                          Hora de fin del evento
                         </FormLabel>
                         <FormControl>
                           <Input type='time' {...field} />

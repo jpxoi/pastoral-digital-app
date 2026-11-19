@@ -4,11 +4,11 @@ import { Table } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { DataTableViewOptions } from '@/components/ui/data-table-view-options'
 import { DataTableFacetedFilter } from '@/components/ui/data-table-faceted-filter'
 import {
   AttendanceStatusFilterOptions,
   UserCategoryFilterOptions,
+  UserRoleFilterOptions,
   UserScheduleFilterOptions,
 } from '@/lib/filter'
 import { IconX } from '@tabler/icons-react'
@@ -33,7 +33,14 @@ export function DataTableToolbar<TData>({
           }
           className='sm:max-w-xs'
         />
-        <div className='flex items-center gap-2'>
+        <div className='flex flex-wrap items-center gap-2'>
+          {table.getColumn('role') && (
+            <DataTableFacetedFilter
+              column={table.getColumn('role')}
+              title='Rol'
+              options={UserRoleFilterOptions}
+            />
+          )}
           {table.getAllColumns().some((col) => col.id === 'category') && (
             <DataTableFacetedFilter
               column={table.getColumn('category')}
@@ -84,7 +91,6 @@ export function DataTableToolbar<TData>({
           )}
         </div>
       </div>
-      <DataTableViewOptions table={table} />
     </div>
   )
 }

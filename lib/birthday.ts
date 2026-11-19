@@ -1,53 +1,65 @@
-export const isBirthdayToday = (dateOfBirth: string): boolean => {
+type BirthdayParts = { year: number; month: number; day: number }
+
+function getBirthdayParts(dateOfBirth: string): BirthdayParts {
+  // Database DATE values arrive as YYYY-MM-DD; parse them as calendar dates
+  // so JavaScript's UTC parsing cannot shift the birthday in western timezones.
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(dateOfBirth)
+  if (!match) throw new Error('Invalid date format')
+
+  const [, year, month, day] = match
+  return { year: Number(year), month: Number(month), day: Number(day) }
+}
+
+function getTodayParts(): BirthdayParts {
   const today = new Date()
-  const birthdate = new Date(dateOfBirth)
+  return {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+    day: today.getDate(),
+  }
+}
 
-  if (isNaN(birthdate.getTime())) return false
-
-  return (
-    today.getDate() === birthdate.getDate() &&
-    today.getMonth() === birthdate.getMonth()
-  )
+function createLocalDate({ year, month, day }: BirthdayParts) {
+  return new Date(year, month - 1, day)
 }
 
 export const getThisYearBirthday = (dateOfBirth: string): Date => {
-  const today = new Date()
-  const birthdate = new Date(dateOfBirth)
+  const birthdate = getBirthdayParts(dateOfBirth)
+  const today = getTodayParts()
+  let birthday = createLocalDate({ ...birthdate, year: today.year })
 
-  if (isNaN(birthdate.getTime())) throw new Error('Invalid date format')
-
-  return new Date(
-    today.getFullYear(),
-    birthdate.getMonth(),
-    birthdate.getDate()
-  )
-}
-
-export const getBirthdayRelativeDate = (dateOfBirth: string): string => {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const birthdateThisYear = getThisYearBirthday(dateOfBirth)
-
-  if (birthdateThisYear < today) {
-    birthdateThisYear.setFullYear(today.getFullYear() + 1)
+  if (birthday < createLocalDate(today)) {
+    birthday = createLocalDate({ ...birthdate, year: today.year + 1 })
   }
 
-  const dayDiff = Math.ceil(
-    (birthdateThisYear.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-  )
-
-  return new Intl.RelativeTimeFormat('es-PE', {
-    numeric: 'auto',
-    style: 'long',
-  }).format(dayDiff, 'day')
+  return birthday
 }
 
-export const getTurnsAge = (dateOfBirth: string) => {
-  const today = new Date()
-  const birthdate = new Date(dateOfBirth)
+export const getDaysUntilBirthday = (dateOfBirth: string): number => {
+  const birthday = getThisYearBirthday(dateOfBirth)
+  const today = getTodayParts()
+  const todayUtc = Date.UTC(today.year, today.month - 1, today.day)
+  const birthdayUtc = Date.UTC(
+    birthday.getFullYear(),
+    birthday.getMonth(),
+    birthday.getDate()
+  )
 
-  return today.getFullYear() - birthdate.getFullYear()
+  return Math.round((birthdayUtc - todayUtc) / 86_400_000)
+}
+
+export const isBirthdayToday = (dateOfBirth: string): boolean =>
+  getDaysUntilBirthday(dateOfBirth) === 0
+
+export const getBirthdayRelativeDate = (dateOfBirth: string): string =>
+  new Intl.RelativeTimeFormat('es-PE', {
+    numeric: 'auto',
+    style: 'long',
+  }).format(getDaysUntilBirthday(dateOfBirth), 'day')
+
+export const getTurnsAge = (dateOfBirth: string) => {
+  const birthdate = getBirthdayParts(dateOfBirth)
+  return getThisYearBirthday(dateOfBirth).getFullYear() - birthdate.year
 }
 
 export const calculateAge = (dateOfBirth: string) => {

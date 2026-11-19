@@ -8,7 +8,7 @@ export default async function UpcomingEvents() {
     <div className='flex flex-col gap-2 lg:grid lg:grid-cols-2 xl:grid-cols-3'>
       {upcomingEvents.length > 0 ? (
         upcomingEvents.map((record) => (
-          <EventCard key={record.id} record={record} type='upcoming' />
+          <EventCard key={record.id} record={record} />
         ))
       ) : (
         <EmptyEvents />

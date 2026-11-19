@@ -1,33 +1,15 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { IconCake } from '@tabler/icons-react'
+import { Card, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function BirthdayCardSkeleton() {
   return (
-    <Card className={cn('text-left')}>
-      <CardHeader>
-        <CardTitle className='flex justify-between gap-2 text-lg font-semibold'>
-          <span className='truncate'>
-            <Skeleton className='h-6 w-48 sm:h-7' />
-          </span>
-          <IconCake className='size-6' />
-        </CardTitle>
-        <CardDescription
-          className={cn('flex justify-between gap-2 text-xs sm:text-sm')}
-        >
-          <span className='truncate'>
-            <Skeleton className='h-4 w-36 sm:h-5' />
-          </span>
-          <span className='text-nowrap'>
-            <Skeleton className='h-4 w-20 sm:h-5' />
-          </span>
-        </CardDescription>
+    <Card size='sm' className='h-full text-left'>
+      <CardHeader className='gap-2'>
+        <div className='flex items-start justify-between gap-2'>
+          <Skeleton className='h-5 w-3/5' />
+          <Skeleton className='h-6 w-24 shrink-0' />
+        </div>
+        <Skeleton className='h-4 w-24' />
       </CardHeader>
     </Card>
   )

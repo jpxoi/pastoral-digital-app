@@ -1,9 +1,17 @@
 'use client'
 
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { Button } from '@/components/ui/button'
+import EventRowActions from '@/components/admin/eventRowActions'
+import { Badge } from '@/components/ui/badge'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { IconInfoCircle } from '@tabler/icons-react'
 import { FetchEventProps } from '@/types'
-import { ColumnDef, Row } from '@tanstack/react-table'
+import { ColumnDef } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
@@ -15,6 +23,23 @@ const formatEventDate = (date: Date) =>
     in: tz('America/Lima'),
   })
 
+const TurnHeader = ({ title, detail }: { title: string; detail: string }) => (
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className='inline-flex cursor-help items-center gap-1.5 text-nowrap'>
+          {title}
+          <IconInfoCircle
+            aria-hidden='true'
+            className='text-muted-foreground size-4 shrink-0'
+          />
+        </span>
+      </TooltipTrigger>
+      <TooltipContent>{detail}</TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+)
+
 export const getAdminEventColumns = (
   canViewAttendance: boolean
 ): ColumnDef<FetchEventProps>[] => [
@@ -23,14 +48,22 @@ export const getAdminEventColumns = (
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Evento' />
     ),
-    cell: ({ row }) => (
-      <span className='min-w-44 font-medium'>{row.original.name}</span>
-    ),
+    cell: ({ row }) =>
+      canViewAttendance ? (
+        <Link
+          className='text-primary font-medium underline-offset-4 hover:underline'
+          href={`/admin/events/${row.original.id}`}
+        >
+          {row.original.name}
+        </Link>
+      ) : (
+        <span className='font-medium'>{row.original.name}</span>
+      ),
   },
   {
     id: 'firstTurn',
     accessorKey: 'date',
-    header: () => <span className='text-nowrap'>Primer turno · Comunión</span>,
+    header: () => <TurnHeader title='Primer turno' detail='Comunión' />,
     cell: ({ row }) => (
       <span className='text-nowrap'>{formatEventDate(row.original.date)}</span>
     ),
@@ -38,9 +71,7 @@ export const getAdminEventColumns = (
   {
     id: 'secondTurn',
     accessorKey: 'secondTurnDate',
-    header: () => (
-      <span className='text-nowrap'>Segundo turno · Confirmación</span>
-    ),
+    header: () => <TurnHeader title='Segundo turno' detail='Confirmación' />,
     cell: ({ row }) => (
       <span className='text-nowrap'>
         {formatEventDate(row.original.secondTurnDate)}
@@ -67,18 +98,35 @@ export const getAdminEventColumns = (
       </div>
     ),
   },
-  ...(canViewAttendance
-    ? [
-        {
-          id: 'actions',
-          cell: ({ row }: { row: Row<FetchEventProps> }) => (
-            <Button asChild variant='outline' size='sm'>
-              <Link href={`/admin/events/${row.original.id}`}>
-                Ver asistencia
-              </Link>
-            </Button>
-          ),
-        },
-      ]
-    : []),
+  {
+    id: 'eventStatus',
+    accessorFn: (event) => {
+      const now = Date.now()
+      if (now < new Date(event.date).getTime()) return 'Próximo'
+      if (now >= new Date(event.endDate).getTime()) return 'Pasado'
+      return 'En curso'
+    },
+    header: 'Estado',
+    cell: ({ getValue }) => {
+      const status = getValue<string>()
+      return (
+        <Badge
+          variant={
+            status === 'En curso'
+              ? 'emerald'
+              : status === 'Próximo'
+                ? 'blue'
+                : 'secondary'
+          }
+          className='whitespace-nowrap'
+        >
+          {status}
+        </Badge>
+      )
+    },
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => <EventRowActions event={row.original} />,
+  },
 ]

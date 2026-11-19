@@ -8,7 +8,6 @@ import {
   ColumnFiltersState,
   GlobalFilterTableState,
   SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -41,7 +40,6 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
@@ -54,7 +52,6 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -63,7 +60,6 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       sorting,
-      columnVisibility,
       rowSelection,
       columnFilters,
       globalFilter,

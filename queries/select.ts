@@ -22,6 +22,13 @@ const CACHE_DURATION = {
 }
 
 /* UsersTable */
+export const getUserForRoleChange = async (id: SelectUser['id']) => {
+  return db.query.usersTable.findFirst({
+    columns: { id: true, role: true },
+    where: eq(usersTable.id, id),
+  })
+}
+
 export const getAllUsers = unstable_cache(
   async () => {
     return db.query.usersTable.findMany({
@@ -297,7 +304,7 @@ export const getAttendanceCalendar = unstable_cache(
 export const getAllEvents = unstable_cache(
   async () => {
     return db.query.eventsTable.findMany({
-      orderBy: (fields) => [asc(fields.date)],
+      orderBy: (fields) => [desc(fields.date)],
       with: {
         location: true,
       },
@@ -381,24 +388,6 @@ export const getUpcomingEvents = unstable_cache(
     })
   },
   ['getUpcomingEvents'],
-  {
-    revalidate: CACHE_DURATION.SIX_HOURS,
-    tags: ['events'],
-  }
-)
-
-export const getPastEvents = unstable_cache(
-  async () => {
-    return db.query.eventsTable.findMany({
-      where: sql`date < current_date`,
-      orderBy: (fields) => [desc(fields.date)],
-      with: {
-        location: true,
-      },
-      limit: 24, // Multiple of 6
-    })
-  },
-  ['getPastEvents'],
   {
     revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['events'],

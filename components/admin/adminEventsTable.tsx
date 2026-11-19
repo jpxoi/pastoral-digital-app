@@ -1,5 +1,4 @@
-import { getAdminEventColumns } from '@/components/admin/adminEventColumns'
-import { DataTable } from '@/components/ui/data-table'
+import AdminEventsTableClient from '@/components/admin/adminEventsTableClient'
 import { getAllEvents } from '@/queries/select'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -11,9 +10,9 @@ export default async function AdminEventsTable() {
   )
 
   return (
-    <DataTable
-      columns={getAdminEventColumns(canViewAttendance)}
-      data={events}
+    <AdminEventsTableClient
+      events={events}
+      canViewAttendance={canViewAttendance}
     />
   )
 }
