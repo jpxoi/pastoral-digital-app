@@ -1,6 +1,6 @@
 'use client'
 
-import { MailIcon } from 'lucide-react'
+import { IconMail } from '@tabler/icons-react'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './input-group'
 import { cn } from '@/lib/utils'
 
@@ -9,7 +9,7 @@ const EmailInput = ({ className, ...props }: React.ComponentProps<'input'>) => {
     <InputGroup>
       <InputGroupInput className={cn(className)} {...props} />
       <InputGroupAddon>
-        <MailIcon />
+        <IconMail />
       </InputGroupAddon>
     </InputGroup>
   )

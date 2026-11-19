@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { CalendarIcon } from 'lucide-react'
+import { IconCalendar } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { es } from 'date-fns/locale'
@@ -41,7 +41,7 @@ const DatePicker = ({
           {value
             ? format(value, 'PPP', { locale: es })
             : placeholder || 'Seleccionar fecha'}
-          <CalendarIcon className='size-3.5' />
+          <IconCalendar className='size-3.5' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto overflow-hidden p-0' align='end'>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { CheckIcon, ChevronsUpDown } from 'lucide-react'
+import { IconCheck, IconChevronsUpDown } from '@tabler/icons-react'
 import * as RPNInput from 'react-phone-number-input'
 import flags from 'react-phone-number-input/flags'
 
@@ -110,7 +110,7 @@ const CountrySelect = ({
             country={selectedCountry}
             countryName={selectedCountry}
           />
-          <ChevronsUpDown
+          <IconChevronsUpDown
             className={cn(
               '-mr-2 size-4 opacity-50',
               disabled ? 'hidden' : 'opacity-100'
@@ -185,7 +185,7 @@ const CountrySelectOption = ({
       <FlagComponent country={country} countryName={countryName} />
       <span className='flex-1 text-sm'>{countryName}</span>
       <span className='text-foreground/50 text-sm'>{`+${RPNInput.getCountryCallingCode(country)}`}</span>
-      <CheckIcon
+      <IconCheck
         className={`ml-auto size-4 ${country === selectedCountry ? 'opacity-100' : 'opacity-0'}`}
       />
     </CommandItem>

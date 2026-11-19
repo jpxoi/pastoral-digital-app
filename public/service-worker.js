@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'pastoral-pwa-shell-v1'
+const SHELL_CACHE = 'pastoral-pwa-shell-v2'
 const NEXT_STATIC_CACHE = 'pastoral-pwa-next-static-v1'
 const PUBLIC_ASSET_CACHE = 'pastoral-pwa-public-v1'
 const OFFLINE_URL = '/offline.html'

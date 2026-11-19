@@ -28,15 +28,6 @@ export const userCategoryEnum = pgEnum('user_category_enum', [
   UserCategory.TEACHER,
 ])
 
-export const userRoleEnum = pgEnum('user_role_enum', [
-  UserRole.MEMBER,
-  UserRole.ADMIN,
-  UserRole.SCANNER,
-  UserRole.TEACHER,
-  UserRole.COORDINATOR,
-  UserRole.MANAGER,
-])
-
 export const userScheduleEnum = pgEnum('user_schedule_enum', [
   UserSchedule.FULL_TIME,
   UserSchedule.PRIMERA_COMUNION,
@@ -76,7 +67,18 @@ export const usersTable = pgTable('users', {
   dateOfBirth: date('date_of_birth').notNull(),
   category: userCategoryEnum().notNull(),
   studentCode: text('student_code'),
-  role: userRoleEnum().default(UserRole.MEMBER).notNull(),
+  role: text('role', {
+    enum: [
+      UserRole.MEMBER,
+      UserRole.ADMIN,
+      UserRole.SCANNER,
+      UserRole.TEACHER,
+      UserRole.COORDINATOR,
+      UserRole.MANAGER,
+    ],
+  })
+    .default(UserRole.MEMBER)
+    .notNull(),
   schedule: userScheduleEnum().default(UserSchedule.FULL_TIME).notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')

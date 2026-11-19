@@ -1,5 +1,5 @@
 {
-  "id": "0f0c35bf-95af-482a-8de1-ef30c6f4d0eb",
+  "id": "833dec92-a847-4bc4-ad9b-55accfb83690",
   "prevId": "093067d9-966a-4caa-9f73-8eb1eecba2e2",
   "version": "7",
   "dialect": "postgresql",
@@ -604,8 +604,7 @@
         },
         "role": {
           "name": "role",
-          "type": "user_role_enum",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'member'"
@@ -679,18 +678,6 @@
         "student",
         "alumni",
         "teacher"
-      ]
-    },
-    "public.user_role_enum": {
-      "name": "user_role_enum",
-      "schema": "public",
-      "values": [
-        "member",
-        "admin",
-        "scanner",
-        "teacher",
-        "coordinator",
-        "manager"
       ]
     },
     "public.user_schedule_enum": {
