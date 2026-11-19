@@ -1,16 +1,16 @@
 'use server'
 
 import { handleDbError } from '@/lib/error'
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import { createSundayMass } from '@/queries/insert'
 import { updateSundayMassRecordVerification } from '@/queries/update'
 import { NewSundayMassFormSchema } from '@/schema'
-import { UserRole } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { NeonDbError } from '@neondatabase/serverless'
 import { updateTag } from 'next/cache'
 import { TZDate } from '@date-fns/tz'
 import { z } from 'zod'
+import { Permission } from '@/types/permissions'
 
 export async function postNewMassRecord(
   formValues: z.infer<typeof NewSundayMassFormSchema>
@@ -75,10 +75,7 @@ export async function postNewMassRecord(
 }
 
 export async function verifyMassRecord(massId: string) {
-  if (
-    !(await checkRole(UserRole.ADMIN)) &&
-    !(await checkRole(UserRole.MANAGER))
-  ) {
+  if (!(await checkPermission(Permission.MASSES_MANAGE))) {
     return { error: 'No estás autorizado para verificar misas.' }
   }
 
@@ -110,10 +107,7 @@ export async function verifyMassRecord(massId: string) {
 }
 
 export async function rejectMassRecord(massId: string) {
-  if (
-    !(await checkRole(UserRole.ADMIN)) &&
-    !(await checkRole(UserRole.MANAGER))
-  ) {
+  if (!(await checkPermission(Permission.MASSES_MANAGE))) {
     return { error: 'No estás autorizado para rechazar misas.' }
   }
 

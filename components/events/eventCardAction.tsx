@@ -1,5 +1,5 @@
-import { checkRole } from '@/lib/roles'
-import { UserRole } from '@/types'
+import { checkPermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import { SelectEvent } from '@/db/schema'
@@ -12,11 +12,13 @@ export async function EventCardAction({
   id: SelectEvent['id']
   date: Date
 }) {
-  const isAdmin = await checkRole(UserRole.ADMIN)
+  const canViewAttendance = await checkPermission(
+    Permission.ATTENDANCE_VIEW_RECORDS
+  )
 
   return (
     <div className='flex gap-2'>
-      {isAdmin ? (
+      {canViewAttendance ? (
         <Button asChild variant='link' className='text-primary h-6 p-1'>
           <Link href={`/admin/events/${id}`}>Ver Asistencia</Link>
         </Button>

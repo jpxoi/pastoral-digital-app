@@ -18,12 +18,15 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
+  await requirePermission(Permission.ATTENDANCE_VIEW_RECORDS)
   const { id } = await params
   const event = await getEventById(id)
 

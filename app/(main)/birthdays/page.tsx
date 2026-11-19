@@ -2,12 +2,16 @@ import { Metadata } from 'next'
 import BirthdayGrid from '@/components/birthdays/birthdayGrid'
 import BirthdayGridSkeleton from '@/components/birthdays/birthdayGridSkeleton'
 import { Suspense } from 'react'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Cumpleaños | Pastoral Digital App',
 }
 
-export default function Page() {
+export default async function Page() {
+  await requirePermission(Permission.BIRTHDAYS_VIEW)
+
   return (
     <>
       <div className='flex flex-col gap-2 text-left'>

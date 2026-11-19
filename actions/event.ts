@@ -2,10 +2,10 @@
 
 import { db } from '@/db/drizzle'
 import { locationsTable } from '@/db/schema'
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import { createEvent } from '@/queries/insert'
 import { NewEventFormSchema } from '@/schema'
-import { UserRole } from '@/types'
+import { Permission } from '@/types/permissions'
 import { TZDate } from '@date-fns/tz'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
@@ -26,7 +26,7 @@ export async function postNewEvent(formValues: unknown) {
 
   if (!userId) return { error: 'Inicia sesión para crear eventos.' }
 
-  if (!(await checkRole(UserRole.ADMIN)))
+  if (!(await checkPermission(Permission.EVENTS_MANAGE)))
     return { error: 'No estás autorizado para crear eventos.' }
 
   const validatedFields = NewEventFormSchema.safeParse(formValues)

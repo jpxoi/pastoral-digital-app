@@ -4,12 +4,17 @@ import UsersTable from '@/components/admin/usersTable'
 import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 import ExportToCsvUsers from '@/components/shared/exportToCsvUsers'
 import RevalidateButton from '@/components/shared/revalidateButton'
+import { checkPermission, requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Administrar Catequistas | Pastoral Digital App',
 }
 
-export default function Page() {
+export default async function Page() {
+  await requirePermission(Permission.CATECHISTS_VIEW)
+  const canSetRole = await checkPermission(Permission.CATECHISTS_ASSIGN_ROLE)
+
   return (
     <>
       <div className='flex justify-between gap-2 max-sm:flex-col'>
@@ -27,7 +32,7 @@ export default function Page() {
         </div>
       </div>
       <Suspense fallback={<UserTableSkeleton />}>
-        <UsersTable />
+        <UsersTable canSetRole={canSetRole} />
       </Suspense>
     </>
   )

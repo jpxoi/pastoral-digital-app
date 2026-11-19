@@ -38,6 +38,9 @@ export enum AttendanceStatus {
 export enum UserRole {
   MEMBER = 'member',
   ADMIN = 'admin',
+  SCANNER = 'scanner',
+  TEACHER = 'teacher',
+  COORDINATOR = 'coordinator',
   MANAGER = 'manager',
 }
 

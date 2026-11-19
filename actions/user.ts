@@ -4,7 +4,7 @@ import { auth, clerkClient } from '@clerk/nextjs/server'
 import { createUser } from '@/queries/insert'
 import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import { UserRole, UserSchedule } from '@/types'
 import { getUserSchedule } from '@/queries/select'
 import { SelectUser } from '@/db/schema'
@@ -13,6 +13,8 @@ import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
 import { updateTag } from 'next/cache'
 import { formatISO } from 'date-fns'
+import { Permission } from '@/types/permissions'
+import { updateUserRole } from '@/queries/update'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -82,8 +84,7 @@ export async function setUserSchedule(
   schedule: UserSchedule,
   userId: SelectUser['id']
 ) {
-  // Check that the user trying to set the schedule is an admin
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.CATECHISTS_EDIT_PROGRAM))) {
     return { error: 'No estás autorizado para realizar esta acción.' }
   }
 
@@ -106,7 +107,47 @@ export async function setUserSchedule(
     })
 }
 
+export async function setUserRole(userId: string, role: UserRole) {
+  if (!(await checkPermission(Permission.CATECHISTS_ASSIGN_ROLE))) {
+    return { error: 'Solo un administrador puede cambiar roles.' }
+  }
+
+  const assignableRoles = [
+    UserRole.MEMBER,
+    UserRole.SCANNER,
+    UserRole.TEACHER,
+    UserRole.COORDINATOR,
+    UserRole.MANAGER,
+    UserRole.ADMIN,
+  ]
+
+  if (!assignableRoles.includes(role)) {
+    return { error: 'El rol seleccionado no es válido.' }
+  }
+
+  try {
+    const client = await clerkClient()
+    const user = await client.users.getUser(userId)
+    await client.users.updateUser(userId, {
+      publicMetadata: { ...user.publicMetadata, role },
+    })
+    const updatedUsers = await updateUserRole(userId, role)
+    if (updatedUsers.length === 0) {
+      return { error: 'No se encontró al catequista en la base de datos.' }
+    }
+    updateTag('users')
+    return { success: 'Rol del catequista actualizado correctamente.' }
+  } catch (error) {
+    console.error(error)
+    return { error: 'No se pudo actualizar el rol del catequista.' }
+  }
+}
+
 export async function fetchUserSchedule(userId: string) {
+  if (!(await checkPermission(Permission.ATTENDANCE_SCAN))) {
+    return { error: 'No estás autorizado para consultar el programa.' }
+  }
+
   try {
     const user = await getUserSchedule(userId)
 

@@ -40,7 +40,7 @@ export function LegalDocument({
         className='mx-auto w-full max-w-6xl px-4 py-12 outline-none md:px-6 md:py-16'
       >
         <div className='flex flex-col gap-10 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:items-start lg:gap-16'>
-          <aside className='print:hidden lg:sticky lg:top-24'>
+          <aside className='lg:sticky lg:top-24 print:hidden'>
             <p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
               En esta página
             </p>
@@ -95,7 +95,7 @@ export function LegalDocument({
             <div
               className={cn(
                 'text-muted-foreground mt-2 max-w-prose text-sm leading-relaxed md:text-base',
-                '[&_section]:scroll-mt-24 [&_section]:border-border [&_section]:border-b [&_section]:py-10 [&_section:last-child]:border-b-0',
+                '[&_section]:border-border [&_section]:scroll-mt-24 [&_section]:border-b [&_section]:py-10 [&_section:last-child]:border-b-0',
                 '[&_h2]:text-foreground [&_h2]:mb-3 [&_h2]:flex [&_h2]:items-baseline [&_h2]:gap-3 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:tracking-tight',
                 '[&_h2_.legal-index]:text-muted-foreground [&_h2_.legal-index]:font-mono [&_h2_.legal-index]:text-xs [&_h2_.legal-index]:font-normal',
                 '[&_h3]:text-foreground [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:text-base [&_h3]:font-semibold',

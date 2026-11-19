@@ -3,12 +3,15 @@ import { Suspense } from 'react'
 import AdminEventsTable from '@/components/admin/adminEventsTable'
 import EventCreateDialogButton from '@/components/admin/eventCreateDialogButton'
 import { getAllLocations } from '@/queries/select'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Administrar Eventos | Pastoral Digital App',
 }
 
 export default async function Page() {
+  await requirePermission(Permission.EVENTS_MANAGE)
   const locations = await getAllLocations()
 
   return (

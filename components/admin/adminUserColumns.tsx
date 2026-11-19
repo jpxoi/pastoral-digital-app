@@ -8,8 +8,20 @@ import UserCategoryLabel from '../shared/userCategoryLabel'
 import UserScheduleLabel from '../shared/userScheduleLabel'
 import { AdminUserRowActions } from './adminUserRowActions'
 import { formatPhoneNumberIntl } from 'react-phone-number-input'
+import { UserRole } from '@/types'
 
-export const AdminUserColumns: ColumnDef<SelectUser>[] = [
+const roleLabels: Record<UserRole, string> = {
+  [UserRole.MEMBER]: 'Miembro',
+  [UserRole.ADMIN]: 'Admin',
+  [UserRole.SCANNER]: 'Scanner',
+  [UserRole.TEACHER]: 'Docente',
+  [UserRole.COORDINATOR]: 'Coordinador',
+  [UserRole.MANAGER]: 'Encargado de misas',
+}
+
+export const getAdminUserColumns = (
+  canSetRole: boolean
+): ColumnDef<SelectUser>[] => [
   {
     id: 'nombreCompleto',
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
@@ -92,6 +104,14 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
     cell: ({ row }) => <UserCategoryLabel category={row.original.category} />,
   },
   {
+    id: 'role',
+    accessorKey: 'role',
+    header: () => <span className='text-nowrap'>Rol</span>,
+    cell: ({ row }) => (
+      <span className='text-nowrap'>{roleLabels[row.original.role]}</span>
+    ),
+  },
+  {
     id: 'programa',
     accessorKey: 'schedule',
     header: () => <span className='text-nowrap'>Programa</span>,
@@ -99,6 +119,8 @@ export const AdminUserColumns: ColumnDef<SelectUser>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <AdminUserRowActions row={row} />,
+    cell: ({ row }) => (
+      <AdminUserRowActions row={row} canSetRole={canSetRole} />
+    ),
   },
 ]

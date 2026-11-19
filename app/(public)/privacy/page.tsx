@@ -1,8 +1,5 @@
 import { Metadata } from 'next'
-import {
-  LegalDocument,
-  LegalHeading,
-} from '@/components/legal/legal-document'
+import { LegalDocument, LegalHeading } from '@/components/legal/legal-document'
 
 export const metadata: Metadata = {
   title: 'Política de Privacidad | Pastoral Mariana',
@@ -85,12 +82,11 @@ export default function PrivacyPolicyPage() {
         <ul>
           <li>
             <strong>Cookies esenciales:</strong> necesarias para el
-            funcionamiento básico de la aplicación y no pueden ser
-            desactivadas.
+            funcionamiento básico de la aplicación y no pueden ser desactivadas.
           </li>
           <li>
-            <strong>Cookies funcionales:</strong> para recordar sus
-            preferencias y personalizar su experiencia.
+            <strong>Cookies funcionales:</strong> para recordar sus preferencias
+            y personalizar su experiencia.
           </li>
           <li>
             <strong>Cookies analíticas:</strong> para entender cómo se utiliza
@@ -98,8 +94,8 @@ export default function PrivacyPolicyPage() {
           </li>
         </ul>
         <p>
-          Puede configurar su navegador para rechazar todas o algunas cookies,
-          o para alertarle cuando los sitios web configuran o acceden a las
+          Puede configurar su navegador para rechazar todas o algunas cookies, o
+          para alertarle cuando los sitios web configuran o acceden a las
           cookies. Sin embargo, si desactiva o rechaza cookies, algunas partes
           de nuestra aplicación podrían no funcionar correctamente.
         </p>
@@ -153,12 +149,9 @@ export default function PrivacyPolicyPage() {
           </li>
           <li>Personalizar su experiencia dentro de la aplicación</li>
           <li>Facilitar la comunicación entre miembros pastorales</li>
+          <li>Enviar notificaciones relevantes sobre actividades pastorales</li>
           <li>
-            Enviar notificaciones relevantes sobre actividades pastorales
-          </li>
-          <li>
-            Realizar análisis y estadísticas anónimas para mejorar la
-            aplicación
+            Realizar análisis y estadísticas anónimas para mejorar la aplicación
           </li>
           <li>
             Detectar, investigar y prevenir actividades fraudulentas y abusos
@@ -208,8 +201,8 @@ export default function PrivacyPolicyPage() {
             sus datos
           </li>
           <li>
-            <strong>Revocación del consentimiento:</strong> derecho a retirar
-            su consentimiento en cualquier momento
+            <strong>Revocación del consentimiento:</strong> derecho a retirar su
+            consentimiento en cualquier momento
           </li>
         </ul>
         <p>
@@ -247,9 +240,7 @@ export default function PrivacyPolicyPage() {
           técnicas y organizativas para proteger su información:
         </p>
         <ul>
-          <li>
-            Encriptación de datos en tránsito mediante protocolos SSL/TLS
-          </li>
+          <li>Encriptación de datos en tránsito mediante protocolos SSL/TLS</li>
           <li>Encriptación de datos en reposo en nuestras bases de datos</li>
           <li>Sistemas de autenticación robustos a través de Clerk</li>
           <li>Auditorías regulares de seguridad y pruebas de penetración</li>
@@ -341,9 +332,7 @@ export default function PrivacyPolicyPage() {
           normativas aplicables en materia de protección de datos, incluyendo:
         </p>
         <ul>
-          <li>
-            Ley de Protección de Datos Personales del Perú (Ley N° 29733)
-          </li>
+          <li>Ley de Protección de Datos Personales del Perú (Ley N° 29733)</li>
           <li>
             Reglamento General de Protección de Datos de la UE (RGPD), cuando
             corresponda

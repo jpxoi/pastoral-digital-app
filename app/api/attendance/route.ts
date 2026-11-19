@@ -1,9 +1,9 @@
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import {
   getAllAttendanceRecords,
   getAttendanceRecordsByEventId,
 } from '@/queries/select'
-import { UserRole } from '@/types'
+import { Permission } from '@/types/permissions'
 import { auth } from '@clerk/nextjs/server'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_VIEW_RECORDS))) {
     return NextResponse.json(
       {
         success: false,

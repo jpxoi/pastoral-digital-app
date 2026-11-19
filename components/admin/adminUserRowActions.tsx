@@ -21,14 +21,15 @@ import { IconCopy, IconPencil, IconQrcode } from '@tabler/icons-react'
 import { IconTrash } from '@tabler/icons-react'
 import { IconDots } from '@tabler/icons-react'
 import { toast } from 'sonner'
-import { UserSchedule } from '@/types'
+import { UserRole, UserSchedule } from '@/types'
 import { SelectUser } from '@/db/schema'
 import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
 import { UserScheduleFilterOptions } from '@/lib/filter'
-import { setUserSchedule } from '@/actions/user'
+import { setUserRole, setUserSchedule } from '@/actions/user'
 
 interface DataTableRowActionsProps {
   row: Row<SelectUser>
+  canSetRole: boolean
 }
 
 const handleSetUserSchedule = async (
@@ -52,7 +53,30 @@ const handleSetUserSchedule = async (
   })
 }
 
-export function AdminUserRowActions({ row }: DataTableRowActionsProps) {
+const handleSetUserRole = async (role: UserRole, userId: SelectUser['id']) => {
+  toast.promise(setUserRole(userId, role), {
+    loading: 'Cambiando rol del catequista...',
+    success: (data: { error?: string; success?: string }) => {
+      if (data.error) throw new Error(data.error)
+      return data.success || 'Rol actualizado.'
+    },
+    error: (error) => error.message || 'Error al cambiar el rol.',
+  })
+}
+
+const roleOptions = [
+  { label: 'Miembro', value: UserRole.MEMBER },
+  { label: 'Scanner', value: UserRole.SCANNER },
+  { label: 'Coordinador', value: UserRole.COORDINATOR },
+  { label: 'Docente', value: UserRole.TEACHER },
+  { label: 'Encargado de misas', value: UserRole.MANAGER },
+  { label: 'Admin', value: UserRole.ADMIN },
+]
+
+export function AdminUserRowActions({
+  row,
+  canSetRole,
+}: DataTableRowActionsProps) {
   return (
     <div className='flex gap-4' key={row.id}>
       <Dialog>
@@ -115,6 +139,27 @@ export function AdminUserRowActions({ row }: DataTableRowActionsProps) {
                 </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
+
+            {canSetRole && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  <IconPencil />
+                  Cambiar rol
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {roleOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() =>
+                        handleSetUserRole(option.value, row.original.id)
+                      }
+                    >
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            )}
 
             <DropdownMenuSeparator />
             <DropdownMenuItem disabled className='text-red-500'>

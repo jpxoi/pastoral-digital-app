@@ -3,7 +3,7 @@
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { Button } from '@/components/ui/button'
 import { FetchEventProps } from '@/types'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Row } from '@tanstack/react-table'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
@@ -15,7 +15,9 @@ const formatEventDate = (date: Date) =>
     in: tz('America/Lima'),
   })
 
-export const AdminEventColumns: ColumnDef<FetchEventProps>[] = [
+export const getAdminEventColumns = (
+  canViewAttendance: boolean
+): ColumnDef<FetchEventProps>[] => [
   {
     accessorKey: 'name',
     header: ({ column }) => (
@@ -65,12 +67,18 @@ export const AdminEventColumns: ColumnDef<FetchEventProps>[] = [
       </div>
     ),
   },
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <Button asChild variant='outline' size='sm'>
-        <Link href={`/admin/events/${row.original.id}`}>Ver asistencia</Link>
-      </Button>
-    ),
-  },
+  ...(canViewAttendance
+    ? [
+        {
+          id: 'actions',
+          cell: ({ row }: { row: Row<FetchEventProps> }) => (
+            <Button asChild variant='outline' size='sm'>
+              <Link href={`/admin/events/${row.original.id}`}>
+                Ver asistencia
+              </Link>
+            </Button>
+          ),
+        },
+      ]
+    : []),
 ]

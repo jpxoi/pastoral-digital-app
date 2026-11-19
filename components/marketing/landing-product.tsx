@@ -14,9 +14,7 @@ const chapters = [
   {
     title: 'Asistencias y misas',
     text: 'En el inicio aparecen las llegadas a tiempo, las tardanzas y las faltas, junto al detalle de cada fecha. También se confirma la misa dominical.',
-    visual: (
-      <DashboardSvg className='h-auto w-full drop-shadow-md' />
-    ),
+    visual: <DashboardSvg className='h-auto w-full drop-shadow-md' />,
     wide: true,
   },
   {

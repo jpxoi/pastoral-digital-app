@@ -1,9 +1,6 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import {
-  LegalDocument,
-  LegalHeading,
-} from '@/components/legal/legal-document'
+import { LegalDocument, LegalHeading } from '@/components/legal/legal-document'
 
 export const metadata: Metadata = {
   title: 'Términos y Condiciones | Pastoral Mariana',
@@ -17,7 +14,10 @@ const sections = [
   { id: 'propiedad-intelectual', title: 'Propiedad intelectual' },
   { id: 'uso-aceptable', title: 'Uso aceptable' },
   { id: 'contenido-del-usuario', title: 'Contenido del usuario' },
-  { id: 'limitacion-de-responsabilidad', title: 'Limitación de responsabilidad' },
+  {
+    id: 'limitacion-de-responsabilidad',
+    title: 'Limitación de responsabilidad',
+  },
   { id: 'enlaces-a-terceros', title: 'Enlaces a terceros' },
   { id: 'terminacion-de-acceso', title: 'Terminación de acceso' },
   { id: 'modificaciones', title: 'Modificaciones' },
@@ -42,9 +42,9 @@ export default function TermsAndConditionsPage() {
       <section id='aceptacion-de-terminos'>
         <LegalHeading index={1}>Aceptación de términos</LegalHeading>
         <p>
-          Al acceder o utilizar la aplicación Pastoral Digital App
-          (&quot;la Aplicación&quot;), usted reconoce que ha leído, entendido y
-          acepta estar sujeto a estos Términos y Condiciones, junto con nuestra{' '}
+          Al acceder o utilizar la aplicación Pastoral Digital App (&quot;la
+          Aplicación&quot;), usted reconoce que ha leído, entendido y acepta
+          estar sujeto a estos Términos y Condiciones, junto con nuestra{' '}
           <Link href='/privacy'>Política de Privacidad</Link>.
         </p>
         <p>

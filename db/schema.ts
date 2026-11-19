@@ -31,6 +31,10 @@ export const userCategoryEnum = pgEnum('user_category_enum', [
 export const userRoleEnum = pgEnum('user_role_enum', [
   UserRole.MEMBER,
   UserRole.ADMIN,
+  UserRole.SCANNER,
+  UserRole.TEACHER,
+  UserRole.COORDINATOR,
+  UserRole.MANAGER,
 ])
 
 export const userScheduleEnum = pgEnum('user_schedule_enum', [

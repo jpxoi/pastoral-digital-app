@@ -3,12 +3,16 @@ import { Suspense } from 'react'
 import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
 import { Metadata } from 'next'
 import RevalidateButton from '@/components/shared/revalidateButton'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Registro de Asistencias | Pastoral Digital App',
 }
 
-export default function Page() {
+export default async function Page() {
+  await requirePermission(Permission.ATTENDANCE_VIEW_RECORDS)
+
   return (
     <>
       <div className='flex justify-between gap-2 max-sm:flex-col'>

@@ -7,6 +7,7 @@ import { esPE } from '@/lib/clerk/localizations/es-PE'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import PwaServiceWorker from '@/components/shared/pwaServiceWorker'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -278,6 +279,7 @@ export default function RootLayout({
             captcha: { language: 'es-es' },
           }}
         >
+          <PwaServiceWorker />
           <Toaster
             className='text-left'
             position='top-right'

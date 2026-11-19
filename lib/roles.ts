@@ -1,9 +1,19 @@
 'use server'
 
-import { UserRole } from '@/types'
+import { hasRolePermission } from '@/lib/permissions'
+import { Permission } from '@/types/permissions'
 import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 
-export const checkRole = async (role: UserRole) => {
+export const checkPermission = async (permission: Permission) => {
   const { sessionClaims } = await auth()
-  return sessionClaims?.metadata?.role === role
+  return hasRolePermission(sessionClaims?.metadata?.role, permission)
+}
+
+export const requirePermission = async (permission: Permission) => {
+  const { sessionClaims } = await auth.protect()
+
+  if (!hasRolePermission(sessionClaims?.metadata?.role, permission)) {
+    redirect('/dashboard')
+  }
 }

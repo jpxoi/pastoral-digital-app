@@ -4,12 +4,16 @@ import MassesTable from '@/components/admin/massesTable'
 import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 import ExportToCsvMasses from '@/components/shared/exportToCsvMasses'
 import RevalidateButton from '@/components/shared/revalidateButton'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Administrar Misas | Pastoral Digital App',
 }
 
-export default function Page() {
+export default async function Page() {
+  await requirePermission(Permission.MASSES_MANAGE)
+
   return (
     <>
       <div className='flex justify-between gap-2 max-sm:flex-col'>

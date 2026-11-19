@@ -2,6 +2,8 @@ import { UserRole } from '.'
 
 export {}
 
+declare module '*.css'
+
 declare global {
   interface CustomJwtSessionClaims {
     metadata: {

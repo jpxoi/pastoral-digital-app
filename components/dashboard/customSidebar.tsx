@@ -15,20 +15,30 @@ import Link from 'next/link'
 import { motion } from 'motion/react'
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs'
 import { Skeleton } from '@/components/ui/skeleton'
-import { checkRole } from '@/lib/roles'
-import { UserRole } from '@/types'
+import { checkPermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export function CustomSidebar() {
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [isManager, setIsManager] = useState(false)
+  const [permissions, setPermissions] = useState<Set<Permission>>(new Set())
 
   useEffect(() => {
-    checkRole(UserRole.ADMIN).then((result) => {
-      setIsAdmin(result)
-    })
+    const availablePermissions = [
+      Permission.EVENTS_MANAGE,
+      Permission.ATTENDANCE_SCAN,
+      Permission.ATTENDANCE_VIEW_RECORDS,
+      Permission.ATTENDANCE_VIEW_CALENDAR,
+      Permission.CATECHISTS_VIEW,
+      Permission.MASSES_MANAGE,
+    ]
 
-    checkRole(UserRole.MANAGER).then((result) => {
-      setIsManager(result)
+    Promise.all(
+      availablePermissions.map(async (permission) =>
+        (await checkPermission(permission)) ? permission : null
+      )
+    ).then((results) => {
+      setPermissions(
+        new Set(results.filter((value): value is Permission => value !== null))
+      )
     })
   }, [])
 
@@ -50,33 +60,28 @@ export function CustomSidebar() {
     },
   ]
 
-  const adminLinks = [
+  const eventAdminLinks = [
     {
       label: 'Administrar Eventos',
       href: '/admin/events',
       icon: <IconCalendar className='h-5 w-5 shrink-0 text-neutral-200' />,
     },
-    {
-      label: 'Escanear QR',
-      href: '/admin/scan',
-      icon: <IconQrcode className='h-5 w-5 shrink-0 text-neutral-200' />,
-    },
-    {
-      label: 'Registro de Asistencia',
-      href: '/admin/records',
-      icon: <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />,
-    },
+  ]
+
+  const coordinatorLinks = [
     {
       label: 'Calendario de Asistencia',
       href: '/admin/calendar',
       icon: <IconTable className='h-5 w-5 shrink-0 text-neutral-200' />,
     },
-    {
-      label: 'Administrar Catequistas',
-      href: '/admin/users',
-      icon: <IconUsers className='h-5 w-5 shrink-0 text-neutral-200' />,
-    },
   ]
+
+  const canViewUsers = permissions.has(Permission.CATECHISTS_VIEW)
+  const canViewCalendar = permissions.has(Permission.ATTENDANCE_VIEW_CALENDAR)
+  const canManageEvents = permissions.has(Permission.EVENTS_MANAGE)
+  const canScan = permissions.has(Permission.ATTENDANCE_SCAN)
+  const canViewRecords = permissions.has(Permission.ATTENDANCE_VIEW_RECORDS)
+  const canManageMasses = permissions.has(Permission.MASSES_MANAGE)
 
   const managerLinks = [
     {
@@ -101,14 +106,58 @@ export function CustomSidebar() {
             ))}
             {}
           </div>
-          {isAdmin && (
+          {canManageEvents && (
             <div className='mt-8 flex flex-col gap-2'>
-              {adminLinks.map((link, idx) => (
+              {eventAdminLinks.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
           )}
-          {(isManager || isAdmin) && (
+          {canScan && (
+            <div className='mt-8 flex flex-col gap-2'>
+              <SidebarLink
+                link={{
+                  label: 'Escanear QR',
+                  href: '/admin/scan',
+                  icon: (
+                    <IconQrcode className='h-5 w-5 shrink-0 text-neutral-200' />
+                  ),
+                }}
+              />
+            </div>
+          )}
+          {canViewRecords && (
+            <div className='mt-8 flex flex-col gap-2'>
+              <SidebarLink
+                link={{
+                  label: 'Registro de Asistencia',
+                  href: '/admin/records',
+                  icon: (
+                    <IconListCheck className='h-5 w-5 shrink-0 text-neutral-200' />
+                  ),
+                }}
+              />
+            </div>
+          )}
+          {(canViewCalendar || canViewUsers) && (
+            <div className='mt-8 flex flex-col gap-2'>
+              {coordinatorLinks.map((link, idx) => (
+                <SidebarLink key={idx} link={link} />
+              ))}
+              {canViewUsers && (
+                <SidebarLink
+                  link={{
+                    label: 'Administrar Catequistas',
+                    href: '/admin/users',
+                    icon: (
+                      <IconUsers className='h-5 w-5 shrink-0 text-neutral-200' />
+                    ),
+                  }}
+                />
+              )}
+            </div>
+          )}
+          {canManageMasses && (
             <div className='mt-8 flex flex-col gap-2'>
               {managerLinks.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />

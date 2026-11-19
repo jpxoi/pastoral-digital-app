@@ -1,11 +1,15 @@
 import { Metadata } from 'next'
 import EventsGrid from '@/components/events/eventsGrid'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Eventos | Pastoral Digital App',
 }
 
-export default function Page() {
+export default async function Page() {
+  await requirePermission(Permission.EVENTS_VIEW)
+
   return (
     <>
       <div className='flex flex-col gap-2 text-left'>

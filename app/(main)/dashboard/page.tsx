@@ -3,12 +3,16 @@ import AttendanceSection from '@/components/dashboard/attendanceSection'
 
 import PastoralIdDialog from '@/components/dashboard/pastoralIdDialog'
 import SundayMassDialog from '@/components/dashboard/sundayMassDialog'
+import { requirePermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
   title: 'Inicio | Pastoral Digital App',
 }
 
-export default function PastoralDigitalPage() {
+export default async function PastoralDigitalPage() {
+  await requirePermission(Permission.DASHBOARD_VIEW)
+
   return (
     <div className='flex w-full flex-col items-center justify-start gap-4'>
       <div className='flex w-full justify-between gap-2 text-left max-sm:flex-col sm:items-center'>

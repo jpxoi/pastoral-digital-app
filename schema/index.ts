@@ -126,7 +126,8 @@ export const NewEventFormSchema = z
       context.addIssue({
         code: 'custom',
         path: [missingField],
-        message: 'Completa la fecha y la hora del segundo turno, o déjalas vacías.',
+        message:
+          'Completa la fecha y la hora del segundo turno, o déjalas vacías.',
       })
     }
 

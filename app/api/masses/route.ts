@@ -1,6 +1,6 @@
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import { getAllMasses } from '@/queries/select'
-import { UserRole } from '@/types'
+import { Permission } from '@/types/permissions'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
@@ -16,10 +16,7 @@ export async function GET() {
     )
   }
 
-  if (
-    !(await checkRole(UserRole.ADMIN)) &&
-    !(await checkRole(UserRole.MANAGER))
-  ) {
+  if (!(await checkPermission(Permission.MASSES_MANAGE))) {
     return NextResponse.json(
       {
         success: false,

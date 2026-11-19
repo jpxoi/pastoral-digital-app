@@ -1,4 +1,6 @@
-export default function manifest() {
+import type { MetadataRoute } from 'next'
+
+export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Pastoral Digital App',
     short_name: 'Pastoral Digital',
@@ -6,6 +8,7 @@ export default function manifest() {
       'Pastoral Digital App permite a catequistas de la Pastoral Mariana acceder a su perfil e identificación digital para actividades y reuniones.',
     start_url: '/dashboard',
     id: '/',
+    scope: '/',
     lang: 'es',
     display: 'standalone',
     background_color: '#ffffff',

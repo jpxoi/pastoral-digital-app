@@ -1,12 +1,20 @@
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 import { CustomSidebar } from '@/components/dashboard/customSidebar'
 import { IosInstallPrompt } from '@/components/shared/iosInstallPrompt'
 import OfflineAlert from '@/components/shared/offlineAlert'
 
-export default function Layout({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { sessionClaims } = await auth.protect()
+
+  if (sessionClaims.metadata?.onboardingComplete !== true) {
+    redirect('/onboarding')
+  }
+
   return (
     <div className='mx-auto flex h-screen w-screen flex-1 flex-col overflow-hidden bg-gray-100 md:flex-row'>
       <IosInstallPrompt />

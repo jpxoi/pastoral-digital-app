@@ -47,7 +47,14 @@ export function ScanSvg({ className }: { className?: string }) {
         Apunta al Pastoral ID del catequista
       </text>
 
-      <rect x='24' y={WELL_Y} width='272' height={WELL_H} rx='12' fill='#f1f5f9' />
+      <rect
+        x='24'
+        y={WELL_Y}
+        width='272'
+        height={WELL_H}
+        rx='12'
+        fill='#f1f5f9'
+      />
       <path
         d={[
           `M${x1} ${y1 + CORNER} v${-CORNER} h${CORNER}`,

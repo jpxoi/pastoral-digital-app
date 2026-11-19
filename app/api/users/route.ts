@@ -1,6 +1,6 @@
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import { getAllUsers } from '@/queries/select'
-import { UserRole } from '@/types'
+import { Permission } from '@/types/permissions'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
@@ -16,7 +16,7 @@ export async function GET() {
     )
   }
 
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.CATECHISTS_VIEW))) {
     return NextResponse.json(
       {
         success: false,

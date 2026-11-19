@@ -13,12 +13,12 @@ import {
 import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
 import { updateTag } from 'next/cache'
-import { checkRole } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 import {
   AttendanceRecordMethod,
   AttendanceStatus,
   FetchAttendanceProps,
-  UserRole,
 } from '@/types'
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
@@ -32,7 +32,11 @@ export const registerAttendanceRecord = async (
   error?: string
   lastAttendanceRecord?: FetchAttendanceProps
 }> => {
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (
+    data.method === AttendanceRecordMethod.QR
+      ? !(await checkPermission(Permission.ATTENDANCE_SCAN))
+      : !(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))
+  ) {
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
 
@@ -67,7 +71,7 @@ export const registerAttendanceRecord = async (
 }
 
 export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
 
@@ -94,7 +98,7 @@ export const setAttendanceRecordStatus = async (
   status: AttendanceStatus,
   recordId: SelectAttendance['id']
 ) => {
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
     return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
@@ -118,7 +122,7 @@ export const setAttendanceRecordStatus = async (
 }
 
 export const fillAbsenceRecords = async (eventId: string) => {
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
     return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
@@ -171,7 +175,7 @@ export const fillAbsenceRecords = async (eventId: string) => {
 export const removeAttendanceRecord = async (
   recordId: SelectAttendance['id']
 ) => {
-  if (!(await checkRole(UserRole.ADMIN))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
     return { error: 'No estás autorizado para eliminar asistencias.' }
   }
   return await deleteAttendanceRecord(recordId)

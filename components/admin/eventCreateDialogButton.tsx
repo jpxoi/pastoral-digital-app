@@ -305,10 +305,7 @@ export default function EventCreateDialogButton({
                     <FormLabel className='block w-full text-left'>
                       Ubicación
                     </FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder='Selecciona una ubicación' />
@@ -316,12 +313,12 @@ export default function EventCreateDialogButton({
                       </FormControl>
                       <SelectContent>
                         {locations.map((location) => (
-                            <SelectItem
-                              key={location.id}
-                              value={String(location.id)}
-                            >
-                              {location.name} — {location.address}
-                            </SelectItem>
+                          <SelectItem
+                            key={location.id}
+                            value={String(location.id)}
+                          >
+                            {location.name} — {location.address}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
