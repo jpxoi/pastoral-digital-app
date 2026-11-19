@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
-import { esMX } from '@clerk/localizations'
 import { shadcn } from '@clerk/ui/themes'
+import { esPE } from '@/lib/clerk/localizations/es-PE'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -270,9 +270,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang='es' suppressHydrationWarning>
+    <html lang='es-PE' suppressHydrationWarning>
       <body className={`${poppins.className} antialiased`}>
-        <ClerkProvider localization={esMX} appearance={clerkAppearance}>
+        <ClerkProvider
+          localization={esPE}
+          appearance={{
+            ...clerkAppearance,
+            captcha: { language: 'es-es' },
+          }}
+        >
           <Toaster
             className='text-left'
             position='top-right'
