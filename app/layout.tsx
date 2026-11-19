@@ -7,7 +7,6 @@ import { esPE } from '@/lib/clerk/localizations/es-PE'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { IosInstallPrompt } from '@/components/shared/iosInstallPrompt'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -290,7 +289,6 @@ export default function RootLayout({
           <SpeedInsights />
           <div className='topbar' aria-hidden='true'></div>
           <div className='bottombar' aria-hidden='true'></div>
-          <IosInstallPrompt />
           {children}
         </ClerkProvider>
       </body>
