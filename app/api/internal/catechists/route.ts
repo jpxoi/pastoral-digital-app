@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const totalQuery = db
-      .select({ total: count() })
+      .select({ total: count().as('total') })
       .from(usersTable)
       .as('total_count')
 
