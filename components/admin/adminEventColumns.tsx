@@ -36,7 +36,9 @@ export const AdminEventColumns: ColumnDef<FetchEventProps>[] = [
   {
     id: 'secondTurn',
     accessorKey: 'secondTurnDate',
-    header: () => <span className='text-nowrap'>Segundo turno · Confirmación</span>,
+    header: () => (
+      <span className='text-nowrap'>Segundo turno · Confirmación</span>
+    ),
     cell: ({ row }) => (
       <span className='text-nowrap'>
         {formatEventDate(row.original.secondTurnDate)}
@@ -48,7 +50,9 @@ export const AdminEventColumns: ColumnDef<FetchEventProps>[] = [
     accessorKey: 'endDate',
     header: () => <span className='text-nowrap'>Fin del evento</span>,
     cell: ({ row }) => (
-      <span className='text-nowrap'>{formatEventDate(row.original.endDate)}</span>
+      <span className='text-nowrap'>
+        {formatEventDate(row.original.endDate)}
+      </span>
     ),
   },
   {

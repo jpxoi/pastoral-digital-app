@@ -100,10 +100,7 @@ export default function EventCreateDialogButton({
           </p>
         ) : (
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className='space-y-5'
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
               <FormField
                 control={form.control}
                 name='name'
@@ -175,10 +172,10 @@ export default function EventCreateDialogButton({
                             </TooltipTrigger>
                             <TooltipContent className='max-w-72'>
                               <p>
-                                El primer turno aplica a Comunión y el segundo
-                                a Confirmación. Si ambos ingresos son a la
-                                misma hora, repite aquí la fecha y hora del
-                                primer turno.
+                                El primer turno aplica a Comunión y el segundo a
+                                Confirmación. Si ambos ingresos son a la misma
+                                hora, repite aquí la fecha y hora del primer
+                                turno.
                               </p>
                             </TooltipContent>
                           </Tooltip>
