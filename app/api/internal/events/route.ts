@@ -75,23 +75,25 @@ export async function GET(request: NextRequest) {
     const total = result[0]?.total ?? 0
     const data = result.flatMap(({ event }) =>
       event
-        ? [{
-        eventId: event.eventId,
-        name: event.name,
-        description: event.description,
-        date: event.date,
-        secondTurnDate: event.secondTurnDate,
-        endDate: event.endDate,
-        location: {
-          locationId: event.locationId,
-          name: event.locationName,
-          address: event.locationAddress,
-          city: event.locationCity,
-          postalCode: event.locationPostalCode,
-          country: event.locationCountry,
-          googleMapsUrl: event.locationGoogleMapsUrl,
-        },
-          }]
+        ? [
+            {
+              eventId: event.eventId,
+              name: event.name,
+              description: event.description,
+              date: event.date,
+              secondTurnDate: event.secondTurnDate,
+              endDate: event.endDate,
+              location: {
+                locationId: event.locationId,
+                name: event.locationName,
+                address: event.locationAddress,
+                city: event.locationCity,
+                postalCode: event.locationPostalCode,
+                country: event.locationCountry,
+                googleMapsUrl: event.locationGoogleMapsUrl,
+              },
+            },
+          ]
         : []
     )
 
