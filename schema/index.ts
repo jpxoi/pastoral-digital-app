@@ -85,37 +85,59 @@ export const NewSundayMassFormSchema = z.object({
     .nonempty('El hash del archivo es requerido'),
 })
 
-const localDateTimeSchema = z
+const localDateSchema = z
   .string()
-  .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'Ingresa una fecha y hora válidas.')
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Ingresa una fecha válida.')
   .refine((value) => {
-    const [date, time] = value.split('T')
-    const [year, month, day] = date.split('-').map(Number)
-    const [hours, minutes] = time.split(':').map(Number)
-    const normalized = new Date(Date.UTC(year, month - 1, day, hours, minutes))
+    const [year, month, day] = value.split('-').map(Number)
+    const normalized = new Date(Date.UTC(year, month - 1, day))
 
     return (
       normalized.getUTCFullYear() === year &&
       normalized.getUTCMonth() === month - 1 &&
-      normalized.getUTCDate() === day &&
-      normalized.getUTCHours() === hours &&
-      normalized.getUTCMinutes() === minutes
+      normalized.getUTCDate() === day
     )
-  }, 'Ingresa una fecha y hora válidas.')
+  }, 'Ingresa una fecha válida.')
+
+const localTimeSchema = z
+  .string()
+  .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Ingresa una hora válida.')
 
 export const NewEventFormSchema = z
   .object({
     name: z.string().trim().min(1, 'El nombre del evento es obligatorio.'),
     description: z.string().trim(),
-    firstTurnDate: localDateTimeSchema,
-    secondTurnDate: z.union([z.literal(''), localDateTimeSchema]),
-    endDate: localDateTimeSchema,
-    locationId: z.string().min(1, 'Selecciona una ubicación.'),
+    firstTurnDate: localDateSchema,
+    firstTurnTime: localTimeSchema,
+    secondTurnDate: z.union([z.literal(''), localDateSchema]),
+    secondTurnTime: z.union([z.literal(''), localTimeSchema]),
+    endDate: localDateSchema,
+    endTime: localTimeSchema,
+    locationId: z.string().regex(/^\d+$/, 'Selecciona una ubicación.'),
   })
   .superRefine((values, context) => {
-    const secondTurnDate = values.secondTurnDate || values.firstTurnDate
+    const hasSecondTurnDate = values.secondTurnDate.length > 0
+    const hasSecondTurnTime = values.secondTurnTime.length > 0
 
-    if (secondTurnDate < values.firstTurnDate) {
+    if (hasSecondTurnDate !== hasSecondTurnTime) {
+      const missingField = hasSecondTurnDate
+        ? 'secondTurnTime'
+        : 'secondTurnDate'
+      context.addIssue({
+        code: 'custom',
+        path: [missingField],
+        message: 'Completa la fecha y la hora del segundo turno, o déjalas vacías.',
+      })
+    }
+
+    const firstTurnDateTime = `${values.firstTurnDate}T${values.firstTurnTime}`
+    const secondTurnDateTime =
+      hasSecondTurnDate && hasSecondTurnTime
+        ? `${values.secondTurnDate}T${values.secondTurnTime}`
+        : firstTurnDateTime
+    const endDateTime = `${values.endDate}T${values.endTime}`
+
+    if (secondTurnDateTime < firstTurnDateTime) {
       context.addIssue({
         code: 'custom',
         path: ['secondTurnDate'],
@@ -123,10 +145,10 @@ export const NewEventFormSchema = z
       })
     }
 
-    if (values.endDate < secondTurnDate) {
+    if (endDateTime < secondTurnDateTime) {
       context.addIssue({
         code: 'custom',
-        path: ['endDate'],
+        path: ['endTime'],
         message: 'El fin debe ser posterior o igual al último turno.',
       })
     }

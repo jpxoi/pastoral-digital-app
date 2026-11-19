@@ -22,6 +22,13 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -52,8 +59,11 @@ export default function EventCreateDialogButton({
       name: '',
       description: '',
       firstTurnDate: '',
+      firstTurnTime: '',
       secondTurnDate: '',
+      secondTurnTime: '',
       endDate: '',
+      endTime: '',
       locationId: '',
     },
   })
@@ -85,12 +95,11 @@ export default function EventCreateDialogButton({
           Crear evento
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[90vh] overflow-y-auto sm:max-w-2xl'>
-        <DialogHeader>
+      <DialogContent className='max-h-[90vh] overflow-y-auto text-left sm:max-w-2xl'>
+        <DialogHeader className='text-left'>
           <DialogTitle>Crear evento</DialogTitle>
           <DialogDescription>
-            Completa los datos y horarios del evento. Las fechas y horas se
-            interpretan en horario de Perú.
+            Completa los datos del evento y define sus turnos de asistencia.
           </DialogDescription>
         </DialogHeader>
 
@@ -105,8 +114,10 @@ export default function EventCreateDialogButton({
                 control={form.control}
                 name='name'
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre del evento</FormLabel>
+                  <FormItem className='text-left'>
+                    <FormLabel className='block w-full text-left'>
+                      Nombre del evento
+                    </FormLabel>
                     <FormControl>
                       <Input
                         placeholder='Ej. Encuentro de catequesis'
@@ -123,8 +134,10 @@ export default function EventCreateDialogButton({
                 control={form.control}
                 name='description'
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Descripción (opcional)</FormLabel>
+                  <FormItem className='text-left'>
+                    <FormLabel className='block w-full text-left'>
+                      Descripción (opcional)
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder='Detalles del evento'
@@ -137,98 +150,176 @@ export default function EventCreateDialogButton({
                 )}
               />
 
-              <div className='grid gap-4 sm:grid-cols-2'>
-                <FormField
-                  control={form.control}
-                  name='firstTurnDate'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Primer turno · Comunión</FormLabel>
-                      <FormControl>
-                        <Input type='datetime-local' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className='grid gap-5 sm:grid-cols-2'>
+                <section className='space-y-3'>
+                  <div className='flex items-center justify-between gap-3'>
+                    <h3 className='text-sm font-semibold'>Primer turno</h3>
+                    <span className='rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-800'>
+                      Comunión
+                    </span>
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name='firstTurnDate'
+                    render={({ field }) => (
+                      <FormItem className='text-left'>
+                        <FormLabel className='block w-full text-left'>
+                          Fecha
+                        </FormLabel>
+                        <FormControl>
+                          <Input type='date' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='firstTurnTime'
+                    render={({ field }) => (
+                      <FormItem className='text-left'>
+                        <FormLabel className='block w-full text-left'>
+                          Hora
+                        </FormLabel>
+                        <FormControl>
+                          <Input type='time' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
 
-                <FormField
-                  control={form.control}
-                  name='secondTurnDate'
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className='flex items-center gap-1.5'>
-                        <FormLabel>Segundo turno · Confirmación</FormLabel>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <button
-                                type='button'
-                                className='text-muted-foreground hover:text-foreground rounded-full'
-                                aria-label='Ayuda sobre los turnos'
-                              >
-                                <IconInfoCircle className='h-4 w-4' />
-                              </button>
-                            </TooltipTrigger>
-                            <TooltipContent className='max-w-72'>
-                              <p>
-                                El primer turno aplica a Comunión y el segundo a
-                                Confirmación. Si ambos ingresos son a la misma
-                                hora, repite aquí la fecha y hora del primer
-                                turno.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <FormControl>
-                        <Input type='datetime-local' {...field} />
-                      </FormControl>
-                      <p className='text-muted-foreground text-sm'>
-                        Déjalo vacío para usar el horario del primer turno.
-                      </p>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <section className='space-y-3'>
+                  <div className='flex items-center justify-between gap-3'>
+                    <div className='flex items-center gap-1.5'>
+                      <h3 className='text-sm font-semibold'>Segundo turno</h3>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button
+                              type='button'
+                              className='text-muted-foreground hover:text-foreground rounded-full'
+                              aria-label='Ayuda sobre los turnos'
+                            >
+                              <IconInfoCircle className='h-4 w-4' />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent className='max-w-72'>
+                            <p>
+                              El primer turno aplica a Comunión y el segundo a
+                              Confirmación. Si ambos ingresos son a la misma
+                              hora, repite aquí la fecha y hora del primer
+                              turno.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <span className='rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-800'>
+                      Confirmación
+                    </span>
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name='secondTurnDate'
+                    render={({ field }) => (
+                      <FormItem className='text-left'>
+                        <FormLabel className='block w-full text-left'>
+                          Fecha
+                        </FormLabel>
+                        <FormControl>
+                          <Input type='date' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='secondTurnTime'
+                    render={({ field }) => (
+                      <FormItem className='text-left'>
+                        <FormLabel className='block w-full text-left'>
+                          Hora
+                        </FormLabel>
+                        <FormControl>
+                          <Input type='time' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <p className='text-muted-foreground text-left text-sm'>
+                    Deja ambos campos vacíos para usar el horario del primer
+                    turno.
+                  </p>
+                </section>
               </div>
 
-              <FormField
-                control={form.control}
-                name='endDate'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Fin del evento</FormLabel>
-                    <FormControl>
-                      <Input type='datetime-local' {...field} />
-                    </FormControl>
-                    <p className='text-muted-foreground text-sm'>
-                      Obligatorio. Para eventos de día completo, indica cuándo
-                      termina el último turno.
-                    </p>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <section className='space-y-3'>
+                <h3 className='text-sm font-semibold'>Fin del evento</h3>
+                <div className='grid gap-4 sm:grid-cols-2'>
+                  <FormField
+                    control={form.control}
+                    name='endDate'
+                    render={({ field }) => (
+                      <FormItem className='text-left'>
+                        <FormLabel className='block w-full text-left'>
+                          Fecha
+                        </FormLabel>
+                        <FormControl>
+                          <Input type='date' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='endTime'
+                    render={({ field }) => (
+                      <FormItem className='text-left'>
+                        <FormLabel className='block w-full text-left'>
+                          Hora
+                        </FormLabel>
+                        <FormControl>
+                          <Input type='time' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </section>
 
               <FormField
                 control={form.control}
                 name='locationId'
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ubicación</FormLabel>
+                  <FormItem className='text-left'>
+                    <FormLabel className='block w-full text-left'>
+                      Ubicación
+                    </FormLabel>
                     <FormControl>
-                      <select
-                        className='border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
-                        {...field}
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
                       >
-                        <option value=''>Selecciona una ubicación</option>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Selecciona una ubicación' />
+                        </SelectTrigger>
+                        <SelectContent>
                         {locations.map((location) => (
-                          <option key={location.id} value={location.id}>
-                            {location.name} · {location.address}
-                          </option>
+                            <SelectItem
+                              key={location.id}
+                              value={String(location.id)}
+                            >
+                              {location.name} — {location.address}
+                            </SelectItem>
                         ))}
-                      </select>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

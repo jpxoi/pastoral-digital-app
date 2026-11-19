@@ -11,7 +11,7 @@ import { IosInstallPrompt } from '@/components/shared/iosInstallPrompt'
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {

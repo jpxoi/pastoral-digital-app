@@ -35,8 +35,16 @@ export async function postNewEvent(formValues: unknown) {
     return { error: 'Revisa los campos del evento e inténtalo nuevamente.' }
   }
 
-  const { name, description, firstTurnDate, secondTurnDate, endDate } =
-    validatedFields.data
+  const {
+    name,
+    description,
+    firstTurnDate,
+    firstTurnTime,
+    secondTurnDate,
+    secondTurnTime,
+    endDate,
+    endTime,
+  } = validatedFields.data
   const locationId = Number(validatedFields.data.locationId)
 
   if (!Number.isSafeInteger(locationId) || locationId < 1) {
@@ -57,9 +65,13 @@ export async function postNewEvent(formValues: unknown) {
     await createEvent({
       name,
       description: description || null,
-      date: toPeruDate(firstTurnDate),
-      secondTurnDate: toPeruDate(secondTurnDate || firstTurnDate),
-      endDate: toPeruDate(endDate),
+      date: toPeruDate(`${firstTurnDate}T${firstTurnTime}`),
+      secondTurnDate: toPeruDate(
+        secondTurnDate && secondTurnTime
+          ? `${secondTurnDate}T${secondTurnTime}`
+          : `${firstTurnDate}T${firstTurnTime}`
+      ),
+      endDate: toPeruDate(`${endDate}T${endTime}`),
       locationId,
     })
 

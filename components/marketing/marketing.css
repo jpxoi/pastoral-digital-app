@@ -1,0 +1,72 @@
+.marketing-root {
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: left;
+  scroll-behavior: smooth;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.topbar {
+  background: white !important;
+}
+
+.bottombar {
+  background: transparent !important;
+}
+
+.marketing-root:focus {
+  outline: none;
+}
+
+.marketing-root ::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marketing-root {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes landing-preview-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-preview-enter {
+    animation: landing-preview-enter 420ms ease-out;
+  }
+
+  .landing-card-motion {
+    transition:
+      translate 200ms ease-out,
+      border-color 200ms ease-out,
+      box-shadow 300ms ease-out;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .landing-card-motion:hover {
+    translate: 0 -2px;
+    border-color: color-mix(in oklch, var(--primary) 28%, var(--border));
+    box-shadow: 0 12px 32px -18px
+      color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+}
+
+@media print {
+  .marketing-root {
+    height: auto;
+    overflow: visible;
+  }
+}
