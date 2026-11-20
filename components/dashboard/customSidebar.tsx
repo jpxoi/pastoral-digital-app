@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useClerk, useUser } from '@clerk/nextjs'
@@ -20,7 +20,6 @@ import {
   IconUsersGroup,
 } from '@tabler/icons-react'
 import { Permission } from '@/types/permissions'
-import { checkPermission } from '@/lib/roles'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -62,32 +61,14 @@ type NavLink = {
   icon: React.JSX.Element
 }
 
-export function CustomSidebar() {
+export function CustomSidebar({
+  permissions: allowedPermissions,
+}: {
+  permissions: readonly Permission[]
+}) {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
-  const [permissions, setPermissions] = useState<Set<Permission>>(new Set())
+  const permissions = new Set(allowedPermissions)
   const pathname = usePathname()
-
-  useEffect(() => {
-    const availablePermissions = [
-      Permission.EVENTS_MANAGE,
-      Permission.ATTENDANCE_SCAN,
-      Permission.ATTENDANCE_VIEW_RECORDS,
-      Permission.ATTENDANCE_VIEW_CALENDAR,
-      Permission.CATECHISTS_VIEW,
-      Permission.CATECHISTS_EDIT_PROGRAM,
-      Permission.MASSES_MANAGE,
-    ]
-
-    Promise.all(
-      availablePermissions.map(async (permission) =>
-        (await checkPermission(permission)) ? permission : null
-      )
-    ).then((results) => {
-      setPermissions(
-        new Set(results.filter((value): value is Permission => value !== null))
-      )
-    })
-  }, [])
 
   const navIconClass = 'size-5 shrink-0'
   const links: NavLink[] = [
