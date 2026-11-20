@@ -9,12 +9,15 @@ import { auth } from '@clerk/nextjs/server'
 import { NeonDbError } from '@neondatabase/serverless'
 import { cacheTags } from '@/lib/cache'
 import { updateTag } from 'next/cache'
-import { TZDate } from '@date-fns/tz'
+import {
+  getMassRegistrationWindow,
+  MASS_REGISTRATION_CLOSED_MESSAGE,
+} from '@/lib/mass-registration'
 import { z } from 'zod'
 import { Permission } from '@/types/permissions'
 import { SundayMassStatus } from '@/types'
 import { after } from 'next/server'
-import { sendUserPush } from '@/lib/push/send'
+import { sendUsersPush } from '@/lib/push/send'
 import { massReviewMessage } from '@/lib/push/payloads'
 
 function notifyMassReview(
@@ -22,22 +25,20 @@ function notifyMassReview(
   accepted: boolean
 ) {
   after(async () => {
-    await Promise.all(
-      records.map(async (record) => {
-        try {
+    try {
+      await sendUsersPush(
+        records.map((record) => {
           const message = massReviewMessage(
             record.id,
             record.sundayDate,
             accepted
           )
-          await sendUserPush(record.userId, message.tag, message)
-        } catch {
-          console.error(
-            'No se pudo enviar la notificación de revisión de misa.'
-          )
-        }
-      })
-    )
+          return { userId: record.userId, key: message.tag, message }
+        })
+      )
+    } catch {
+      console.error('No se pudo enviar la notificación de revisión de misa.')
+    }
   })
 }
 
@@ -59,31 +60,14 @@ export async function postNewMassRecord(
 
   const { parish, evidenceFileKey } = validatedFields.data
 
-  const peruDate = new TZDate(new Date(), 'America/Lima')
-
-  const isValidTimeframe =
-    peruDate.getDay() === 0 || // Sunday
-    (peruDate.getDay() === 1 && peruDate.getHours() < 18) // Monday before 6 PM
-
-  if (!isValidTimeframe)
-    return {
-      error:
-        'El registro de misa solo está disponible los domingos y lunes hasta las 6:00 PM.',
-    }
-
-  if (peruDate.getDay() === 1) {
-    peruDate.setDate(peruDate.getDate() - 1)
-  }
-
-  const year = peruDate.getFullYear()
-  const month = String(peruDate.getMonth() + 1).padStart(2, '0')
-  const day = String(peruDate.getDate()).padStart(2, '0')
+  const window = getMassRegistrationWindow()
+  if (!window.isOpen) return { error: MASS_REGISTRATION_CLOSED_MESSAGE }
 
   return await createSundayMass({
     userId,
     parish,
     evidenceFileKey,
-    sundayDate: `${year}-${month}-${day}`,
+    sundayDate: window.sundayDate,
   })
     .then(() => {
       updateTag(cacheTags.massesList())
@@ -94,6 +78,8 @@ export async function postNewMassRecord(
     })
     .catch((error) => {
       console.error(error)
+      if (!getMassRegistrationWindow().isOpen)
+        return { error: MASS_REGISTRATION_CLOSED_MESSAGE }
       if (error instanceof Error && error.message === 'EVIDENCE_UNAVAILABLE')
         return {
           error:
