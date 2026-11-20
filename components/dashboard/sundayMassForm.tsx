@@ -96,9 +96,14 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
       return files
     }
 
+    const isHeicOrHeif =
+      /\.(heic|heif)$/i.test(file.name) ||
+      /^image\/(heic|heif)(-sequence)?$/i.test(file.type)
+
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 4,
       maxWidthOrHeight: 1920,
+      initialQuality: 0.8,
       useWebWorker: true,
       onProgress: (progress: number) => {
         setOptimizationProgress(progress)
@@ -108,20 +113,56 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
     try {
       setIsOptimizing(true)
 
-      if (
-        file.name.toLowerCase().endsWith('.heic') ||
-        file.name.toLowerCase().endsWith('.heif')
-      ) {
-        const converted = await heic2any({ blob: file, toType: 'image/jpeg' })
-        file = new File(
-          Array.isArray(converted) ? converted : [converted],
-          file.name.replace(/\.[^/.]+$/, '.jpg'),
-          { type: 'image/jpeg' }
-        )
+      if (isHeicOrHeif) {
+        try {
+          const converted = await heic2any({
+            blob: file,
+            toType: 'image/jpeg',
+            quality: 1,
+          })
+          const blob = Array.isArray(converted) ? converted[0] : converted
+          if (!blob || blob.type !== 'image/jpeg' || !blob.size)
+            throw new Error('No se pudo convertir la imagen HEIC/HEIF a JPEG.')
+          file = new File([blob], file.name.replace(/\.[^/.]+$/, '.jpg'), {
+            type: 'image/jpeg',
+            lastModified: file.lastModified,
+          })
+        } catch (error) {
+          // Safari may still decode the original HEIC/HEIF natively.
+          console.error(error)
+        }
       }
 
-      const compressedFile = await imageCompression(file, options)
-      return [compressedFile]
+      const hasCompatibleBase =
+        file.type === 'image/jpeg' || file.type === 'image/webp'
+
+      for (const fileType of ['image/webp', 'image/jpeg']) {
+        try {
+          const compressedFile = await imageCompression(file, {
+            ...options,
+            fileType,
+          })
+
+          // Unsupported encoders can silently return PNG instead.
+          if (compressedFile.type !== fileType) continue
+          if (!compressedFile.size) continue
+          if (compressedFile.size > 4 * 1024 * 1024) continue
+          if (hasCompatibleBase && compressedFile.size >= file.size) continue
+
+          const extension = fileType === 'image/webp' ? 'webp' : 'jpg'
+          const name = `${file.name.replace(/\.[^/.]+$/, '')}.${extension}`
+          return [
+            new File([compressedFile], name, {
+              type: fileType,
+              lastModified: file.lastModified,
+            }),
+          ]
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      return hasCompatibleBase && file.size <= 4 * 1024 * 1024 ? [file] : files
     } catch (error) {
       console.error(error)
       return files
