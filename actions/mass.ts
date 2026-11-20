@@ -95,9 +95,8 @@ export async function postNewMassRecord(
 }
 
 export async function verifyMassRecord(massId: string) {
-  if (!(await checkPermission(Permission.MASSES_REVIEW_RECORDS))) {
+  if (!(await checkPermission(Permission.MASSES_REVIEW_RECORDS)))
     return { error: 'No estás autorizado para verificar misas.' }
-  }
 
   const { userId: verifiedById } = await auth()
 

@@ -24,7 +24,7 @@ export default async function Page() {
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Misas' />} />
       <Suspense fallback={<MassesTableSkeleton />}>
-        <MassesTable canReview={canReview}>
+        <MassesTable>
           <div className='flex flex-wrap items-center gap-2'>
             <RevalidateButton resource='masses' />
             {canReview && (
