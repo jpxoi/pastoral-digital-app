@@ -1,18 +1,11 @@
 import 'server-only'
 import { sendNotification } from 'web-push'
-import { eq, inArray, lt, sql } from 'drizzle-orm'
+import { and, asc, gt, inArray, lt, sql } from 'drizzle-orm'
 import { db } from '@/db/drizzle'
 import { pushDeliveriesTable, pushSubscriptionsTable } from '@/db/schema'
 import type { PushMessage } from './payloads'
 import { buildPushDeliveryReservation } from '@/queries/push'
-
-export type PushSubscriptionRecord = typeof pushSubscriptionsTable.$inferSelect
-export type PushJob = {
-  subscription: PushSubscriptionRecord
-  key: string
-  message: PushMessage
-  ttl: number
-}
+import { buildUserPushJobs, type PushJob, type UserPushMessage } from './jobs'
 
 export function pushIsConfigured() {
   return Boolean(
@@ -80,19 +73,27 @@ export async function sendPushBatch(jobs: PushJob[]) {
     )
   }
 
-  // At most two cleanup queries, only when failures occur; successes keep their claims.
-  await Promise.all([
-    expiredSubscriptions.size
-      ? db
-          .delete(pushSubscriptionsTable)
-          .where(inArray(pushSubscriptionsTable.id, [...expiredSubscriptions]))
-      : Promise.resolve(),
-    failedClaims.length
-      ? db
-          .delete(pushDeliveriesTable)
-          .where(inArray(pushDeliveriesTable.id, failedClaims))
-      : Promise.resolve(),
-  ])
+  // Independent cleanup statements share one HTTP batch; successful claims stay reserved.
+  const cleanups = [
+    ...(expiredSubscriptions.size
+      ? [
+          db
+            .delete(pushSubscriptionsTable)
+            .where(
+              inArray(pushSubscriptionsTable.id, [...expiredSubscriptions])
+            ),
+        ]
+      : []),
+    ...(failedClaims.length
+      ? [
+          db
+            .delete(pushDeliveriesTable)
+            .where(inArray(pushDeliveriesTable.id, failedClaims)),
+        ]
+      : []),
+  ]
+  const [firstCleanup, ...otherCleanups] = cleanups
+  if (firstCleanup) await db.batch([firstCleanup, ...otherCleanups])
   return { failed: failedClaims.length }
 }
 
@@ -102,18 +103,37 @@ export async function sendUserPush(
   message: PushMessage,
   ttl = 3600
 ) {
-  if (!pushIsConfigured()) return { failed: 0 }
-  const subscriptions = await db
-    .select()
-    .from(pushSubscriptionsTable)
-    .where(eq(pushSubscriptionsTable.userId, userId))
-  return sendPushBatch(
-    subscriptions.map((subscription) => ({ subscription, key, message, ttl }))
-  )
+  return sendUsersPush([{ userId, key, message, ttl }])
 }
 
-export async function prunePushDeliveries() {
-  await db
+export async function sendUsersPush(messages: UserPushMessage[]) {
+  if (!messages.length || !pushIsConfigured()) return { failed: 0 }
+  const userIds = [...new Set(messages.map((message) => message.userId))]
+  let cursor: string | undefined
+  let failed = 0
+  while (true) {
+    const subscriptions = await db
+      .select()
+      .from(pushSubscriptionsTable)
+      .where(
+        and(
+          inArray(pushSubscriptionsTable.userId, userIds),
+          cursor ? gt(pushSubscriptionsTable.id, cursor) : undefined
+        )
+      )
+      .orderBy(asc(pushSubscriptionsTable.id))
+      .limit(100)
+    if (!subscriptions.length) break
+    failed += (await sendPushBatch(buildUserPushJobs(subscriptions, messages)))
+      .failed
+    if (subscriptions.length < 100) break
+    cursor = subscriptions[subscriptions.length - 1].id
+  }
+  return { failed }
+}
+
+export function prunePushDeliveries() {
+  return db
     .delete(pushDeliveriesTable)
     .where(lt(pushDeliveriesTable.createdAt, sql`now() - interval '90 days'`))
 }

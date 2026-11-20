@@ -46,26 +46,28 @@ export async function sendScheduledPush(
             )
           )
       : []
-  const birthdays =
+  const [birthdays] =
     kind === 'birthdays'
-      ? await db
-          .select({
-            id: usersTable.id,
-            firstName: usersTable.firstName,
-            lastName: usersTable.lastName,
-          })
-          .from(usersTable)
-          .where(
-            sql`to_char(${usersTable.dateOfBirth}, 'MM-DD') = ${date.slice(5)}`
-          )
-          .orderBy(
-            asc(usersTable.firstName),
-            asc(usersTable.lastName),
-            asc(usersTable.id)
-          )
-      : []
+      ? await db.batch([
+          db
+            .select({
+              id: usersTable.id,
+              firstName: usersTable.firstName,
+              lastName: usersTable.lastName,
+            })
+            .from(usersTable)
+            .where(
+              sql`to_char(${usersTable.dateOfBirth}, 'MM-DD') = ${date.slice(5)}`
+            )
+            .orderBy(
+              asc(usersTable.firstName),
+              asc(usersTable.lastName),
+              asc(usersTable.id)
+            ),
+          prunePushDeliveries(),
+        ])
+      : [[]]
 
-  if (kind === 'birthdays') await prunePushDeliveries()
   if (
     (kind === 'events' && !events.length) ||
     (kind === 'birthdays' && !birthdays.length)
