@@ -211,9 +211,8 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
     form.resetField('evidenceFileKey')
   }
 
-  const handleRemoveEvidence = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    if (!evidence) return
+  const handleRemoveEvidence = async () => {
+    if (!evidence || isPending || isRemoving) return
 
     setIsRemoving(true)
     try {
@@ -381,10 +380,12 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                         </div>
                       </div>
                       <Button
+                        type='button'
                         variant='destructive-ghost'
                         className='shrink-0'
                         size='icon'
-                        onClick={handleRemoveEvidence}
+                        aria-label='Eliminar evidencia'
+                        onClick={() => void handleRemoveEvidence()}
                         disabled={isPending || isRemoving}
                       >
                         <IconTrash size={16} />

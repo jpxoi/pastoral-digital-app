@@ -1,8 +1,19 @@
 'use client'
 
 import { Row } from '@tanstack/react-table'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,73 +90,103 @@ export function AdminAttendanceRowActions({
   canUpdate,
   canDelete,
 }: DataTableRowActionsProps) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
   return (
-    <DropdownMenu key={row.id}>
-      <DropdownMenuTrigger asChild>
-        <Button variant='ghost' className='h-8 w-8 p-0'>
-          <span className='sr-only'>Abrir menu</span>
-          <IconDots className='h-4 w-4' />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
-        <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard
-              .writeText(row.original.id)
-              .then(() =>
-                toast.info(
-                  'El ID de asistencia ha sido copiado al portapapeles'
-                )
-              )
-          }
-        >
-          <IconCopy />
-          Copiar ID de asistencia
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {canUpdate && (
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <IconPencil />
-              Modificar estado
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuRadioGroup
-                value={row.original.status}
-                onValueChange={(value) => {
-                  handleSetAttendanceRecordStatus(
-                    value as AttendanceStatus,
-                    row.original.id
+    <>
+      <DropdownMenu key={row.id}>
+        <DropdownMenuTrigger asChild>
+          <Button variant='ghost' className='h-8 w-8 p-0'>
+            <span className='sr-only'>Abrir menu</span>
+            <IconDots className='h-4 w-4' />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end'>
+          <DropdownMenuItem
+            onClick={() =>
+              navigator.clipboard
+                .writeText(row.original.id)
+                .then(() =>
+                  toast.info(
+                    'El ID de asistencia ha sido copiado al portapapeles'
                   )
-                }}
+                )
+            }
+          >
+            <IconCopy />
+            Copiar ID de asistencia
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          {canUpdate && (
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <IconPencil />
+                Modificar estado
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuRadioGroup
+                  value={row.original.status}
+                  onValueChange={(value) => {
+                    void handleSetAttendanceRecordStatus(
+                      value as AttendanceStatus,
+                      row.original.id
+                    )
+                  }}
+                >
+                  {AttendanceStatusFilterOptions.map((option) => (
+                    <DropdownMenuRadioItem
+                      key={option.value}
+                      value={option.value}
+                      disabled={row.original.status === option.value}
+                    >
+                      <option.icon className='mr-2 size-4' />
+                      {option.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          )}
+          {canDelete && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant='destructive'
+                onSelect={() => setConfirmingDelete(true)}
               >
-                {AttendanceStatusFilterOptions.map((option) => (
-                  <DropdownMenuRadioItem
-                    key={option.value}
-                    value={option.value}
-                    disabled={row.original.status === option.value}
-                  >
-                    <option.icon className='mr-2 size-4' />
-                    {option.label}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
-        )}
-        {canDelete && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant='destructive'
-              onClick={() => handleDeleteAttendanceRecord(row.original.id)}
+                <IconTrash />
+                Eliminar registro
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              ¿Eliminar registro de asistencia?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Se eliminará el registro de asistencia de{' '}
+              {row.original.user.firstName} {row.original.user.lastName}. Esta
+              acción no se puede deshacer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              variant='destructive-solid'
+              onClick={() => {
+                if (canDelete) {
+                  void handleDeleteAttendanceRecord(row.original.id)
+                }
+              }}
             >
-              <IconTrash />
               Eliminar registro
-            </DropdownMenuItem>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

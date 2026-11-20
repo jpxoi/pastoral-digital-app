@@ -1,6 +1,6 @@
 'use server'
 
-import { auth, clerkClient } from '@clerk/nextjs/server'
+import { auth, clerkClient, currentUser } from '@clerk/nextjs/server'
 import { createUser } from '@/queries/insert'
 import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
@@ -18,11 +18,35 @@ import { updateUserRole } from '@/queries/update'
 import { hasRolePermission } from '@/lib/permissions'
 
 export const registerUser = async (
-  values: z.infer<typeof OnboardingFormSchema>
+  values: Omit<z.infer<typeof OnboardingFormSchema>, 'email'>
 ) => {
   const { userId } = await auth()
   if (!userId) return { error: 'No se encontró el usuario autenticado.' }
-  const validatedFields = OnboardingFormSchema.safeParse(values)
+
+  let email: string | undefined
+  try {
+    const account = await currentUser()
+    email = account?.primaryEmailAddress?.emailAddress
+  } catch (error) {
+    console.error('Failed to fetch Clerk account during onboarding', {
+      userId,
+      error,
+    })
+    return {
+      error: 'No se pudo completar el registro. Intenta nuevamente.',
+    }
+  }
+  if (!email) {
+    console.error('Clerk account has no primary email during onboarding', {
+      userId,
+    })
+    return { error: 'No se pudo completar el registro. Intenta nuevamente.' }
+  }
+  const validatedFields = OnboardingFormSchema.safeParse({
+    ...values,
+    id: userId,
+    email,
+  })
 
   if (!validatedFields.success) {
     return {
@@ -240,7 +264,7 @@ export async function removeCatechist(targetUserId: string) {
     }
     return {
       success:
-        'Cuenta eliminada. La limpieza de sus datos se completará mediante el webhook.',
+        'Cuenta eliminada correctamente. Sus datos se actualizarán en breve.',
     }
   } catch (error) {
     console.error('Could not delete catechist', error)

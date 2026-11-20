@@ -83,7 +83,11 @@ export function AdminUserRowActions({
   const [editingAssignments, setEditingAssignments] = useState(false)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null)
   const parsedRole = parseUserRole(row.original.role)
+  const selectedRoleLabel = UserRoleFilterOptions.find(
+    (option) => option.value === selectedRole
+  )?.label
   return (
     <div className='flex gap-4' key={row.id}>
       <Dialog>
@@ -145,7 +149,7 @@ export function AdminUserRowActions({
                   <DropdownMenuRadioGroup
                     value={parsedRole ?? ''}
                     onValueChange={(value) =>
-                      handleSetUserRole(value as UserRole, row.original.id)
+                      setSelectedRole(value as UserRole)
                     }
                   >
                     {UserRoleFilterOptions.map((option) => (
@@ -189,6 +193,37 @@ export function AdminUserRowActions({
           />
         </DialogContent>
       </Dialog>
+      {canSetRole && (
+        <AlertDialog
+          open={selectedRole !== null}
+          onOpenChange={(open) => {
+            if (!open) setSelectedRole(null)
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>¿Cambiar rol del catequista?</AlertDialogTitle>
+              <AlertDialogDescription>
+                El rol de {row.original.firstName} {row.original.lastName}{' '}
+                cambiará a {selectedRoleLabel}. Esto modificará sus permisos de
+                acceso en la aplicación.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  if (selectedRole) {
+                    void handleSetUserRole(selectedRole, row.original.id)
+                  }
+                }}
+              >
+                Cambiar rol
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       {canDelete && (
         <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
           <AlertDialogContent>
