@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { TZDate } from '@date-fns/tz'
+import { connection } from 'next/server'
 import { and, eq } from 'drizzle-orm'
 import { db } from '@/db/drizzle'
 import { sundayMassesTable } from '@/db/schema'
@@ -11,6 +12,7 @@ export default async function MassRegistration({
 }: {
   searchParams: Promise<{ register?: string | string[] }>
 }) {
+  await connection()
   const { userId } = await auth()
   if (!userId) return null
   const now = new TZDate(new Date(), 'America/Lima')
