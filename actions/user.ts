@@ -18,6 +18,8 @@ import { updateUserRole } from '@/queries/update'
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
 ) => {
+  const { userId } = await auth()
+  if (!userId) return { error: 'No se encontró el usuario autenticado.' }
   const validatedFields = OnboardingFormSchema.safeParse(values)
 
   if (!validatedFields.success) {
@@ -29,12 +31,15 @@ export const registerUser = async (
 
   return await createUser({
     ...validatedFields.data,
+    id: userId,
     dateOfBirth: validatedFields.data.dateOfBirth,
   })
-    .then(async () => {
+    .then(async (savedUser) => {
+      updateTag('users')
       const onboardingResult = await completeOnboarding(
         validatedFields.data.firstName,
-        validatedFields.data.lastName
+        validatedFields.data.lastName,
+        savedUser.role as UserRole
       )
 
       if (onboardingResult.error) {
@@ -53,7 +58,11 @@ export const registerUser = async (
     })
 }
 
-const completeOnboarding = async (firstName: string, lastName: string) => {
+const completeOnboarding = async (
+  firstName: string,
+  lastName: string,
+  role: UserRole
+) => {
   const { userId } = await auth()
 
   if (!userId) {
@@ -65,7 +74,7 @@ const completeOnboarding = async (firstName: string, lastName: string) => {
   try {
     await client.users.updateUser(userId, {
       publicMetadata: {
-        role: UserRole.MEMBER,
+        role,
         onboardingComplete: true,
       },
       firstName,

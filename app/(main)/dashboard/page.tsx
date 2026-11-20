@@ -17,9 +17,9 @@ export default async function PastoralDigitalPage() {
   await requirePermission(Permission.DASHBOARD_VIEW)
 
   return (
-    <div className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
+    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
       <PageHeader />
-      <div className='flex w-full flex-col gap-4 pb-2 sm:flex-row sm:items-center sm:justify-between'>
+      <div className='flex w-full flex-row items-center justify-between gap-4 pb-2'>
         <div className='min-w-0 flex-1'>
           <Salutation />
         </div>

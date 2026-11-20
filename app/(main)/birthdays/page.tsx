@@ -15,7 +15,7 @@ export default async function Page() {
   await requirePermission(Permission.BIRTHDAYS_VIEW)
 
   return (
-    <div className='mx-auto flex w-full max-w-[90rem] flex-col gap-6'>
+    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
       <PageHeader breadcrumb={<PageBreadcrumb label='Cumpleaños' />} />
       <Suspense fallback={<BirthdayGridSkeleton />}>
         <BirthdayGrid />

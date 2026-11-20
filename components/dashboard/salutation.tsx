@@ -44,7 +44,7 @@ export default function Salutation() {
   }
 
   return (
-    <h1 className='w-full text-left text-2xl font-semibold break-words sm:text-3xl'>
+    <h1 className='w-full text-left text-xl font-semibold break-words sm:text-2xl'>
       {greeting}
       {firstName ? `, ${firstName}` : ''}
     </h1>

@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: 'Mis misas | Pastoral Digital App' }
 export default async function Page() {
   await requirePermission(Permission.DASHBOARD_VIEW)
   return (
-    <div className='mx-auto flex w-full max-w-[90rem] flex-col gap-6'>
+    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
       <PageHeader breadcrumb={<PageBreadcrumb label='Mis misas' />} />
       <Suspense fallback={<SundayMassTableSkeleton />}>
         <SundayMassTable preview={false} />

@@ -15,7 +15,24 @@ import {
 } from '@/db/schema'
 
 export const createUser = async (data: InsertUser) => {
-  await db.insert(usersTable).values(data)
+  const [user] = await db
+    .insert(usersTable)
+    .values(data)
+    .onConflictDoUpdate({
+      target: usersTable.id,
+      set: {
+        dni: data.dni,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        dateOfBirth: data.dateOfBirth,
+        category: data.category,
+        studentCode: data.studentCode,
+      },
+    })
+    .returning({ role: usersTable.role })
+  return user
 }
 
 export const createUsers = async (data: InsertUser[]) => {

@@ -4,7 +4,7 @@ import AttendanceTableSkeleton from '@/components/dashboard/attendanceTableSkele
 
 export default function Loading() {
   return (
-    <div className='mx-auto flex w-full max-w-[90rem] flex-col gap-6'>
+    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
       <PageHeader breadcrumb={<PageBreadcrumb label='Mis asistencias' />} />
       <AttendanceTableSkeleton />
     </div>
