@@ -10,7 +10,7 @@ const integerQueryParam = z
   .string()
   .regex(/^\d+$/)
   .transform(Number)
-  .pipe(z.number().int().safe())
+  .pipe(z.number().int())
 
 export const paginationSchema = z
   .object({

@@ -1,5 +1,5 @@
 {
-  "id": "093067d9-966a-4caa-9f73-8eb1eecba2e2",
+  "id": "311e2ae5-c629-4d1e-bd82-e7da2f1ab4f8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "uuidv7()"
         },
         "user_id": {
           "name": "user_id",
@@ -143,8 +144,12 @@
           "name": "attendance_records_user_id_users_id_fk",
           "tableFrom": "attendance_records",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -152,8 +157,12 @@
           "name": "attendance_records_event_id_events_id_fk",
           "tableFrom": "attendance_records",
           "tableTo": "events",
-          "columnsFrom": ["event_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -161,8 +170,283 @@
           "name": "attendance_records_registered_by_users_id_fk",
           "tableFrom": "attendance_records",
           "tableTo": "users",
-          "columnsFrom": ["registered_by"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "registered_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.catechist_assignments": {
+      "name": "catechist_assignments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "catechist_assignment_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_id": {
+          "name": "program_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unq_catechist_assignments_user_program": {
+          "name": "unq_catechist_assignments_user_program",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "program_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"catechist_assignments\".\"type\" = 'PROGRAM'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "unq_catechist_assignments_user_service": {
+          "name": "unq_catechist_assignments_user_service",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"catechist_assignments\".\"type\" IN ('COORDINATOR', 'LOGISTICS')",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "catechist_assignments_user_id_users_id_fk": {
+          "name": "catechist_assignments_user_id_users_id_fk",
+          "tableFrom": "catechist_assignments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "catechist_assignments_program_id_programs_id_fk": {
+          "name": "catechist_assignments_program_id_programs_id_fk",
+          "tableFrom": "catechist_assignments",
+          "tableTo": "programs",
+          "columnsFrom": [
+            "program_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "chk_catechist_assignments_program_type": {
+          "name": "chk_catechist_assignments_program_type",
+          "value": "(\"catechist_assignments\".\"type\" = 'PROGRAM' AND \"catechist_assignments\".\"program_id\" IS NOT NULL) OR (\"catechist_assignments\".\"type\" IN ('COORDINATOR', 'LOGISTICS') AND \"catechist_assignments\".\"program_id\" IS NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.catechist_community_assignments": {
+      "name": "catechist_community_assignments",
+      "schema": "",
+      "columns": {
+        "assignment_id": {
+          "name": "assignment_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "community_id": {
+          "name": "community_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "responsibility": {
+          "name": "responsibility",
+          "type": "community_responsibility_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "catechist_community_assignments_assignment_id_catechist_assignments_id_fk": {
+          "name": "catechist_community_assignments_assignment_id_catechist_assignments_id_fk",
+          "tableFrom": "catechist_community_assignments",
+          "tableTo": "catechist_assignments",
+          "columnsFrom": [
+            "assignment_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "catechist_community_assignments_community_id_communities_id_fk": {
+          "name": "catechist_community_assignments_community_id_communities_id_fk",
+          "tableFrom": "catechist_community_assignments",
+          "tableTo": "communities",
+          "columnsFrom": [
+            "community_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.communities": {
+      "name": "communities",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "program_id": {
+          "name": "program_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "unq_communities_program_id_name": {
+          "name": "unq_communities_program_id_name",
+          "columns": [
+            {
+              "expression": "program_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "communities_program_id_programs_id_fk": {
+          "name": "communities_program_id_programs_id_fk",
+          "tableFrom": "communities",
+          "tableTo": "programs",
+          "columnsFrom": [
+            "program_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -181,7 +465,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "uuidv7()"
         },
         "name": {
           "name": "name",
@@ -215,7 +500,7 @@
         },
         "location_id": {
           "name": "location_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -256,8 +541,12 @@
           "name": "events_location_id_locations_id_fk",
           "tableFrom": "events",
           "tableTo": "locations",
-          "columnsFrom": ["location_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -274,20 +563,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": true,
           "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "locations_id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
+          "default": "uuidv7()"
         },
         "name": {
           "name": "name",
@@ -350,6 +629,113 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.mass_evidence_files": {
+      "name": "mass_evidence_files",
+      "schema": "",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hash": {
+          "name": "hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "mass_evidence_state",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'available'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programs": {
+      "name": "programs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "programs_code_unique": {
+          "name": "programs_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.sunday_masses": {
       "name": "sunday_masses",
       "schema": "",
@@ -358,7 +744,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "uuidv7()"
         },
         "user_id": {
           "name": "user_id",
@@ -391,12 +778,13 @@
           "primaryKey": false,
           "notNull": true
         },
-        "verified": {
-          "name": "verified",
-          "type": "boolean",
+        "status": {
+          "name": "status",
+          "type": "sunday_mass_status_enum",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": false
+          "default": "'pending'"
         },
         "verified_by": {
           "name": "verified_by",
@@ -462,11 +850,11 @@
           "method": "btree",
           "with": {}
         },
-        "idx_sunday_masses_verified": {
-          "name": "idx_sunday_masses_verified",
+        "idx_sunday_masses_status": {
+          "name": "idx_sunday_masses_status",
           "columns": [
             {
-              "expression": "verified",
+              "expression": "status",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -483,8 +871,12 @@
           "name": "sunday_masses_user_id_users_id_fk",
           "tableFrom": "sunday_masses",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -492,8 +884,12 @@
           "name": "sunday_masses_verified_by_users_id_fk",
           "tableFrom": "sunday_masses",
           "tableTo": "users",
-          "columnsFrom": ["verified_by"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "verified_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -503,12 +899,16 @@
         "sunday_masses_evidence_file_key_unique": {
           "name": "sunday_masses_evidence_file_key_unique",
           "nullsNotDistinct": false,
-          "columns": ["evidence_file_key"]
+          "columns": [
+            "evidence_file_key"
+          ]
         },
         "sunday_masses_evidence_file_hash_unique": {
           "name": "sunday_masses_evidence_file_hash_unique",
           "nullsNotDistinct": false,
-          "columns": ["evidence_file_hash"]
+          "columns": [
+            "evidence_file_hash"
+          ]
         }
       },
       "policies": {},
@@ -576,8 +976,7 @@
         },
         "role": {
           "name": "role",
-          "type": "user_role_enum",
-          "typeSchema": "public",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "default": "'member'"
@@ -605,14 +1004,33 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "unq_users_dni": {
+          "name": "unq_users_dni",
+          "columns": [
+            {
+              "expression": "dni",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"users\".\"dni\" IS NOT NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       },
       "policies": {},
@@ -624,7 +1042,11 @@
     "public.attendance_record_method_enum": {
       "name": "attendance_record_method_enum",
       "schema": "public",
-      "values": ["manual", "qr", "nfc"]
+      "values": [
+        "manual",
+        "qr",
+        "nfc"
+      ]
     },
     "public.attendance_status_enum": {
       "name": "attendance_status_enum",
@@ -632,21 +1054,56 @@
       "values": [
         "A TIEMPO",
         "TARDANZA",
-        "DOBLE TARDANZA",
         "FALTA JUSTIFICADA",
         "TARDANZA JUSTIFICADA",
         "FALTA INJUSTIFICADA"
       ]
     },
+    "public.catechist_assignment_type_enum": {
+      "name": "catechist_assignment_type_enum",
+      "schema": "public",
+      "values": [
+        "PROGRAM",
+        "COORDINATOR",
+        "LOGISTICS"
+      ]
+    },
+    "public.community_responsibility_enum": {
+      "name": "community_responsibility_enum",
+      "schema": "public",
+      "values": [
+        "GUIDE",
+        "ADVISOR",
+        "SEMILLERO"
+      ]
+    },
+    "public.mass_evidence_state": {
+      "name": "mass_evidence_state",
+      "schema": "public",
+      "values": [
+        "available",
+        "attached",
+        "deleting",
+        "deleted"
+      ]
+    },
+    "public.sunday_mass_status_enum": {
+      "name": "sunday_mass_status_enum",
+      "schema": "public",
+      "values": [
+        "pending",
+        "accepted",
+        "rejected"
+      ]
+    },
     "public.user_category_enum": {
       "name": "user_category_enum",
       "schema": "public",
-      "values": ["student", "alumni", "teacher"]
-    },
-    "public.user_role_enum": {
-      "name": "user_role_enum",
-      "schema": "public",
-      "values": ["member", "admin"]
+      "values": [
+        "student",
+        "alumni",
+        "teacher"
+      ]
     },
     "public.user_schedule_enum": {
       "name": "user_schedule_enum",

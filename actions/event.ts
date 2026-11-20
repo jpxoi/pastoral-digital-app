@@ -46,11 +46,7 @@ export async function postNewEvent(formValues: unknown) {
     endDate,
     endTime,
   } = validatedFields.data
-  const locationId = Number(validatedFields.data.locationId)
-
-  if (!Number.isSafeInteger(locationId) || locationId < 1) {
-    return { error: 'La ubicación seleccionada no es válida.' }
-  }
+  const locationId = validatedFields.data.locationId
 
   try {
     const [location] = await db
@@ -85,7 +81,7 @@ export async function postNewEvent(formValues: unknown) {
 }
 
 const eventDetailsSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   name: z.string().trim().min(1).max(200),
   description: z.string().trim().max(5000),
 })

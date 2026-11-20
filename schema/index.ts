@@ -47,7 +47,7 @@ export const OnboardingFormSchema = z
       .trim()
       .nonempty('El apellido es requerido para crear un usuario.')
       .transform((val) => val.trim()),
-    email: z.string().email('Correo electrónico inválido'),
+    email: z.email('Correo electrónico inválido'),
     phoneNumber: z
       .string()
       .refine(isValidPhoneNumber, 'Número de teléfono inválido'),
@@ -166,7 +166,7 @@ export const NewEventFormSchema = z
     secondTurnTime: z.union([z.literal(''), localTimeSchema]),
     endDate: localDateSchema,
     endTime: localTimeSchema,
-    locationId: z.string().regex(/^\d+$/, 'Selecciona una ubicación.'),
+    locationId: z.uuid('Selecciona una ubicación válida.'),
   })
   .superRefine((values, context) => {
     const hasSecondTurnDate = values.secondTurnDate.length > 0

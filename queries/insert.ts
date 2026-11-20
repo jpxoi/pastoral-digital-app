@@ -1,5 +1,4 @@
 import { sql } from 'drizzle-orm'
-import { v7 as uuidv7 } from 'uuid'
 import { db } from '@/db/drizzle'
 import {
   InsertUser,
@@ -74,8 +73,8 @@ export const createSundayMass = async (
         AND NOT EXISTS (SELECT 1 FROM sunday_masses WHERE evidence_file_key = ${data.evidenceFileKey})
       RETURNING key, hash
     )
-    INSERT INTO sunday_masses (id, user_id, parish, sunday_date, evidence_file_key, evidence_file_hash)
-    SELECT ${uuidv7()}, ${data.userId}, ${data.parish}, ${data.sundayDate}, key, hash FROM evidence
+    INSERT INTO sunday_masses (user_id, parish, sunday_date, evidence_file_key, evidence_file_hash)
+    SELECT ${data.userId}, ${data.parish}, ${data.sundayDate}, key, hash FROM evidence
     RETURNING id
   `)
   if (!result.rows.length) throw new Error('EVIDENCE_UNAVAILABLE')

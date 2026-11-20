@@ -85,7 +85,7 @@ paths:
                     secondTurnDate: '2026-11-22T17:00:00.000Z'
                     endDate: '2026-11-22T19:00:00.000Z'
                     location:
-                      locationId: 1
+                      locationId: 0190abcd-1234-7abc-8def-123456789abc
                       name: Auditorio
                       address: Av. Ejemplo 123
                       city: Trujillo
@@ -196,7 +196,8 @@ components:
         - googleMapsUrl
       properties:
         locationId:
-          type: integer
+          type: string
+          format: uuid
         name:
           type: string
         address:

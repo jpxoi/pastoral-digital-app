@@ -77,7 +77,7 @@ export const registerAttendanceRecord = async (
 }
 
 const qrAttendanceInputSchema = z.object({
-  eventId: z.string().uuid(),
+  eventId: z.uuid(),
   userId: z.string().min(1),
 })
 
