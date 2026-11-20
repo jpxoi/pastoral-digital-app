@@ -67,7 +67,7 @@ export function DataTableToolbar<TData>({
           )}
         </InputGroup>
         <div className='order-3 flex flex-wrap items-center gap-2 md:order-2'>
-          {table.getColumn('role') && (
+          {table.getAllColumns().some((col) => col.id === 'role') && (
             <DataTableFacetedFilter
               column={table.getColumn('role')}
               title='Rol'
