@@ -38,6 +38,7 @@ import { removeFile } from '@/actions/file'
 import { postNewMassRecord } from '@/actions/mass'
 import { ClientUploadedFileData } from 'uploadthing/types'
 import Image from 'next/image'
+import MassRegistrationNotice from './massRegistrationNotice'
 
 interface Evidence {
   key: string
@@ -273,9 +274,10 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
 
   if (isRegistrationClosed)
     return (
-      <p role='status' className='text-muted-foreground text-sm'>
-        El plazo de registro ya terminó. {MASS_REGISTRATION_CLOSED_MESSAGE}
-      </p>
+      <MassRegistrationNotice
+        title='Plazo de registro finalizado'
+        description={MASS_REGISTRATION_CLOSED_MESSAGE}
+      />
     )
 
   return (
