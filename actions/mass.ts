@@ -109,7 +109,7 @@ export async function postNewMassRecord(
 }
 
 export async function verifyMassRecord(massId: string) {
-  if (!(await checkPermission(Permission.MASSES_MANAGE))) {
+  if (!(await checkPermission(Permission.MASSES_REVIEW_RECORDS))) {
     return { error: 'No estás autorizado para verificar misas.' }
   }
 
@@ -148,7 +148,7 @@ export async function verifyMassRecord(massId: string) {
 }
 
 export async function rejectMassRecord(massId: string) {
-  if (!(await checkPermission(Permission.MASSES_MANAGE))) {
+  if (!(await checkPermission(Permission.MASSES_REVIEW_RECORDS))) {
     return { error: 'No estás autorizado para rechazar misas.' }
   }
 

@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     )
   if (
     !(await checkPermission(Permission.CATECHISTS_VIEW)) ||
-    !(await checkPermission(Permission.CATECHISTS_VIEW_PASTORAL_ID))
+    !(await checkPermission(Permission.CATECHISTS_GENERATE_FOTOCHECKS))
   ) {
     return NextResponse.json(
       { error: 'No tienes permiso para generar fotochecks.' },

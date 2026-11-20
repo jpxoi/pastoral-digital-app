@@ -72,35 +72,36 @@ export function CustomSidebar({
 
   const navIconClass = 'size-5 shrink-0'
   const links: NavLink[] = [
-    {
+    permissions.has(Permission.DASHBOARD_VIEW) && {
       label: 'Inicio',
       href: '/dashboard',
       icon: <IconHome2 className={navIconClass} />,
     },
-    {
+    permissions.has(Permission.EVENTS_VIEW) && {
       label: 'Eventos',
       href: '/events',
       icon: <IconCalendar className={navIconClass} />,
     },
-    {
+    permissions.has(Permission.ATTENDANCE_VIEW_OWN) && {
       label: 'Mis asistencias',
       href: '/attendance',
       icon: <IconListCheck className={navIconClass} />,
     },
-    {
+    permissions.has(Permission.MASSES_VIEW_OWN) && {
       label: 'Mis misas',
       href: '/masses',
       icon: <IconBuildingChurch className={navIconClass} />,
     },
-    {
+    permissions.has(Permission.BIRTHDAYS_VIEW) && {
       label: 'Cumpleaños',
       href: '/birthdays',
       icon: <IconCake className={navIconClass} />,
     },
-  ]
+  ].filter((link): link is NavLink => Boolean(link))
 
   const adminLinks = [
-    permissions.has(Permission.EVENTS_MANAGE) && {
+    (permissions.has(Permission.EVENTS_CREATE) ||
+      permissions.has(Permission.EVENTS_EDIT)) && {
       label: 'Administrar Eventos',
       href: '/admin/events',
       icon: <IconCalendar className={navIconClass} />,
@@ -125,12 +126,12 @@ export function CustomSidebar({
       href: '/admin/users',
       icon: <IconUsers className={navIconClass} />,
     },
-    permissions.has(Permission.CATECHISTS_EDIT_PROGRAM) && {
+    permissions.has(Permission.COMMUNITIES_MANAGE) && {
       label: 'Administrar Comunidades',
       href: '/admin/communities',
       icon: <IconUsersGroup className={navIconClass} />,
     },
-    permissions.has(Permission.MASSES_MANAGE) && {
+    permissions.has(Permission.MASSES_VIEW_RECORDS) && {
       label: 'Administrar Misas',
       href: '/admin/masses',
       icon: <IconBuildingChurch className={navIconClass} />,

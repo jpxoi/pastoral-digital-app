@@ -15,6 +15,7 @@ import { cacheTags } from '@/lib/cache'
 import { updateTag } from 'next/cache'
 import { Permission } from '@/types/permissions'
 import { updateUserRole } from '@/queries/update'
+import { hasRolePermission } from '@/lib/permissions'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -106,7 +107,7 @@ export async function setUserAssignments(
   input: unknown,
   userId: SelectUser['id']
 ) {
-  if (!(await checkPermission(Permission.CATECHISTS_EDIT_PROGRAM))) {
+  if (!(await checkPermission(Permission.CATECHISTS_EDIT_ASSIGNMENTS))) {
     return { error: 'No estás autorizado para realizar esta acción.' }
   }
 
@@ -148,7 +149,7 @@ export async function setUserRole(userId: string, role: UserRole) {
     UserRole.SCANNER,
     UserRole.TEACHER,
     UserRole.COORDINATOR,
-    UserRole.MANAGER,
+    UserRole.MASS_MANAGER,
     UserRole.ADMIN,
   ]
 
@@ -212,7 +213,13 @@ export async function setUserRole(userId: string, role: UserRole) {
 
 export async function removeCatechist(targetUserId: string) {
   const { userId, sessionClaims } = await auth()
-  if (!userId || sessionClaims?.metadata?.role !== UserRole.ADMIN) {
+  if (
+    !userId ||
+    !hasRolePermission(
+      sessionClaims?.metadata?.role,
+      Permission.CATECHISTS_DELETE
+    )
+  ) {
     return { error: 'Solo un administrador puede eliminar catequistas.' }
   }
   if (!targetUserId || targetUserId === userId) {

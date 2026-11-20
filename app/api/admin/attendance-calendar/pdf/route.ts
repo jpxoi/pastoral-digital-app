@@ -17,7 +17,7 @@ export async function GET() {
     )
   }
 
-  if (!(await checkPermission(Permission.ATTENDANCE_VIEW_CALENDAR))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_EXPORT_CALENDAR_PDF))) {
     return NextResponse.json(
       { error: 'No tienes permiso para exportar el calendario.' },
       { status: 403 }

@@ -12,7 +12,8 @@ import UserAssignmentBadges from '../shared/userAssignmentBadges'
 import { getAssignmentKey } from '@/lib/assignments'
 import { AdminUserRowActions } from './adminUserRowActions'
 import { formatPhoneNumberIntl } from 'react-phone-number-input'
-import { UserRole } from '@/types'
+import { parseUserRole, UserRole } from '@/types'
+import { filterUserRole } from '@/lib/filter'
 import { Badge, type BadgeProps } from '@/components/ui/badge'
 import {
   IconUser,
@@ -29,7 +30,7 @@ const roleIcons = {
   [UserRole.SCANNER]: IconQrcode,
   [UserRole.TEACHER]: IconSchool,
   [UserRole.COORDINATOR]: IconUsers,
-  [UserRole.MANAGER]: IconCalendar,
+  [UserRole.MASS_MANAGER]: IconCalendar,
 }
 
 const roleVariants: Record<UserRole, BadgeProps['variant']> = {
@@ -38,7 +39,7 @@ const roleVariants: Record<UserRole, BadgeProps['variant']> = {
   [UserRole.SCANNER]: 'sky',
   [UserRole.TEACHER]: 'violet',
   [UserRole.COORDINATOR]: 'emerald',
-  [UserRole.MANAGER]: 'amber',
+  [UserRole.MASS_MANAGER]: 'amber',
 }
 
 const roleLabels: Record<UserRole, string> = {
@@ -47,11 +48,15 @@ const roleLabels: Record<UserRole, string> = {
   [UserRole.SCANNER]: 'Responsable de asistencia',
   [UserRole.TEACHER]: 'Docente',
   [UserRole.COORDINATOR]: 'Coordinador',
-  [UserRole.MANAGER]: 'Encargado de misas',
+  [UserRole.MASS_MANAGER]: 'Encargado de misas',
 }
 
 export const getAdminUserColumns = (
   canSetRole: boolean,
+  canDelete: boolean,
+  canEditAssignments: boolean,
+  canViewPastoralId: boolean,
+  canGenerateFotochecks: boolean,
   catalog: AssignmentCatalog
 ): ColumnDef<UserWithAssignments>[] => [
   {
@@ -138,17 +143,21 @@ export const getAdminUserColumns = (
   {
     id: 'role',
     accessorKey: 'role',
-    filterFn: (row, id, values: string[]) => values.includes(row.getValue(id)),
+    filterFn: (row, id, values: string[]) =>
+      filterUserRole(row.getValue(id), values),
     header: () => <span className='text-nowrap'>Rol</span>,
     cell: ({ row }) => {
-      const Icon = roleIcons[row.original.role]
+      const role = parseUserRole(row.original.role)
+      if (!role) return <Badge variant='slate'>Rol desconocido</Badge>
+
+      const Icon = roleIcons[role]
       return (
         <Badge
-          variant={roleVariants[row.original.role]}
+          variant={roleVariants[role]}
           className='h-8 rounded-lg text-nowrap'
         >
           <Icon className='size-4' />
-          {roleLabels[row.original.role]}
+          {roleLabels[role]}
         </Badge>
       )
     },
@@ -170,6 +179,10 @@ export const getAdminUserColumns = (
       <AdminUserRowActions
         row={row}
         canSetRole={canSetRole}
+        canDelete={canDelete}
+        canEditAssignments={canEditAssignments}
+        canViewPastoralId={canViewPastoralId}
+        canGenerateFotochecks={canGenerateFotochecks}
         catalog={catalog}
       />
     ),

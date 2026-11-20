@@ -6,7 +6,7 @@ import AttendanceCalendarTable from '@/components/admin/attendanceCalendarTable'
 import AttendanceCalendarTableSkeleton from '@/components/admin/attendanceCalendarTableSkeleton'
 import RevalidateButton from '@/components/shared/revalidateButton'
 import ExportAttendanceCalendarPdfButton from '@/components/admin/exportAttendanceCalendarPdfButton'
-import { requirePermission } from '@/lib/roles'
+import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
@@ -15,6 +15,9 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   await requirePermission(Permission.ATTENDANCE_VIEW_CALENDAR)
+  const canExportPdf = await checkPermission(
+    Permission.ATTENDANCE_EXPORT_CALENDAR_PDF
+  )
 
   return (
     <>
@@ -25,7 +28,7 @@ export default async function Page() {
         <AttendanceCalendarTable>
           <div className='flex items-center gap-2'>
             <RevalidateButton resource='calendar' />
-            <ExportAttendanceCalendarPdfButton />
+            {canExportPdf && <ExportAttendanceCalendarPdfButton />}
           </div>
         </AttendanceCalendarTable>
       </Suspense>

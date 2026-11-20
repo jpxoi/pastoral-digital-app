@@ -10,12 +10,16 @@ export default async function AttendanceTable({
   children?: ReactNode
 }) {
   const attendanceRecords = await getAllAttendanceRecords()
-  const canDelete = await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS)
+  const [canUpdate, canDelete] = await Promise.all([
+    checkPermission(Permission.ATTENDANCE_UPDATE_RECORD_STATUS),
+    checkPermission(Permission.ATTENDANCE_DELETE_RECORDS),
+  ])
 
   return (
     <>
       <AttendanceTableClient
         canDelete={canDelete}
+        canUpdate={canUpdate}
         attendanceRecords={attendanceRecords}
       >
         {children}

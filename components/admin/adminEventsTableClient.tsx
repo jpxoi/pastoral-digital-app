@@ -8,16 +8,21 @@ import type { ReactNode } from 'react'
 interface AdminEventsTableClientProps {
   events: FetchEventProps[]
   canViewAttendance: boolean
+  canEditEvents: boolean
   actions?: ReactNode
 }
 
 export default function AdminEventsTableClient({
   events,
   canViewAttendance,
+  canEditEvents,
   actions,
 }: AdminEventsTableClientProps) {
   return (
-    <DataTable columns={getAdminEventColumns(canViewAttendance)} data={events}>
+    <DataTable
+      columns={getAdminEventColumns(canViewAttendance, canEditEvents)}
+      data={events}
+    >
       {actions}
     </DataTable>
   )

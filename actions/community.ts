@@ -19,7 +19,7 @@ const updateSchema = z.object({ id: z.uuid(), name: communityNameSchema })
 
 async function canManageCommunities() {
   const { userId } = await auth()
-  return !!userId && (await checkPermission(Permission.CATECHISTS_EDIT_PROGRAM))
+  return !!userId && (await checkPermission(Permission.COMMUNITIES_MANAGE))
 }
 
 function invalidateCommunities() {

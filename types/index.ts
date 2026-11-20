@@ -46,7 +46,15 @@ export enum UserRole {
   SCANNER = 'scanner',
   TEACHER = 'teacher',
   COORDINATOR = 'coordinator',
-  MANAGER = 'manager',
+  MASS_MANAGER = 'mass_manager',
+}
+
+export function parseUserRole(role: unknown): UserRole | null {
+  if (typeof role !== 'string') return null
+
+  return Object.values(UserRole).includes(role as UserRole)
+    ? (role as UserRole)
+    : null
 }
 
 export enum UserCategory {

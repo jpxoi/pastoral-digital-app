@@ -5,15 +5,18 @@ import { Metadata } from 'next'
 import { Suspense } from 'react'
 import AdminEventsTable from '@/components/admin/adminEventsTable'
 import EventCreateAction from '@/components/admin/eventCreateAction'
-import { requirePermission } from '@/lib/roles'
+import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Administrar eventos',
 }
 
 export default async function Page() {
-  await requirePermission(Permission.EVENTS_MANAGE)
+  const canCreateEvents = await checkPermission(Permission.EVENTS_CREATE)
+  const canEditEvents = await checkPermission(Permission.EVENTS_EDIT)
+  if (!canCreateEvents && !canEditEvents) redirect('/dashboard')
 
   return (
     <>
@@ -25,10 +28,12 @@ export default async function Page() {
           </p>
         }
       >
-        <AdminEventsTable>
-          <Suspense fallback={<Skeleton className='h-9 w-36' />}>
-            <EventCreateAction />
-          </Suspense>
+        <AdminEventsTable canEditEvents={canEditEvents}>
+          {canCreateEvents && (
+            <Suspense fallback={<Skeleton className='h-9 w-36' />}>
+              <EventCreateAction />
+            </Suspense>
+          )}
         </AdminEventsTable>
       </Suspense>
     </>

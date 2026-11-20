@@ -1,11 +1,13 @@
 import { Permission, PERMISSIONS } from '@/types/permissions'
-import { UserRole } from '@/types'
+import { parseUserRole, UserRole } from '@/types'
 
 type RolePermissionMatrix = Readonly<Record<UserRole, readonly Permission[]>>
 
 const basicPermissions = [
   Permission.DASHBOARD_VIEW,
   Permission.EVENTS_VIEW,
+  Permission.ATTENDANCE_VIEW_OWN,
+  Permission.MASSES_VIEW_OWN,
   Permission.BIRTHDAYS_VIEW,
 ]
 
@@ -19,19 +21,30 @@ export const ROLE_PERMISSIONS: RolePermissionMatrix = {
   [UserRole.COORDINATOR]: [
     ...basicPermissions,
     Permission.CATECHISTS_VIEW,
-    Permission.CATECHISTS_EDIT_PROGRAM,
+    Permission.CATECHISTS_EDIT_ASSIGNMENTS,
+    Permission.COMMUNITIES_MANAGE,
     Permission.CATECHISTS_VIEW_PASTORAL_ID,
     Permission.ATTENDANCE_VIEW_CALENDAR,
   ],
   [UserRole.TEACHER]: [
     ...basicPermissions,
     Permission.CATECHISTS_VIEW,
-    Permission.CATECHISTS_EDIT_PROGRAM,
+    Permission.CATECHISTS_EDIT_ASSIGNMENTS,
+    Permission.COMMUNITIES_MANAGE,
     Permission.CATECHISTS_VIEW_PASTORAL_ID,
+    Permission.CATECHISTS_GENERATE_FOTOCHECKS,
     Permission.ATTENDANCE_VIEW_CALENDAR,
-    Permission.EVENTS_MANAGE,
+    Permission.ATTENDANCE_EXPORT_CALENDAR_PDF,
+    Permission.ATTENDANCE_VIEW_RECORDS,
+    Permission.EVENTS_CREATE,
+    Permission.EVENTS_EDIT,
+    Permission.MASSES_VIEW_RECORDS,
   ],
-  [UserRole.MANAGER]: [...basicPermissions, Permission.MASSES_MANAGE],
+  [UserRole.MASS_MANAGER]: [
+    ...basicPermissions,
+    Permission.MASSES_VIEW_RECORDS,
+    Permission.MASSES_REVIEW_RECORDS,
+  ],
   [UserRole.ADMIN]: PERMISSIONS,
 }
 
@@ -47,9 +60,6 @@ export function hasRolePermission(
   role: unknown,
   permission: Permission
 ): boolean {
-  return (
-    typeof role === 'string' &&
-    Object.values(UserRole).includes(role as UserRole) &&
-    hasPermission(role as UserRole, permission)
-  )
+  const parsedRole = parseUserRole(role)
+  return parsedRole ? hasPermission(parsedRole, permission) : false
 }

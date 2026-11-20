@@ -28,7 +28,7 @@ export async function postNewEvent(formValues: unknown) {
 
   if (!userId) return { error: 'Inicia sesión para crear eventos.' }
 
-  if (!(await checkPermission(Permission.EVENTS_MANAGE)))
+  if (!(await checkPermission(Permission.EVENTS_CREATE)))
     return { error: 'No estás autorizado para crear eventos.' }
 
   const validatedFields = NewEventFormSchema.safeParse(formValues)
@@ -89,7 +89,7 @@ const eventDetailsSchema = z.object({
 
 export async function updateEventDetails(values: unknown) {
   const { userId } = await auth()
-  if (!userId || !(await checkPermission(Permission.EVENTS_MANAGE))) {
+  if (!userId || !(await checkPermission(Permission.EVENTS_EDIT))) {
     return { error: 'No estás autorizado para editar eventos.' }
   }
   const parsed = eventDetailsSchema.safeParse(values)

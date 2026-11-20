@@ -16,16 +16,29 @@ export const metadata: Metadata = {
 export default async function Page() {
   await requirePermission(Permission.CATECHISTS_VIEW)
   const canSetRole = await checkPermission(Permission.CATECHISTS_ASSIGN_ROLE)
+  const canDelete = await checkPermission(Permission.CATECHISTS_DELETE)
+  const canEditAssignments = await checkPermission(
+    Permission.CATECHISTS_EDIT_ASSIGNMENTS
+  )
+  const canViewPastoralId = await checkPermission(
+    Permission.CATECHISTS_VIEW_PASTORAL_ID
+  )
 
   const canGenerateFotochecks = await checkPermission(
-    Permission.CATECHISTS_VIEW_PASTORAL_ID
+    Permission.CATECHISTS_GENERATE_FOTOCHECKS
   )
 
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Catequistas' />} />
       <Suspense fallback={<UserTableSkeleton />}>
-        <UsersTable canSetRole={canSetRole}>
+        <UsersTable
+          canSetRole={canSetRole}
+          canDelete={canDelete}
+          canEditAssignments={canEditAssignments}
+          canViewPastoralId={canViewPastoralId}
+          canGenerateFotochecks={canGenerateFotochecks}
+        >
           <div className='flex items-center gap-2'>
             <RevalidateButton resource='users' />
             {canGenerateFotochecks && <GenerateFotochecksButton />}

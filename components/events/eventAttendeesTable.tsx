@@ -9,11 +9,15 @@ export default async function EventAttendeesTable({
   eventId: string
 }) {
   const attendanceRecords = await getAttendanceRecordsByEventId(eventId)
-  const canDelete = await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS)
+  const [canUpdate, canDelete] = await Promise.all([
+    checkPermission(Permission.ATTENDANCE_UPDATE_RECORD_STATUS),
+    checkPermission(Permission.ATTENDANCE_DELETE_RECORDS),
+  ])
 
   return (
     <EventAttendeesTableClient
       canDelete={canDelete}
+      canUpdate={canUpdate}
       attendanceRecords={attendanceRecords}
     />
   )

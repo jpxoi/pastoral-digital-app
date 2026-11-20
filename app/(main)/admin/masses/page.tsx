@@ -5,7 +5,7 @@ import { Metadata } from 'next'
 import MassesTable from '@/components/admin/massesTable'
 import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 import RevalidateButton from '@/components/shared/revalidateButton'
-import { requirePermission } from '@/lib/roles'
+import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import ExportMassesPdfButton from '@/components/admin/exportMassesPdfButton'
 
@@ -14,13 +14,14 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  await requirePermission(Permission.MASSES_MANAGE)
+  await requirePermission(Permission.MASSES_VIEW_RECORDS)
+  const canReview = await checkPermission(Permission.MASSES_REVIEW_RECORDS)
 
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Misas' />} />
       <Suspense fallback={<MassesTableSkeleton />}>
-        <MassesTable>
+        <MassesTable canReview={canReview}>
           <div className='flex flex-wrap items-center gap-2'>
             <RevalidateButton resource='masses' />
             <ExportMassesPdfButton />

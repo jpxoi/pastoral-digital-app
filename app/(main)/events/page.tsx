@@ -12,7 +12,7 @@ export default async function Page() {
   await requirePermission(Permission.EVENTS_VIEW)
 
   return (
-    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
+    <div className='flex w-full flex-col gap-6'>
       <PageHeader />
       <EventsGrid />
     </div>

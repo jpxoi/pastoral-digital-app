@@ -17,7 +17,7 @@ async function CommunitiesTable() {
 }
 
 export default async function Page() {
-  await requirePermission(Permission.CATECHISTS_EDIT_PROGRAM)
+  await requirePermission(Permission.COMMUNITIES_MANAGE)
 
   return (
     <>

@@ -54,7 +54,7 @@ export const registerAttendanceRecord = async (
 }> => {
   if (
     data.method !== AttendanceRecordMethod.MANUAL ||
-    !(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))
+    !(await checkPermission(Permission.ATTENDANCE_CREATE_RECORDS))
   ) {
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
@@ -188,7 +188,7 @@ export const registerQrAttendanceRecord = async (input: unknown) => {
 export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
   if (
     data.some((record) => record.method !== AttendanceRecordMethod.MANUAL) ||
-    !(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))
+    !(await checkPermission(Permission.ATTENDANCE_CREATE_RECORDS))
   ) {
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
@@ -216,7 +216,7 @@ export const setAttendanceRecordStatus = async (
   status: AttendanceStatus,
   recordId: SelectAttendance['id']
 ) => {
-  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_UPDATE_RECORD_STATUS))) {
     return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
@@ -255,7 +255,7 @@ export const setAttendanceRecordStatus = async (
 }
 
 export const fillAbsenceRecords = async (eventId: string) => {
-  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_FILL_ABSENCES))) {
     return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
@@ -308,7 +308,7 @@ export const fillAbsenceRecords = async (eventId: string) => {
 export const removeAttendanceRecord = async (
   recordId: SelectAttendance['id']
 ) => {
-  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
+  if (!(await checkPermission(Permission.ATTENDANCE_DELETE_RECORDS))) {
     return { error: 'No estás autorizado para eliminar asistencias.' }
   }
   return await deleteAttendanceRecord(recordId)

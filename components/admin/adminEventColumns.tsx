@@ -59,7 +59,8 @@ const TurnHeader = ({ title, detail }: { title: string; detail: string }) => (
 )
 
 export const getAdminEventColumns = (
-  canViewAttendance: boolean
+  canViewAttendance: boolean,
+  canEditEvents: boolean
 ): ColumnDef<FetchEventProps>[] => [
   {
     accessorKey: 'name',
@@ -133,8 +134,12 @@ export const getAdminEventColumns = (
       )
     },
   },
-  {
-    id: 'actions',
-    cell: ({ row }) => <EventRowActions event={row.original} />,
-  },
+  ...(canEditEvents
+    ? [
+        {
+          id: 'actions',
+          cell: ({ row }) => <EventRowActions event={row.original} />,
+        } satisfies ColumnDef<FetchEventProps>,
+      ]
+    : []),
 ]

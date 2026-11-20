@@ -16,10 +16,13 @@ const refreshTargets = {
     tag: cacheTags.attendanceList(),
     permission: Permission.ATTENDANCE_VIEW_CALENDAR,
   },
-  masses: { tag: cacheTags.massesList(), permission: Permission.MASSES_MANAGE },
+  masses: {
+    tag: cacheTags.massesList(),
+    permission: Permission.MASSES_VIEW_RECORDS,
+  },
   communities: {
     tag: cacheTags.assignmentCatalog(),
-    permission: Permission.CATECHISTS_EDIT_PROGRAM,
+    permission: Permission.COMMUNITIES_MANAGE,
   },
 } satisfies Record<RefreshResource, { tag: string; permission: Permission }>
 

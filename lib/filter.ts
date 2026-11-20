@@ -1,4 +1,9 @@
-import { AttendanceStatus, UserCategory, UserRole } from '@/types'
+import {
+  AttendanceStatus,
+  parseUserRole,
+  UserCategory,
+  UserRole,
+} from '@/types'
 
 import {
   IconBackpack,
@@ -30,9 +35,26 @@ export const UserRoleFilterOptions = [
   },
   { label: 'Coordinador', value: UserRole.COORDINATOR, icon: IconUsers },
   { label: 'Docente', value: UserRole.TEACHER, icon: IconSchool },
-  { label: 'Encargado de misas', value: UserRole.MANAGER, icon: IconCalendar },
+  {
+    label: 'Encargado de misas',
+    value: UserRole.MASS_MANAGER,
+    icon: IconCalendar,
+  },
   { label: 'Administrador', value: UserRole.ADMIN, icon: IconShield },
 ]
+
+export function filterUserRole(
+  role: unknown,
+  selectedRoles: readonly string[]
+) {
+  const parsedRole = parseUserRole(role)
+  return (
+    parsedRole !== null &&
+    selectedRoles.some(
+      (selectedRole) => parseUserRole(selectedRole) === parsedRole
+    )
+  )
+}
 
 export const UserCategoryFilterOptions = [
   {

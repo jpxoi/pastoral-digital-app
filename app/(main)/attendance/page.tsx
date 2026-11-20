@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  await requirePermission(Permission.DASHBOARD_VIEW)
+  await requirePermission(Permission.ATTENDANCE_VIEW_OWN)
   return (
-    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
+    <div className='flex w-full flex-col gap-6'>
       <PageHeader />
       <Suspense fallback={<AttendanceTableSkeleton />}>
         <AttendanceTable preview={false} />

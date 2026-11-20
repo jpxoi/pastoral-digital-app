@@ -1,16 +1,13 @@
-import { execFileSync } from 'node:child_process'
-import { mkdir, readdir, rm } from 'node:fs/promises'
+import sharp, { type Sharp } from 'sharp'
+import { mkdir, readdir } from 'node:fs/promises'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 type LogoSource = {
   file: string
   maxCssWidth: number
 }
 
-type ImageFormat = 'webp' | 'avif' | 'png'
-
-const projectRoot = fileURLToPath(new URL('../', import.meta.url))
+const projectRoot = process.cwd()
 const sourceDirectory = path.join(projectRoot, 'app/assets/brand')
 const outputDirectory = path.join(projectRoot, 'public/brand/optimized')
 const logos: LogoSource[] = [
@@ -19,87 +16,78 @@ const logos: LogoSource[] = [
 ]
 const scales = [2, 3] as const
 const appIconScales = [4, 6] as const
-const formatOptions: Record<ImageFormat, string[]> = {
-  webp: ['-define', 'webp:method=6', '-quality', '90'],
-  avif: ['-define', 'heic:speed=6', '-quality', '90'],
-  png: [
-    '-define',
-    'png:compression-level=9',
-    '-define',
-    'png:compression-filter=5',
-  ],
+async function generateFormats(image: Sharp, outputBase: string) {
+  await image
+    .clone()
+    .webp({ quality: 90, effort: 6 })
+    .toFile(`${outputBase}.webp`)
+  await image
+    .clone()
+    .avif({ quality: 90, effort: 6 })
+    .toFile(`${outputBase}.avif`)
+  await image
+    .clone()
+    .png({ compressionLevel: 9, adaptiveFiltering: true, palette: false })
+    .toFile(`${outputBase}.png`)
 }
 
-function generateFormats(
-  sourcePath: string,
-  outputBase: string,
-  transforms: string[]
-) {
-  for (const format of Object.keys(formatOptions) as ImageFormat[]) {
-    execFileSync(
-      'magick',
-      [
-        sourcePath,
-        ...transforms,
-        '-strip',
-        ...formatOptions[format],
-        `${outputBase}.${format}`,
-      ],
-      { stdio: 'inherit' }
+async function main() {
+  const availableFiles = new Set(await readdir(sourceDirectory))
+  const requiredFiles = [...logos.map(({ file }) => file), 'logo-icon.png']
+  const missingFiles = requiredFiles.filter((file) => !availableFiles.has(file))
+
+  if (missingFiles.length) {
+    throw new Error(
+      `No se encontraron archivos fuente: ${missingFiles.join(', ')}`
     )
   }
-}
 
-try {
-  execFileSync('magick', ['-version'], { stdio: 'ignore' })
-} catch {
-  console.error('No se encontró ImageMagick. Instálalo para generar los logos.')
-  process.exit(1)
-}
+  await mkdir(outputDirectory, { recursive: true })
 
-const availableFiles = new Set(await readdir(sourceDirectory))
-const requiredFiles = [...logos.map(({ file }) => file), 'logo-icon.png']
-const missingFiles = requiredFiles.filter((file) => !availableFiles.has(file))
+  for (const logo of logos) {
+    const sourcePath = path.join(sourceDirectory, logo.file)
+    const baseName = path.parse(logo.file).name
 
-if (missingFiles.length) {
-  throw new Error(
-    `No se encontraron archivos fuente: ${missingFiles.join(', ')}`
+    for (const scale of scales) {
+      const width = logo.maxCssWidth * scale
+      const outputBase = path.join(outputDirectory, `${baseName}-${width}`)
+
+      await generateFormats(
+        sharp(sourcePath).resize({ width, withoutEnlargement: true }),
+        outputBase
+      )
+    }
+  }
+
+  const appIconSource = path.join(sourceDirectory, 'logo-icon.png')
+  for (const scale of appIconScales) {
+    const size = 24 * scale
+    const contentSize = Math.round(size * 0.8)
+    const outputBase = path.join(outputDirectory, `app-icon-${size}`)
+
+    const icon = await sharp(appIconSource)
+      .resize({ width: contentSize, height: contentSize, fit: 'inside' })
+      .png()
+      .toBuffer()
+    await generateFormats(
+      sharp({
+        create: {
+          width: size,
+          height: size,
+          channels: 4,
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        },
+      }).composite([{ input: icon, gravity: 'centre' }]),
+      outputBase
+    )
+  }
+
+  console.log(
+    `Logos optimizados generados en ${path.relative(projectRoot, outputDirectory)}`
   )
 }
 
-await rm(outputDirectory, { recursive: true, force: true })
-await mkdir(outputDirectory, { recursive: true })
-
-for (const logo of logos) {
-  const sourcePath = path.join(sourceDirectory, logo.file)
-  const baseName = path.parse(logo.file).name
-
-  for (const scale of scales) {
-    const width = logo.maxCssWidth * scale
-    const outputBase = path.join(outputDirectory, `${baseName}-${width}`)
-
-    generateFormats(sourcePath, outputBase, ['-resize', `${width}x>`])
-  }
-}
-
-const appIconSource = path.join(sourceDirectory, 'logo-icon.png')
-for (const scale of appIconScales) {
-  const size = 24 * scale
-  const contentSize = Math.round(size * 0.8)
-  const outputBase = path.join(outputDirectory, `app-icon-${size}`)
-
-  generateFormats(appIconSource, outputBase, [
-    '-resize',
-    `${contentSize}x${contentSize}`,
-    '-background',
-    'none',
-    '-gravity',
-    'center',
-    '-extent',
-    `${size}x${size}`,
-  ])
-}
-
-console.log(
-  `Logos optimizados generados en ${path.relative(projectRoot, outputDirectory)}`
-)
+main().catch((error: unknown) => {
+  console.error(error)
+  process.exitCode = 1
+})

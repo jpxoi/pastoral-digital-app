@@ -5,8 +5,10 @@ import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export default async function AdminEventsTable({
+  canEditEvents,
   children,
 }: {
+  canEditEvents: boolean
   children?: ReactNode
 }) {
   const events = await getAllEvents()
@@ -18,6 +20,7 @@ export default async function AdminEventsTable({
     <AdminEventsTableClient
       events={events}
       canViewAttendance={canViewAttendance}
+      canEditEvents={canEditEvents}
       actions={children}
     />
   )

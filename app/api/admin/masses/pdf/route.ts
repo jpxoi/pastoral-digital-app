@@ -18,7 +18,7 @@ export async function GET() {
     )
   }
 
-  if (!(await checkPermission(Permission.MASSES_MANAGE))) {
+  if (!(await checkPermission(Permission.MASSES_VIEW_RECORDS))) {
     return NextResponse.json(
       { error: 'No tienes permiso para exportar el reporte de misas.' },
       { status: 403 }

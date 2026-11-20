@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react'
 import { getAllMasses } from '@/queries/select'
 import { DataTable } from '@/components/ui/data-table'
-import { MassesColumns } from '@/components/admin/massesColumns'
+import { getMassesColumns } from '@/components/admin/massesColumns'
 
 export default async function MassesTable({
+  canReview,
   children,
 }: {
+  canReview: boolean
   children?: ReactNode
 }) {
   const massesRecords = await getAllMasses()
@@ -13,7 +15,7 @@ export default async function MassesTable({
   return (
     <>
       <DataTable
-        columns={MassesColumns}
+        columns={getMassesColumns(canReview)}
         data={massesRecords}
         autoResetPageIndex={false}
       >

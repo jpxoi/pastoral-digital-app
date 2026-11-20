@@ -26,7 +26,7 @@ import { IconCopy, IconPencil, IconQrcode } from '@tabler/icons-react'
 import { IconTrash } from '@tabler/icons-react'
 import { IconDots } from '@tabler/icons-react'
 import { toast } from 'sonner'
-import { UserRole } from '@/types'
+import { parseUserRole, UserRole } from '@/types'
 import type {
   AssignmentCatalog,
   UserWithAssignments,
@@ -42,6 +42,10 @@ import { setUserRole, removeCatechist } from '@/actions/user'
 interface DataTableRowActionsProps {
   row: Row<UserWithAssignments>
   canSetRole: boolean
+  canDelete: boolean
+  canEditAssignments: boolean
+  canViewPastoralId: boolean
+  canGenerateFotochecks: boolean
   catalog: AssignmentCatalog
 }
 
@@ -59,10 +63,15 @@ const handleSetUserRole = async (role: UserRole, userId: string) => {
 export function AdminUserRowActions({
   row,
   canSetRole,
+  canDelete,
+  canEditAssignments,
+  canViewPastoralId,
+  canGenerateFotochecks,
   catalog,
 }: DataTableRowActionsProps) {
   const { download, pending } = useFotocheckDownload()
   const [editingAssignments, setEditingAssignments] = useState(false)
+  const parsedRole = parseUserRole(row.original.role)
   return (
     <div className='flex gap-4' key={row.id}>
       <Dialog>
@@ -89,24 +98,30 @@ export function AdminUserRowActions({
               Copiar ID de catequista
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DialogTrigger asChild>
-              <DropdownMenuItem>
-                <IconQrcode />
-                Ver Pastoral ID
+            {canViewPastoralId && (
+              <DialogTrigger asChild>
+                <DropdownMenuItem>
+                  <IconQrcode />
+                  Ver Pastoral ID
+                </DropdownMenuItem>
+              </DialogTrigger>
+            )}
+
+            {canGenerateFotochecks && (
+              <DropdownMenuItem
+                disabled={pending}
+                onSelect={() => void download(row.original.id)}
+              >
+                <IconIdBadge2 /> Generar fotocheck
               </DropdownMenuItem>
-            </DialogTrigger>
+            )}
 
-            <DropdownMenuItem
-              disabled={pending}
-              onSelect={() => void download(row.original.id)}
-            >
-              <IconIdBadge2 /> Generar fotocheck
-            </DropdownMenuItem>
-
-            <DropdownMenuItem onSelect={() => setEditingAssignments(true)}>
-              <IconPencil />
-              Modificar asignaciones
-            </DropdownMenuItem>
+            {canEditAssignments && (
+              <DropdownMenuItem onSelect={() => setEditingAssignments(true)}>
+                <IconPencil />
+                Modificar asignaciones
+              </DropdownMenuItem>
+            )}
 
             {canSetRole && (
               <DropdownMenuSub>
@@ -116,7 +131,7 @@ export function AdminUserRowActions({
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
                   <DropdownMenuRadioGroup
-                    value={row.original.role}
+                    value={parsedRole ?? ''}
                     onValueChange={(value) =>
                       handleSetUserRole(value as UserRole, row.original.id)
                     }
@@ -125,7 +140,7 @@ export function AdminUserRowActions({
                       <DropdownMenuRadioItem
                         key={option.value}
                         value={option.value}
-                        disabled={row.original.role === option.value}
+                        disabled={parsedRole === option.value}
                       >
                         <option.icon className='mr-2 size-4' />
                         {option.label}
@@ -137,7 +152,7 @@ export function AdminUserRowActions({
             )}
 
             <DropdownMenuSeparator />
-            {canSetRole && (
+            {canDelete && (
               <DropdownMenuItem
                 variant='destructive'
                 onSelect={() => {

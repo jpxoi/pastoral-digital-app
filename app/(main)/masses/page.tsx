@@ -14,9 +14,9 @@ export default async function Page({
 }: {
   searchParams: Promise<{ register?: string | string[] }>
 }) {
-  await requirePermission(Permission.DASHBOARD_VIEW)
+  await requirePermission(Permission.MASSES_VIEW_OWN)
   return (
-    <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
+    <div className='flex w-full flex-col gap-6'>
       <PageHeader />
       <Suspense fallback={null}>
         <MassRegistration searchParams={searchParams} />

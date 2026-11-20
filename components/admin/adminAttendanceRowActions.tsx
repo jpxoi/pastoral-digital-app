@@ -29,6 +29,7 @@ import { SelectAttendance } from '@/db/schema'
 
 interface DataTableRowActionsProps {
   row: Row<FetchAttendanceProps>
+  canUpdate: boolean
   canDelete: boolean
 }
 
@@ -75,6 +76,7 @@ const handleDeleteAttendanceRecord = async (
 
 export function AdminAttendanceRowActions({
   row,
+  canUpdate,
   canDelete,
 }: DataTableRowActionsProps) {
   return (
@@ -101,34 +103,36 @@ export function AdminAttendanceRowActions({
           Copiar ID de asistencia
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>
-            <IconPencil />
-            Modificar estado
-          </DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup
-              value={row.original.status}
-              onValueChange={(value) => {
-                handleSetAttendanceRecordStatus(
-                  value as AttendanceStatus,
-                  row.original.id
-                )
-              }}
-            >
-              {AttendanceStatusFilterOptions.map((option) => (
-                <DropdownMenuRadioItem
-                  key={option.value}
-                  value={option.value}
-                  disabled={row.original.status === option.value}
-                >
-                  <option.icon className='mr-2 size-4' />
-                  {option.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        {canUpdate && (
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <IconPencil />
+              Modificar estado
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuRadioGroup
+                value={row.original.status}
+                onValueChange={(value) => {
+                  handleSetAttendanceRecordStatus(
+                    value as AttendanceStatus,
+                    row.original.id
+                  )
+                }}
+              >
+                {AttendanceStatusFilterOptions.map((option) => (
+                  <DropdownMenuRadioItem
+                    key={option.value}
+                    value={option.value}
+                    disabled={row.original.status === option.value}
+                  >
+                    <option.icon className='mr-2 size-4' />
+                    {option.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        )}
         {canDelete && (
           <>
             <DropdownMenuSeparator />

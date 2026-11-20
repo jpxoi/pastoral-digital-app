@@ -80,10 +80,11 @@ export function DataTable<TData, TValue>({
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    globalFilterFn: globalFilterColumnId ? 'includesString' : undefined,
+    globalFilterFn: 'includesString',
     getColumnCanGlobalFilter: globalFilterColumnId
       ? (column: Column<TData, unknown>) => column.id === globalFilterColumnId
-      : undefined,
+      : (column: Column<TData, unknown>) =>
+          'accessorFn' in column.columnDef || 'accessorKey' in column.columnDef,
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),

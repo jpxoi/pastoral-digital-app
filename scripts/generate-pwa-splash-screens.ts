@@ -1,8 +1,14 @@
-import { execFileSync } from 'node:child_process'
-import { access, mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises'
+import sharp from 'sharp'
+import {
+  access,
+  copyFile,
+  mkdir,
+  mkdtemp,
+  rm,
+  writeFile,
+} from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 type Device = {
   name: string
@@ -13,7 +19,7 @@ type Device = {
 
 type Orientation = 'landscape' | 'portrait'
 
-const projectRoot = fileURLToPath(new URL('../', import.meta.url))
+const projectRoot = process.cwd()
 const splashDirectory = path.join(projectRoot, 'public/splash_screens')
 const sourceLogo = path.join(
   projectRoot,
@@ -158,36 +164,17 @@ async function writeSplash(
 ) {
   const { width, height } = getScreenDimensions(device, orientation)
   const file = `${device.name}_${orientation}.png`
-  const svgFile = path.join(tempDirectory, `${file}.svg`)
-  const backgroundFile = path.join(tempDirectory, `${file}-background.png`)
-  const outputFile = path.join(splashDirectory, file)
+  const outputFile = path.join(tempDirectory, file)
   const logoWidth = Math.round(Math.min(width * 0.36, height * 0.55))
 
-  await writeFile(svgFile, renderSvg(artwork, width, height))
-  execFileSync('magick', [svgFile, '-strip', backgroundFile], {
-    stdio: 'inherit',
-  })
-  execFileSync(
-    'magick',
-    [
-      backgroundFile,
-      '(',
-      sourceLogo,
-      '-resize',
-      `${logoWidth}x`,
-      ')',
-      '-gravity',
-      'center',
-      '-composite',
-      '-strip',
-      '-define',
-      'png:compression-level=9',
-      '-define',
-      'png:compression-filter=5',
-      outputFile,
-    ],
-    { stdio: 'inherit' }
-  )
+  const logo = await sharp(sourceLogo)
+    .resize({ width: logoWidth })
+    .png()
+    .toBuffer()
+  await sharp(Buffer.from(renderSvg(artwork, width, height)))
+    .composite([{ input: logo, gravity: 'centre' }])
+    .png({ compressionLevel: 9, adaptiveFiltering: true, palette: false })
+    .toFile(outputFile)
 
   return {
     url: `/splash_screens/${file}`,
@@ -212,14 +199,6 @@ function renderDefinitions(screens: Awaited<ReturnType<typeof writeSplash>>[]) {
 
 async function main() {
   try {
-    execFileSync('magick', ['-version'], { stdio: 'ignore' })
-  } catch {
-    throw new Error(
-      'No se encontró ImageMagick. Instálalo para generar los splash screens.'
-    )
-  }
-
-  try {
     await access(sourceLogo)
   } catch {
     throw new Error(`No se encontró el logo fuente: ${sourceLogo}`)
@@ -231,7 +210,6 @@ async function main() {
   )
 
   try {
-    await rm(splashDirectory, { recursive: true, force: true })
     await mkdir(splashDirectory, { recursive: true })
 
     const screens: Awaited<ReturnType<typeof writeSplash>>[] = []
@@ -248,6 +226,12 @@ async function main() {
       }
     }
 
+    for (const screen of screens) {
+      await copyFile(
+        path.join(tempDirectory, screen.file),
+        path.join(splashDirectory, screen.file)
+      )
+    }
     await writeFile(definitionsFile, renderDefinitions(screens))
   } finally {
     await rm(tempDirectory, { recursive: true, force: true })
@@ -259,4 +243,7 @@ async function main() {
   console.log('Actualizadas las definiciones en lib/pwa/splash-screens.ts')
 }
 
-await main()
+main().catch((error: unknown) => {
+  console.error(error)
+  process.exitCode = 1
+})

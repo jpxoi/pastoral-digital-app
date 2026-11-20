@@ -10,6 +10,7 @@ import { tz } from '@date-fns/tz'
 import { es } from 'date-fns/locale'
 
 export const getEventAttendeesColumns = (
+  canUpdate: boolean,
   canDelete: boolean
 ): ColumnDef<FetchAttendanceProps>[] => [
   {
@@ -80,10 +81,18 @@ export const getEventAttendeesColumns = (
     enableHiding: false,
     enableGlobalFilter: false,
   },
-  {
-    id: 'acciones',
-    cell: ({ row }) => {
-      return <AdminAttendanceRowActions row={row} canDelete={canDelete} />
-    },
-  },
+  ...(canUpdate || canDelete
+    ? [
+        {
+          id: 'acciones',
+          cell: ({ row }) => (
+            <AdminAttendanceRowActions
+              row={row}
+              canUpdate={canUpdate}
+              canDelete={canDelete}
+            />
+          ),
+        } satisfies ColumnDef<FetchAttendanceProps>,
+      ]
+    : []),
 ]

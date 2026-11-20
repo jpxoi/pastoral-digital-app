@@ -85,7 +85,7 @@ export const usersTable = pgTable(
         UserRole.SCANNER,
         UserRole.TEACHER,
         UserRole.COORDINATOR,
-        UserRole.MANAGER,
+        UserRole.MASS_MANAGER,
       ],
     })
       .default(UserRole.MEMBER)

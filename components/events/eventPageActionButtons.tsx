@@ -9,8 +9,11 @@ export default async function EventPageActionButtons({
 }: {
   eventId: string
 }) {
-  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS)))
-    return null
+  const [canCreateRecords, canFillAbsences] = await Promise.all([
+    checkPermission(Permission.ATTENDANCE_CREATE_RECORDS),
+    checkPermission(Permission.ATTENDANCE_FILL_ABSENCES),
+  ])
+  if (!canCreateRecords && !canFillAbsences) return null
 
   const users = await getUsersWithNoAttendanceRecord(eventId)
   if (!users.length) return null
@@ -23,8 +26,10 @@ export default async function EventPageActionButtons({
 
   return (
     <div className='flex w-full items-center justify-end gap-2'>
-      <EventAddRecordButton eventId={eventId} catechists={catechists} />
-      <EventFillAbsenteesButton eventId={eventId} />
+      {canCreateRecords && (
+        <EventAddRecordButton eventId={eventId} catechists={catechists} />
+      )}
+      {canFillAbsences && <EventFillAbsenteesButton eventId={eventId} />}
     </div>
   )
 }

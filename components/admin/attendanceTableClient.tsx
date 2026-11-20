@@ -8,15 +8,17 @@ import type { FetchAttendancePropsWithEvent } from '@/types'
 export default function AttendanceTableClient({
   attendanceRecords,
   canDelete,
+  canUpdate,
   children,
 }: {
   attendanceRecords: FetchAttendancePropsWithEvent[]
   canDelete: boolean
+  canUpdate: boolean
   children?: ReactNode
 }) {
   return (
     <DataTable
-      columns={getAdminAttendanceColumns(canDelete)}
+      columns={getAdminAttendanceColumns(canUpdate, canDelete)}
       data={attendanceRecords}
     >
       {children}
