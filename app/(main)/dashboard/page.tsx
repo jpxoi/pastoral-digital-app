@@ -8,7 +8,7 @@ import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
-  title: 'Inicio | Pastoral Digital App',
+  title: 'Inicio',
 }
 
 export default async function PastoralDigitalPage() {

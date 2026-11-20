@@ -9,7 +9,6 @@ import { shadcn } from '@clerk/ui/themes'
 import { esPE } from '@/lib/clerk/localizations/es-PE'
 import { Toaster } from '@/components/ui/sonner'
 import { Analytics } from '@vercel/analytics/next'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import PwaServiceWorker from '@/components/shared/pwaServiceWorker'
 import { splashScreens } from '@/lib/pwa/splash-screens'
 
@@ -20,13 +19,16 @@ const geist = Geist({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://id.pastoralmarianaps.net.pe'),
-  title: 'Pastoral Digital App',
+  title: {
+    default: 'Pastoral Digital',
+    template: '%s | Pastoral Digital',
+  },
   description:
-    'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
+    'Pastoral Digital App ayuda a catequistas y coordinadores de la Pastoral Mariana a organizar identificaciones, asistencias, misas y eventos desde una sola plataforma.',
   openGraph: {
-    title: 'Pastoral Digital App',
+    title: 'Pastoral Digital App | Gestión para catequistas',
     description:
-      'Pastoral Digital es una plataforma digital para uso interno de la Pastoral Mariana del CEP Nuestra Señora del Perpetuo Socorro',
+      'Pastoral Digital App ayuda a catequistas y coordinadores de la Pastoral Mariana a organizar identificaciones, asistencias, misas y eventos desde una sola plataforma.',
     url: 'https://id.pastoralmarianaps.net.pe',
     siteName: 'Pastoral Digital App',
   },
@@ -77,7 +79,6 @@ export default function RootLayout({
             richColors
           />
           <Analytics />
-          <SpeedInsights />
           <div className='topbar' aria-hidden='true'></div>
           <div className='bottombar' aria-hidden='true'></div>
           <Suspense fallback={<Loading />}>

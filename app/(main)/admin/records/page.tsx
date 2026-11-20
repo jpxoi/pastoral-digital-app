@@ -9,7 +9,7 @@ import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
-  title: 'Registro de Asistencias | Pastoral Digital App',
+  title: 'Registro de asistencias',
 }
 
 export default async function Page() {

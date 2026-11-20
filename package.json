@@ -30,7 +30,6 @@
     "@tanstack/react-table": "^8.21.3",
     "@uploadthing/react": "^7.3.3",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.1.0",
     "@yudiel/react-qr-scanner": "^2.6.0",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",

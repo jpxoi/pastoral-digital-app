@@ -10,7 +10,7 @@ import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
-  title: 'Administrar Catequistas | Pastoral Digital App',
+  title: 'Administrar catequistas',
 }
 
 export default async function Page() {

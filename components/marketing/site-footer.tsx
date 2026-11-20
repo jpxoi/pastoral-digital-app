@@ -94,7 +94,7 @@ export async function SiteFooter() {
                 rel='noopener noreferrer'
                 className='text-foreground underline-offset-4 hover:underline'
               >
-                jpxoi
+                Jean Paul Fernandez
                 <span className='sr-only'> (se abre en una nueva pestaña)</span>
               </a>
             </p>

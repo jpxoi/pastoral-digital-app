@@ -1,27 +1,39 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-function matchesPath(pathname: string, route: string) {
-  return pathname === route || pathname.startsWith(`${route}/`)
-}
+const matchesPath = (pathname: string, route: string) =>
+  pathname === route || pathname.startsWith(`${route}/`)
 
-function isPublicPath(pathname: string) {
-  return (
-    pathname === '/' ||
-    matchesPath(pathname, '/home') ||
-    matchesPath(pathname, '/sign-in') ||
-    matchesPath(pathname, '/sign-up') ||
-    matchesPath(pathname, '/oauth-consent') ||
-    matchesPath(pathname, '/privacy') ||
-    matchesPath(pathname, '/terms')
-  )
-}
+const isLandingPath = (pathname: string) =>
+  pathname === '/' || pathname === '/home'
+
+const isPublicPath = (pathname: string) =>
+  isLandingPath(pathname) ||
+  matchesPath(pathname, '/sign-in') ||
+  matchesPath(pathname, '/sign-up') ||
+  matchesPath(pathname, '/oauth-consent') ||
+  matchesPath(pathname, '/privacy') ||
+  matchesPath(pathname, '/terms')
 
 const isOnboardingPath = (pathname: string) =>
   matchesPath(pathname, '/onboarding')
 
 export default clerkMiddleware(async (auth, req) => {
   const pathname = req.nextUrl.pathname
+
+  if (isLandingPath(pathname)) {
+    const { isAuthenticated, sessionClaims } = await auth()
+
+    if (isAuthenticated) {
+      const destination =
+        sessionClaims?.metadata?.onboardingComplete === true
+          ? '/dashboard'
+          : '/onboarding'
+      return NextResponse.redirect(new URL(destination, req.url))
+    }
+
+    return NextResponse.next()
+  }
 
   if (isPublicPath(pathname)) return NextResponse.next()
 
@@ -30,16 +42,14 @@ export default clerkMiddleware(async (auth, req) => {
   if (!isAuthenticated) return redirectToSignIn({ returnBackUrl: req.url })
 
   if (isOnboardingPath(pathname)) {
-    if (sessionClaims?.metadata?.onboardingComplete === true) {
+    if (sessionClaims?.metadata?.onboardingComplete === true)
       return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
 
     return NextResponse.next()
   }
 
-  if (sessionClaims?.metadata?.onboardingComplete !== true) {
+  if (sessionClaims?.metadata?.onboardingComplete !== true)
     return NextResponse.redirect(new URL('/onboarding', req.url))
-  }
 
   return NextResponse.next()
 })

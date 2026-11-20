@@ -7,7 +7,7 @@ import { Permission } from '@/types/permissions'
 import PageHeader from '@/components/shared/pageHeader'
 
 export const metadata: Metadata = {
-  title: 'Cumpleaños | Pastoral Digital App',
+  title: 'Cumpleaños',
 }
 
 export default async function Page() {

@@ -7,7 +7,7 @@ import AttendanceTableSkeleton from '@/components/dashboard/attendanceTableSkele
 import PageHeader from '@/components/shared/pageHeader'
 
 export const metadata: Metadata = {
-  title: 'Mis asistencias | Pastoral Digital App',
+  title: 'Mis asistencias',
 }
 
 export default async function Page() {

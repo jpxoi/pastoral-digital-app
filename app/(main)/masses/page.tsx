@@ -7,7 +7,7 @@ import SundayMassTableSkeleton from '@/components/dashboard/sundayMassTableSkele
 import PageHeader from '@/components/shared/pageHeader'
 import MassRegistration from '@/components/dashboard/massRegistration'
 
-export const metadata: Metadata = { title: 'Mis misas | Pastoral Digital App' }
+export const metadata: Metadata = { title: 'Mis misas' }
 
 export default async function Page({
   searchParams,

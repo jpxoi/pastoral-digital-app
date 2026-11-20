@@ -141,6 +141,13 @@ body:has([data-browser-chrome='wave']) .topbar {
   background: #07309b;
 }
 
+body:has([data-sidebar='sidebar'][data-mobile='true'][data-state='open'])
+  .topbar,
+body:has([data-sidebar='sidebar'][data-mobile='true'][data-state='open'])
+  .bottombar {
+  background: var(--primary) !important;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.148 0.004 228.8);

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { PastoralSignature } from '@/components/shared/pastoral-signature'
-import { Button } from '@/components/ui/button'
+import { SiteHeaderAction } from '@/components/marketing/site-header-action'
 
 const nav = [
   { href: '/#la-app', label: 'La app' },
@@ -63,9 +63,7 @@ export function SiteHeader({
           </nav>
         )}
         <div className='ml-auto'>
-          <Button size='sm' asChild>
-            <Link href='/sign-in'>Iniciar sesión</Link>
-          </Button>
+          <SiteHeaderAction />
         </div>
       </div>
     </header>

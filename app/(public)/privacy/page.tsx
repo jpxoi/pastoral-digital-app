@@ -2,23 +2,8 @@ import { Metadata } from 'next'
 import { LegalDocument, LegalHeading } from '@/components/legal/legal-document'
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidad | Pastoral Mariana',
-  description:
-    'Descubra cómo Pastoral Mariana recopila, utiliza y protege sus datos personales. Última actualización: 18 de febrero de 2026.',
+  title: 'Política de privacidad',
 }
-
-const sections = [
-  { id: 'recopilacion-de-datos', title: 'Recopilación de datos' },
-  { id: 'cookies-y-tecnologias', title: 'Cookies y tecnologías' },
-  { id: 'servicios-de-terceros', title: 'Servicios de terceros' },
-  { id: 'uso-de-la-informacion', title: 'Uso de la información' },
-  { id: 'derechos-del-usuario', title: 'Derechos del usuario' },
-  { id: 'menores-de-edad', title: 'Menores de edad' },
-  { id: 'seguridad', title: 'Seguridad' },
-  { id: 'cambios-en-la-politica', title: 'Cambios en la política' },
-  { id: 'contacto', title: 'Contacto' },
-  { id: 'cumplimiento-de-normativas', title: 'Cumplimiento de normativas' },
-]
 
 export default function PrivacyPolicyPage() {
   return (
@@ -32,7 +17,6 @@ export default function PrivacyPolicyPage() {
           protegemos sus datos personales.
         </p>
       }
-      sections={sections}
       related={{ href: '/terms', label: 'los Términos y condiciones' }}
     >
       <section id='recopilacion-de-datos'>

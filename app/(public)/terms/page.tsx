@@ -3,26 +3,8 @@ import { Metadata } from 'next'
 import { LegalDocument, LegalHeading } from '@/components/legal/legal-document'
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones | Pastoral Mariana',
-  description:
-    'Términos y condiciones de uso de la plataforma Pastoral Digital App. Última actualización: 18 de febrero de 2026.',
+  title: 'Términos y condiciones',
 }
-
-const sections = [
-  { id: 'aceptacion-de-terminos', title: 'Aceptación de términos' },
-  { id: 'registro-y-cuentas', title: 'Registro y cuentas' },
-  { id: 'propiedad-intelectual', title: 'Propiedad intelectual' },
-  { id: 'uso-aceptable', title: 'Uso aceptable' },
-  { id: 'contenido-del-usuario', title: 'Contenido del usuario' },
-  {
-    id: 'limitacion-de-responsabilidad',
-    title: 'Limitación de responsabilidad',
-  },
-  { id: 'enlaces-a-terceros', title: 'Enlaces a terceros' },
-  { id: 'terminacion-de-acceso', title: 'Terminación de acceso' },
-  { id: 'modificaciones', title: 'Modificaciones' },
-  { id: 'legislacion-aplicable', title: 'Legislación aplicable' },
-]
 
 export default function TermsAndConditionsPage() {
   return (
@@ -36,7 +18,6 @@ export default function TermsAndConditionsPage() {
           plataforma, aceptas cumplirlos y quedar sujeto a ellos.
         </p>
       }
-      sections={sections}
       related={{ href: '/privacy', label: 'la Política de privacidad' }}
     >
       <section id='aceptacion-de-terminos'>

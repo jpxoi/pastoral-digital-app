@@ -10,7 +10,7 @@ import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
-  title: 'Calendario de Asistencias | Pastoral Digital App',
+  title: 'Calendario de asistencias',
 }
 
 export default async function Page() {

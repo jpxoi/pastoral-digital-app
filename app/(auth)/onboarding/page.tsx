@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import OnboardingForm from '@/components/home/onboardingForm'
 
 export const metadata: Metadata = {
-  title: 'Onboarding | Pastoral Digital App',
+  title: 'Completa tu perfil',
 }
 
 export default async function OnboardingPage() {

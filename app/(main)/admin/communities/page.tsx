@@ -8,7 +8,7 @@ import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
 export const metadata: Metadata = {
-  title: 'Administrar Comunidades | Pastoral Digital App',
+  title: 'Administrar comunidades',
 }
 
 async function CommunitiesTable() {

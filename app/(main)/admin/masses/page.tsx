@@ -10,7 +10,7 @@ import { Permission } from '@/types/permissions'
 import ExportMassesPdfButton from '@/components/admin/exportMassesPdfButton'
 
 export const metadata: Metadata = {
-  title: 'Administrar Misas | Pastoral Digital App',
+  title: 'Administrar misas',
 }
 
 export default async function Page() {
