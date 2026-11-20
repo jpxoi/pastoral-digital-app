@@ -172,7 +172,12 @@ export const getMassesColumns = (
     id: 'massStatus',
     accessorKey: 'status',
     header: () => <span className='text-nowrap'>Estado</span>,
-    cell: ({ row }) => <SundayMassStatusLabel status={row.original.status} />,
+    cell: ({ row }) => (
+      <SundayMassStatusLabel
+        status={row.original.status}
+        verifier={row.original.verifier}
+      />
+    ),
   },
   ...(canReview
     ? [

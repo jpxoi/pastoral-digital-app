@@ -3,7 +3,10 @@ import { desc, eq, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { db } from '@/db/drizzle'
 import { attendanceRecordsTable, eventsTable, usersTable } from '@/db/schema'
-import { generateAttendanceCalendarPdf } from '@/lib/attendance-calendar-pdf'
+import {
+  generateAttendanceCalendarPdf,
+  type AttendanceCalendarPdfPerson,
+} from '@/lib/attendance-calendar-pdf'
 import { buildAttendanceReportFilename } from '@/lib/pdf-filenames'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -66,23 +69,31 @@ export async function GET() {
         .groupBy(attendanceRecordsTable.userId)
     )
 
-    const people = await db
-      .with(calendarEvents, calendarDates, attendanceByUser)
-      .select({
-        userId: usersTable.id,
-        fullName: sql<string>`trim(${usersTable.firstName} || ' ' || ${usersTable.lastName})`,
-        category: usersTable.category,
-        studentCode: usersTable.studentCode,
-        attendance: sql<
-          Record<string, string | null>
-        >`coalesce(${attendanceByUser.attendance}, '{}'::jsonb)`,
-        dateKeys: calendarDates.dateKeys,
-      })
-      .from(usersTable)
+    const reportPeople = db.$with('report_people').as(
+      db
+        .select({
+          people: sql<
+            AttendanceCalendarPdfPerson[]
+          >`coalesce(jsonb_agg(jsonb_build_object(
+          'userId', ${usersTable.id},
+          'fullName', trim(${usersTable.firstName} || ' ' || ${usersTable.lastName}),
+          'category', ${usersTable.category},
+          'studentCode', ${usersTable.studentCode},
+          'attendance', coalesce(${attendanceByUser.attendance}, '{}'::jsonb)
+        )), '[]'::jsonb)`.as('people'),
+        })
+        .from(usersTable)
+        .leftJoin(attendanceByUser, eq(usersTable.id, attendanceByUser.userId))
+    )
+    // Return shared calendar dates once, alongside the aggregated people.
+    const [report] = await db
+      .with(calendarEvents, calendarDates, attendanceByUser, reportPeople)
+      .select({ people: reportPeople.people, dateKeys: calendarDates.dateKeys })
+      .from(reportPeople)
       .crossJoin(calendarDates)
-      .leftJoin(attendanceByUser, eq(usersTable.id, attendanceByUser.userId))
 
-    const dateKeys = people[0]?.dateKeys ?? []
+    const people = report?.people ?? []
+    const dateKeys = report?.dateKeys ?? []
     if (people.length === 0 || dateKeys.length === 0) {
       return NextResponse.json(
         { error: 'No hay asistencias para exportar.' },

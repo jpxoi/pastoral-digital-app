@@ -231,5 +231,19 @@ export async function generateFotocheckPdf(
     })
     cropMarks(sheet, x, top)
   }
+  const pages = pdf.getPages()
+  if (pages.length > 1) {
+    pages.forEach((page, index) => {
+      const label = `Página ${index + 1} de ${pages.length}`
+      const size = 7
+      page.drawText(label, {
+        x: width - mm(10) - regular.widthOfTextAtSize(label, size),
+        y: 18,
+        font: regular,
+        size,
+        color: rgb(0.42, 0.45, 0.44),
+      })
+    })
+  }
   return pdf.save()
 }

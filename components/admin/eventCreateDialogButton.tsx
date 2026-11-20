@@ -31,7 +31,6 @@ import {
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { NewEventFormSchema } from '@/schema'
@@ -199,24 +198,22 @@ export default function EventCreateDialogButton({
                   <div className='flex items-center justify-between gap-3'>
                     <div className='flex items-center gap-1.5'>
                       <h3 className='text-sm font-semibold'>Segundo turno</h3>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button
-                              type='button'
-                              className='text-muted-foreground hover:text-foreground rounded-full'
-                              aria-label='Ayuda sobre los turnos'
-                            >
-                              <IconInfoCircle className='h-4 w-4' />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent className='max-w-72'>
-                            Completa ambos campos para definir un horario
-                            distinto. Déjalos vacíos para usar el horario del
-                            primer turno.
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type='button'
+                            className='text-muted-foreground hover:text-foreground rounded-full'
+                            aria-label='Ayuda sobre los turnos'
+                          >
+                            <IconInfoCircle className='h-4 w-4' />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent className='max-w-72'>
+                          Completa ambos campos para definir un horario
+                          distinto. Déjalos vacíos para usar el horario del
+                          primer turno.
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                     <span className='rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-800'>
                       Confirmación

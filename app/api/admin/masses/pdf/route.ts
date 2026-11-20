@@ -3,7 +3,10 @@ import { eq, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { db } from '@/db/drizzle'
 import { sundayMassesTable, usersTable } from '@/db/schema'
-import { generateAttendanceCalendarPdf } from '@/lib/attendance-calendar-pdf'
+import {
+  generateAttendanceCalendarPdf,
+  type AttendanceCalendarPdfPerson,
+} from '@/lib/attendance-calendar-pdf'
 import { buildAttendanceReportFilename } from '@/lib/pdf-filenames'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -26,33 +29,56 @@ export async function GET() {
   }
 
   try {
-    const people = await db
-      .select({
-        userId: usersTable.id,
-        fullName: sql<string>`trim(${usersTable.firstName} || ' ' || ${usersTable.lastName})`,
-        category: usersTable.category,
-        studentCode: usersTable.studentCode,
-        attendance: sql<Record<string, string | null>>`coalesce(
-          jsonb_object_agg(
-            ${sundayMassesTable.sundayDate}::text,
-            case when ${sundayMassesTable.status} = ${SundayMassStatus.ACCEPTED}
-              then ${AttendanceStatus.A_TIEMPO}::text else null end
-          ) filter (where ${sundayMassesTable.id} is not null),
+    const attendanceByUser = db.$with('attendance_by_user').as(
+      db
+        .select({
+          userId: usersTable.id,
+          fullName:
+            sql<string>`trim(${usersTable.firstName} || ' ' || ${usersTable.lastName})`.as(
+              'full_name'
+            ),
+          category: usersTable.category,
+          studentCode: usersTable.studentCode,
+          // Unaccepted records render like missing cells, so omit them from the map.
+          attendance: sql<Record<string, string | null>>`coalesce(
+          jsonb_object_agg(${sundayMassesTable.sundayDate}::text, ${AttendanceStatus.A_TIEMPO}::text)
+            filter (where ${sundayMassesTable.status} = ${SundayMassStatus.ACCEPTED}),
           '{}'::jsonb
-        )`,
-        firstSunday: sql<
-          string | null
-        >`min(min(${sundayMassesTable.sundayDate})) over ()`,
-        lastSunday: sql<
-          string | null
-        >`max(max(${sundayMassesTable.sundayDate})) over ()`,
+        )`.as('attendance'),
+          firstSunday: sql<
+            string | null
+          >`min(${sundayMassesTable.sundayDate})`.as('first_sunday'),
+          lastSunday: sql<
+            string | null
+          >`max(${sundayMassesTable.sundayDate})`.as('last_sunday'),
+        })
+        .from(usersTable)
+        .leftJoin(
+          sundayMassesTable,
+          eq(usersTable.id, sundayMassesTable.userId)
+        )
+        .groupBy(usersTable.id)
+    )
+    const [report] = await db
+      .with(attendanceByUser)
+      .select({
+        people: sql<
+          AttendanceCalendarPdfPerson[]
+        >`coalesce(jsonb_agg(jsonb_build_object(
+        'userId', ${attendanceByUser.userId},
+        'fullName', ${attendanceByUser.fullName},
+        'category', ${attendanceByUser.category},
+        'studentCode', ${attendanceByUser.studentCode},
+        'attendance', ${attendanceByUser.attendance}
+      )), '[]'::jsonb)`,
+        firstSunday: sql<string | null>`min(${attendanceByUser.firstSunday})`,
+        lastSunday: sql<string | null>`max(${attendanceByUser.lastSunday})`,
       })
-      .from(usersTable)
-      .leftJoin(sundayMassesTable, eq(usersTable.id, sundayMassesTable.userId))
-      .groupBy(usersTable.id)
+      .from(attendanceByUser)
 
-    const firstDate = people[0]?.firstSunday
-    const lastDate = people[0]?.lastSunday
+    const people = report?.people ?? []
+    const firstDate = report?.firstSunday
+    const lastDate = report?.lastSunday
     if (!firstDate || !lastDate) {
       return NextResponse.json(
         { error: 'No hay registros de misas para exportar.' },

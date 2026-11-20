@@ -64,7 +64,10 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
       const status = row.original.status
       return (
         <div className='flex items-center justify-end'>
-          <SundayMassStatusLabel status={status} />
+          <SundayMassStatusLabel
+            status={status}
+            verifier={row.original.verifier}
+          />
         </div>
       )
     },

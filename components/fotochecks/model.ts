@@ -1,10 +1,10 @@
 import type { CatechistAssignment } from '@/types/assignments'
-import { getAssignmentLabel } from '@/lib/assignments'
+import { assignmentLabels, getAssignmentLabel } from '@/lib/assignments'
 
 export interface FotocheckPerson {
   id: string
   name: string
-  assignments: CatechistAssignment[]
+  assignments: Pick<CatechistAssignment, 'type'>[]
 }
 
 export const BRAND_BLUE = '#07309b'
@@ -16,10 +16,13 @@ export function getFotocheckLabel(assignments: readonly CatechistAssignment[]) {
 }
 
 export function getPrintedFotocheckLabel(
-  assignments: readonly CatechistAssignment[]
+  assignments: readonly Pick<CatechistAssignment, 'type'>[]
 ) {
-  const services = assignments.filter(
-    (assignment) => assignment.type !== 'program'
+  return (
+    assignments
+      .flatMap((assignment) =>
+        assignment.type === 'program' ? [] : [assignmentLabels[assignment.type]]
+      )
+      .join(' · ') || 'Catequista'
   )
-  return services.map(getAssignmentLabel).join(' · ') || 'Catequista'
 }

@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { IconInfoCircle } from '@tabler/icons-react'
@@ -39,22 +38,20 @@ function EventDateTime({ date }: { date: Date }) {
 const TurnHeader = ({ title, detail }: { title: string; detail: string }) => (
   <span className='inline-flex items-center gap-1.5 text-nowrap'>
     {title}
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            type='button'
-            aria-label={detail}
-            className='text-muted-foreground inline-flex cursor-default items-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2'
-          >
-            <IconInfoCircle aria-hidden='true' className='size-4 shrink-0' />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side='right' align='center'>
-          {detail}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type='button'
+          aria-label={detail}
+          className='text-muted-foreground inline-flex cursor-default items-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2'
+        >
+          <IconInfoCircle aria-hidden='true' className='size-4 shrink-0' />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side='right' align='center'>
+        {detail}
+      </TooltipContent>
+    </Tooltip>
   </span>
 )
 

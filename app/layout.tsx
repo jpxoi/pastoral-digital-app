@@ -8,6 +8,7 @@ import { ClerkProvider } from '@clerk/nextjs'
 import { shadcn } from '@clerk/ui/themes'
 import { esPE } from '@/lib/clerk/localizations/es-PE'
 import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { Analytics } from '@vercel/analytics/next'
 import PwaServiceWorker from '@/components/shared/pwaServiceWorker'
 import { splashScreens } from '@/lib/pwa/splash-screens'
@@ -90,9 +91,11 @@ export default function RootLayout({
           <Analytics />
           <div className='topbar' aria-hidden='true'></div>
           <div className='bottombar' aria-hidden='true'></div>
-          <Suspense fallback={<Loading />}>
-            <RequestContent>{children}</RequestContent>
-          </Suspense>
+          <TooltipProvider delayDuration={200}>
+            <Suspense fallback={<Loading />}>
+              <RequestContent>{children}</RequestContent>
+            </Suspense>
+          </TooltipProvider>
         </ClerkProvider>
       </body>
     </html>

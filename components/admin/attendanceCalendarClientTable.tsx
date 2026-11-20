@@ -5,7 +5,6 @@ import { IconAlertCircle, IconSearch } from '@tabler/icons-react'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Input } from '@/components/ui/input'
@@ -142,22 +141,20 @@ export default function AttendanceCalendarClientTable({
                       <div className='flex items-center gap-2'>
                         {row.fullName}
                         {unjustifiedAbsences > 3 && (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <IconAlertCircle
-                                  className='text-destructive size-4 shrink-0'
-                                  aria-label={`${unjustifiedAbsences} faltas injustificadas`}
-                                />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p className='text-xs'>
-                                  Este catequista tiene más de 3 faltas no
-                                  justificadas.
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <IconAlertCircle
+                                className='text-destructive size-4 shrink-0'
+                                aria-label={`${unjustifiedAbsences} faltas injustificadas`}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className='text-xs'>
+                                Este catequista tiene más de 3 faltas no
+                                justificadas.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
                         )}
                       </div>
                     </td>
