@@ -1,4 +1,6 @@
-import { getAllUsers } from '@/queries/select'
+import { checkPermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
+import { getUsersWithNoAttendanceRecord } from '@/queries/select'
 import EventFillAbsenteesButton from './eventFillAbsenteesButton'
 import EventAddRecordButton from './eventAddRecordButton'
 
@@ -7,7 +9,11 @@ export default async function EventPageActionButtons({
 }: {
   eventId: string
 }) {
-  const users = await getAllUsers()
+  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS)))
+    return null
+
+  const users = await getUsersWithNoAttendanceRecord(eventId)
+  if (!users.length) return null
   const catechists = users.map(({ id, firstName, lastName, studentCode }) => ({
     id,
     firstName,

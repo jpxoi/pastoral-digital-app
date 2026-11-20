@@ -32,7 +32,7 @@ import { PastoralIdCard } from '../dashboard/pastoral-id-card'
 import { useFotocheckDownload } from '@/components/fotochecks/generate-button'
 import { IconIdBadge2 } from '@tabler/icons-react'
 import { UserRoleFilterOptions, UserScheduleFilterOptions } from '@/lib/filter'
-import { setUserRole, setUserSchedule } from '@/actions/user'
+import { setUserRole, setUserSchedule, removeCatechist } from '@/actions/user'
 
 interface DataTableRowActionsProps {
   row: Row<SelectUser>
@@ -174,10 +174,31 @@ export function AdminUserRowActions({
             )}
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant='destructive' disabled>
-              <IconTrash />
-              Eliminar catequista
-            </DropdownMenuItem>
+            {canSetRole && (
+              <DropdownMenuItem
+                variant='destructive'
+                onSelect={() => {
+                  if (
+                    !window.confirm(
+                      `¿Eliminar permanentemente a ${row.original.firstName} ${row.original.lastName}, su cuenta y sus registros? Esta acción no se puede deshacer.`
+                    )
+                  )
+                    return
+                  toast.promise(removeCatechist(row.original.id), {
+                    loading: 'Eliminando catequista...',
+                    success: (data) => {
+                      if (data.error) throw new Error(data.error)
+                      return data.success
+                    },
+                    error: (error) =>
+                      error.message || 'Error al eliminar catequista.',
+                  })
+                }}
+              >
+                <IconTrash />
+                Eliminar catequista
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
         <DialogContent className='max-h-[calc(100dvh-2rem)] gap-0 overflow-x-hidden overflow-y-auto border-none p-0 sm:max-w-sm'>

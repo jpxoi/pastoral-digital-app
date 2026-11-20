@@ -14,6 +14,7 @@ import { NeonDbError } from '@neondatabase/serverless'
 import { updateTag } from 'next/cache'
 import { Permission } from '@/types/permissions'
 import { updateUserRole } from '@/queries/update'
+import { deleteCatechistData } from '@/queries/delete'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -218,6 +219,39 @@ export async function fetchUserSchedule(userId: string) {
     return {
       error:
         'Ocurrió un error inesperado al obtener el horario del catequista. Por favor, inténtalo nuevamente.',
+    }
+  }
+}
+
+export async function removeCatechist(targetUserId: string) {
+  const { userId, sessionClaims } = await auth()
+  if (!userId || sessionClaims?.metadata?.role !== UserRole.ADMIN) {
+    return { error: 'Solo un administrador puede eliminar catequistas.' }
+  }
+  if (!targetUserId || targetUserId === userId) {
+    return { error: 'No puedes eliminar tu propia cuenta.' }
+  }
+  try {
+    const client = await clerkClient()
+    try {
+      await client.users.deleteUser(targetUserId)
+    } catch (error) {
+      if (!(
+        typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        error.status === 404
+      ))
+        throw error
+    }
+    await deleteCatechistData(targetUserId)
+    for (const tag of ['users', 'attendance', 'sundayMasses']) updateTag(tag)
+    return { success: 'Catequista eliminado correctamente.' }
+  } catch (error) {
+    console.error('Could not delete catechist', error)
+    return {
+      error:
+        'No se pudo completar la eliminación. Intenta nuevamente para completar ambos sistemas.',
     }
   }
 }

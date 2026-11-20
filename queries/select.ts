@@ -146,6 +146,9 @@ export const getUsersWithNoAttendanceRecord = async (
   return db
     .select({
       id: usersTable.id,
+      firstName: usersTable.firstName,
+      lastName: usersTable.lastName,
+      studentCode: usersTable.studentCode,
     })
     .from(usersTable)
     .leftJoin(
