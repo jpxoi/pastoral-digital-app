@@ -576,7 +576,7 @@ export default function OnboardingForm({
                       id='studentCode'
                       value={field.value ?? ''}
                       aria-invalid={fieldState.invalid}
-                      placeholder='Ej. S5B01'
+                      placeholder='Ej. P6A01 o S5B01'
                       autoComplete='off'
                     />
                     <FieldDescription>
