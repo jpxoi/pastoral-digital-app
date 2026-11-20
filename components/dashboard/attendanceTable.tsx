@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import ErrorAlert from '@/components/shared/errorAlert'
 import { IconCalendarCheck } from '@tabler/icons-react'
 import { DashboardEmpty, DashboardSection } from './dashboard-section'
@@ -22,7 +23,7 @@ export default async function AttendanceTable({
       preview ? 5 : null
     )
   } catch (error) {
-    console.error('Failed to load getAttendanceRecordsByUserId', error)
+    logger.error('Failed to load getAttendanceRecordsByUserId', { error })
     return (
       <DashboardSection title='Mis asistencias'>
         <ErrorAlert

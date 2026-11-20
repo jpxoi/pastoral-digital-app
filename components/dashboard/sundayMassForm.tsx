@@ -129,7 +129,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
           })
         } catch (error) {
           // Safari may still decode the original HEIC/HEIF natively.
-          console.error(error)
+          console.warn('Failed to convert HEIC/HEIF image to JPEG', { error })
         }
       }
 
@@ -158,13 +158,15 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
             }),
           ]
         } catch (error) {
-          console.error(error)
+          console.warn('Failed to compress image', { fileType, error })
         }
       }
 
       return hasCompatibleBase && file.size <= 4 * 1024 * 1024 ? [file] : files
     } catch (error) {
-      console.error(error)
+      console.warn('Failed to optimize image, falling back to original', {
+        error,
+      })
       return files
     } finally {
       setIsOptimizing(false)
@@ -258,7 +260,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
           setEvidence(null)
         }
       } catch (error) {
-        console.error('Submission error:', error)
+        console.error('Submission error', { error })
         setError('Ocurrió un error inesperado. Por favor, inténtalo de nuevo.')
       }
     })
