@@ -9,7 +9,7 @@ export default function ErrorAlert({
   description: string
 }) {
   return (
-    <Alert variant='destructive' className='bg-red-50 text-left'>
+    <Alert variant='destructive' className='border-red-200 bg-red-50 text-left'>
       <IconExclamationCircle className='h-4 w-4' />
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>

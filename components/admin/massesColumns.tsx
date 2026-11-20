@@ -123,7 +123,7 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
       <div className='flex gap-4' key={row.id}>
         {row.original.status === SundayMassStatus.PENDING && (
           <Button
-            variant='ghost'
+            variant='outline'
             className='h-8 w-8 p-0 hover:bg-red-50'
             onClick={() => {
               handleRejectMass(row.original.id)
@@ -135,7 +135,7 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
         )}
         {row.original.status === SundayMassStatus.PENDING && (
           <Button
-            variant='ghost'
+            variant='outline'
             className='h-8 w-8 p-0 hover:bg-emerald-50'
             onClick={() => {
               handleVerifyMass(row.original.id)
