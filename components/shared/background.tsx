@@ -8,7 +8,7 @@ export default function Background({
 }: ComponentProps<'svg'>) {
   return (
     <svg
-      viewBox='0 0 900 675'
+      viewBox={backgroundArtwork.viewBox}
       preserveAspectRatio='xMidYMid slice'
       aria-hidden='true'
       focusable='false'

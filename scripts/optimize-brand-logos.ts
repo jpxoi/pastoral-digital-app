@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdir, readdir, unlink } from 'node:fs/promises'
+import { mkdir, readdir, rm } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -50,14 +50,6 @@ function generateFormats(
   }
 }
 
-async function removeIfExists(filePath: string) {
-  try {
-    await unlink(filePath)
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
-  }
-}
-
 try {
   execFileSync('magick', ['-version'], { stdio: 'ignore' })
 } catch {
@@ -65,32 +57,21 @@ try {
   process.exit(1)
 }
 
-await mkdir(outputDirectory, { recursive: true })
 const availableFiles = new Set(await readdir(sourceDirectory))
+const requiredFiles = [
+  ...logos.map(({ file }) => file),
+  'logo-icon.png',
+]
+const missingFiles = requiredFiles.filter((file) => !availableFiles.has(file))
 
-for (const logo of logos) {
-  const baseName = path.parse(logo.file).name
-  const obsoleteWidth = logo.maxCssWidth
-
-  for (const format of Object.keys(formatOptions)) {
-    await removeIfExists(
-      path.join(outputDirectory, `${baseName}-${obsoleteWidth}.${format}`)
-    )
-  }
-}
-for (const width of [24, 48, 72]) {
-  for (const format of Object.keys(formatOptions)) {
-    await removeIfExists(
-      path.join(outputDirectory, `app-icon-${width}.${format}`)
-    )
-  }
+if (missingFiles.length) {
+  throw new Error(`No se encontraron archivos fuente: ${missingFiles.join(', ')}`)
 }
 
-for (const logo of logos) {
-  if (!availableFiles.has(logo.file)) {
-    throw new Error(`No se encontró el archivo fuente: ${logo.file}`)
-  }
+await rm(outputDirectory, { recursive: true, force: true })
+await mkdir(outputDirectory, { recursive: true })
 
+for (const logo of logos) {
   const sourcePath = path.join(sourceDirectory, logo.file)
   const baseName = path.parse(logo.file).name
 
@@ -103,10 +84,6 @@ for (const logo of logos) {
 }
 
 const appIconSource = path.join(sourceDirectory, 'logo-icon.png')
-if (!availableFiles.has('logo-icon.png')) {
-  throw new Error('No se encontró el archivo fuente: logo-icon.png')
-}
-
 for (const scale of appIconScales) {
   const size = 24 * scale
   const contentSize = Math.round(size * 0.8)
