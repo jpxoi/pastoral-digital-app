@@ -10,7 +10,9 @@ import SundayMassBanner from './sundayMassBanner'
 export default function AttendanceSection() {
   return (
     <div className='flex w-full flex-col gap-8'>
-      <SundayMassBanner />
+      <Suspense fallback={null}>
+        <SundayMassBanner />
+      </Suspense>
       <Suspense fallback={<DashboardCardsSkeleton />}>
         <DashboardCards />
       </Suspense>

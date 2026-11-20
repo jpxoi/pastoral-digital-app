@@ -7,10 +7,12 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { IconBuildingChurch } from '@tabler/icons-react'
-import SundayMassForm from './sundayMassForm'
 import { TZDate } from '@date-fns/tz'
+import { connection } from 'next/server'
+import SundayMassForm from './sundayMassForm'
 
-export default function SundayMassBanner() {
+export default async function SundayMassBanner() {
+  await connection()
   const peruDate = new TZDate(new Date(), 'America/Lima')
 
   if (peruDate.getDay() !== 0) return null

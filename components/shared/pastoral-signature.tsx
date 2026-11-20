@@ -4,10 +4,14 @@ const logoVariants = {
   light: {
     file: 'logo-horizontal-inverse',
     widths: [480, 720],
+    width: 720,
+    height: 242,
   },
   dark: {
     file: 'logo-horizontal',
     widths: [400, 600],
+    width: 600,
+    height: 202,
   },
 } as const
 
@@ -61,6 +65,8 @@ export function PastoralSignature({
         src={`/brand/optimized/${logo.file}-${fallbackWidth}.png`}
         srcSet={getSourceSet(logo.file, logo.widths, 'png')}
         sizes={sizes}
+        width={logo.width}
+        height={logo.height}
         alt='Pastoral Mariana'
         decoding='async'
         className={cn('block h-auto', className)}
@@ -86,6 +92,8 @@ export function PastoralAppMark({ className }: { className?: string }) {
       <img
         src='/brand/optimized/app-icon-144.png'
         srcSet={getDensitySourceSet(file, widths, 'png', 24)}
+        width={144}
+        height={144}
         alt=''
         decoding='async'
         className={cn('block h-auto', className)}
