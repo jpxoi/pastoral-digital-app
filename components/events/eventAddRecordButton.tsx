@@ -3,12 +3,9 @@
 import { z } from 'zod'
 import { NewAttendanceRecordFormSchema } from '@/schema'
 
-import {
-  registerAttendanceRecord,
-  registerAttendanceRecords,
-} from '@/actions/attendance'
+import { registerAttendanceRecord } from '@/actions/attendance'
 import { Button } from '@/components/ui/button'
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import {
   Dialog,
@@ -23,13 +20,11 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -41,15 +36,40 @@ import {
   SelectValue,
 } from '../ui/select'
 import { AttendanceRecordMethod, AttendanceStatus } from '@/types'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { useUser } from '@clerk/nextjs'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { IconCheck, IconSelector } from '@tabler/icons-react'
+import { cn } from '@/lib/utils'
 
-export default function EventFillAbsenteesButton({
+type CatechistOption = {
+  id: string
+  firstName: string
+  lastName: string
+  studentCode: string | null
+}
+
+export default function EventAddRecordButton({
   eventId,
+  catechists,
 }: {
   eventId: string
+  catechists: CatechistOption[]
 }) {
   const [isPending, startTransition] = useTransition()
+  const [isCatechistPickerOpen, setIsCatechistPickerOpen] = useState(false)
+  const [catechistSearch, setCatechistSearch] = useState('')
 
   const { user: registeredBy, isLoaded } = useUser()
 
@@ -64,80 +84,37 @@ export default function EventFillAbsenteesButton({
   const onSubmit = async (
     values: z.infer<typeof NewAttendanceRecordFormSchema>
   ) => {
-    const { userId } = values
+    startTransition(() => {
+      toast.promise(
+        registerAttendanceRecord({
+          eventId,
+          userId: values.userId,
+          registeredBy: registeredBy?.id || '',
+          checkInTime: new Date(),
+          method: AttendanceRecordMethod.MANUAL,
+          status: values.status,
+        }),
+        {
+          loading: 'Registrando asistencia...',
+          success: (data: { error?: string; success?: string }) => {
+            if (data.error) {
+              throw new Error(data.error)
+            }
 
-    const userIds = userId.includes(',')
-      ? userId.split(',').map((id) => id.trim())
-      : [userId]
-
-    if (userIds.length > 1) {
-      startTransition(() => {
-        toast.promise(
-          registerAttendanceRecords(
-            userIds.map(
-              (id) => ({
-                eventId: eventId,
-                userId: id,
-                registeredBy: registeredBy?.id || '',
-                checkInTime: new Date(),
-                method: AttendanceRecordMethod.MANUAL,
-                status: values.status,
-              }),
-              `/admin/events/${eventId}`
+            if (data.success) {
+              form.reset({ userId: '', status: undefined })
+              return data.success
+            }
+          },
+          error: (error) => {
+            return (
+              error.message ||
+              'Ha ocurrido un error al registrar la asistencia.'
             )
-          ),
-          {
-            loading: 'Registrando asistencias...',
-            success: (data: { error?: string; success?: string }) => {
-              if (data.error) {
-                throw new Error(data.error)
-              }
-
-              if (data.success) {
-                return data.success
-              }
-            },
-            error: (error) => {
-              return (
-                error.message ||
-                'Ha ocurrido un error al registrar las asistencias.'
-              )
-            },
-          }
-        )
-      })
-    } else {
-      startTransition(() => {
-        toast.promise(
-          registerAttendanceRecord({
-            eventId: eventId,
-            userId: values.userId,
-            registeredBy: registeredBy?.id || '',
-            checkInTime: new Date(),
-            method: AttendanceRecordMethod.MANUAL,
-            status: values.status,
-          }),
-          {
-            loading: 'Registrando asistencia...',
-            success: (data: { error?: string; success?: string }) => {
-              if (data.error) {
-                throw new Error(data.error)
-              }
-
-              if (data.success) {
-                return data.success
-              }
-            },
-            error: (error) => {
-              return (
-                error.message ||
-                'Ha ocurrido un error al registrar la asistencia.'
-              )
-            },
-          }
-        )
-      })
-    }
+          },
+        }
+      )
+    })
   }
   return (
     <Dialog>
@@ -157,69 +134,111 @@ export default function EventFillAbsenteesButton({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className='grid gap-4 py-4'
+            className='grid gap-5 py-4'
           >
-            <Tabs>
-              <TabsList className='grid grid-cols-2'>
-                <TabsTrigger value='single'>Agregar un registro </TabsTrigger>
-                <TabsTrigger value='multiple'>
-                  Agregar múltiples registros
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value='single'>
-                <FormField
-                  control={form.control}
-                  name='userId'
-                  render={({ field }) => (
-                    <FormItem className='grid grid-cols-4 items-center gap-x-4'>
-                      <FormLabel className='text-right'>Catequista</FormLabel>
+            <FormField
+              control={form.control}
+              name='userId'
+              render={({ field }) => {
+                const selectedCatechist = catechists.find(
+                  (catechist) => catechist.id === field.value
+                )
+
+                return (
+                  <FormItem className='grid gap-2'>
+                    <FormLabel>Catequista</FormLabel>
+                    <Popover
+                      open={isCatechistPickerOpen}
+                      modal
+                      onOpenChange={(open) => {
+                        setIsCatechistPickerOpen(open)
+                        if (open) setCatechistSearch('')
+                      }}
+                    >
                       <FormControl>
-                        <Input
-                          placeholder='Ingrese el ID del catequista'
-                          {...field}
-                          className='col-span-3'
-                        />
+                        <PopoverTrigger asChild>
+                          <Button
+                            type='button'
+                            variant='outline'
+                            role='combobox'
+                            aria-expanded={isCatechistPickerOpen}
+                            className='w-full justify-between font-normal'
+                          >
+                            <span className='truncate'>
+                              {selectedCatechist
+                                ? `${selectedCatechist.firstName} ${selectedCatechist.lastName}${selectedCatechist.studentCode ? ` · ${selectedCatechist.studentCode}` : ''}`
+                                : 'Seleccionar catequista'}
+                            </span>
+                            <IconSelector className='ml-2 size-4 shrink-0 opacity-50' />
+                          </Button>
+                        </PopoverTrigger>
                       </FormControl>
-                      <FormMessage className='col-span-full' />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-              <TabsContent value='multiple'>
-                <FormField
-                  control={form.control}
-                  name='userId'
-                  render={({ field }) => (
-                    <FormItem className='grid grid-cols-4 items-center gap-x-4'>
-                      <FormLabel className='text-right'>Catequistas</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder='Ingrese los IDs de los catequistas'
-                          {...field}
-                          className='col-span-3'
-                        />
-                      </FormControl>
-                      <FormDescription className='col-span-full'>
-                        Separe los IDs con comas.
-                      </FormDescription>
-                      <FormMessage className='col-span-full' />
-                    </FormItem>
-                  )}
-                />
-              </TabsContent>
-            </Tabs>
+                      <PopoverContent
+                        align='start'
+                        className='w-(--radix-popover-trigger-width) p-0'
+                      >
+                        <Command>
+                          <CommandInput
+                            value={catechistSearch}
+                            onValueChange={setCatechistSearch}
+                            placeholder='Buscar catequista...'
+                          />
+                          <CommandList>
+                            <CommandEmpty>
+                              No se encontraron catequistas.
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {catechists.map((catechist) => {
+                                const name = `${catechist.firstName} ${catechist.lastName}`
+                                const searchValue = `${name} ${catechist.studentCode ?? ''}`
+
+                                return (
+                                  <CommandItem
+                                    key={catechist.id}
+                                    value={searchValue}
+                                    onSelect={() => {
+                                      field.onChange(catechist.id)
+                                      setIsCatechistPickerOpen(false)
+                                    }}
+                                  >
+                                    <IconCheck
+                                      className={cn(
+                                        'mr-2 size-4',
+                                        field.value === catechist.id
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                    <span className='min-w-0 flex-1 truncate'>
+                                      {name}
+                                    </span>
+                                    {catechist.studentCode && (
+                                      <span className='text-muted-foreground ml-2 text-xs'>
+                                        {catechist.studentCode}
+                                      </span>
+                                    )}
+                                  </CommandItem>
+                                )
+                              })}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
             <FormField
               control={form.control}
               name='status'
               render={({ field }) => (
-                <FormItem className='grid grid-cols-4 items-center gap-x-4 gap-y-1'>
-                  <FormLabel className='text-right'>Estado</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                <FormItem className='grid gap-2'>
+                  <FormLabel>Estado</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className='col-span-3'>
+                      <SelectTrigger>
                         <SelectValue placeholder='Seleccione el estado' />
                       </SelectTrigger>
                     </FormControl>
@@ -231,7 +250,7 @@ export default function EventFillAbsenteesButton({
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage className='col-span-full' />
+                  <FormMessage />
                 </FormItem>
               )}
             />

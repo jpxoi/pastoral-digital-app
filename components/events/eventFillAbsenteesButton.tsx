@@ -13,7 +13,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { useTransition } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 export default function EventFillAbsenteesButton({
@@ -21,26 +21,32 @@ export default function EventFillAbsenteesButton({
 }: {
   eventId: string
 }) {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
 
-  const handleClick = async (eventId: string) => {
-    startTransition(() => {
-      toast.promise(fillAbsenceRecords(eventId), {
-        loading: 'Rellenando faltas...',
-        success: (data) => {
-          if (data.error) {
-            throw new Error(data.error)
-          }
+  const handleClick = (eventId: string) => {
+    setIsPending(true)
+    const result = fillAbsenceRecords(eventId)
 
-          if (data.success) {
-            return data.success
-          }
-        },
-        error: (error) => {
-          return error.message || 'Ha ocurrido un error al rellenar faltas.'
-        },
-      })
+    toast.promise(result, {
+      loading: 'Rellenando faltas...',
+      success: (data) => {
+        if (data.error) {
+          throw new Error(data.error)
+        }
+
+        if (data.success) {
+          return data.success
+        }
+      },
+      error: (error) => {
+        return error.message || 'Ha ocurrido un error al rellenar faltas.'
+      },
     })
+
+    void result.then(
+      () => setIsPending(false),
+      () => setIsPending(false)
+    )
   }
   return (
     <AlertDialog>

@@ -14,7 +14,7 @@ export function useFotocheckDownload() {
     busy.current = true
     setPending(true)
     try {
-      const response = await fetch('/api/fotochecks', {
+      const response = await fetch('/api/admin/fotochecks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userId ? { userId } : {}),

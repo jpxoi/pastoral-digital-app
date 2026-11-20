@@ -1,25 +1,24 @@
-import { countUsersWithNoAttendanceRecord } from '@/queries/select'
+import { getAllUsers } from '@/queries/select'
 import EventFillAbsenteesButton from './eventFillAbsenteesButton'
-import ExportToCsv from '../shared/exportToCsv'
-import EventAddRecordsButton from './eventAddRecordButton'
+import EventAddRecordButton from './eventAddRecordButton'
 
 export default async function EventPageActionButtons({
   eventId,
 }: {
   eventId: string
 }) {
-  const absentUsers = await countUsersWithNoAttendanceRecord(eventId)
+  const users = await getAllUsers()
+  const catechists = users.map(({ id, firstName, lastName, studentCode }) => ({
+    id,
+    firstName,
+    lastName,
+    studentCode,
+  }))
 
   return (
-    <div className='flex items-center gap-2'>
-      {absentUsers > 0 ? (
-        <>
-          <EventAddRecordsButton eventId={eventId} />
-          <EventFillAbsenteesButton eventId={eventId} />
-        </>
-      ) : (
-        <ExportToCsv eventId={eventId} />
-      )}
+    <div className='flex w-full items-center justify-end gap-2'>
+      <EventAddRecordButton eventId={eventId} catechists={catechists} />
+      <EventFillAbsenteesButton eventId={eventId} />
     </div>
   )
 }

@@ -333,6 +333,7 @@ export const getEventById = unstable_cache(
   async (id: SelectEvent['id']) => {
     return db.query.eventsTable.findFirst({
       where: eq(eventsTable.id, id),
+      with: { location: true },
     })
   },
   ['getEventById'],

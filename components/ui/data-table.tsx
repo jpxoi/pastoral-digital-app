@@ -6,6 +6,7 @@ import { useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
+  Column,
   GlobalFilterTableState,
   SortingState,
   flexRender,
@@ -34,12 +35,14 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   getRowId?: (row: TData) => string
+  globalFilterColumnId?: string
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   getRowId,
+  globalFilterColumnId,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
@@ -57,6 +60,10 @@ export function DataTable<TData, TValue>({
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    globalFilterFn: globalFilterColumnId ? 'includesString' : undefined,
+    getColumnCanGlobalFilter: globalFilterColumnId
+      ? (column: Column<TData, unknown>) => column.id === globalFilterColumnId
+      : undefined,
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),

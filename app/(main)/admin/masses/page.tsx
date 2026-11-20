@@ -5,7 +5,6 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import MassesTable from '@/components/admin/massesTable'
 import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
-import ExportToCsvMasses from '@/components/shared/exportToCsvMasses'
 import RevalidateButton from '@/components/shared/revalidateButton'
 import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -23,7 +22,6 @@ export default async function Page() {
       <PageActions>
         <div className='flex flex-wrap items-center gap-2'>
           <RevalidateButton tag='sundayMasses' />
-          <ExportToCsvMasses />
         </div>
       </PageActions>
       <Suspense fallback={<MassesTableSkeleton />}>

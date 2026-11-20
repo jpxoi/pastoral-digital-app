@@ -9,5 +9,11 @@ export default async function EventAttendeesTable({
 }) {
   const attendanceRecords = await getAttendanceRecordsByEventId(eventId)
 
-  return <DataTable columns={EventAttendeesColumns} data={attendanceRecords} />
+  return (
+    <DataTable
+      columns={EventAttendeesColumns}
+      data={attendanceRecords}
+      globalFilterColumnId='catequista'
+    />
+  )
 }

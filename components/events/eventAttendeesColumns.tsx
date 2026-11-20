@@ -24,6 +24,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
       )
     },
     enableHiding: false,
+    enableGlobalFilter: true,
   },
   {
     id: 'horaDeIngreso',
@@ -39,6 +40,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
       })
       return <span>{formattedTime}</span>
     },
+    enableGlobalFilter: false,
   },
   {
     id: 'registradoPor',
@@ -54,6 +56,8 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
         </span>
       )
     },
+    enableSorting: false,
+    enableGlobalFilter: false,
   },
   {
     id: 'estado',
@@ -72,6 +76,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
       )
     },
     enableHiding: false,
+    enableGlobalFilter: false,
   },
   {
     id: 'acciones',

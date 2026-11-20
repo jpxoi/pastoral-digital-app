@@ -6,6 +6,7 @@ import { Metadata } from 'next'
 import AttendanceCalendarTable from '@/components/admin/attendanceCalendarTable'
 import AttendanceCalendarTableSkeleton from '@/components/admin/attendanceCalendarTableSkeleton'
 import RevalidateButton from '@/components/shared/revalidateButton'
+import ExportAttendanceCalendarPdfButton from '@/components/admin/exportAttendanceCalendarPdfButton'
 import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
@@ -23,6 +24,7 @@ export default async function Page() {
       />
       <PageActions>
         <RevalidateButton tag='attendance' />
+        <ExportAttendanceCalendarPdfButton />
       </PageActions>
       <Suspense fallback={<AttendanceCalendarTableSkeleton />}>
         <AttendanceCalendarTable />

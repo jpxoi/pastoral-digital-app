@@ -147,7 +147,7 @@ export function CustomSidebar() {
         <Link
           href='/dashboard'
           aria-label='Pastoral Digital App'
-          className='flex h-10 items-center gap-3 px-1 font-medium group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0'
+          className='flex h-10 w-full items-center justify-start gap-3 px-1 text-left font-medium group-data-[collapsible=icon]:px-0'
         >
           <PastoralAppMark className='size-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white object-contain' />
           <span className='truncate group-data-[collapsible=icon]:hidden'>
