@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  IconAlertTriangle,
+  IconExclamationCircle,
   IconLoader2,
   IconRefresh,
   IconTrash,
@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -113,7 +114,8 @@ export function ClerkOrphanUsersButton() {
       <Button
         type='button'
         size='sm'
-        variant='destructive-ghost'
+        variant='outline'
+        className='border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive'
         onClick={() => {
           setOpen(true)
           void loadUsers()
@@ -225,25 +227,31 @@ export function ClerkOrphanUsersButton() {
           )}
 
           {users.length > 0 && !loading && (
-            <div className='space-y-2'>
-              <div className='flex items-start gap-2'>
-                <IconAlertTriangle className='text-destructive mt-0.5 size-4 shrink-0' />
-                <p className='text-sm leading-5'>
-                  <span className='font-medium'>Eliminación permanente.</span>{' '}
-                  Las cuentas listadas se borrarán de Clerk.
-                </p>
+            <div className='space-y-4'>
+              <Alert
+                variant='destructive'
+                className='border-red-200 bg-red-50 text-left'
+              >
+                <IconExclamationCircle />
+                <AlertTitle>Eliminación permanente</AlertTitle>
+                <AlertDescription className='text-xs whitespace-nowrap'>
+                  Las cuentas listadas se borrarán de Clerk y no podrán
+                  recuperarse.
+                </AlertDescription>
+              </Alert>
+              <div className='space-y-2'>
+                <Label htmlFor='clerk-cleanup-confirmation'>
+                  Escribe ELIMINAR
+                </Label>
+                <Input
+                  id='clerk-cleanup-confirmation'
+                  value={confirmation}
+                  onChange={(event) => setConfirmation(event.target.value)}
+                  autoComplete='off'
+                  spellCheck={false}
+                  disabled={pending}
+                />
               </div>
-              <Label htmlFor='clerk-cleanup-confirmation'>
-                Escribe ELIMINAR
-              </Label>
-              <Input
-                id='clerk-cleanup-confirmation'
-                value={confirmation}
-                onChange={(event) => setConfirmation(event.target.value)}
-                autoComplete='off'
-                spellCheck={false}
-                disabled={pending}
-              />
             </div>
           )}
 
