@@ -30,7 +30,7 @@ import { getQrAttendanceContext } from '@/queries/assignments'
 import { getAttendanceTurn } from '@/lib/assignments'
 import { z } from 'zod'
 import { after } from 'next/server'
-import { sendUserPush } from '@/lib/push/send'
+import { sendUsersPush } from '@/lib/push/send'
 import { attendanceUpdatedMessage } from '@/lib/push/payloads'
 
 function invalidateAttendance(
@@ -224,19 +224,17 @@ export const setAttendanceRecordStatus = async (
     .then(async (records) => {
       invalidateAttendance(records)
       after(async () => {
-        await Promise.all(
-          records.map(async (record) => {
-            try {
-              await sendUserPush(
-                record.userId,
-                `attendance:${record.id}:${record.updatedAt.toISOString()}`,
-                attendanceUpdatedMessage(record.id)
-              )
-            } catch {
-              console.error('No se pudo enviar la notificación de asistencia.')
-            }
-          })
-        )
+        try {
+          await sendUsersPush(
+            records.map((record) => ({
+              userId: record.userId,
+              key: `attendance:${record.id}:${record.updatedAt.toISOString()}`,
+              message: attendanceUpdatedMessage(record.id),
+            }))
+          )
+        } catch {
+          console.error('No se pudo enviar la notificación de asistencia.')
+        }
       })
 
       return {
