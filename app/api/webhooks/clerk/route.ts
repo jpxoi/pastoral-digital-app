@@ -86,6 +86,8 @@ export async function POST(request: NextRequest) {
         // runs after the response so Clerk can receive its acknowledgement quickly.
         const evidenceFiles = await deleteCatechistData(userId)
         revalidateTag(cacheTags.usersList(), { expire: 0 })
+        revalidateTag(cacheTags.assignments(), { expire: 0 })
+        revalidateTag(cacheTags.userAssignments(userId), { expire: 0 })
         revalidateTag(cacheTags.attendance(), { expire: 0 })
         revalidateTag(cacheTags.masses(), { expire: 0 })
 

@@ -6,7 +6,7 @@ import { sundayMassesTable, usersTable } from '@/db/schema'
 import { generateAttendanceCalendarPdf } from '@/lib/attendance-calendar-pdf'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
-import { SundayMassStatus } from '@/types'
+import { AttendanceStatus, SundayMassStatus } from '@/types'
 
 export async function GET() {
   const { userId } = await auth()
@@ -80,7 +80,9 @@ export async function GET() {
       const person = peopleById.get(record.userId)
       if (!person) continue
       person.attendance[record.sundayDate] =
-        record.status === SundayMassStatus.ACCEPTED ? 'A TIEMPO' : null
+        record.status === SundayMassStatus.ACCEPTED
+          ? AttendanceStatus.A_TIEMPO
+          : null
     }
 
     const now = new Date()

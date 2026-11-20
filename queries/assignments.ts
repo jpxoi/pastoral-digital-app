@@ -39,6 +39,10 @@ export async function getAssignmentCatalog() {
   cacheLife('days')
   cacheTag(cacheTags.assignmentCatalog())
 
+  return queryAssignmentCatalog()
+}
+
+async function queryAssignmentCatalog() {
   const rows = await db.query.programsTable.findMany({
     columns: { id: true, code: true, name: true },
     with: {
@@ -121,7 +125,8 @@ export async function replaceUserAssignments(
   userId: string,
   assignments: AssignmentInput[]
 ) {
-  const catalog = await getAssignmentCatalog()
+  // Validate writes against the current catalog rather than a cached copy.
+  const catalog = await queryAssignmentCatalog()
   const error = validateAssignments(assignments, catalog)
   if (error) throw new Error(error)
   const rows = assignments.map((a) => ({

@@ -1,6 +1,6 @@
 'use client'
 
-import { SignIn, SignUp } from '@clerk/nextjs'
+import { OAuthConsent, SignIn, SignUp } from '@clerk/nextjs'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Spinner } from '@/components/ui/spinner'
 
@@ -45,4 +45,15 @@ export function AuthSignIn() {
 
 export function AuthSignUp() {
   return <AuthClerkForm Component={SignUp} />
+}
+
+export function AuthOAuthConsent() {
+  const isMobile = useIsMobile()
+
+  return (
+    <OAuthConsent
+      appearance={isMobile ? flushAppearance : raisedAppearance}
+      fallback={authFallback}
+    />
+  )
 }

@@ -33,11 +33,11 @@ export enum SundayMassStatus {
 }
 
 export enum AttendanceStatus {
-  A_TIEMPO = 'A TIEMPO',
-  TARDANZA = 'TARDANZA',
-  FALTA_JUSTIFICADA = 'FALTA JUSTIFICADA',
-  TARDANZA_JUSTIFICADA = 'TARDANZA JUSTIFICADA',
-  FALTA_INJUSTIFICADA = 'FALTA INJUSTIFICADA',
+  A_TIEMPO = 'on-time',
+  TARDANZA = 'late',
+  FALTA_JUSTIFICADA = 'excused-absence',
+  TARDANZA_JUSTIFICADA = 'excused-late',
+  FALTA_INJUSTIFICADA = 'unexcused-absence',
 }
 
 export enum UserRole {
@@ -53,15 +53,6 @@ export enum UserCategory {
   STUDENT = 'student',
   ALUMNI = 'alumni',
   TEACHER = 'teacher',
-}
-
-export enum UserSchedule {
-  FULL_TIME = 'full-time',
-  PRIMERA_COMUNION = 'primera-comunion',
-  CONFIRMACION = 'confirmacion',
-  LOGISTICA = 'logistica',
-  SEMILLEROS = 'semilleros',
-  COORDINADOR = 'coordinador',
 }
 
 export enum AttendanceRecordMethod {

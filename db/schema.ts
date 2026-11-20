@@ -16,7 +16,6 @@ import {
   SundayMassStatus,
   UserCategory,
   UserRole,
-  UserSchedule,
 } from '@/types'
 
 /* Enums */
@@ -25,15 +24,6 @@ export const userCategoryEnum = pgEnum('user_category_enum', [
   UserCategory.STUDENT,
   UserCategory.ALUMNI,
   UserCategory.TEACHER,
-])
-
-export const userScheduleEnum = pgEnum('user_schedule_enum', [
-  UserSchedule.FULL_TIME,
-  UserSchedule.PRIMERA_COMUNION,
-  UserSchedule.CONFIRMACION,
-  UserSchedule.LOGISTICA,
-  UserSchedule.SEMILLEROS,
-  UserSchedule.COORDINADOR,
 ])
 
 export const attendanceStatusEnum = pgEnum('attendance_status_enum', [
@@ -100,7 +90,6 @@ export const usersTable = pgTable(
     })
       .default(UserRole.MEMBER)
       .notNull(),
-    schedule: userScheduleEnum().default(UserSchedule.FULL_TIME).notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
       .notNull()

@@ -40,6 +40,10 @@ export default async function revalidate(resource: RefreshResource) {
   }
 
   updateTag(target.tag)
+  if (resource === 'users') {
+    updateTag(cacheTags.assignments())
+    updateTag(cacheTags.assignmentCatalog())
+  }
   refresh()
   return { success: true }
 }

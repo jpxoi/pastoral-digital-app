@@ -10,16 +10,26 @@ import {
 } from '@/components/ui/tooltip'
 import { Input } from '@/components/ui/input'
 import type { ReactNode } from 'react'
+import { AttendanceStatus } from '@/types'
 
 type AttendanceCalendarRow = Record<string, string | null>
 
 const ATTENDANCE_LABELS: Record<string, { label: string; className: string }> =
   {
-    'A TIEMPO': { label: 'A', className: 'text-green-700' },
-    TARDANZA: { label: 'T', className: 'text-amber-700' },
-    'FALTA INJUSTIFICADA': { label: 'F', className: 'text-red-700' },
-    'FALTA JUSTIFICADA': { label: 'FJ', className: 'text-blue-700' },
-    'TARDANZA JUSTIFICADA': { label: 'TJ', className: 'text-purple-700' },
+    [AttendanceStatus.A_TIEMPO]: { label: 'A', className: 'text-green-700' },
+    [AttendanceStatus.TARDANZA]: { label: 'T', className: 'text-amber-700' },
+    [AttendanceStatus.FALTA_INJUSTIFICADA]: {
+      label: 'F',
+      className: 'text-red-700',
+    },
+    [AttendanceStatus.FALTA_JUSTIFICADA]: {
+      label: 'FJ',
+      className: 'text-blue-700',
+    },
+    [AttendanceStatus.TARDANZA_JUSTIFICADA]: {
+      label: 'TJ',
+      className: 'text-purple-700',
+    },
   }
 
 function normalizeSearchText(value: string) {
@@ -116,7 +126,10 @@ export default function AttendanceCalendarClientTable({
               filteredRows.map((row) => {
                 const unjustifiedAbsences = dateColumns.reduce(
                   (count, dateKey) =>
-                    count + (row[dateKey] === 'FALTA INJUSTIFICADA' ? 1 : 0),
+                    count +
+                    (row[dateKey] === AttendanceStatus.FALTA_INJUSTIFICADA
+                      ? 1
+                      : 0),
                   0
                 )
 

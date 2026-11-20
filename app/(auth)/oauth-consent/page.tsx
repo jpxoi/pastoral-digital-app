@@ -1,4 +1,5 @@
-import { OAuthConsent, Show } from '@clerk/nextjs'
+import { Show } from '@clerk/nextjs'
+import { AuthOAuthConsent } from '@/components/auth/auth-clerk-forms'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
@@ -10,7 +11,7 @@ export default function OAuthConsentPage() {
   return (
     <Suspense>
       <Show when='signed-in'>
-        <OAuthConsent />
+        <AuthOAuthConsent />
       </Show>
     </Suspense>
   )

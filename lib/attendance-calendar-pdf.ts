@@ -5,7 +5,7 @@ import {
   type PDFFont,
   type PDFPage,
 } from 'pdf-lib'
-import { UserCategory } from '@/types'
+import { AttendanceStatus, UserCategory } from '@/types'
 
 export type AttendanceCalendarPdfPerson = {
   fullName: string
@@ -92,15 +92,15 @@ function categoryLabel(category: UserCategory) {
 
 function attendanceLabel(status: string | null | undefined) {
   switch (status) {
-    case 'A TIEMPO':
+    case AttendanceStatus.A_TIEMPO:
       return 'A'
-    case 'TARDANZA':
+    case AttendanceStatus.TARDANZA:
       return 'T'
-    case 'FALTA INJUSTIFICADA':
+    case AttendanceStatus.FALTA_INJUSTIFICADA:
       return 'F'
-    case 'FALTA JUSTIFICADA':
+    case AttendanceStatus.FALTA_JUSTIFICADA:
       return 'FJ'
-    case 'TARDANZA JUSTIFICADA':
+    case AttendanceStatus.TARDANZA_JUSTIFICADA:
       return 'TJ'
     default:
       return '-'
@@ -109,15 +109,15 @@ function attendanceLabel(status: string | null | undefined) {
 
 function statusColor(status: string | null | undefined) {
   switch (status) {
-    case 'A TIEMPO':
+    case AttendanceStatus.A_TIEMPO:
       return rgb(0.13, 0.45, 0.29)
-    case 'TARDANZA':
+    case AttendanceStatus.TARDANZA:
       return rgb(0.63, 0.43, 0.02)
-    case 'FALTA INJUSTIFICADA':
+    case AttendanceStatus.FALTA_INJUSTIFICADA:
       return rgb(0.68, 0.18, 0.18)
-    case 'FALTA JUSTIFICADA':
+    case AttendanceStatus.FALTA_JUSTIFICADA:
       return rgb(0.16, 0.36, 0.67)
-    case 'TARDANZA JUSTIFICADA':
+    case AttendanceStatus.TARDANZA_JUSTIFICADA:
       return rgb(0.45, 0.25, 0.63)
     default:
       return rgb(0.42, 0.45, 0.44)
