@@ -1,3 +1,5 @@
+import { db } from '@/db/drizzle'
+import { massEvidenceFilesTable } from '@/db/schema'
 import { auth } from '@clerk/nextjs/server'
 import { createUploadthing, type FileRouter } from 'uploadthing/next'
 import { UploadThingError } from 'uploadthing/server'
@@ -17,7 +19,10 @@ export const ourFileRouter = {
       return { userId }
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      console.log('file url', file.ufsUrl)
+      await db
+        .insert(massEvidenceFilesTable)
+        .values({ key: file.key, userId: metadata.userId, hash: file.fileHash })
+        .onConflictDoNothing({ target: massEvidenceFilesTable.key })
       return { uploadedBy: metadata.userId }
     }),
 } satisfies FileRouter

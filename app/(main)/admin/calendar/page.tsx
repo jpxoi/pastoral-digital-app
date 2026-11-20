@@ -1,3 +1,6 @@
+import PageActions from '@/components/shared/pageActions'
+import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
+import PageHeader from '@/components/shared/pageHeader'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import AttendanceCalendarTable from '@/components/admin/attendanceCalendarTable'
@@ -15,15 +18,14 @@ export default async function Page() {
 
   return (
     <>
-      <div className='flex justify-between gap-2 max-sm:flex-col'>
-        <div className='flex flex-col gap-2 text-left'>
-          <h1 className='text-xl font-semibold sm:text-2xl'>
-            Calendario de Asistencia
-          </h1>
-        </div>
+      <PageHeader
+        breadcrumb={
+          <PageBreadcrumb label='Calendario de Asistencia' administration />
+        }
+      />
+      <PageActions>
         <RevalidateButton tag='attendance' />
-      </div>
-
+      </PageActions>
       <Suspense fallback={<AttendanceCalendarTableSkeleton />}>
         <AttendanceCalendarTable />
       </Suspense>

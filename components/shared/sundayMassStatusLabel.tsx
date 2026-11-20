@@ -1,26 +1,33 @@
-import { IconCheck, IconClockQuestion } from '@tabler/icons-react'
+import { IconCheck, IconClockQuestion, IconX } from '@tabler/icons-react'
+import { SundayMassStatus } from '@/types'
 import type { JSX } from 'react'
 import { Badge } from '../ui/badge'
 
 export default function SundayMassStatusLabel({
-  verified,
+  status,
 }: {
-  verified: string
+  status: SundayMassStatus
 }) {
-  const categoryMapping: { [key: string]: JSX.Element } = {
-    verificado: (
+  const statusMapping: Record<SundayMassStatus, JSX.Element> = {
+    [SundayMassStatus.ACCEPTED]: (
       <Badge variant={'emerald'} className='h-8 rounded-lg'>
         <IconCheck className='size-4' />
-        <span className='ml-2 text-nowrap'>Verificado</span>
+        <span className='text-nowrap'>Aceptado</span>
       </Badge>
     ),
-    pendiente: (
+    [SundayMassStatus.PENDING]: (
       <Badge variant={'orange'} className='h-8 rounded-lg'>
         <IconClockQuestion className='size-4' />
-        <span className='ml-2 text-nowrap'>Pendiente</span>
+        <span className='text-nowrap'>Pendiente</span>
+      </Badge>
+    ),
+    [SundayMassStatus.REJECTED]: (
+      <Badge variant='red' className='h-8 rounded-lg'>
+        <IconX className='size-4' />
+        <span className='text-nowrap'>Rechazado</span>
       </Badge>
     ),
   }
 
-  return categoryMapping[verified] || null
+  return statusMapping[status] || null
 }

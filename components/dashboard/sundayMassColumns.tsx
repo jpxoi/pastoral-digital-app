@@ -54,19 +54,17 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
     },
   },
   {
-    accessorKey: 'verified',
+    accessorKey: 'status',
     header: () => (
       <div className='w-full text-right'>
         <span>Estado</span>
       </div>
     ),
     cell: ({ row }) => {
-      const status = row.original.verified
+      const status = row.original.status
       return (
         <div className='flex items-center justify-end'>
-          <SundayMassStatusLabel
-            verified={status ? 'verificado' : 'pendiente'}
-          />
+          <SundayMassStatusLabel status={status} />
         </div>
       )
     },

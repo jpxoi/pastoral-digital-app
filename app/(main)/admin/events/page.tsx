@@ -1,8 +1,11 @@
+import PageActions from '@/components/shared/pageActions'
+import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
+import { Skeleton } from '@/components/ui/skeleton'
+import PageHeader from '@/components/shared/pageHeader'
 import { Metadata } from 'next'
 import { Suspense } from 'react'
 import AdminEventsTable from '@/components/admin/adminEventsTable'
-import EventCreateDialogButton from '@/components/admin/eventCreateDialogButton'
-import { getAllLocations } from '@/queries/select'
+import EventCreateAction from '@/components/admin/eventCreateAction'
 import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
@@ -12,28 +15,17 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   await requirePermission(Permission.EVENTS_MANAGE)
-  const locations = await getAllLocations()
 
   return (
     <>
-      <div className='flex justify-between gap-2 max-sm:flex-col'>
-        <div className='flex flex-col gap-2 text-left'>
-          <h1 className='text-xl font-semibold sm:text-2xl'>
-            Administrar Eventos
-          </h1>
-          <p className='text-sm text-neutral-500'>
-            Consulta los eventos y crea nuevos horarios de asistencia.
-          </p>
-        </div>
-        <div className='flex flex-col items-start gap-2 sm:items-end'>
-          <EventCreateDialogButton locations={locations} />
-          {locations.length === 0 && (
-            <p className='text-sm text-neutral-500'>
-              Registra una ubicación en la base de datos para crear eventos.
-            </p>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        breadcrumb={<PageBreadcrumb label='Eventos' administration />}
+      />
+      <PageActions>
+        <Suspense fallback={<Skeleton className='h-9 w-36' />}>
+          <EventCreateAction />
+        </Suspense>
+      </PageActions>
       <Suspense
         fallback={
           <p className='text-muted-foreground py-8 text-center text-sm'>

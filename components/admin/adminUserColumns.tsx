@@ -142,7 +142,7 @@ export const getAdminUserColumns = (
           variant={roleVariants[row.original.role]}
           className='h-8 rounded-lg text-nowrap'
         >
-          <Icon className='mr-2 size-4' />
+          <Icon className='size-4' />
           {roleLabels[row.original.role]}
         </Badge>
       )

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { IconCheck, IconChevronsUpDown } from '@tabler/icons-react'
+import { IconCheck, IconSelector } from '@tabler/icons-react'
 import * as RPNInput from 'react-phone-number-input'
 import flags from 'react-phone-number-input/flags'
 
@@ -110,7 +110,7 @@ const CountrySelect = ({
             country={selectedCountry}
             countryName={selectedCountry}
           />
-          <IconChevronsUpDown
+          <IconSelector
             className={cn(
               '-mr-2 size-4 opacity-50',
               disabled ? 'hidden' : 'opacity-100'

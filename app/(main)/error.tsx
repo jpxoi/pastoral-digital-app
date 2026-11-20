@@ -1,5 +1,9 @@
 'use client'
 
+import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
+
+import PageHeader from '@/components/shared/pageHeader'
+
 import ErrorFallback from '@/components/shared/errorFallback'
 
 export default function Error({
@@ -9,5 +13,10 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
-  return <ErrorFallback error={error} reset={reset} />
+  return (
+    <>
+      <PageHeader breadcrumb={<PageBreadcrumb label='Ocurrió un error' />} />
+      <ErrorFallback error={error} reset={reset} />
+    </>
+  )
 }

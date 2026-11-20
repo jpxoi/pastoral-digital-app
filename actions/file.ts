@@ -2,39 +2,36 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { UTApi } from 'uploadthing/server'
+import { db } from '@/db/drizzle'
+import { sql } from 'drizzle-orm'
 
 const utapi = new UTApi()
 
-export async function removeFile(key: string): Promise<{
-  success: boolean
-}> {
+export async function removeFile(key: string): Promise<{ success: boolean }> {
+  const { userId } = await auth()
+  if (!userId || !key) return { success: false }
+
   try {
-    if (!key) return { success: false }
-    const { userId } = await auth()
+    // Competes with registration for the same evidence row. Attached files cannot be claimed.
+    const claimed = await db.execute(sql`
+      UPDATE mass_evidence_files SET state = 'deleting', updated_at = now()
+      WHERE key = ${key} AND user_id = ${userId} AND state IN ('available', 'deleting', 'deleted')
+        AND NOT EXISTS (SELECT 1 FROM sunday_masses WHERE evidence_file_key = ${key})
+      RETURNING key
+    `)
+    if (!claimed.rows.length) return { success: false }
 
-    if (!userId) {
-      console.warn('[UploadThing] Unauthorized delete attempt for key:', key)
-      return { success: false }
-    }
+    const result = await utapi.deleteFiles(key)
+    if (!result.success) return { success: false }
 
-    const res = await utapi.deleteFiles(key)
-
-    if (!res.success) {
-      console.error(
-        '[UploadThing] Orphaned file failed to delete on backend. Key:',
-        key
-      )
-      return { success: false }
-    }
-
+    await db.execute(sql`
+      UPDATE mass_evidence_files SET state = 'deleted', updated_at = now()
+      WHERE key = ${key} AND user_id = ${userId} AND state = 'deleting'
+    `)
     return { success: true }
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Unknown error'
-    console.error(
-      `[Server Error] Exception during file deletion for key ${key}:`,
-      errorMessage
-    )
+    // Keep deleting state on uncertain storage failures: retries are allowed, registration isn't.
+    console.error('Could not delete unregistered mass evidence', error)
     return { success: false }
   }
 }

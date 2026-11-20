@@ -8,11 +8,11 @@ import SundayMassTableSkeleton from './sundayMassTableSkeleton'
 
 export default function AttendanceSection() {
   return (
-    <div className='flex h-auto w-full flex-col items-center justify-start gap-4'>
+    <div className='flex w-full flex-col gap-8'>
       <Suspense fallback={<DashboardCardsSkeleton />}>
         <DashboardCards />
       </Suspense>
-      <div className='grid w-full grid-cols-1 gap-4 lg:grid-cols-2'>
+      <div className='grid w-full grid-cols-1 items-start gap-8 xl:grid-cols-2'>
         <Suspense fallback={<AttendanceTableSkeleton />}>
           <AttendanceTable />
         </Suspense>

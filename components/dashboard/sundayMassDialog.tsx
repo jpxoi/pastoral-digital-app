@@ -24,7 +24,7 @@ export default function SundayMassDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={'outline'} className='max-sm:w-full' size={'sm'}>
+        <Button variant={'outline'} size={'sm'}>
           <IconBuildingChurch />
           Registrar Misa
         </Button>

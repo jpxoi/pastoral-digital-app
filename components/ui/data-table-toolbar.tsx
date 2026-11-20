@@ -3,7 +3,12 @@
 import { Table } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from '@/components/ui/input-group'
 import { DataTableFacetedFilter } from '@/components/ui/data-table-faceted-filter'
 import {
   AttendanceStatusFilterOptions,
@@ -11,7 +16,7 @@ import {
   UserRoleFilterOptions,
   UserScheduleFilterOptions,
 } from '@/lib/filter'
-import { IconX } from '@tabler/icons-react'
+import { IconSearch, IconX } from '@tabler/icons-react'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -21,18 +26,38 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+  const globalFilter = String(table.getState().globalFilter ?? '')
 
   return (
     <div className='flex items-center justify-between gap-2'>
       <div className='flex flex-1 flex-col items-start max-sm:space-y-2 sm:flex-row sm:items-center sm:space-x-2'>
-        <Input
-          placeholder='Buscar registros...'
-          value={table.getState().globalFilter}
-          onChange={(event) =>
-            table.setGlobalFilter(String(event.target.value))
-          }
-          className='sm:max-w-xs'
-        />
+        <InputGroup className='h-8 w-full sm:max-w-sm'>
+          <InputGroupInput
+            aria-label='Buscar registros'
+            placeholder='Buscar registros...'
+            value={globalFilter}
+            onChange={(event) => table.setGlobalFilter(event.target.value)}
+            className='h-full'
+          />
+          <InputGroupAddon>
+            <IconSearch
+              className='size-4 shrink-0 opacity-50'
+              aria-hidden='true'
+            />
+          </InputGroupAddon>
+          {globalFilter.length > 0 && (
+            <InputGroupAddon align='inline-end'>
+              <InputGroupButton
+                variant='ghost'
+                size='icon-xs'
+                aria-label='Limpiar búsqueda'
+                onClick={() => table.setGlobalFilter('')}
+              >
+                <IconX className='size-4 opacity-50' aria-hidden='true' />
+              </InputGroupButton>
+            </InputGroupAddon>
+          )}
+        </InputGroup>
         <div className='flex flex-wrap items-center gap-2'>
           {table.getColumn('role') && (
             <DataTableFacetedFilter

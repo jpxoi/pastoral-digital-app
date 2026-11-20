@@ -1,21 +1,58 @@
-import { currentUser } from '@clerk/nextjs/server'
+import ErrorAlert from '@/components/shared/errorAlert'
+import { IconCalendarCheck } from '@tabler/icons-react'
+import { DashboardEmpty, DashboardSection } from './dashboard-section'
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 import { getAttendanceRecordsByUserId } from '@/queries/select'
+import { PersonalRecordsTable } from './personal-records-table'
 import { SimpleDataTable } from '@/components/ui/simple-data-table'
 import { UserAttendanceColumns } from '@/components/dashboard/userAttendanceColumns'
 
-export default async function AttendanceTable() {
-  const user = await currentUser()
-  const attendanceRecords = await getAttendanceRecordsByUserId(
-    user?.id as string
-  )
+export default async function AttendanceTable({
+  preview = true,
+}: { preview?: boolean } = {}) {
+  const { userId } = await auth()
+  if (!userId) redirect('/sign-in')
+  let attendanceRecords: Awaited<
+    ReturnType<typeof getAttendanceRecordsByUserId>
+  >
+  try {
+    attendanceRecords = await getAttendanceRecordsByUserId(
+      userId,
+      preview ? 5 : null
+    )
+  } catch (error) {
+    console.error('Failed to load getAttendanceRecordsByUserId', error)
+    return (
+      <DashboardSection title='Mis asistencias'>
+        <ErrorAlert
+          title='No se pudieron cargar tus asistencias'
+          description='Inténtalo de nuevo más tarde.'
+        />
+      </DashboardSection>
+    )
+  }
 
   return (
-    <div className='flex w-full flex-col gap-2'>
-      <h1 className='text-left text-lg font-bold'>Mis Asistencias</h1>
-      <SimpleDataTable
-        columns={UserAttendanceColumns}
-        data={attendanceRecords}
-      />
-    </div>
+    <DashboardSection
+      title='Mis asistencias'
+      count={preview ? undefined : attendanceRecords.length}
+      href={preview ? '/attendance' : undefined}
+    >
+      {attendanceRecords.length > 0 ? (
+        preview ? (
+          <SimpleDataTable
+            columns={UserAttendanceColumns}
+            data={attendanceRecords}
+          />
+        ) : (
+          <PersonalRecordsTable kind='attendance' data={attendanceRecords} />
+        )
+      ) : (
+        <DashboardEmpty icon={<IconCalendarCheck aria-hidden='true' />}>
+          Aún no tienes asistencias
+        </DashboardEmpty>
+      )}
+    </DashboardSection>
   )
 }

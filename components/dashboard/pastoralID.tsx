@@ -31,7 +31,7 @@ export default async function PastoralId() {
       : 'Catequista'
 
   return (
-    <div className='relative isolate flex w-full min-w-0 flex-col gap-2 bg-white p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'>
+    <div className='bg-card text-card-foreground relative isolate flex w-full min-w-0 flex-col gap-2 p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'>
       <PastoralIdBackground className='pointer-events-none absolute inset-0 -z-10 size-full' />
       <div className='flex grow flex-col items-center justify-start gap-2'>
         <PastoralIdQRCode userId={user.id} />
@@ -46,7 +46,7 @@ export default async function PastoralId() {
         <h3 className='text-card-foreground text-center text-xl font-bold break-words sm:text-2xl'>
           {user?.fullName}
         </h3>
-        <p className='text-base text-blue-950'>{schedule}</p>
+        <p className='text-primary text-base'>{schedule}</p>
       </div>
     </div>
   )

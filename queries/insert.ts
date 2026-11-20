@@ -1,3 +1,5 @@
+import { sql } from 'drizzle-orm'
+import { v7 as uuidv7 } from 'uuid'
 import { db } from '@/db/drizzle'
 import {
   InsertUser,
@@ -44,8 +46,22 @@ export const createLocations = async (data: InsertLocation[]) => {
   await db.insert(locationsTable).values(data)
 }
 
-export const createSundayMass = async (data: InsertSundayMass) => {
-  await db.insert(sundayMassesTable).values(data)
+export const createSundayMass = async (
+  data: Omit<InsertSundayMass, 'evidenceFileHash'>
+) => {
+  // Claim and insertion share one statement: any constraint failure rolls both back.
+  const result = await db.execute(sql`
+    WITH evidence AS (
+      UPDATE mass_evidence_files SET state = 'attached', updated_at = now()
+      WHERE key = ${data.evidenceFileKey} AND user_id = ${data.userId} AND state = 'available'
+        AND NOT EXISTS (SELECT 1 FROM sunday_masses WHERE evidence_file_key = ${data.evidenceFileKey})
+      RETURNING key, hash
+    )
+    INSERT INTO sunday_masses (id, user_id, parish, sunday_date, evidence_file_key, evidence_file_hash)
+    SELECT ${uuidv7()}, ${data.userId}, ${data.parish}, ${data.sundayDate}, key, hash FROM evidence
+    RETURNING id
+  `)
+  if (!result.rows.length) throw new Error('EVIDENCE_UNAVAILABLE')
 }
 export const createSundayMasses = async (data: InsertSundayMass[]) => {
   await db.insert(sundayMassesTable).values(data)

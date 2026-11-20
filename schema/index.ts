@@ -79,10 +79,6 @@ export const NewSundayMassFormSchema = z.object({
     .string()
     .trim()
     .nonempty('La evidencia de asistencia es requerida'),
-  evidenceFileHash: z
-    .string()
-    .trim()
-    .nonempty('El hash del archivo es requerido'),
 })
 
 const localDateSchema = z

@@ -1,3 +1,6 @@
+import PageActions from '@/components/shared/pageActions'
+import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
+import PageHeader from '@/components/shared/pageHeader'
 import AttendanceTable from '@/components/admin/attendanceTable'
 import { Suspense } from 'react'
 import AttendanceTableSkeleton from '@/components/admin/attendanceTableSkeleton'
@@ -15,17 +18,14 @@ export default async function Page() {
 
   return (
     <>
-      <div className='flex justify-between gap-2 max-sm:flex-col'>
-        <div className='flex flex-col gap-2 text-left'>
-          <h1 className='text-xl font-semibold sm:text-2xl'>
-            Registro de Asistencia
-          </h1>
-          <p className='text-sm text-neutral-500'>
-            Aquí puedes ver los registros de asistencia de los catequistas.
-          </p>
-        </div>
+      <PageHeader
+        breadcrumb={
+          <PageBreadcrumb label='Registro de Asistencia' administration />
+        }
+      />
+      <PageActions>
         <RevalidateButton tag='attendance' />
-      </div>
+      </PageActions>
       <Suspense fallback={<AttendanceTableSkeleton />}>
         <AttendanceTable />
       </Suspense>

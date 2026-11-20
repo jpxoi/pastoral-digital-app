@@ -8,7 +8,8 @@ import {
   usersTable,
 } from '@/db/schema'
 import { AttendanceStatus, UserRole } from '@/types'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
+import { SundayMassStatus } from '@/types'
 
 export const updateUserSchedule = async (
   userId: SelectUser['id'],
@@ -43,16 +44,27 @@ export const updateAttendanceRecordStatus = async (
 
 export const updateSundayMassRecordVerification = async (
   recordId: SelectSundayMass['id'],
-  verified: SelectSundayMass['verified'],
+  status: SelectSundayMass['status'],
   verifiedBy: SelectSundayMass['verifiedBy']
 ) => {
-  return db
+  const rows = await db
     .update(sundayMassesTable)
     .set({
-      verified,
+      status,
       verifiedBy,
       verifiedAt: new Date(),
       updatedAt: new Date(),
     })
-    .where(eq(sundayMassesTable.id, recordId))
+    .where(
+      and(
+        eq(sundayMassesTable.id, recordId),
+        eq(sundayMassesTable.status, SundayMassStatus.PENDING)
+      )
+    )
+    .returning({ id: sundayMassesTable.id })
+  if (!rows.length)
+    throw new Error(
+      'El registro ya fue revisado o no existe. Actualiza la página.'
+    )
+  return rows
 }

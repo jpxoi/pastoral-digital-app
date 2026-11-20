@@ -1,8 +1,7 @@
 'use client'
 
 import { SelectUser } from '@/db/schema'
-import { Button } from '../ui/button'
-import { IconFileTypeCsv } from '@tabler/icons-react'
+import ExportCsvButton from './exportCsvButton'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -90,10 +89,5 @@ export default function ExportToCsvUsers() {
     )
   }
 
-  return (
-    <Button onClick={() => handleClick()} size='sm' className='max-sm:w-full'>
-      <IconFileTypeCsv className='mr-1 h-4 w-4' />
-      <span>Exportar CSV</span>{' '}
-    </Button>
-  )
+  return <ExportCsvButton onClick={() => handleClick()} />
 }

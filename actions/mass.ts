@@ -11,6 +11,7 @@ import { updateTag } from 'next/cache'
 import { TZDate } from '@date-fns/tz'
 import { z } from 'zod'
 import { Permission } from '@/types/permissions'
+import { SundayMassStatus } from '@/types'
 
 export async function postNewMassRecord(
   formValues: z.infer<typeof NewSundayMassFormSchema>
@@ -28,7 +29,7 @@ export async function postNewMassRecord(
         'No se pudo obtener el usuario. Por favor, vuelve a iniciar sesión.',
     }
 
-  const { parish, evidenceFileKey, evidenceFileHash } = validatedFields.data
+  const { parish, evidenceFileKey } = validatedFields.data
 
   const peruDate = new TZDate(new Date(), 'America/Lima')
 
@@ -54,7 +55,6 @@ export async function postNewMassRecord(
     userId,
     parish,
     evidenceFileKey,
-    evidenceFileHash,
     sundayDate: `${year}-${month}-${day}`,
   })
     .then(() => {
@@ -65,6 +65,11 @@ export async function postNewMassRecord(
     })
     .catch((error) => {
       console.error(error)
+      if (error instanceof Error && error.message === 'EVIDENCE_UNAVAILABLE')
+        return {
+          error:
+            'La evidencia no está disponible o no te pertenece. Vuelve a adjuntar la imagen.',
+        }
       return {
         error:
           error.cause instanceof NeonDbError
@@ -88,7 +93,11 @@ export async function verifyMassRecord(massId: string) {
     }
   }
 
-  return await updateSundayMassRecordVerification(massId, true, verifiedById)
+  return await updateSundayMassRecordVerification(
+    massId,
+    SundayMassStatus.ACCEPTED,
+    verifiedById
+  )
     .then(() => {
       updateTag('sundayMasses')
       return {
@@ -120,7 +129,11 @@ export async function rejectMassRecord(massId: string) {
     }
   }
 
-  return await updateSundayMassRecordVerification(massId, false, verifiedById)
+  return await updateSundayMassRecordVerification(
+    massId,
+    SundayMassStatus.REJECTED,
+    verifiedById
+  )
     .then(() => {
       updateTag('sundayMasses')
       return {

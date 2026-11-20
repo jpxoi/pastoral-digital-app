@@ -1,3 +1,6 @@
+import PageActions from '@/components/shared/pageActions'
+import Salutation from '@/components/dashboard/salutation'
+import PageHeader from '@/components/shared/pageHeader'
 import { Metadata } from 'next'
 import AttendanceSection from '@/components/dashboard/attendanceSection'
 
@@ -14,15 +17,19 @@ export default async function PastoralDigitalPage() {
   await requirePermission(Permission.DASHBOARD_VIEW)
 
   return (
-    <div className='flex w-full flex-col items-center justify-start gap-4'>
-      <div className='flex w-full justify-between gap-2 text-left max-sm:flex-col sm:items-center'>
-        <h1 className='text-xl font-semibold sm:text-2xl'>Inicio</h1>
-        <div className='flex flex-col gap-2 sm:flex-row-reverse'>
-          <PastoralIdDialog />
-          <SundayMassDialog />
+    <div className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
+      <PageHeader />
+      <div className='flex w-full flex-col gap-4 pb-2 sm:flex-row sm:items-center sm:justify-between'>
+        <div className='min-w-0 flex-1'>
+          <Salutation />
+        </div>
+        <div className='shrink-0'>
+          <PageActions>
+            <PastoralIdDialog />
+            <SundayMassDialog />
+          </PageActions>
         </div>
       </div>
-
       <AttendanceSection />
     </div>
   )

@@ -1,5 +1,4 @@
 import {
-  boolean,
   date,
   index,
   integer,
@@ -10,10 +9,11 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 import {
   AttendanceRecordMethod,
   AttendanceStatus,
+  SundayMassStatus,
   UserCategory,
   UserRole,
   UserSchedule,
@@ -55,6 +55,12 @@ export const AttendanceRecordMethodEnum = pgEnum(
   ]
 )
 
+export const sundayMassStatusEnum = pgEnum('sunday_mass_status_enum', [
+  SundayMassStatus.PENDING,
+  SundayMassStatus.ACCEPTED,
+  SundayMassStatus.REJECTED,
+])
+
 /* Tables */
 
 export const usersTable = pgTable('users', {
@@ -85,7 +91,9 @@ export const usersTable = pgTable('users', {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-})
+}, (table) => [
+  uniqueIndex('unq_users_dni').on(table.dni).where(sql`${table.dni} IS NOT NULL`),
+])
 
 export const attendanceRecordsTable = pgTable(
   'attendance_records',
@@ -159,6 +167,22 @@ export const locationsTable = pgTable('locations', {
     .$onUpdate(() => new Date()),
 })
 
+export const massEvidenceStateEnum = pgEnum('mass_evidence_state', [
+  'available',
+  'attached',
+  'deleting',
+  'deleted',
+])
+
+export const massEvidenceFilesTable = pgTable('mass_evidence_files', {
+  key: text('key').primaryKey(),
+  userId: text('user_id').notNull(),
+  hash: text('hash').notNull(),
+  state: massEvidenceStateEnum('state').notNull().default('available'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+})
+
 /* Registro de Misas Dominicales */
 export const sundayMassesTable = pgTable(
   'sunday_masses',
@@ -173,7 +197,9 @@ export const sundayMassesTable = pgTable(
     sundayDate: date('sunday_date').notNull().defaultNow(),
     evidenceFileKey: text('evidence_file_key').notNull().unique(),
     evidenceFileHash: text('evidence_file_hash').notNull().unique(),
-    verified: boolean('verified').default(false).notNull(),
+    status: sundayMassStatusEnum('status')
+      .default(SundayMassStatus.PENDING)
+      .notNull(),
     verifiedBy: text('verified_by').references(() => usersTable.id),
     verifiedAt: timestamp('verified_at'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -185,7 +211,7 @@ export const sundayMassesTable = pgTable(
   (table) => [
     uniqueIndex('unq_user_sunday_date').on(table.userId, table.sundayDate),
     index('idx_sunday_masses_user_id').on(table.userId),
-    index('idx_sunday_masses_verified').on(table.verified),
+    index('idx_sunday_masses_status').on(table.status),
   ]
 )
 

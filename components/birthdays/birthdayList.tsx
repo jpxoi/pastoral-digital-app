@@ -75,7 +75,7 @@ export default function BirthdayList({ users }: { users: BirthdayUser[] }) {
   return (
     <div className='flex flex-col gap-5 text-left'>
       {upcomingUsers.length === 0 ? (
-        <Empty className='bg-muted/30 h-full rounded-lg'>
+        <Empty className='h-full'>
           <EmptyMedia variant='icon'>
             <IconCakeOff />
           </EmptyMedia>

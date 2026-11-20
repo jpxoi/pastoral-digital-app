@@ -54,8 +54,7 @@ export default function BirthdayCard({
       size='sm'
       className={cn(
         'h-full text-left',
-        isToday &&
-          'bg-blue-50/60 ring-blue-200 dark:bg-blue-950/20 dark:ring-blue-900'
+        isToday && 'bg-blue-50/60 ring-blue-200'
       )}
     >
       <CardHeader className='gap-2'>
@@ -71,8 +70,7 @@ export default function BirthdayCard({
                   aria-label={fullDate}
                   className={cn(
                     'bg-muted focus-visible:ring-ring inline-flex shrink-0 cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium focus-visible:ring-2 focus-visible:outline-none',
-                    isToday &&
-                      'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+                    isToday && 'bg-blue-100 text-blue-700'
                   )}
                 >
                   <IconCake className='size-3.5' aria-hidden='true' />

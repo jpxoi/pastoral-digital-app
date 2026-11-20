@@ -15,7 +15,7 @@ export default function EmptyEvents({
   description?: string
 }) {
   return (
-    <Empty className='bg-muted/30 col-span-full h-full rounded-lg'>
+    <Empty className='col-span-full h-full'>
       <EmptyHeader>
         <EmptyMedia variant='icon'>
           <IconCalendarOff />

@@ -19,37 +19,37 @@ export default function UserScheduleLabel({
     'full-time': (
       <Badge variant={'slate'} className='h-8 rounded-lg'>
         <IconCalendarBolt className='size-4' />
-        <span className='ml-2 text-nowrap'>Completo</span>
+        <span className='text-nowrap'>Completo</span>
       </Badge>
     ),
     coordinador: (
       <Badge variant={'emerald'} className='h-8 rounded-lg'>
         <IconUserStar className='size-4' />
-        <span className='ml-2 text-nowrap'>Coordinador</span>
+        <span className='text-nowrap'>Coordinador</span>
       </Badge>
     ),
     'primera-comunion': (
       <Badge variant={'amber'} className='h-8 rounded-lg'>
         <IconCross className='size-4' />
-        <span className='ml-2 text-nowrap'>Comunión</span>
+        <span className='text-nowrap'>Comunión</span>
       </Badge>
     ),
     confirmacion: (
       <Badge variant={'red'} className='h-8 rounded-lg'>
         <IconFlame className='size-4' />
-        <span className='ml-2 text-nowrap'>Confirmación</span>
+        <span className='text-nowrap'>Confirmación</span>
       </Badge>
     ),
     logistica: (
       <Badge variant={'purple'} className='h-8 rounded-lg'>
         <IconPackageExport className='size-4' />
-        <span className='ml-2 text-nowrap'>Logística</span>
+        <span className='text-nowrap'>Logística</span>
       </Badge>
     ),
     semilleros: (
       <Badge variant={'sky'} className='h-8 rounded-lg'>
         <IconMoodKid className='size-4' />
-        <span className='ml-2 text-nowrap'>Semilleros</span>
+        <span className='text-nowrap'>Semilleros</span>
       </Badge>
     ),
   }

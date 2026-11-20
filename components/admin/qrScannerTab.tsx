@@ -355,7 +355,7 @@ export default function QrScannerTab() {
                 </Item>
               ))
             ) : (
-              <Empty className='bg-muted/30'>
+              <Empty>
                 <EmptyHeader>
                   <EmptyMedia variant='icon'>
                     <IconUserOff />

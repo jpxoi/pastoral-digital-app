@@ -87,6 +87,16 @@ export function CustomSidebar() {
       icon: <IconCalendar className={navIconClass} />,
     },
     {
+      label: 'Mis asistencias',
+      href: '/attendance',
+      icon: <IconListCheck className={navIconClass} />,
+    },
+    {
+      label: 'Mis misas',
+      href: '/masses',
+      icon: <IconBuildingChurch className={navIconClass} />,
+    },
+    {
       label: 'Cumpleaños',
       href: '/birthdays',
       icon: <IconCake className={navIconClass} />,
@@ -235,7 +245,7 @@ function SidebarUserButton() {
           tooltip={name}
           className='hover:text-sidebar-foreground active:text-sidebar-foreground data-[state=open]:text-sidebar-foreground data-[state=open]:hover:text-sidebar-foreground hover:bg-white/10 active:bg-white/15 data-[state=open]:bg-white/10 data-[state=open]:hover:bg-white/10'
         >
-          <Avatar className='size-8 rounded-full'>
+          <Avatar className='size-8 rounded-full after:border-0'>
             <AvatarImage src={user.imageUrl} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
@@ -249,7 +259,7 @@ function SidebarUserButton() {
         align='end'
         side={isMobile ? 'bottom' : 'right'}
         sideOffset={8}
-        className='min-w-56'
+        className='w-64 max-w-[calc(100vw-1rem)] min-w-0 text-left'
       >
         <DropdownMenuGroup>
           <DropdownMenuLabel>

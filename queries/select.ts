@@ -200,7 +200,7 @@ export const getLastAttendanceRecord = async () => {
 }
 
 export const getAttendanceRecordsByUserId = unstable_cache(
-  async (userId: SelectUser['id']) => {
+  async (userId: SelectUser['id'], limit: number | null = 100) => {
     return db.query.attendanceRecordsTable.findMany({
       where: eq(attendanceRecordsTable.userId, userId),
       orderBy: (fields) => [desc(fields.checkInTime), desc(fields.eventId)],
@@ -209,7 +209,7 @@ export const getAttendanceRecordsByUserId = unstable_cache(
         event: true,
         registeredByUser: true,
       },
-      limit: 100,
+      limit: limit ?? undefined,
     })
   },
   ['getAttendanceRecordsByUserId'],
@@ -426,15 +426,15 @@ export const getAllMasses = unstable_cache(
 )
 
 export const getSundayMassesRecordsByUserId = unstable_cache(
-  async (userId: SelectUser['id']) => {
+  async (userId: SelectUser['id'], limit: number | null = 100) => {
     return db.query.sundayMassesTable.findMany({
       where: eq(sundayMassesTable.userId, userId),
-      orderBy: (fields) => [desc(fields.id)],
+      orderBy: (fields) => [desc(fields.sundayDate), desc(fields.id)],
       with: {
         user: true,
         verifier: true,
       },
-      limit: 100,
+      limit: limit ?? undefined,
     })
   },
   ['getSundayMassesRecordsByUserId'],

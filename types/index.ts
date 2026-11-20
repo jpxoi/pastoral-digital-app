@@ -26,6 +26,12 @@ export interface FetchMassesProps extends SelectSundayMass {
   verifier: SelectUser | null
 }
 
+export enum SundayMassStatus {
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected',
+}
+
 export enum AttendanceStatus {
   A_TIEMPO = 'A TIEMPO',
   TARDANZA = 'TARDANZA',

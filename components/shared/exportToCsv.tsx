@@ -1,8 +1,7 @@
 'use client'
 
 import { FetchAttendanceProps } from '@/types'
-import { Button } from '../ui/button'
-import { IconFileTypeCsv } from '@tabler/icons-react'
+import ExportCsvButton from './exportCsvButton'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -85,14 +84,5 @@ export default function ExportToCsv({ eventId }: { eventId: string }) {
     )
   }
 
-  return (
-    <Button
-      onClick={() => handleClick(eventId)}
-      size='sm'
-      className='max-sm:w-full'
-    >
-      <IconFileTypeCsv className='h-4 w-4' />
-      <span>Exportar CSV</span>
-    </Button>
-  )
+  return <ExportCsvButton onClick={() => handleClick(eventId)} />
 }

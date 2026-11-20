@@ -1,9 +1,8 @@
 'use client'
 
-import { Button } from '../ui/button'
-import { FetchMassesProps } from '@/types'
+import ExportCsvButton from './exportCsvButton'
+import { FetchMassesProps, SundayMassStatus } from '@/types'
 import { tz } from '@date-fns/tz'
-import { IconFileTypeCsv } from '@tabler/icons-react'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { toast } from 'sonner'
@@ -41,7 +40,7 @@ export default function ExportToCsvMasses() {
                 'evidence_file_key',
                 'evidence_file_hash',
                 'evidence_file_url',
-                'verified',
+                'status',
                 'verfied_by_user_id',
                 'verified_by_full_name',
                 'verified_at',
@@ -59,7 +58,11 @@ export default function ExportToCsvMasses() {
                 item.evidenceFileKey,
                 item.evidenceFileHash,
                 `https://jox4e78o3v.ufs.sh/f/${item.evidenceFileKey}`,
-                item.verified ? 'Verificado' : 'Rechazado',
+                {
+                  [SundayMassStatus.PENDING]: 'Pendiente',
+                  [SundayMassStatus.ACCEPTED]: 'Aceptado',
+                  [SundayMassStatus.REJECTED]: 'Rechazado',
+                }[item.status],
                 item.verifiedBy,
                 item.verifier
                   ? `${item.verifier.firstName} ${item.verifier.lastName}`
@@ -100,10 +103,5 @@ export default function ExportToCsvMasses() {
     )
   }
 
-  return (
-    <Button onClick={() => handleClick()} size='sm' className='max-sm:w-full'>
-      <IconFileTypeCsv className='h-4 w-4' />
-      <span>Exportar CSV</span>{' '}
-    </Button>
-  )
+  return <ExportCsvButton onClick={() => handleClick()} />
 }

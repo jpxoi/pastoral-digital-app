@@ -6,7 +6,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { IconCheck, IconPhoto, IconX } from '@tabler/icons-react'
 import { toast } from 'sonner'
-import { FetchMassesProps } from '@/types'
+import { FetchMassesProps, SundayMassStatus } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import UserCategoryLabel from '../shared/userCategoryLabel'
 import { rejectMassRecord, verifyMassRecord } from '@/actions/mass'
@@ -112,20 +112,16 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
     },
   },
   {
-    id: 'verificado',
-    accessorKey: 'verified',
+    id: 'massStatus',
+    accessorKey: 'status',
     header: () => <span className='text-nowrap'>Estado</span>,
-    cell: ({ row }) => (
-      <SundayMassStatusLabel
-        verified={row.original.verified ? 'verificado' : 'pendiente'}
-      />
-    ),
+    cell: ({ row }) => <SundayMassStatusLabel status={row.original.status} />,
   },
   {
     id: 'actions',
     cell: ({ row }) => (
       <div className='flex gap-4' key={row.id}>
-        {row.original.verified ? (
+        {row.original.status === SundayMassStatus.PENDING && (
           <Button
             variant='ghost'
             className='h-8 w-8 p-0 hover:bg-red-50'
@@ -136,7 +132,8 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
             <span className='sr-only'>Rechazar</span>
             <IconX className='h-4 w-4 text-red-700 hover:text-red-800' />
           </Button>
-        ) : (
+        )}
+        {row.original.status === SundayMassStatus.PENDING && (
           <Button
             variant='ghost'
             className='h-8 w-8 p-0 hover:bg-emerald-50'
@@ -144,7 +141,7 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
               handleVerifyMass(row.original.id)
             }}
           >
-            <span className='sr-only'>Verificar</span>
+            <span className='sr-only'>Aceptar</span>
             <IconCheck className='h-4 w-4 text-emerald-700 hover:text-emerald-800' />
           </Button>
         )}

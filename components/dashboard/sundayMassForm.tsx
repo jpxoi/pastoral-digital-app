@@ -36,7 +36,6 @@ import { ClientUploadedFileData } from 'uploadthing/types'
 import Image from 'next/image'
 
 interface Evidence {
-  fileHash: string
   key: string
   name: string
   size: number
@@ -46,6 +45,7 @@ interface Evidence {
 
 export default function SundayMassForm() {
   const [isOptimizing, setIsOptimizing] = useState(false)
+  const [isRemoving, setIsRemoving] = useState(false)
   const [optimizationProgress, setOptimizationProgress] = useState(0)
 
   const [evidence, setEvidence] = useState<Evidence | null>(null)
@@ -60,7 +60,6 @@ export default function SundayMassForm() {
     defaultValues: {
       parish: '',
       evidenceFileKey: '',
-      evidenceFileHash: '',
     },
   })
 
@@ -122,9 +121,6 @@ export default function SundayMassForm() {
     setError(null)
     setEvidence(evidence)
     form.setValue('evidenceFileKey', evidence.key, { shouldValidate: true })
-    form.setValue('evidenceFileHash', evidence.fileHash, {
-      shouldValidate: true,
-    })
   }
 
   const handleOnUploadError = (error: string) => {
@@ -140,7 +136,6 @@ export default function SundayMassForm() {
 
     setEvidence(null)
     form.resetField('evidenceFileKey')
-    form.resetField('evidenceFileHash')
   }
 
   const handleOnUploadAborted = () => {
@@ -149,26 +144,29 @@ export default function SundayMassForm() {
 
     setEvidence(null)
     form.resetField('evidenceFileKey')
-    form.resetField('evidenceFileHash')
   }
 
   const handleRemoveEvidence = async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!evidence) return
 
-    const fileKey = evidence.key
-
-    setEvidence(null)
-    form.resetField('evidenceFileKey')
-    form.resetField('evidenceFileHash')
-
-    removeFile(fileKey)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((error) =>
-        console.error('Network error during background deletion:', error)
-      )
+    setIsRemoving(true)
+    try {
+      const result = await removeFile(evidence.key)
+      if (!result.success) {
+        setError(
+          'No se pudo eliminar la evidencia. Si ya está registrada, no puede eliminarse. Inténtalo de nuevo.'
+        )
+        return
+      }
+      setEvidence(null)
+      form.resetField('evidenceFileKey')
+      setError(null)
+    } catch {
+      setError('No se pudo eliminar la evidencia. Inténtalo de nuevo.')
+    } finally {
+      setIsRemoving(false)
+    }
   }
 
   const onSubmit = (data: z.infer<typeof NewSundayMassFormSchema>) => {
@@ -270,7 +268,7 @@ export default function SundayMassForm() {
                       minLength={3}
                       maxLength={45}
                       required
-                      disabled={isPending}
+                      disabled={isPending || isRemoving}
                     />
                   </FormControl>
                   <FormMessage />
@@ -309,7 +307,7 @@ export default function SundayMassForm() {
                         className='text-destructive hover:bg-destructive/10 hover:text-destructive shrink-0'
                         size='icon'
                         onClick={handleRemoveEvidence}
-                        disabled={isPending}
+                        disabled={isPending || isRemoving}
                       >
                         <IconTrash size={16} />
                       </Button>
@@ -341,8 +339,7 @@ export default function SundayMassForm() {
                   )}
                   <FormMessage />
                   <FormDescription>
-                    La imagen seleccionada será procesada y optimizada
-                    localmente antes de su envío.
+                    Adjunta una imagen de hasta 4 MB.
                   </FormDescription>
                 </FormItem>
               )}
@@ -353,7 +350,10 @@ export default function SundayMassForm() {
                 {error}
               </div>
             )}
-            <Button disabled={!evidence || isPending} type='submit'>
+            <Button
+              disabled={!evidence || isPending || isRemoving}
+              type='submit'
+            >
               {isPending ? (
                 <div className='flex items-center gap-2'>
                   <IconLoader2 className='animate-spin' />

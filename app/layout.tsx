@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Poppins } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import './globals.css'
 import { ClerkProvider } from '@clerk/nextjs'
 import { shadcn } from '@clerk/ui/themes'
@@ -9,9 +9,9 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import PwaServiceWorker from '@/components/shared/pwaServiceWorker'
 
-const poppins = Poppins({
+const geist = Geist({
+  variable: '--font-geist',
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -271,7 +271,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='es-PE' suppressHydrationWarning>
-      <body className={`${poppins.className} antialiased`}>
+      <body className={`${geist.variable} font-sans antialiased`}>
         <ClerkProvider
           localization={esPE}
           appearance={{

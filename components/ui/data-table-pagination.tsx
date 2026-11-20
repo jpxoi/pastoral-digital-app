@@ -7,14 +7,8 @@ import {
 } from '@tabler/icons-react'
 
 import { Button } from '@/components/ui/button'
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { Separator } from '@/components/ui/separator'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -40,23 +34,20 @@ export function DataTablePagination<TData>({
         />
         <div className='hidden items-center gap-x-2 text-sm sm:flex'>
           <span>Mostrar</span>
-          <Select
+          <NativeSelect
+            size='sm'
+            className='w-[70px]'
             value={`${pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value))
+            onChange={(event) => {
+              table.setPageSize(Number(event.target.value))
             }}
           >
-            <SelectTrigger className='h-8 w-[70px]'>
-              <SelectValue placeholder={pageSize} />
-            </SelectTrigger>
-            <SelectContent side='top'>
-              {[10, 20, 30, 40, 50, 100].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {[10, 20, 30, 40, 50, 100].map((option) => (
+              <NativeSelectOption key={option} value={`${option}`}>
+                {option}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
         </div>
       </div>
       <div className='flex shrink-0 items-center gap-x-2'>

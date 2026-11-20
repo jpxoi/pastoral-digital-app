@@ -18,31 +18,31 @@ export default function AttendanceStatusLabel({
     'A TIEMPO': (
       <Badge variant={'green'} className='h-8 rounded-lg'>
         <IconClockCheck className='size-4' />
-        <span className='ml-2 text-nowrap'>A TIEMPO</span>
+        <span className='text-nowrap'>A TIEMPO</span>
       </Badge>
     ),
     TARDANZA: (
       <Badge variant={'orange'} className='h-8 rounded-lg'>
         <IconClockExclamation className='size-4' />
-        <span className='ml-2 text-nowrap'>TARDANZA</span>
+        <span className='text-nowrap'>TARDANZA</span>
       </Badge>
     ),
     'FALTA INJUSTIFICADA': (
       <Badge variant={'red'} className='h-8 rounded-lg'>
         <IconCalendarX className='size-4' />
-        <span className='ml-2 text-nowrap'>FALTA NO JUSTIFICADA</span>
+        <span className='text-nowrap'>FALTA NO JUSTIFICADA</span>
       </Badge>
     ),
     'TARDANZA JUSTIFICADA': (
       <Badge variant={'purple'} className='h-8 rounded-lg'>
         <IconClockHeart className='size-4' />
-        <span className='ml-2 text-nowrap'>TARDANZA JUSTIFICADA</span>
+        <span className='text-nowrap'>TARDANZA JUSTIFICADA</span>
       </Badge>
     ),
     'FALTA JUSTIFICADA': (
       <Badge variant={'blue'} className='h-8 rounded-lg'>
         <IconCalendarHeart className='size-4' />
-        <span className='ml-2 text-nowrap'>FALTA JUSTIFICADA</span>
+        <span className='text-nowrap'>FALTA JUSTIFICADA</span>
       </Badge>
     ),
   }

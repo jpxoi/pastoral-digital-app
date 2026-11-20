@@ -10,20 +10,22 @@ export default function RevalidateButton({ tag }: { tag: string }) {
   const [isPending, startTransition] = useTransition()
 
   const handleClick = async () => {
-    startTransition(() => {
-      revalidate(tag)
+    startTransition(async () => {
+      await revalidate(tag)
     })
   }
 
   return (
     <Button
-      variant='outline'
+      variant='ghost'
       disabled={isPending}
-      size='sm'
+      size='icon'
+      aria-label={isPending ? 'Actualizando...' : 'Actualizar'}
+      title={isPending ? 'Actualizando...' : 'Actualizar'}
+      aria-busy={isPending}
       onClick={handleClick}
     >
       <IconRefresh className={cn('h-4 w-4', isPending && 'animate-spin')} />
-      <span className=''>{isPending ? 'Actualizando...' : 'Actualizar'}</span>
     </Button>
   )
 }

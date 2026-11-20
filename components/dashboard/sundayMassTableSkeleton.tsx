@@ -1,3 +1,4 @@
+import { DashboardSection } from './dashboard-section'
 import {
   Table,
   TableBody,
@@ -10,8 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 export default function SundayMassTableSkeleton() {
   return (
-    <div className='flex w-full flex-col gap-2'>
-      <h1 className='text-left text-lg font-bold'>Mis Misas</h1>
+    <DashboardSection title='Mis misas'>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -26,7 +26,7 @@ export default function SundayMassTableSkeleton() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {Array.from({ length: 5 }).map((_, index) => (
               <TableRow key={index}>
                 <TableCell>
                   <div className='flex flex-col gap-1 text-left'>
@@ -47,6 +47,6 @@ export default function SundayMassTableSkeleton() {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </DashboardSection>
   )
 }

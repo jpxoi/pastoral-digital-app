@@ -3,7 +3,7 @@ import { Skeleton } from '../ui/skeleton'
 
 export default function PastoralIDSkeleton() {
   return (
-    <div className='relative isolate flex w-full min-w-0 flex-col gap-2 bg-white p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'>
+    <div className='bg-card text-card-foreground relative isolate flex w-full min-w-0 flex-col gap-2 p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'>
       <PastoralIdBackground className='pointer-events-none absolute inset-0 -z-10 size-full' />
       <div className='flex grow flex-col items-center justify-start gap-2'>
         <div className='m-0 mx-auto flex aspect-square h-auto w-full flex-col items-center justify-center rounded-lg bg-white p-4 text-center sm:max-w-sm'>
