@@ -1,21 +1,31 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
 import { IconBuildingChurch } from '@tabler/icons-react'
-import { TZDate } from '@date-fns/tz'
+import { getMassRegistrationWindow } from '@/lib/mass-registration'
+import { auth } from '@clerk/nextjs/server'
+import { db } from '@/db/drizzle'
+import { sundayMassesTable } from '@/db/schema'
+import { and, eq } from 'drizzle-orm'
 import { connection } from 'next/server'
-import SundayMassForm from './sundayMassForm'
+import MassRegistrationDialog from './massRegistrationDialog'
 
 export default async function SundayMassBanner() {
   await connection()
-  const peruDate = new TZDate(new Date(), 'America/Lima')
+  const window = getMassRegistrationWindow()
+  if (!window.isOpen) return null
 
-  if (peruDate.getDay() !== 0) return null
+  const { userId } = await auth()
+  if (!userId) return null
+
+  const [record] = await db
+    .select({ id: sundayMassesTable.id })
+    .from(sundayMassesTable)
+    .where(
+      and(
+        eq(sundayMassesTable.userId, userId),
+        eq(sundayMassesTable.sundayDate, window.sundayDate)
+      )
+    )
+    .limit(1)
+  if (record) return null
 
   return (
     <div className='border-primary/20 bg-primary/5 flex flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5'>
@@ -24,29 +34,18 @@ export default async function SundayMassBanner() {
           <IconBuildingChurch aria-hidden='true' className='size-5' />
         </div>
         <div className='min-w-0 space-y-1'>
-          <h2 className='font-semibold'>¿Ya participaste en la misa de hoy?</h2>
+          <h2 className='font-semibold'>
+            ¿Ya participaste en la misa del domingo?
+          </h2>
           <p className='text-muted-foreground text-sm'>
-            Registra tu asistencia dominical para tenerla en tu historial.
+            Registra tu asistencia hasta el lunes a las 12:00 p. m.
           </p>
         </div>
       </div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className='shrink-0'>
-            <IconBuildingChurch aria-hidden='true' />
-            Registrar misa
-          </Button>
-        </DialogTrigger>
-        <DialogContent className='gap-6 border-none'>
-          <DialogHeader>
-            <DialogTitle className='flex items-center gap-2'>
-              <IconBuildingChurch size={24} aria-hidden='true' />
-              Registrar Misa
-            </DialogTitle>
-          </DialogHeader>
-          <SundayMassForm />
-        </DialogContent>
-      </Dialog>
+      <MassRegistrationDialog
+        initiallyOpen={false}
+        closesAt={window.closesAt.getTime()}
+      />
     </div>
   )
 }
