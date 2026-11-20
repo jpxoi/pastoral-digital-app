@@ -14,8 +14,10 @@ import SundayMassForm from './sundayMassForm'
 
 export default function MassRegistrationDialog({
   initiallyOpen,
+  closesAt,
 }: {
   initiallyOpen: boolean
+  closesAt: number
 }) {
   const [open, setOpen] = useState(initiallyOpen)
   return (
@@ -30,7 +32,7 @@ export default function MassRegistrationDialog({
         <DialogHeader>
           <DialogTitle>Registrar misa</DialogTitle>
         </DialogHeader>
-        <SundayMassForm />
+        <SundayMassForm closesAt={closesAt} />
       </DialogContent>
     </Dialog>
   )
