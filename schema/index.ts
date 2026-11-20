@@ -4,7 +4,16 @@ import { z } from 'zod'
 
 const onboardingDateSchema = z
   .string()
-  .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Ingresa tu fecha como DD/MM/AAAA.')
+  .transform((value) =>
+    /^\d{4}-\d{2}-\d{2}$/.test(value)
+      ? value.split('-').reverse().join('/')
+      : value
+  )
+  .pipe(
+    z
+      .string()
+      .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Ingresa tu fecha como DD/MM/AAAA.')
+  )
   .refine((value) => {
     const [day, month, year] = value.split('/').map(Number)
     const date = new Date(year, month - 1, day)
@@ -16,8 +25,8 @@ const onboardingDateSchema = z
     )
   }, 'Ingresa una fecha válida.')
   .transform((value) => {
-    const [day, month, year] = value.split('/').map(Number)
-    return new Date(year, month - 1, day)
+    const [day, month, year] = value.split('/')
+    return `${year}-${month}-${day}`
   })
 
 export const OnboardingFormSchema = z
@@ -26,6 +35,7 @@ export const OnboardingFormSchema = z
     dni: z
       .string()
       .trim()
+      .nullable()
       .transform((value) => value || null),
     firstName: z
       .string()
@@ -50,7 +60,7 @@ export const OnboardingFormSchema = z
         }),
       }
     ),
-    studentCode: z.string().trim().optional(),
+    studentCode: z.string().trim().nullish(),
     role: z.literal(UserRole.MEMBER).default(UserRole.MEMBER),
   })
   .superRefine((values, context) => {
@@ -86,7 +96,10 @@ export const OnboardingFormSchema = z
       today.getDate()
     )
 
-    if (values.dateOfBirth > earliestBirthDate) {
+    if (
+      values.dateOfBirth >
+      `${earliestBirthDate.getFullYear()}-${String(earliestBirthDate.getMonth() + 1).padStart(2, '0')}-${String(earliestBirthDate.getDate()).padStart(2, '0')}`
+    ) {
       context.addIssue({
         code: 'custom',
         path: ['dateOfBirth'],

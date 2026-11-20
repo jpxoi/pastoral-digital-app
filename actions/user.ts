@@ -12,7 +12,6 @@ import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
 import { updateTag } from 'next/cache'
-import { formatISO } from 'date-fns'
 import { Permission } from '@/types/permissions'
 import { updateUserRole } from '@/queries/update'
 
@@ -30,7 +29,7 @@ export const registerUser = async (
 
   return await createUser({
     ...validatedFields.data,
-    dateOfBirth: formatISO(validatedFields.data.dateOfBirth),
+    dateOfBirth: validatedFields.data.dateOfBirth,
   })
     .then(async () => {
       const onboardingResult = await completeOnboarding(

@@ -17,8 +17,6 @@ import {
   FieldGroup,
   FieldSet,
   FieldLegend,
-  FieldContent,
-  FieldTitle,
 } from '@/components/ui/field'
 import {
   IconCircleCheck,
@@ -33,7 +31,9 @@ import { UserCategory, UserRole } from '@/types'
 import { registerUser } from '@/actions/user'
 import { toast } from 'sonner'
 import { PhoneInput } from '../ui/phone-input'
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
+import { RadioGroup } from '../ui/radio-group'
+import { RadioGroup as RadioGroupPrimitive } from 'radix-ui'
+import { UserCategoryFilterOptions } from '@/lib/filter'
 import {
   InputGroup,
   InputGroupAddon,
@@ -68,9 +68,28 @@ const steps = [
 
 function formatDateInput(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 8)
-  if (digits.length <= 2) return digits
-  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+  if (digits.length < 2) return digits
+  if (digits.length < 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
   return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+}
+
+function describeDateInput(value: string | undefined) {
+  if (!value || !/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return null
+  const [day, month, year] = value.split('/').map(Number)
+  const date = new Date(0)
+  date.setUTCFullYear(year, month - 1, day)
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  )
+    return null
+  return new Intl.DateTimeFormat('es-PE', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(date)
 }
 
 export default function OnboardingForm({
@@ -264,6 +283,7 @@ export default function OnboardingForm({
                       <InputGroupInput
                         {...field}
                         id='dni'
+                        value={field.value ?? ''}
                         aria-invalid={fieldState.invalid}
                         placeholder='Número de DNI'
                         autoComplete='off'
@@ -437,7 +457,7 @@ export default function OnboardingForm({
                     {...field}
                     id='phoneNumber'
                     aria-invalid={fieldState.invalid}
-                    placeholder=''
+                    placeholder='912 345 678'
                     autoComplete='off'
                     defaultCountry='PE'
                   />
@@ -465,9 +485,19 @@ export default function OnboardingForm({
                       ref={field.ref}
                       value={field.value}
                       onBlur={field.onBlur}
-                      onChange={(event) =>
-                        field.onChange(formatDateInput(event.target.value))
-                      }
+                      onChange={(event) => {
+                        let value = event.target.value
+                        const inputType = (event.nativeEvent as InputEvent)
+                          .inputType
+                        if (
+                          inputType === 'deleteContentBackward' &&
+                          field.value?.endsWith('/') &&
+                          value === field.value.slice(0, -1)
+                        ) {
+                          value = value.slice(0, -1)
+                        }
+                        field.onChange(formatDateInput(value))
+                      }}
                       aria-invalid={fieldState.invalid}
                       placeholder='DD/MM/AAAA'
                       inputMode='numeric'
@@ -475,6 +505,14 @@ export default function OnboardingForm({
                       maxLength={10}
                     />
                   </InputGroup>
+                  {describeDateInput(field.value) && (
+                    <FieldDescription
+                      aria-live='polite'
+                      className='-mt-1! text-xs leading-snug'
+                    >
+                      {describeDateInput(field.value)}
+                    </FieldDescription>
+                  )}
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -492,12 +530,6 @@ export default function OnboardingForm({
               name='category'
               control={form.control}
               render={({ field, fieldState }) => {
-                const options = [
-                  { label: 'Alumno', value: UserCategory.STUDENT },
-                  { label: 'Exalumno', value: UserCategory.ALUMNI },
-                  { label: 'Docente', value: UserCategory.TEACHER },
-                ]
-
                 return (
                   <FieldSet data-invalid={fieldState.invalid}>
                     <FieldLegend>Relación con el colegio</FieldLegend>
@@ -508,31 +540,24 @@ export default function OnboardingForm({
                       aria-invalid={fieldState.invalid}
                       disabled={false}
                     >
-                      {options.map((item) => (
-                        <FieldLabel key={item.value} htmlFor={item.value}>
-                          <Field
-                            orientation='horizontal'
-                            data-invalid={fieldState.invalid}
-                          >
-                            <FieldContent>
-                              <FieldTitle>{item.label}</FieldTitle>
-                            </FieldContent>
-                            <RadioGroupItem
-                              value={item.value}
-                              id={item.value}
-                              aria-invalid={fieldState.invalid}
-                            />
-                          </Field>
-                        </FieldLabel>
+                      {UserCategoryFilterOptions.map((item) => (
+                        <RadioGroupPrimitive.Item
+                          key={item.value}
+                          value={item.value}
+                          aria-invalid={fieldState.invalid}
+                          className='border-input text-foreground hover:bg-muted/50 data-[state=checked]:border-primary data-[state=checked]:bg-primary/5 data-[state=checked]:text-primary focus-visible:ring-ring flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
+                        >
+                          <item.icon
+                            className='size-5 shrink-0'
+                            aria-hidden='true'
+                          />
+                          {item.label}
+                        </RadioGroupPrimitive.Item>
                       ))}
                     </RadioGroup>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
-                    <FieldDescription>
-                      Edad mínima: 13 años para alumno, 16 para exalumno y 18
-                      para docente.
-                    </FieldDescription>
                   </FieldSet>
                 )
               }}
@@ -549,6 +574,7 @@ export default function OnboardingForm({
                     <Input
                       {...field}
                       id='studentCode'
+                      value={field.value ?? ''}
                       aria-invalid={fieldState.invalid}
                       placeholder='Ej. S5B01'
                       autoComplete='off'
