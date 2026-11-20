@@ -1,5 +1,7 @@
 import { NeonDbError } from '@neondatabase/serverless'
 
+export class MassReviewConflictError extends Error {}
+
 export const handleDbError = (error: NeonDbError) => {
   if (error.message.includes('sunday_masses_evidence_file_hash_unique')) {
     return 'Esta imagen ya fue utilizada como evidencia en otro registro de misa.'

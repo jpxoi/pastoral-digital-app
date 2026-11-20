@@ -10,6 +10,7 @@ import {
 import { AttendanceStatus, UserRole } from '@/types'
 import { and, eq, ne } from 'drizzle-orm'
 import { SundayMassStatus } from '@/types'
+import { MassReviewConflictError } from '@/lib/error'
 
 export const updateUserRole = async (
   userId: SelectUser['id'],
@@ -67,9 +68,17 @@ export const updateSundayMassRecordVerification = async (
       userId: sundayMassesTable.userId,
       sundayDate: sundayMassesTable.sundayDate,
     })
-  if (!rows.length)
-    throw new Error(
-      'El registro ya fue revisado o no existe. Actualiza la página.'
+  if (!rows.length) {
+    const [record] = await db
+      .select({ id: sundayMassesTable.id })
+      .from(sundayMassesTable)
+      .where(eq(sundayMassesTable.id, recordId))
+      .limit(1)
+    throw new MassReviewConflictError(
+      record
+        ? 'Otro revisor ya procesó este registro.'
+        : 'El registro ya no está disponible.'
     )
+  }
   return rows
 }
