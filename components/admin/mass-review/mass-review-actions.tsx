@@ -31,9 +31,8 @@ export default function MassReviewActions({
       )}
       <div className='grid grid-cols-2 gap-2'>
         <Button
-          variant='ghost'
           size='lg'
-          className='bg-red-100/70 text-red-700 hover:bg-red-100 hover:text-red-800 focus-visible:border-red-400 focus-visible:ring-red-500/20 dark:hover:bg-red-100'
+          className='bg-red-500 text-white hover:bg-red-600 focus-visible:border-red-400 focus-visible:ring-red-500/30'
           disabled={busy || !canReject}
           aria-busy={pendingAction === 'reject'}
           onClick={() => onReview('reject')}
@@ -46,9 +45,8 @@ export default function MassReviewActions({
           {pendingAction === 'reject' ? 'Rechazando...' : 'Rechazar'}
         </Button>
         <Button
-          variant='ghost'
           size='lg'
-          className='bg-emerald-100/70 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 focus-visible:border-emerald-400 focus-visible:ring-emerald-500/20 dark:hover:bg-emerald-100'
+          className='bg-emerald-600 text-white hover:bg-emerald-700 focus-visible:border-emerald-500 focus-visible:ring-emerald-500/30'
           disabled={busy || !canApprove}
           aria-busy={pendingAction === 'approve'}
           onClick={() => onReview('approve')}
