@@ -41,10 +41,12 @@ function MassReviewActions({ id }: { id: string }) {
     })
 
     try {
-      await promise
+      const result = await promise
+      if ('error' in result) {
+        setPendingAction(null)
+      }
     } catch {
       // toast.promise reports the error to the user.
-    } finally {
       setPendingAction(null)
     }
   }
