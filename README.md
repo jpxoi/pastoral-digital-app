@@ -144,16 +144,18 @@ Los tres [Vercel Schedules](https://vercel.com/docs/schedules) se declaran en `v
 | `push-masses`    | Domingos a las 5:00 p. m.          | Suscritos sin registro de misa de ese domingo.                                        |
 | `push-birthdays` | Todos los días a las 9:00 a. m.    | Saludo al cumpleañero y un aviso agrupado de los demás cumpleaños a cada suscrito.    |
 
+El registro de misa abre el domingo a las 00:00 y cierra el lunes a las 12:00 p. m., en `America/Lima`. Inicio y Mis misas comparten el diálogo y la regla de horario. El servidor también valida el plazo al registrar y antes de autorizar una subida mediante `sundayMassEvidenceUploader`; las URLs de subida duran cinco minutos y los archivos completados fuera del plazo se descartan. Solo se permite un registro por usuario y domingo; un rechazo es definitivo y no habilita un nuevo envío.
+
 Los cambios efectivos de estado de misa o asistencia disparan un envío después de guardar la operación, mediante `after()`. Los avisos de asistencia no revelan estados. Las notificaciones se activan desde Inicio o desde el menú de cuenta → Notificaciones, con un único permiso por dispositivo. En iPhone/iPad debe abrirse la PWA instalada en la pantalla de inicio. Cerrar sesión desde el menú desactiva la suscripción de ese dispositivo.
 
-Los envíos masivos consultan dispositivos y usuarios con un join, filtran misas ya registradas en esa misma consulta y reservan todas las entregas del lote con un único `INSERT … SELECT … ON CONFLICT DO NOTHING`. Las peticiones al servicio push se procesan de diez en diez; las suscripciones caducadas se eliminan por lote. El registro de entregas se conserva 90 días y evita repetir envíos ya reservados.
+Los envíos masivos consultan dispositivos y usuarios con un join, filtran misas ya registradas en esa misma consulta y reservan todas las entregas del lote con un único `INSERT … SELECT … ON CONFLICT DO NOTHING`. Los avisos de revisión de misas y actualización de asistencias también agrupan usuarios y consultan sus dispositivos por páginas de 100, sin consultas por usuario. La selección y la reserva se mantienen en dos consultas por lote. Las peticiones al servicio push se procesan de diez en diez; la limpieza de suscripciones caducadas y entregas fallidas comparte un único batch HTTP. La consulta de cumpleaños y la limpieza diaria también comparten un batch. El registro de entregas se conserva 90 días y evita repetir envíos ya reservados.
 
 Los horarios son aproximados por el jitter. Los handlers usan `ce-vssscheduledat` y descartan ejecuciones de más de 30 minutos para evitar recordatorios tardíos. Los targets `path` de Schedules no reintentan automáticamente; los errores se reflejan en sus logs y en una respuesta 503. Una repetición dentro de esa ventana, con la misma fecha programada, reintenta las entregas fallidas sin repetir las reservadas correctamente. Web Push no garantiza que el usuario vea o lea el aviso; una interrupción del proceso después de reservar puede dejar una entrega sin enviar.
 
 Pruebas locales sin enviar notificaciones reales:
 
 ```sh
-pnpm exec tsx --test tests/push.test.ts
+pnpm exec tsx --test tests/mass-registration.test.ts tests/push-jobs.test.ts
 ```
 
 ### 5. Generar las migraciones de la base de datos

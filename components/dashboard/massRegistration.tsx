@@ -1,35 +1,73 @@
 import { auth } from '@clerk/nextjs/server'
-import { TZDate } from '@date-fns/tz'
 import { connection } from 'next/server'
 import { and, eq } from 'drizzle-orm'
 import { db } from '@/db/drizzle'
 import { sundayMassesTable } from '@/db/schema'
-import { getPeruDateKey } from '@/lib/birthday'
+import {
+  getMassRegistrationWindow,
+  MASS_REGISTRATION_CLOSED_MESSAGE,
+} from '@/lib/mass-registration'
+import { SundayMassStatus } from '@/types'
 import MassRegistrationDialog from './massRegistrationDialog'
 
 export default async function MassRegistration({
   searchParams,
 }: {
-  searchParams: Promise<{ register?: string | string[] }>
+  searchParams: Promise<{
+    register?: string | string[]
+    sunday?: string | string[]
+  }>
 }) {
   await connection()
   const { userId } = await auth()
   if (!userId) return null
-  const now = new TZDate(new Date(), 'America/Lima')
-  if (now.getDay() !== 0 && !(now.getDay() === 1 && now.getHours() < 18))
-    return null
-  const sunday = new Date(now.getTime() - (now.getDay() === 1 ? 86_400_000 : 0))
+
+  const { register, sunday } = await searchParams
+  const window = getMassRegistrationWindow()
+
+  const notice = (message: string) => (
+    <p role='status' className='text-muted-foreground text-sm'>
+      {message}
+    </p>
+  )
+
+  if (register === '1' && sunday && sunday !== window.sundayDate)
+    return notice(
+      'El plazo del recordatorio que abriste ya terminó. Revisa tus registros en Mis misas.'
+    )
+
+  if (!window.isOpen && register !== '1') return null
+
   const [record] = await db
-    .select({ id: sundayMassesTable.id })
+    .select({ status: sundayMassesTable.status })
     .from(sundayMassesTable)
     .where(
       and(
         eq(sundayMassesTable.userId, userId),
-        eq(sundayMassesTable.sundayDate, getPeruDateKey(sunday))
+        eq(sundayMassesTable.sundayDate, window.sundayDate)
       )
     )
     .limit(1)
-  if (record) return null
-  const { register } = await searchParams
-  return <MassRegistrationDialog initiallyOpen={register === '1'} />
+
+  if (record) {
+    if (register !== '1') return null
+    return notice(
+      record.status === SundayMassStatus.REJECTED
+        ? 'Tu registro de misa de este domingo fue rechazado.'
+        : record.status === SundayMassStatus.ACCEPTED
+          ? 'Tu registro de misa de este domingo ya fue aprobado.'
+          : 'Ya enviaste tu registro de misa de este domingo y está pendiente de revisión.'
+    )
+  }
+  if (!window.isOpen)
+    return notice(
+      `El plazo de registro ya terminó. ${MASS_REGISTRATION_CLOSED_MESSAGE}`
+    )
+
+  return (
+    <MassRegistrationDialog
+      initiallyOpen={register === '1'}
+      closesAt={window.closesAt.getTime()}
+    />
+  )
 }

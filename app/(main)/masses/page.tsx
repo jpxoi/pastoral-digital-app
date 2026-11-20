@@ -12,7 +12,10 @@ export const metadata: Metadata = { title: 'Mis misas' }
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ register?: string | string[] }>
+  searchParams: Promise<{
+    register?: string | string[]
+    sunday?: string | string[]
+  }>
 }) {
   await requirePermission(Permission.MASSES_VIEW_OWN)
   return (
