@@ -3,6 +3,16 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { setUserAssignments } from '@/actions/user'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Badge } from '@/components/ui/badge'
+import {
+  IconCross,
+  IconFlame,
+  IconMoodKid,
+  IconPackageExport,
+  IconUserStar,
+} from '@tabler/icons-react'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -115,15 +125,20 @@ export default function UserAssignmentEditor({
         if (!open && !pending) onClose()
       }}
     >
-      <DialogContent className='max-h-[85dvh] overflow-y-auto'>
-        <DialogHeader>
-          <DialogTitle>Asignaciones de {user.firstName}</DialogTitle>
+      <DialogContent className='max-h-[85dvh] gap-0 overflow-hidden p-0 sm:max-w-lg'>
+        <DialogHeader className='border-b px-6 pt-6 pb-4 text-left'>
+          <DialogTitle>Asignaciones</DialogTitle>
+          <p className='text-sm font-medium'>
+            {user.firstName} {user.lastName}
+          </p>
           <DialogDescription>
-            Selecciona hasta dos asignaciones. Semilleros es exclusivo de
-            Comunión. La comunidad es opcional.
+            Elige hasta dos. Semilleros es exclusivo de Comunión.
           </DialogDescription>
         </DialogHeader>
-        <fieldset disabled={pending} className='flex flex-col gap-3'>
+        <fieldset
+          disabled={pending}
+          className='flex max-h-[55dvh] flex-col gap-2 overflow-y-auto px-6 py-4'
+        >
           <legend className='sr-only'>Asignaciones</legend>
           {options.map((option) => {
             const index = assignments.findIndex(
@@ -143,17 +158,49 @@ export default function UserAssignmentEditor({
                   assignments.length > 0))
             const assignment = assignments[index]
 
+            const Icon =
+              option.assignment.type === 'semillero'
+                ? IconMoodKid
+                : option.assignment.type === 'coordinator'
+                  ? IconUserStar
+                  : option.assignment.type === 'logistics'
+                    ? IconPackageExport
+                    : option.assignment.programId === communion?.id
+                      ? IconCross
+                      : IconFlame
+
             return (
               <div
                 key={option.key}
-                className='flex flex-col gap-2 rounded-lg border p-3'
+                className={cn(
+                  'rounded-xl border transition-colors',
+                  selected
+                    ? 'border-primary/40 bg-primary/5'
+                    : 'border-border hover:bg-muted/50',
+                  disabled && 'opacity-45'
+                )}
               >
-                <label className='flex items-center gap-2 text-sm font-medium'>
-                  <input
-                    type='checkbox'
+                <label
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-3 text-sm font-medium',
+                    disabled ? 'cursor-not-allowed' : 'cursor-pointer'
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'flex size-8 shrink-0 items-center justify-center rounded-lg',
+                      selected
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-muted text-muted-foreground'
+                    )}
+                  >
+                    <Icon className='size-4' />
+                  </span>
+                  <span className='flex-1'>{option.label}</span>
+                  <Checkbox
                     checked={selected}
                     disabled={disabled}
-                    onChange={() =>
+                    onCheckedChange={() =>
                       setAssignments((current) =>
                         selected
                           ? current.filter((_, position) => position !== index)
@@ -161,14 +208,13 @@ export default function UserAssignmentEditor({
                       )
                     }
                   />
-                  {option.label}
                 </label>
                 {selected && assignment.programId && (
-                  <>
-                    <label className='flex flex-col gap-1 text-sm'>
-                      Comunidad
+                  <div className='border-primary/10 grid gap-3 border-t px-3 py-3 sm:grid-cols-2'>
+                    <label className='text-muted-foreground flex flex-col gap-1.5 text-xs font-medium'>
+                      Comunidad opcional
                       <select
-                        className='bg-background rounded-md border p-2'
+                        className='bg-background text-foreground focus-visible:ring-ring h-9 w-full min-w-0 rounded-lg border px-2 text-sm font-normal outline-none focus-visible:ring-2'
                         value={assignment.communityId ?? ''}
                         onChange={(event) =>
                           updateAssignment(index, {
@@ -196,10 +242,10 @@ export default function UserAssignmentEditor({
                     </label>
                     {assignment.communityId &&
                       assignment.type === 'program' && (
-                        <label className='flex flex-col gap-1 text-sm'>
+                        <label className='text-muted-foreground flex flex-col gap-1.5 text-xs font-medium'>
                           Responsabilidad
                           <select
-                            className='bg-background rounded-md border p-2'
+                            className='bg-background text-foreground focus-visible:ring-ring h-9 w-full min-w-0 rounded-lg border px-2 text-sm font-normal outline-none focus-visible:ring-2'
                             value={assignment.responsibility ?? ''}
                             onChange={(event) =>
                               updateAssignment(index, {
@@ -219,19 +265,24 @@ export default function UserAssignmentEditor({
                           Responsabilidad: Semillero
                         </p>
                       )}
-                  </>
+                  </div>
                 )}
               </div>
             )
           })}
         </fieldset>
-        <div className='flex justify-end gap-2'>
-          <Button variant='outline' disabled={pending} onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button disabled={pending} onClick={() => void save()}>
-            {pending ? 'Guardando...' : 'Guardar asignaciones'}
-          </Button>
+        <div className='bg-muted/20 flex items-center justify-between gap-3 border-t px-6 py-4'>
+          <Badge variant='secondary' className='shrink-0'>
+            {assignments.length} de 2
+          </Badge>
+          <div className='flex gap-2'>
+            <Button variant='outline' disabled={pending} onClick={onClose}>
+              Cancelar
+            </Button>
+            <Button disabled={pending} onClick={() => void save()}>
+              {pending ? 'Guardando...' : 'Guardar asignaciones'}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
