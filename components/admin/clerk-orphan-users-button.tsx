@@ -192,7 +192,7 @@ export function ClerkOrphanUsersButton() {
                 return (
                   <div
                     key={user.id}
-                    className='grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 rounded-lg border bg-card px-3 py-2'
+                    className='bg-card grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 rounded-lg border px-3 py-2'
                   >
                     <Avatar className='row-span-2 size-9'>
                       <AvatarImage src={user.imageUrl} alt='' />
