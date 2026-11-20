@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { getAttendanceCalendar } from '@/queries/select'
+import { connection } from 'next/server'
 import {
   Empty,
   EmptyHeader,
@@ -15,7 +16,8 @@ export default async function AttendanceCalendarTable({
 }: {
   children?: ReactNode
 }) {
-  const attendanceCalendar = await getAttendanceCalendar()
+  await connection()
+  const attendanceCalendar = await getAttendanceCalendar(new Date())
 
   if (!attendanceCalendar || attendanceCalendar.length === 0) {
     return (

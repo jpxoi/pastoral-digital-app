@@ -75,7 +75,7 @@ async function getUserBirthdaysForDate(peruDate: string) {
   })
 }
 
-export const getUserBirthdays = (now = new Date()) =>
+export const getUserBirthdays = (now: Date) =>
   getUserBirthdaysForDate(getPeruDateKey(now))
 
 export async function getUserAttendanceStats(userId: SelectUser['id']) {
@@ -267,7 +267,7 @@ async function getAttendanceCalendarForDate(peruDate: string) {
   }
 }
 
-export const getAttendanceCalendar = (now = new Date()) =>
+export const getAttendanceCalendar = (now: Date) =>
   getAttendanceCalendarForDate(getPeruDateKey(now))
 
 /* EventsTable */
