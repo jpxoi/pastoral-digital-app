@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useTransition } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { IconArrowLeft } from '@tabler/icons-react'
@@ -18,16 +18,20 @@ import MassReviewEmpty from './mass-review/mass-review-empty'
 function MassReviewRecord({
   record,
   pendingAction,
+  error,
   onReview,
 }: {
   record: PendingMassRecord
   pendingAction: MassReviewAction | null
+  error: string | null
   onReview: (action: MassReviewAction) => void
 }) {
   const [imageState, setImageState] = useState<EvidenceImageState>('loading')
   const imageUrl = `https://jox4e78o3v.ufs.sh/f/${record.evidenceFileKey}`
   return (
-    <div className='grid w-full min-w-0 items-start gap-4 pb-20 md:pb-0 lg:grid-cols-[minmax(0,1fr)_22.5rem]'>
+    <div
+      className={`grid w-full min-w-0 items-start gap-4 md:pb-0 lg:grid-cols-[minmax(0,1fr)_22.5rem] ${error ? 'pb-44' : 'pb-20'}`}
+    >
       <MassEvidenceImage
         imageUrl={imageUrl}
         name={`${record.user.firstName} ${record.user.lastName}`}
@@ -39,6 +43,7 @@ function MassReviewRecord({
         imageUrl={imageUrl}
         imageState={imageState}
         pendingAction={pendingAction}
+        error={error}
         onReview={onReview}
       />
     </div>
@@ -59,6 +64,20 @@ export default function MassReviewClient({
   const [error, setError] = useState<string | null>(null)
   const [refreshing, startRefresh] = useTransition()
   const record = records.find((item) => !reviewedIds.has(item.id))
+  const recordId = record?.id
+  const previousRecordId = useRef(recordId)
+  const evidenceRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (
+      previousRecordId.current &&
+      recordId &&
+      previousRecordId.current !== recordId
+    ) {
+      evidenceRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' })
+    }
+    previousRecordId.current = recordId
+  }, [recordId])
 
   async function review(action: MassReviewAction) {
     if (!record || busy.current) return
@@ -106,28 +125,23 @@ export default function MassReviewClient({
           </Link>
         </Button>
       </div>
-      {error && (
-        <p
-          role='alert'
-          className='text-destructive rounded-lg border p-3 text-sm'
-        >
-          {error}
-        </p>
-      )}
-      {record ? (
-        <MassReviewRecord
-          key={record.id}
-          record={record}
-          pendingAction={pendingAction}
-          onReview={(action) => void review(action)}
-        />
-      ) : (
-        <MassReviewEmpty
-          refreshing={refreshing}
-          busy={pendingAction !== null}
-          onRefresh={() => startRefresh(() => router.refresh())}
-        />
-      )}
+      <div ref={evidenceRef} className='scroll-mt-4'>
+        {record ? (
+          <MassReviewRecord
+            key={record.id}
+            record={record}
+            pendingAction={pendingAction}
+            error={error}
+            onReview={(action) => void review(action)}
+          />
+        ) : (
+          <MassReviewEmpty
+            refreshing={refreshing}
+            busy={pendingAction !== null}
+            onRefresh={() => startRefresh(() => router.refresh())}
+          />
+        )}
+      </div>
     </div>
   )
 }

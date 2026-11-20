@@ -26,12 +26,14 @@ export default function MassReviewDetails({
   imageUrl,
   imageState,
   pendingAction,
+  error,
   onReview,
 }: {
   record: PendingMassRecord
   imageUrl: string
   imageState: EvidenceImageState
   pendingAction: MassReviewAction | null
+  error: string | null
   onReview: (action: MassReviewAction) => void
 }) {
   const [openedOriginal, setOpenedOriginal] = useState(false)
@@ -95,6 +97,7 @@ export default function MassReviewDetails({
       </a>
       <MassReviewActions
         pendingAction={pendingAction}
+        error={error}
         canReject={imageState !== 'loading'}
         canApprove={
           imageState === 'loaded' || (imageState === 'error' && openedOriginal)
