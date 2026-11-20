@@ -8,6 +8,7 @@ import {
 import { AttendanceStatus, UserCategory } from '@/types'
 
 export type AttendanceCalendarPdfPerson = {
+  userId: string
   fullName: string
   category: UserCategory
   studentCode: string | null
@@ -18,9 +19,12 @@ const PAGE_WIDTH = 841.89
 const PAGE_HEIGHT = 595.28
 const MARGIN = 28
 const HEADER_HEIGHT = 50
-const TABLE_HEADER_HEIGHT = 22
+const TABLE_HEADER_HEIGHT = 20
 const ROW_HEIGHT = 18
-const FIXED_WIDTHS = [25, 171, 66, 62]
+const FIXED_WIDTHS = [25, 237, 62]
+const GROUP_HEADER_HEIGHT = 18
+const SUMMARY_HEIGHT = 48
+const SUMMARY_GAP = 14
 const MAX_DATES_PER_PAGE = 20
 
 function printable(text: string) {
@@ -77,17 +81,6 @@ function drawCellText(
     label = `${label.slice(0, -2)}...`
   }
   drawText(page, label, x + 4, top, { font, size, color })
-}
-
-function categoryLabel(category: UserCategory) {
-  switch (category) {
-    case UserCategory.STUDENT:
-      return 'Alumno'
-    case UserCategory.ALUMNI:
-      return 'Exalumno'
-    case UserCategory.TEACHER:
-      return 'Profesor'
-  }
 }
 
 function attendanceLabel(status: string | null | undefined) {
@@ -152,6 +145,50 @@ function drawPageHeader(
   })
 }
 
+function drawSummary(
+  page: PDFPage,
+  items: { label: string; value: number }[],
+  regular: PDFFont,
+  bold: PDFFont
+) {
+  const gap = 8
+  const width =
+    (PAGE_WIDTH - MARGIN * 2 - gap * (items.length - 1)) / items.length
+  items.forEach((item, index) => {
+    const x = MARGIN + index * (width + gap)
+    const height = SUMMARY_HEIGHT
+    const radius = 4
+    const control = radius * (1 - 0.5522847498)
+    page.drawSvgPath(
+      `M ${radius} 0 H ${width - radius}
+       C ${width - control} 0 ${width} ${control} ${width} ${radius}
+       V ${height - radius}
+       C ${width} ${height - control} ${width - control} ${height} ${width - radius} ${height}
+       H ${radius}
+       C ${control} ${height} 0 ${height - control} 0 ${height - radius}
+       V ${radius}
+       C 0 ${control} ${control} 0 ${radius} 0 Z`,
+      {
+        x,
+        y: PAGE_HEIGHT - HEADER_HEIGHT,
+        color: rgb(0.97, 0.97, 0.97),
+        borderColor: rgb(0.87, 0.87, 0.87),
+        borderWidth: 0.5,
+      }
+    )
+    drawText(page, item.label.toUpperCase(), x + 10, HEADER_HEIGHT + 8, {
+      font: regular,
+      size: 7,
+      color: rgb(0.42, 0.42, 0.42),
+    })
+    drawText(page, String(item.value), x + 10, HEADER_HEIGHT + 21, {
+      font: bold,
+      size: 17,
+      color: rgb(0.18, 0.18, 0.18),
+    })
+  })
+}
+
 export async function generateAttendanceCalendarPdf(
   people: AttendanceCalendarPdfPerson[],
   dateKeys: string[],
@@ -164,146 +201,199 @@ export async function generateAttendanceCalendarPdf(
   const regular = await pdf.embedFont(StandardFonts.Helvetica)
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold)
 
-  const orderedPeople = [...people].sort((a, b) =>
-    a.fullName.localeCompare(b.fullName, 'es', { sensitivity: 'base' })
-  )
+  const collator = new Intl.Collator('es', { sensitivity: 'base' })
+  const categories = [
+    { category: UserCategory.STUDENT, label: 'Alumnos' },
+    { category: UserCategory.ALUMNI, label: 'Exalumnos' },
+    { category: UserCategory.TEACHER, label: 'Profesores' },
+  ]
+  const groups = categories.map(({ category, label }) => ({
+    category,
+    label,
+    people: people
+      .filter((person) => person.category === category)
+      .sort(
+        (a, b) =>
+          collator.compare(a.fullName, b.fullName) ||
+          a.userId.localeCompare(b.userId)
+      ),
+  }))
   const dateGroups: string[][] = []
   for (let index = 0; index < dateKeys.length; index += MAX_DATES_PER_PAGE) {
     dateGroups.push(dateKeys.slice(index, index + MAX_DATES_PER_PAGE))
   }
   if (dateGroups.length === 0) dateGroups.push([])
 
-  const fixedWidth = FIXED_WIDTHS.reduce((sum, width) => sum + width, 0)
-  const rowCapacity = Math.max(
-    1,
-    Math.floor(
-      (PAGE_HEIGHT - HEADER_HEIGHT - TABLE_HEADER_HEIGHT - MARGIN) / ROW_HEIGHT
-    )
-  )
-  const rowGroups: AttendanceCalendarPdfPerson[][] = []
-  for (let index = 0; index < orderedPeople.length; index += rowCapacity) {
-    rowGroups.push(orderedPeople.slice(index, index + rowCapacity))
-  }
-  if (rowGroups.length === 0) rowGroups.push([])
-
-  const generatedLabel = generatedAt
-
   for (const dates of dateGroups) {
-    const dateWidth = dates.length
-      ? (PAGE_WIDTH - MARGIN * 2 - fixedWidth) / dates.length
-      : 0
-    for (
-      let rowGroupIndex = 0;
-      rowGroupIndex < rowGroups.length;
-      rowGroupIndex += 1
-    ) {
-      const rows = rowGroups[rowGroupIndex]
-      const page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-      drawPageHeader(page, generatedLabel, reportTitle, bold)
+    let page: PDFPage | undefined
+    let tableTop = HEADER_HEIGHT
 
-      const tableTop = HEADER_HEIGHT
+    for (const group of groups) {
+      const widths =
+        group.category === UserCategory.STUDENT
+          ? FIXED_WIDTHS
+          : [FIXED_WIDTHS[0], FIXED_WIDTHS[1] + FIXED_WIDTHS[2]]
+      const fixedWidth = widths.reduce((sum, width) => sum + width, 0)
       const totalTableWidth = PAGE_WIDTH - MARGIN * 2
-      page.drawRectangle({
-        x: MARGIN,
-        y: PAGE_HEIGHT - tableTop - TABLE_HEADER_HEIGHT,
-        width: totalTableWidth,
-        height: TABLE_HEADER_HEIGHT,
-        color: rgb(0.03, 0.19, 0.61),
-      })
+      const dateWidth = dates.length
+        ? (totalTableWidth - fixedWidth) / dates.length
+        : 0
+      let offset = 0
 
-      const headers = ['N.', 'Nombre completo', 'Tipo', 'Código']
-      let x = MARGIN
-      headers.forEach((header, index) => {
-        drawText(page, header, x + 4, tableTop + 7, {
-          font: bold,
-          size: 7,
-          color: rgb(1, 1, 1),
-        })
-        x += FIXED_WIDTHS[index]
-      })
-      dates.forEach((dateKey) => {
-        drawCenteredText(
-          page,
-          formatDateKey(dateKey),
-          x,
-          dateWidth,
-          tableTop + 8,
-          bold,
-          6,
-          rgb(1, 1, 1)
-        )
-        x += dateWidth
-      })
+      while (offset < group.people.length) {
+        if (
+          !page ||
+          tableTop + GROUP_HEADER_HEIGHT + TABLE_HEADER_HEIGHT + ROW_HEIGHT >
+            PAGE_HEIGHT - MARGIN
+        ) {
+          page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+          drawPageHeader(page, generatedAt, reportTitle, bold)
+          tableTop = HEADER_HEIGHT
+          if (pdf.getPageCount() === 1) {
+            drawSummary(
+              page,
+              [
+                { label: 'Total de catequistas', value: people.length },
+                ...groups.map((item) => ({
+                  label: item.label,
+                  value: item.people.length,
+                })),
+              ],
+              regular,
+              bold
+            )
+            tableTop += SUMMARY_HEIGHT + SUMMARY_GAP
+          }
+        }
 
-      rows.forEach((person, rowIndex) => {
-        const top = tableTop + TABLE_HEADER_HEIGHT + rowIndex * ROW_HEIGHT
-        const fill = rowIndex % 2 === 0 ? rgb(0.94, 0.96, 1) : rgb(1, 1, 1)
         page.drawRectangle({
           x: MARGIN,
-          y: PAGE_HEIGHT - top - ROW_HEIGHT,
+          y: PAGE_HEIGHT - tableTop - GROUP_HEADER_HEIGHT,
           width: totalTableWidth,
-          height: ROW_HEIGHT,
-          color: fill,
+          height: GROUP_HEADER_HEIGHT,
+          color: rgb(0.88, 0.93, 1),
         })
-        let cellX = MARGIN
-        drawCenteredText(
-          page,
-          String(rowGroupIndex * rowCapacity + rowIndex + 1),
-          cellX,
-          FIXED_WIDTHS[0],
-          top + 5,
-          regular,
-          7
-        )
-        cellX += FIXED_WIDTHS[0]
-        drawCellText(
-          page,
-          person.fullName,
-          cellX,
-          FIXED_WIDTHS[1],
-          top + 5,
-          regular,
-          7
-        )
-        cellX += FIXED_WIDTHS[1]
-        drawCellText(
-          page,
-          categoryLabel(person.category),
-          cellX,
-          FIXED_WIDTHS[2],
-          top + 5,
-          regular,
-          7
-        )
-        cellX += FIXED_WIDTHS[2]
-        drawCellText(
-          page,
-          person.category === UserCategory.STUDENT
-            ? (person.studentCode ?? '')
-            : '',
-          cellX,
-          FIXED_WIDTHS[3],
-          top + 5,
-          regular,
-          7
-        )
-        cellX += FIXED_WIDTHS[3]
-
-        dates.forEach((dateKey) => {
-          const status = person.attendance[dateKey]
-          drawCenteredText(
+        const groupLabel = group.label.toUpperCase()
+        const groupLabelSize = 6.5
+        drawText(page, groupLabel, MARGIN + 4, tableTop + 5, {
+          font: bold,
+          size: groupLabelSize,
+        })
+        if (offset > 0) {
+          const labelWidth = bold.widthOfTextAtSize(groupLabel, groupLabelSize)
+          drawText(
             page,
-            attendanceLabel(status),
-            cellX,
-            dateWidth,
-            top + 5,
-            bold,
-            7,
-            statusColor(status)
+            '(continuación)',
+            MARGIN + 4 + labelWidth + 4,
+            tableTop + 6,
+            {
+              font: regular,
+              size: 5.5,
+              color: rgb(0.42, 0.45, 0.49),
+            }
           )
-          cellX += dateWidth
+        }
+        tableTop += GROUP_HEADER_HEIGHT
+        page.drawRectangle({
+          x: MARGIN,
+          y: PAGE_HEIGHT - tableTop - TABLE_HEADER_HEIGHT,
+          width: totalTableWidth,
+          height: TABLE_HEADER_HEIGHT,
+          color: rgb(0.03, 0.19, 0.61),
         })
-      })
+
+        const headers =
+          group.category === UserCategory.STUDENT
+            ? ['N.', 'Nombre completo', 'Código']
+            : ['N.', 'Nombre completo']
+        let x = MARGIN
+        headers.forEach((header, index) => {
+          drawText(page!, header, x + 4, tableTop + 6, {
+            font: bold,
+            size: 7,
+            color: rgb(1, 1, 1),
+          })
+          x += widths[index]
+        })
+        dates.forEach((dateKey) => {
+          drawCenteredText(
+            page!,
+            formatDateKey(dateKey),
+            x,
+            dateWidth,
+            tableTop + 7,
+            bold,
+            6,
+            rgb(1, 1, 1)
+          )
+          x += dateWidth
+        })
+        tableTop += TABLE_HEADER_HEIGHT
+
+        const capacity = Math.floor(
+          (PAGE_HEIGHT - MARGIN - tableTop) / ROW_HEIGHT
+        )
+        const rows = group.people.slice(offset, offset + capacity)
+        rows.forEach((person, rowIndex) => {
+          const top = tableTop + rowIndex * ROW_HEIGHT
+          page!.drawRectangle({
+            x: MARGIN,
+            y: PAGE_HEIGHT - top - ROW_HEIGHT,
+            width: totalTableWidth,
+            height: ROW_HEIGHT,
+            color: rowIndex % 2 === 0 ? rgb(0.94, 0.96, 1) : rgb(1, 1, 1),
+          })
+          let cellX = MARGIN
+          drawCenteredText(
+            page!,
+            String(offset + rowIndex + 1),
+            cellX,
+            widths[0],
+            top + 5,
+            regular,
+            7
+          )
+          cellX += widths[0]
+          drawCellText(
+            page!,
+            person.fullName,
+            cellX,
+            widths[1],
+            top + 5,
+            regular,
+            7
+          )
+          cellX += widths[1]
+          if (group.category === UserCategory.STUDENT) {
+            drawCellText(
+              page!,
+              person.studentCode ?? '',
+              cellX,
+              widths[2],
+              top + 5,
+              regular,
+              7
+            )
+            cellX += widths[2]
+          }
+          dates.forEach((dateKey) => {
+            const status = person.attendance[dateKey]
+            drawCenteredText(
+              page!,
+              attendanceLabel(status),
+              cellX,
+              dateWidth,
+              top + 5,
+              bold,
+              7,
+              statusColor(status)
+            )
+            cellX += dateWidth
+          })
+        })
+        offset += rows.length
+        tableTop += rows.length * ROW_HEIGHT
+      }
     }
   }
 

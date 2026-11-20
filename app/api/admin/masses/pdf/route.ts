@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server'
-import { asc } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { db } from '@/db/drizzle'
 import { sundayMassesTable, usersTable } from '@/db/schema'
@@ -26,38 +26,42 @@ export async function GET() {
   }
 
   try {
-    const [people, records] = await Promise.all([
-      db
-        .select({
-          id: usersTable.id,
-          firstName: usersTable.firstName,
-          lastName: usersTable.lastName,
-          category: usersTable.category,
-          studentCode: usersTable.studentCode,
-        })
-        .from(usersTable)
-        .orderBy(asc(usersTable.firstName), asc(usersTable.lastName)),
-      db
-        .select({
-          userId: sundayMassesTable.userId,
-          sundayDate: sundayMassesTable.sundayDate,
-          status: sundayMassesTable.status,
-        })
-        .from(sundayMassesTable)
-        .orderBy(asc(sundayMassesTable.sundayDate)),
-    ])
+    const people = await db
+      .select({
+        userId: usersTable.id,
+        fullName: sql<string>`trim(${usersTable.firstName} || ' ' || ${usersTable.lastName})`,
+        category: usersTable.category,
+        studentCode: usersTable.studentCode,
+        attendance: sql<Record<string, string | null>>`coalesce(
+          jsonb_object_agg(
+            ${sundayMassesTable.sundayDate}::text,
+            case when ${sundayMassesTable.status} = ${SundayMassStatus.ACCEPTED}
+              then ${AttendanceStatus.A_TIEMPO}::text else null end
+          ) filter (where ${sundayMassesTable.id} is not null),
+          '{}'::jsonb
+        )`,
+        firstSunday: sql<
+          string | null
+        >`min(min(${sundayMassesTable.sundayDate})) over ()`,
+        lastSunday: sql<
+          string | null
+        >`max(max(${sundayMassesTable.sundayDate})) over ()`,
+      })
+      .from(usersTable)
+      .leftJoin(sundayMassesTable, eq(usersTable.id, sundayMassesTable.userId))
+      .groupBy(usersTable.id)
 
-    if (people.length === 0 || records.length === 0) {
+    const firstDate = people[0]?.firstSunday
+    const lastDate = people[0]?.lastSunday
+    if (!firstDate || !lastDate) {
       return NextResponse.json(
         { error: 'No hay registros de misas para exportar.' },
         { status: 404 }
       )
     }
 
-    const firstSunday = new Date(`${records[0].sundayDate}T00:00:00.000Z`)
-    const lastSunday = new Date(
-      `${records[records.length - 1].sundayDate}T00:00:00.000Z`
-    )
+    const firstSunday = new Date(`${firstDate}T00:00:00.000Z`)
+    const lastSunday = new Date(`${lastDate}T00:00:00.000Z`)
     const dateKeys: string[] = []
     for (
       const date = firstSunday;
@@ -65,25 +69,6 @@ export async function GET() {
       date.setUTCDate(date.getUTCDate() + 7)
     ) {
       dateKeys.push(date.toISOString().slice(0, 10))
-    }
-
-    const peopleWithAttendance = people.map((person) => ({
-      fullName: `${person.firstName} ${person.lastName}`.trim(),
-      category: person.category,
-      studentCode: person.studentCode,
-      attendance: {} as Record<string, string | null>,
-    }))
-    const peopleById = new Map(
-      people.map((person, index) => [person.id, peopleWithAttendance[index]])
-    )
-
-    for (const record of records) {
-      const person = peopleById.get(record.userId)
-      if (!person) continue
-      person.attendance[record.sundayDate] =
-        record.status === SundayMassStatus.ACCEPTED
-          ? AttendanceStatus.A_TIEMPO
-          : null
     }
 
     const now = new Date()
@@ -97,7 +82,7 @@ export async function GET() {
       minute: '2-digit',
     }).format(now)
     const pdf = await generateAttendanceCalendarPdf(
-      peopleWithAttendance,
+      people,
       dateKeys,
       `Generado el ${generatedDate} a las ${generatedTime}`,
       'REPORTE DE ASISTENCIA A MISA'

@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server'
-import { asc, sql } from 'drizzle-orm'
+import { desc, eq, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { db } from '@/db/drizzle'
 import { attendanceRecordsTable, eventsTable, usersTable } from '@/db/schema'
@@ -25,56 +25,65 @@ export async function GET() {
   }
 
   try {
-    const records = await db
+    // Keep the last event of each day, matching the calendar's date-based cells.
+    const dateKey = sql<string>`to_char(${eventsTable.date}, 'YYYY-MM-DD')`
+
+    const calendarEvents = db.$with('calendar_events').as(
+      db
+        .selectDistinctOn([dateKey], {
+          id: eventsTable.id,
+          dateKey: dateKey.as('date_key'),
+        })
+        .from(eventsTable)
+        .where(sql`${eventsTable.date}::date <= current_date`)
+        .orderBy(dateKey, desc(eventsTable.date), desc(eventsTable.id))
+    )
+
+    const calendarDates = db.$with('calendar_dates').as(
+      db
+        .select({
+          dateKeys: sql<string[]>`coalesce(
+          jsonb_agg(${calendarEvents.dateKey} order by ${calendarEvents.dateKey}),
+          '[]'::jsonb
+        )`.as('date_keys'),
+        })
+        .from(calendarEvents)
+    )
+
+    const attendanceByUser = db.$with('attendance_by_user').as(
+      db
+        .select({
+          userId: attendanceRecordsTable.userId,
+          attendance: sql<Record<string, string | null>>`jsonb_object_agg(
+          ${calendarEvents.dateKey}, ${attendanceRecordsTable.status}
+        )`.as('attendance'),
+        })
+        .from(attendanceRecordsTable)
+        .innerJoin(
+          calendarEvents,
+          eq(attendanceRecordsTable.eventId, calendarEvents.id)
+        )
+        .groupBy(attendanceRecordsTable.userId)
+    )
+
+    const people = await db
+      .with(calendarEvents, calendarDates, attendanceByUser)
       .select({
         userId: usersTable.id,
-        firstName: usersTable.firstName,
-        lastName: usersTable.lastName,
+        fullName: sql<string>`trim(${usersTable.firstName} || ' ' || ${usersTable.lastName})`,
         category: usersTable.category,
         studentCode: usersTable.studentCode,
-        eventDate: eventsTable.date,
-        status: attendanceRecordsTable.status,
+        attendance: sql<
+          Record<string, string | null>
+        >`coalesce(${attendanceByUser.attendance}, '{}'::jsonb)`,
+        dateKeys: calendarDates.dateKeys,
       })
       .from(usersTable)
-      .leftJoin(eventsTable, sql`1=1`)
-      .leftJoin(
-        attendanceRecordsTable,
-        sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
-      )
-      .where(
-        sql`${eventsTable.date} IS NOT NULL AND ${eventsTable.date}::date <= current_date::date`
-      )
-      .orderBy(asc(eventsTable.date))
+      .crossJoin(calendarDates)
+      .leftJoin(attendanceByUser, eq(usersTable.id, attendanceByUser.userId))
 
-    const peopleById = new Map<
-      string,
-      {
-        fullName: string
-        category: (typeof records)[number]['category']
-        studentCode: string | null
-        attendance: Record<string, string | null>
-      }
-    >()
-    const dateKeys = new Set<string>()
-
-    for (const record of records) {
-      if (!peopleById.has(record.userId)) {
-        peopleById.set(record.userId, {
-          fullName: `${record.firstName} ${record.lastName}`.trim(),
-          category: record.category,
-          studentCode: record.studentCode,
-          attendance: {},
-        })
-      }
-
-      if (record.eventDate) {
-        const dateKey = new Date(record.eventDate).toISOString().split('T')[0]
-        dateKeys.add(dateKey)
-        peopleById.get(record.userId)!.attendance[dateKey] = record.status
-      }
-    }
-
-    if (peopleById.size === 0) {
+    const dateKeys = people[0]?.dateKeys ?? []
+    if (people.length === 0 || dateKeys.length === 0) {
       return NextResponse.json(
         { error: 'No hay asistencias para exportar.' },
         { status: 404 }
@@ -93,8 +102,8 @@ export async function GET() {
     }).format(now)
     const generatedAt = `Generado el ${generatedDate} a las ${generatedTime}`
     const pdf = await generateAttendanceCalendarPdf(
-      Array.from(peopleById.values()),
-      Array.from(dateKeys).sort(),
+      people,
+      dateKeys,
       generatedAt
     )
 
