@@ -8,6 +8,9 @@ import RevalidateButton from '@/components/shared/revalidateButton'
 import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import ExportMassesPdfButton from '@/components/admin/exportMassesPdfButton'
+import Link from 'next/link'
+import { IconPhotoCheck } from '@tabler/icons-react'
+import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
   title: 'Administrar misas',
@@ -24,6 +27,14 @@ export default async function Page() {
         <MassesTable canReview={canReview}>
           <div className='flex flex-wrap items-center gap-2'>
             <RevalidateButton resource='masses' />
+            {canReview && (
+              <Button asChild size='sm' variant='outline'>
+                <Link href='/admin/masses/review'>
+                  <IconPhotoCheck />
+                  Revisar pendientes
+                </Link>
+              </Button>
+            )}
             <ExportMassesPdfButton />
           </div>
         </MassesTable>

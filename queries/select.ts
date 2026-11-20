@@ -8,7 +8,7 @@ import {
   sundayMassesTable,
   usersTable,
 } from '@/db/schema'
-import { AttendanceStatus } from '@/types'
+import { AttendanceStatus, SundayMassStatus } from '@/types'
 import { asc, count, desc, eq, gte, lt, sql } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { cacheTags } from '@/lib/cache'
@@ -395,6 +395,31 @@ export const getAttendanceRecordForUserEvent = async (
   })
 
 /* MassesTable */
+export async function getPendingMasses() {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(cacheTags.masses(), cacheTags.massesList(), cacheTags.usersList())
+
+  return db.query.sundayMassesTable.findMany({
+    columns: {
+      id: true,
+      parish: true,
+      sundayDate: true,
+      createdAt: true,
+      evidenceFileKey: true,
+    },
+    where: eq(sundayMassesTable.status, SundayMassStatus.PENDING),
+    orderBy: (fields) => [asc(fields.createdAt), asc(fields.id)],
+    with: {
+      user: { columns: { firstName: true, lastName: true, category: true } },
+    },
+  })
+}
+
+export type PendingMassRecord = Awaited<
+  ReturnType<typeof getPendingMasses>
+>[number]
+
 export async function getAllMasses() {
   'use cache'
   cacheLife('hours')
