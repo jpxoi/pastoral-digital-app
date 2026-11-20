@@ -102,6 +102,7 @@ export function ClerkOrphanUsersButton() {
   return (
     <>
       <Button
+        type='button'
         size='sm'
         variant='outline'
         onClick={() => {
