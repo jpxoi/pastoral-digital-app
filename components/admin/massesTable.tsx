@@ -12,7 +12,11 @@ export default async function MassesTable({
 
   return (
     <>
-      <DataTable columns={MassesColumns} data={massesRecords}>
+      <DataTable
+        columns={MassesColumns}
+        data={massesRecords}
+        autoResetPageIndex={false}
+      >
         {children}
       </DataTable>
     </>

@@ -30,21 +30,28 @@ import {
 } from '@/components/ui/table'
 
 import { DataTablePagination } from '@/components/ui/data-table-pagination'
-import { DataTableToolbar } from './data-table-toolbar'
+import {
+  DataTableToolbar,
+  type DataTableFacetedFilterConfig,
+} from './data-table-toolbar'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  autoResetPageIndex?: boolean
   getRowId?: (row: TData) => string
   globalFilterColumnId?: string
+  facetedFilters?: DataTableFacetedFilterConfig[]
   children?: ReactNode
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  autoResetPageIndex = true,
   getRowId,
   globalFilterColumnId,
+  facetedFilters,
   children,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
@@ -56,11 +63,21 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getRowId,
+    autoResetPageIndex,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
+    onSortingChange: (updater) => {
+      setSorting(updater)
+      table.resetPageIndex()
+    },
+    onColumnFiltersChange: (updater) => {
+      setColumnFilters(updater)
+      table.resetPageIndex()
+    },
+    onGlobalFilterChange: (updater) => {
+      setGlobalFilter(updater)
+      table.resetPageIndex()
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     globalFilterFn: globalFilterColumnId ? 'includesString' : undefined,
@@ -81,7 +98,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table}>{children}</DataTableToolbar>
+      <DataTableToolbar table={table} facetedFilters={facetedFilters}>
+        {children}
+      </DataTableToolbar>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

@@ -17,11 +17,24 @@ import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
 import Link from 'next/link'
 
-const formatEventDate = (date: Date) =>
-  format(new Date(date), 'PP p', {
-    locale: es,
-    in: tz('America/Lima'),
-  })
+const eventDateOptions = { locale: es, in: tz('America/Lima') }
+
+function EventDateTime({ date }: { date: Date }) {
+  const value = new Date(date)
+
+  return (
+    <time
+      dateTime={value.toISOString()}
+      className='inline-flex items-center gap-1.5 whitespace-nowrap tabular-nums'
+    >
+      <span>{format(value, 'PP', eventDateOptions)}</span>
+      <span aria-hidden='true' className='text-muted-foreground'>
+        ·
+      </span>
+      <span>{format(value, 'p', eventDateOptions)}</span>
+    </time>
+  )
+}
 
 const TurnHeader = ({ title, detail }: { title: string; detail: string }) => (
   <span className='inline-flex items-center gap-1.5 text-nowrap'>
@@ -69,29 +82,19 @@ export const getAdminEventColumns = (
     id: 'firstTurn',
     accessorKey: 'date',
     header: () => <TurnHeader title='Primer turno' detail='Comunión' />,
-    cell: ({ row }) => (
-      <span className='text-nowrap'>{formatEventDate(row.original.date)}</span>
-    ),
+    cell: ({ row }) => <EventDateTime date={row.original.date} />,
   },
   {
     id: 'secondTurn',
     accessorKey: 'secondTurnDate',
     header: () => <TurnHeader title='Segundo turno' detail='Confirmación' />,
-    cell: ({ row }) => (
-      <span className='text-nowrap'>
-        {formatEventDate(row.original.secondTurnDate)}
-      </span>
-    ),
+    cell: ({ row }) => <EventDateTime date={row.original.secondTurnDate} />,
   },
   {
     id: 'endDate',
     accessorKey: 'endDate',
     header: () => <span className='text-nowrap'>Fin del evento</span>,
-    cell: ({ row }) => (
-      <span className='text-nowrap'>
-        {formatEventDate(row.original.endDate)}
-      </span>
-    ),
+    cell: ({ row }) => <EventDateTime date={row.original.endDate} />,
   },
   {
     id: 'location',

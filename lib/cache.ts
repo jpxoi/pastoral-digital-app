@@ -16,4 +16,5 @@ export const cacheTags = {
   userMasses: (userId: string) => `user:${userId}:masses`,
 } as const
 
-export type RefreshResource = 'users' | 'records' | 'calendar' | 'masses'
+export type RefreshResource =
+  'users' | 'records' | 'calendar' | 'masses' | 'communities'

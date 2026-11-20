@@ -16,6 +16,7 @@ import {
   IconSettings,
   IconTable,
   IconUsers,
+  IconUsersGroup,
 } from '@tabler/icons-react'
 import { Permission } from '@/types/permissions'
 import { checkPermission } from '@/lib/roles'
@@ -61,6 +62,7 @@ export function CustomSidebar() {
       Permission.ATTENDANCE_VIEW_RECORDS,
       Permission.ATTENDANCE_VIEW_CALENDAR,
       Permission.CATECHISTS_VIEW,
+      Permission.CATECHISTS_EDIT_PROGRAM,
       Permission.MASSES_MANAGE,
     ]
 
@@ -129,6 +131,11 @@ export function CustomSidebar() {
       label: 'Administrar Catequistas',
       href: '/admin/users',
       icon: <IconUsers className={navIconClass} />,
+    },
+    permissions.has(Permission.CATECHISTS_EDIT_PROGRAM) && {
+      label: 'Administrar Comunidades',
+      href: '/admin/communities',
+      icon: <IconUsersGroup className={navIconClass} />,
     },
     permissions.has(Permission.MASSES_MANAGE) && {
       label: 'Administrar Misas',

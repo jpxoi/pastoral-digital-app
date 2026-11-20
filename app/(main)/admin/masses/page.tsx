@@ -1,4 +1,3 @@
-import PageActions from '@/components/shared/pageActions'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
 import PageHeader from '@/components/shared/pageHeader'
 import { Suspense } from 'react'
@@ -20,14 +19,13 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Misas' />} />
-      <PageActions>
-        <div className='flex flex-wrap items-center gap-2'>
-          <RevalidateButton resource='masses' />
-          <ExportMassesPdfButton />
-        </div>
-      </PageActions>
       <Suspense fallback={<MassesTableSkeleton />}>
-        <MassesTable />
+        <MassesTable>
+          <div className='flex flex-wrap items-center gap-2'>
+            <RevalidateButton resource='masses' />
+            <ExportMassesPdfButton />
+          </div>
+        </MassesTable>
       </Suspense>
     </>
   )

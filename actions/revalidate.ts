@@ -17,6 +17,10 @@ const refreshTargets = {
     permission: Permission.ATTENDANCE_VIEW_CALENDAR,
   },
   masses: { tag: cacheTags.massesList(), permission: Permission.MASSES_MANAGE },
+  communities: {
+    tag: cacheTags.assignmentCatalog(),
+    permission: Permission.CATECHISTS_EDIT_PROGRAM,
+  },
 } satisfies Record<RefreshResource, { tag: string; permission: Permission }>
 
 export default async function revalidate(resource: RefreshResource) {
@@ -43,6 +47,10 @@ export default async function revalidate(resource: RefreshResource) {
   if (resource === 'users') {
     updateTag(cacheTags.assignments())
     updateTag(cacheTags.assignmentCatalog())
+  }
+  if (resource === 'communities') {
+    updateTag(cacheTags.usersList())
+    updateTag(cacheTags.assignments())
   }
   refresh()
   return { success: true }

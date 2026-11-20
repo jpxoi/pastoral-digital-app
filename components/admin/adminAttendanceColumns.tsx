@@ -53,12 +53,19 @@ export const getAdminAttendanceColumns = (
     ),
     cell: ({ row }) => {
       const checkInTime = new Date(row.original.checkInTime)
-      const formattedTime = format(checkInTime, 'PP pp', {
+      const formattedTime = format(checkInTime, "PP '·' pp", {
         locale: es,
         in: tz('America/Lima'),
       })
 
-      return <span className='text-left text-nowrap'>{formattedTime}</span>
+      return (
+        <time
+          dateTime={checkInTime.toISOString()}
+          className='text-left text-nowrap tabular-nums'
+        >
+          {formattedTime}
+        </time>
+      )
     },
   },
   {

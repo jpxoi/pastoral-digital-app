@@ -36,7 +36,7 @@ export const getEventAttendeesColumns = (
     ),
     cell: ({ row }) => {
       const checkInTime = new Date(row.original.checkInTime)
-      const formattedTime = format(checkInTime, 'ppp', {
+      const formattedTime = format(checkInTime, 'pp', {
         locale: es,
         in: tz('America/Lima'),
       })

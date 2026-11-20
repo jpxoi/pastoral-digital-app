@@ -19,13 +19,21 @@ import {
 import { IconSearch, IconX } from '@tabler/icons-react'
 import type { ReactNode } from 'react'
 
+export interface DataTableFacetedFilterConfig {
+  columnId: string
+  title: string
+  options: { label: string; value: string }[]
+}
+
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  facetedFilters?: DataTableFacetedFilterConfig[]
   children?: ReactNode
 }
 
 export function DataTableToolbar<TData>({
   table,
+  facetedFilters = [],
   children,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
@@ -67,6 +75,14 @@ export function DataTableToolbar<TData>({
           )}
         </InputGroup>
         <div className='order-3 flex flex-wrap items-center gap-2 md:order-2'>
+          {facetedFilters.map((filter) => (
+            <DataTableFacetedFilter
+              key={filter.columnId}
+              column={table.getColumn(filter.columnId)}
+              title={filter.title}
+              options={filter.options}
+            />
+          ))}
           {table.getAllColumns().some((col) => col.id === 'role') && (
             <DataTableFacetedFilter
               column={table.getColumn('role')}
