@@ -75,12 +75,20 @@ export function birthdayAnnouncement(
   people: { firstName: string; lastName: string }[],
   date: string
 ): PushMessage {
-  const names = new Intl.ListFormat('es-PE', { type: 'conjunction' }).format(
-    people.map((person) => `${person.firstName} ${person.lastName}`)
-  )
+  const remaining = people.length - 3
+  const celebrants = new Intl.ListFormat('es-PE', {
+    type: 'conjunction',
+  }).format([
+    ...people
+      .slice(0, 3)
+      .map((person) => `${person.firstName} ${person.lastName}`),
+    ...(remaining > 0
+      ? [`${remaining} ${remaining === 1 ? 'persona más' : 'personas más'}`]
+      : []),
+  ])
   return {
     title: '¡Hoy celebramos cumpleaños! 🎂',
-    body: `Hoy es el cumpleaños de ${names}. ¡Acompáñalos con un saludo!`,
+    body: `Hoy es el cumpleaños de ${celebrants}. ¡Acompáñalos con un saludo!`,
     url: '/birthdays',
     tag: `birthday-announcement:${date}`,
   }

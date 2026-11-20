@@ -118,8 +118,8 @@ export async function sendScheduledPush(
         messages = [
           {
             title: 'Recuerda registrar tu misa',
-            body: 'Si ya asististe, sube tu evidencia. Tienes hasta mañana a las 6:00 p. m.',
-            url: '/masses?register=1',
+            body: 'Si ya asististe, sube tu evidencia. Tienes hasta mañana a las 12:00 p. m.',
+            url: `/masses?register=1&sunday=${date}`,
             tag: `mass-reminder:${date}`,
           },
         ]
