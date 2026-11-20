@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { getPeruDateKey } from '@/lib/birthday'
 import { db } from '@/db/drizzle'
 import {
@@ -262,7 +263,7 @@ async function getAttendanceCalendarForDate(peruDate: string) {
 
     return Array.from(userMap.values())
   } catch (error) {
-    console.error('Error generating attendance calendar:', error)
+    logger.error('Error generating attendance calendar:', { error })
     throw error
   }
 }

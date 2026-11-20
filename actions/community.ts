@@ -1,5 +1,6 @@
 'use server'
 
+import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
 import { updateTag } from 'next/cache'
@@ -43,7 +44,7 @@ function communityError(
       return { error: foreignKeyError }
     }
   }
-  console.error('Error managing community:', error)
+  logger.error('Error managing community:', { error })
   return { error: 'No se pudo guardar el cambio. Inténtalo nuevamente.' }
 }
 

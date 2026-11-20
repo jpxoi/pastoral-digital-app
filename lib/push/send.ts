@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import 'server-only'
 import { sendNotification } from 'web-push'
 import { and, asc, gt, inArray, lt, sql } from 'drizzle-orm'
@@ -66,7 +67,7 @@ export async function sendPushBatch(jobs: PushJob[]) {
           else {
             failedClaims.push(claim.id)
             // The original error may contain private endpoints and keys.
-            console.error('Falló la entrega de Web Push', { status })
+            logger.error('Falló la entrega de Web Push', { status })
           }
         }
       })

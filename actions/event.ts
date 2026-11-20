@@ -1,5 +1,6 @@
 'use server'
 
+import { logger } from '@/lib/logger'
 import { db } from '@/db/drizzle'
 import { eventsTable, locationsTable } from '@/db/schema'
 import { checkPermission } from '@/lib/roles'
@@ -76,7 +77,7 @@ export async function postNewEvent(formValues: unknown) {
     updateTag(cacheTags.eventsList())
     return { success: 'El evento se creó correctamente.' }
   } catch (error) {
-    console.error('Error creating event:', error)
+    logger.error('Error creating event:', { error })
     return { error: 'Ocurrió un error al crear el evento.' }
   }
 }
@@ -107,7 +108,7 @@ export async function updateEventDetails(values: unknown) {
     updateTag(cacheTags.event(id))
     return { success: 'Evento actualizado correctamente.' }
   } catch (error) {
-    console.error('Error updating event:', error)
+    logger.error('Error updating event:', { error })
     return { error: 'No se pudo actualizar el evento.' }
   }
 }

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { auth, clerkClient } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -78,7 +79,9 @@ export async function GET() {
       { headers: { 'Cache-Control': 'no-store' } }
     )
   } catch (error) {
-    console.error('Could not list Clerk users missing from the database', error)
+    logger.error('Could not list Clerk users missing from the database', {
+      error,
+    })
     return NextResponse.json(
       { error: 'No se pudo consultar Clerk y la base de datos.' },
       { status: 500 }
@@ -131,7 +134,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ deletedIds: deleted })
   } catch (error) {
-    console.error('Could not delete orphan Clerk users', error)
+    logger.error('Could not delete orphan Clerk users', { error })
     return NextResponse.json(
       { error: 'No se pudo completar la limpieza de usuarios de Clerk.' },
       { status: 500 }

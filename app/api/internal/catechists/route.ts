@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { db } from '@/db/drizzle'
 import { usersTable } from '@/db/schema'
 import {
@@ -102,7 +103,7 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Error fetching catechists for internal API:', error)
+    logger.error('Error fetching catechists for internal API:', { error })
     return jsonResponse(
       { success: false, error: 'Failed to fetch catechists' },
       500

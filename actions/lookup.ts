@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { z } from 'zod'
+import { logger } from '@/lib/logger'
 
 const dniDataSchema = z.object({
   numero: z.string().regex(/^[0-9]{8}$/),
@@ -41,6 +42,7 @@ export async function lookupDni(dni: string) {
   }
 
   if (!token) {
+    logger.error('DNI lookup API key is not configured', { userId })
     return {
       success: false,
       error: 'Token de API no configurado',
@@ -61,27 +63,38 @@ export async function lookupDni(dni: string) {
 
     if (response.status === 404)
       return { success: false, error: 'No se encontró el DNI consultado.' }
-    if (!response.ok)
+    if (!response.ok) {
+      logger.error('DNI lookup service request failed', {
+        userId,
+        status: response.status,
+      })
       return {
         success: false,
         error:
           'El servicio de consulta no está disponible. Inténtalo más tarde.',
       }
+    }
 
     const parsed = lookupResponseSchema.safeParse(await response.json())
-    if (!parsed.success)
+    if (!parsed.success) {
+      logger.error('DNI lookup service returned an invalid response', {
+        userId,
+      })
       return {
         success: false,
         error: 'El servicio devolvió una respuesta inválida.',
       }
+    }
     if (!parsed.data.success)
       return { success: false, error: 'No se pudo validar el DNI consultado.' }
     const data = parsed.data.data
-    if (data.numero !== dni)
+    if (data.numero !== dni) {
+      logger.error('DNI lookup returned mismatched document data', { userId })
       return {
         success: false,
         error: 'Los datos recibidos no corresponden al DNI consultado.',
       }
+    }
 
     const firstName = toTitleCase(data.nombres)
     const firstLastName = toTitleCase(data.apellido_paterno)
@@ -100,7 +113,11 @@ export async function lookupDni(dni: string) {
         documentNumber: data.numero,
       },
     }
-  } catch {
+  } catch (error) {
+    logger.error('DNI lookup failed', {
+      userId,
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    })
     return {
       success: false,
       error:

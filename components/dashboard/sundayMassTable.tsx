@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import ErrorAlert from '@/components/shared/errorAlert'
 import { IconBuildingChurch } from '@tabler/icons-react'
 import { DashboardEmpty, DashboardSection } from './dashboard-section'
@@ -20,7 +21,7 @@ export default async function SundayMassTable({
       preview ? 5 : null
     )
   } catch (error) {
-    console.error('Failed to load getSundayMassesRecordsByUserId', error)
+    logger.error('Failed to load getSundayMassesRecordsByUserId', { error })
     return (
       <DashboardSection
         title='Mis misas'

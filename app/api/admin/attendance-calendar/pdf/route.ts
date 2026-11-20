@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import { desc, eq, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
@@ -127,7 +128,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error('Could not generate attendance calendar PDF', error)
+    logger.error('Could not generate attendance calendar PDF', { error })
     return NextResponse.json(
       { error: 'No se pudo exportar el calendario. Inténtalo de nuevo.' },
       { status: 500 }

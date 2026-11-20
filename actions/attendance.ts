@@ -1,5 +1,6 @@
 'use server'
 
+import { logger } from '@/lib/logger'
 import { handleDbError } from '@/lib/error'
 import {
   createAttendanceRecord,
@@ -78,7 +79,11 @@ export const registerAttendanceRecord = async (
       }
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to register manual attendance', {
+        userId: data.userId,
+        eventId: data.eventId,
+        error,
+      })
       return {
         error:
           error.cause instanceof NeonDbError
@@ -175,7 +180,7 @@ export const registerQrAttendanceRecord = async (input: unknown) => {
       lastAttendanceRecord,
     }
   } catch (error) {
-    console.error(error)
+    logger.error('Failed to register QR attendance', { userId, eventId, error })
     return {
       error:
         error instanceof Error && error.cause instanceof NeonDbError
@@ -202,7 +207,10 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
       }
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to register attendance records', {
+        recordCount: data.length,
+        error,
+      })
       return {
         error:
           error.cause instanceof NeonDbError
@@ -233,7 +241,7 @@ export const setAttendanceRecordStatus = async (
             }))
           )
         } catch {
-          console.error('No se pudo enviar la notificación de asistencia.')
+          logger.error('No se pudo enviar la notificación de asistencia.')
         }
       })
 
@@ -242,7 +250,11 @@ export const setAttendanceRecordStatus = async (
       }
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to update attendance status', {
+        recordId,
+        status,
+        error,
+      })
       return {
         error:
           error.cause instanceof NeonDbError
@@ -271,9 +283,10 @@ export const fillAbsenceRecords = async (eventId: string) => {
 
   const { userId: registeredBy } = await auth()
 
-  console.log(
-    `Creating ${absentUsers.length} absence records for event ${eventId}`
-  )
+  logger.info('Creating absence records', {
+    eventId,
+    recordCount: absentUsers.length,
+  })
 
   const absenceRecords = absentUsers.map((user) => ({
     userId: user.id,
@@ -293,7 +306,11 @@ export const fillAbsenceRecords = async (eventId: string) => {
       success: 'Faltas rellenadas correctamente.',
     }
   } catch (error) {
-    console.error(error)
+    logger.error('Failed to fill absence records', {
+      eventId,
+      recordCount: absenceRecords.length,
+      error,
+    })
     return {
       error:
         error instanceof Error && error.cause instanceof NeonDbError
@@ -317,7 +334,7 @@ export const removeAttendanceRecord = async (
       }
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to delete attendance record', { recordId, error })
       return {
         error:
           error.cause instanceof NeonDbError

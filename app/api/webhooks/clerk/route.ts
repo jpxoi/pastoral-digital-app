@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { cacheTags } from '@/lib/cache'
 import { clerkClient } from '@clerk/nextjs/server'
 import { verifyWebhook } from '@clerk/nextjs/webhooks'
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
     // verifyWebhook reads CLERK_WEBHOOK_SIGNING_SECRET by default.
     event = await verifyWebhook(request)
   } catch (error) {
-    console.error('Clerk webhook signature verification failed', error)
+    logger.error('Clerk webhook signature verification failed', { error })
     return Response.json(
       { error: 'Invalid webhook signature' },
       { status: 400 }
@@ -99,17 +100,14 @@ export async function POST(request: NextRequest) {
             try {
               const result = await utapi.deleteFiles(fileKeys)
               if (!result.success) {
-                console.error(
-                  'UploadThing did not delete user evidence files',
-                  {
-                    userId,
-                    deletedCount: result.deletedCount,
-                    requestedCount: fileKeys.length,
-                  }
-                )
+                logger.error('UploadThing did not delete user evidence files', {
+                  userId,
+                  deletedCount: result.deletedCount,
+                  requestedCount: fileKeys.length,
+                })
               }
             } catch (error) {
-              console.error(
+              logger.error(
                 'Could not delete user evidence files from UploadThing',
                 {
                   userId,
@@ -128,7 +126,7 @@ export async function POST(request: NextRequest) {
         return Response.json({ received: true })
     }
   } catch (error) {
-    console.error('Clerk webhook processing failed', {
+    logger.error('Clerk webhook processing failed', {
       eventType: event.type,
       error,
     })

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
@@ -123,7 +124,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    console.error('Could not generate Sunday masses PDF', error)
+    logger.error('Could not generate Sunday masses PDF', { error })
     return NextResponse.json(
       { error: 'No se pudo exportar el reporte de misas. Inténtalo de nuevo.' },
       { status: 500 }

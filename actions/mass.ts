@@ -1,5 +1,6 @@
 'use server'
 
+import { logger } from '@/lib/logger'
 import { handleDbError, MassReviewConflictError } from '@/lib/error'
 import { checkPermission } from '@/lib/roles'
 import { createSundayMass } from '@/queries/insert'
@@ -37,7 +38,7 @@ function notifyMassReview(
         })
       )
     } catch {
-      console.error('No se pudo enviar la notificación de revisión de misa.')
+      logger.error('No se pudo enviar la notificación de revisión de misa.')
     }
   })
 }
@@ -77,7 +78,10 @@ export async function postNewMassRecord(
       }
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to register Sunday mass attendance', {
+        userId,
+        error,
+      })
       if (!getMassRegistrationWindow().isOpen)
         return { error: MASS_REGISTRATION_CLOSED_MESSAGE }
       if (error instanceof Error && error.message === 'EVIDENCE_UNAVAILABLE')
@@ -126,7 +130,7 @@ export async function verifyMassRecord(massId: string) {
         updateTag(cacheTags.massesList())
         return { error: error.message, code: 'MASS_REVIEW_CONFLICT' as const }
       }
-      console.error(error)
+      logger.error('Failed to accept Sunday mass attendance', { massId, error })
       return {
         error:
           error.cause instanceof NeonDbError
@@ -169,7 +173,7 @@ export async function rejectMassRecord(massId: string) {
         updateTag(cacheTags.massesList())
         return { error: error.message, code: 'MASS_REVIEW_CONFLICT' as const }
       }
-      console.error(error)
+      logger.error('Failed to reject Sunday mass attendance', { massId, error })
       return {
         error:
           error.cause instanceof NeonDbError

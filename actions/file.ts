@@ -1,5 +1,6 @@
 'use server'
 
+import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import { UTApi } from 'uploadthing/server'
 import { db } from '@/db/drizzle'
@@ -31,7 +32,7 @@ export async function removeFile(key: string): Promise<{ success: boolean }> {
     return { success: true }
   } catch (error) {
     // Keep deleting state on uncertain storage failures: retries are allowed, registration isn't.
-    console.error('Could not delete unregistered mass evidence', error)
+    logger.error('Could not delete unregistered mass evidence', { error })
     return { success: false }
   }
 }

@@ -1,4 +1,5 @@
 import { auth } from '@clerk/nextjs/server'
+import { logger } from '@/lib/logger'
 import { and, eq } from 'drizzle-orm'
 import { db } from '@/db/drizzle'
 import { pushSubscriptionsTable } from '@/db/schema'
@@ -24,6 +25,7 @@ export async function GET() {
       endpoints: subscriptions.map((s) => s.endpoint),
     })
   } catch {
+    logger.error('Failed to load push subscriptions', { userId })
     return jsonResponse(
       { error: 'No se pudo consultar el estado de las notificaciones.' },
       503
@@ -72,6 +74,10 @@ export async function POST(request: Request) {
       })
     return jsonResponse({ success: true })
   } catch {
+    // Database errors can contain subscription endpoints and keys.
+    logger.error('Failed to save push subscription', {
+      userId: authorization.userId,
+    })
     return jsonResponse(
       { error: 'No se pudieron activar las notificaciones.' },
       503
@@ -97,6 +103,9 @@ export async function DELETE(request: Request) {
       )
     return jsonResponse({ success: true })
   } catch {
+    logger.error('Failed to delete push subscription', {
+      userId: authorization.userId,
+    })
     return jsonResponse(
       { error: 'No se pudieron desactivar las notificaciones.' },
       503

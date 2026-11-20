@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { timingSafeEqual } from 'node:crypto'
 import { z } from 'zod'
 import { NextResponse } from 'next/server'
@@ -44,7 +45,7 @@ export function authorizeInternalRequest(request: Request) {
   const expectedToken = process.env.INTERNAL_API_TOKEN
 
   if (!expectedToken || expectedToken.length < MIN_TOKEN_LENGTH) {
-    console.error('INTERNAL_API_TOKEN is missing or too short')
+    logger.error('INTERNAL_API_TOKEN is missing or too short')
     return jsonResponse(
       { success: false, error: 'Internal API is misconfigured' },
       503

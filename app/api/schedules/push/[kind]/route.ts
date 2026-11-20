@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { timingSafeEqual } from 'node:crypto'
 import { TZDate } from '@date-fns/tz'
 import { jsonResponse } from '@/lib/internal-api'
@@ -53,7 +54,7 @@ export async function POST(
     )
     return jsonResponse(result, result.failed ? 503 : 200)
   } catch {
-    console.error('Falló el schedule de notificaciones', { kind })
+    logger.error('Falló el schedule de notificaciones', { kind })
     return jsonResponse({ error: 'No se pudo completar el envío.' }, 503)
   }
 }

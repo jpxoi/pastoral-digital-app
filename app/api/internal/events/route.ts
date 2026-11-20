@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { db } from '@/db/drizzle'
 import { eventsTable, locationsTable } from '@/db/schema'
 import {
@@ -108,7 +109,7 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Error fetching events for internal API:', error)
+    logger.error('Error fetching events for internal API:', { error })
     return jsonResponse(
       { success: false, error: 'Failed to fetch events' },
       500

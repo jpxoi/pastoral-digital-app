@@ -1,5 +1,6 @@
 'use server'
 
+import { logger } from '@/lib/logger'
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server'
 import { createUser } from '@/queries/insert'
 import { z } from 'zod'
@@ -23,23 +24,19 @@ export const registerUser = async (
   const { userId } = await auth()
   if (!userId) return { error: 'No se encontró el usuario autenticado.' }
 
+  const log = logger.with({ module: 'onboarding', userId })
   let email: string | undefined
   try {
     const account = await currentUser()
     email = account?.primaryEmailAddress?.emailAddress
   } catch (error) {
-    console.error('Failed to fetch Clerk account during onboarding', {
-      userId,
-      error,
-    })
+    log.error('Failed to fetch Clerk account during onboarding', { error })
     return {
       error: 'No se pudo completar el registro. Intenta nuevamente.',
     }
   }
   if (!email) {
-    console.error('Clerk account has no primary email during onboarding', {
-      userId,
-    })
+    log.error('Clerk account has no primary email during onboarding')
     return { error: 'No se pudo completar el registro. Intenta nuevamente.' }
   }
   const validatedFields = OnboardingFormSchema.safeParse({
@@ -79,7 +76,7 @@ export const registerUser = async (
       return { error: 'Error al completar el registro del usuario' }
     })
     .catch((error) => {
-      console.error(error)
+      log.error('Failed to register user', { error })
       return { error: 'Error al registrar el usuario. Intenta nuevamente.' }
     })
 }
@@ -109,7 +106,11 @@ const completeOnboarding = async (
 
     return { success: 'Metadata del usuario actualizada exitosamente.' }
   } catch (err) {
-    console.error(err)
+    logger
+      .with({ module: 'onboarding', userId })
+      .error('Failed to complete onboarding in Clerk', {
+        error: err,
+      })
     return { error: 'Hubo un error al actualizar los metadatos del usuario.' }
   }
 }
@@ -151,7 +152,7 @@ export async function setUserAssignments(
       }
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to update catechist assignments', { userId, error })
       return {
         error:
           error.cause instanceof NeonDbError
@@ -200,7 +201,7 @@ export async function setUserRole(userId: string, role: UserRole) {
         throw new Error('No se encontró al catequista en la base de datos.')
       }
     } catch (error) {
-      console.error('Failed to update user role in database:', {
+      logger.error('Failed to update user role in database:', {
         userId,
         role,
         error,
@@ -210,7 +211,7 @@ export async function setUserRole(userId: string, role: UserRole) {
           publicMetadata: { role: previousRole },
         })
       } catch (rollbackError) {
-        console.error('Failed to restore Clerk role after database failure:', {
+        logger.error('Failed to restore Clerk role after database failure:', {
           userId,
           previousRole,
           databaseRole: dbUser.role,
@@ -230,7 +231,7 @@ export async function setUserRole(userId: string, role: UserRole) {
     updateTag(cacheTags.usersList())
     return { success: 'Rol del catequista actualizado correctamente.' }
   } catch (error) {
-    console.error(error)
+    logger.error('Failed to update catechist role', { userId, role, error })
     return { error: 'No se pudo actualizar el rol del catequista.' }
   }
 }
@@ -267,7 +268,7 @@ export async function removeCatechist(targetUserId: string) {
         'Cuenta eliminada correctamente. Sus datos se actualizarán en breve.',
     }
   } catch (error) {
-    console.error('Could not delete catechist', error)
+    logger.error('Could not delete catechist', { error })
     return {
       error:
         'No se pudo completar la eliminación. Intenta nuevamente para completar ambos sistemas.',

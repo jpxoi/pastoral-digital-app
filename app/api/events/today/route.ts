@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { checkPermission } from '@/lib/roles'
 import { getTodayEvents } from '@/queries/select'
 import { Permission } from '@/types/permissions'
@@ -29,7 +30,7 @@ export async function GET() {
       return NextResponse.json(events, { status: 200 })
     })
     .catch((error) => {
-      console.error(error)
+      logger.error('Failed to fetch today events', { userId, error })
       return NextResponse.json(
         {
           error: 'Ha ocurrido un error al obtener el evento del día.',

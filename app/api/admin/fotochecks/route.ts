@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 import { asc, eq } from 'drizzle-orm'
@@ -86,7 +87,7 @@ export async function POST(request: Request) {
       },
     })
   } catch (error) {
-    console.error('Could not generate fotocheck PDF', error)
+    logger.error('Could not generate fotocheck PDF', { error })
     return NextResponse.json(
       { error: 'No se pudieron generar los fotochecks. Inténtalo de nuevo.' },
       { status: 500 }
