@@ -4,9 +4,6 @@ import { jsonResponse } from '@/lib/internal-api'
 import { pushIsConfigured } from '@/lib/push/send'
 import { sendScheduledPush, type ScheduledPushKind } from '@/lib/push/scheduled'
 
-export const runtime = 'nodejs'
-export const maxDuration = 300
-
 const scheduleHours = { events: 18, masses: 17, birthdays: 9 } as const
 
 export async function POST(
