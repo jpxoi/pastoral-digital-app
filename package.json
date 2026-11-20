@@ -12,6 +12,7 @@
     "assets:logos": "tsx scripts/optimize-brand-logos.ts",
     "assets:screenshots": "tsx scripts/generate-screenshots.tsx",
     "assets:splash-screens": "tsx scripts/generate-pwa-splash-screens.ts",
+    "assets:opengraph": "tsx scripts/generate-opengraph.tsx",
     "db:seed": "tsx scripts/seed.ts",
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",

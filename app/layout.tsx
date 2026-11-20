@@ -32,6 +32,15 @@ export const metadata: Metadata = {
     url: 'https://id.pastoralmarianaps.net.pe',
     siteName: 'Pastoral Digital App',
   },
+  twitter: {
+    card: 'summary_large_image',
+    images: [
+      {
+        url: '/opengraph-image.jpeg',
+        alt: 'Pastoral Digital App: identidad, asistencias y misas para catequistas y coordinadores.',
+      },
+    ],
+  },
   appleWebApp: {
     title: 'Pastoral Digital',
     capable: true,
