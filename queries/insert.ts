@@ -70,6 +70,8 @@ export const createSundayMass = async (
     WITH evidence AS (
       UPDATE mass_evidence_files SET state = 'attached', updated_at = now()
       WHERE key = ${data.evidenceFileKey} AND user_id = ${data.userId} AND state = 'available'
+        AND now() >= (${data.sundayDate}::date AT TIME ZONE 'America/Lima')
+        AND now() < ((${data.sundayDate}::date + interval '1 day 12 hours') AT TIME ZONE 'America/Lima')
         AND NOT EXISTS (SELECT 1 FROM sunday_masses WHERE evidence_file_key = ${data.evidenceFileKey})
       RETURNING key, hash
     )

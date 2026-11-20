@@ -354,7 +354,7 @@ async function getUpcomingEventsForDate(peruDate: string) {
     with: {
       location: true,
     },
-    limit: 6, // Multiple of 6
+    limit: 12,
   })
 }
 
