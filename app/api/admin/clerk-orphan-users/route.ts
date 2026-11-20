@@ -32,13 +32,16 @@ async function authorize() {
 
 async function listClerkUsers() {
   const client = await clerkClient()
-  const users = []
   const limit = 500
+  const firstPage = await client.users.getUserList({ limit })
+  const users = [...firstPage.data]
+  let startingAfter = users[users.length - 1]?.id
 
-  for (let offset = 0; ; offset += limit) {
-    const page = await client.users.getUserList({ limit, offset })
+  while (users.length < firstPage.totalCount && startingAfter) {
+    const page = await client.users.getUserList({ limit, startingAfter })
     users.push(...page.data)
     if (page.data.length < limit) break
+    startingAfter = page.data[page.data.length - 1]?.id
   }
 
   return users
