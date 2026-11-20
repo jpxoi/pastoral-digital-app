@@ -134,11 +134,15 @@ function getScreenDimensions(device: Device, orientation: Orientation) {
   return { width: height, height: width }
 }
 
-function renderSvg(artwork: {
-  color: string
-  viewBox: string
-  paths: readonly { d: string; fill: string }[]
-}, width: number, height: number) {
+function renderSvg(
+  artwork: {
+    color: string
+    viewBox: string
+    paths: readonly { d: string; fill: string }[]
+  },
+  width: number,
+  height: number
+) {
   const paths = artwork.paths
     .map(({ d, fill }) => `<path d="${d}" fill="${fill}"/>`)
     .join('')
@@ -210,7 +214,9 @@ async function main() {
   try {
     execFileSync('magick', ['-version'], { stdio: 'ignore' })
   } catch {
-    throw new Error('No se encontró ImageMagick. Instálalo para generar los splash screens.')
+    throw new Error(
+      'No se encontró ImageMagick. Instálalo para generar los splash screens.'
+    )
   }
 
   try {
@@ -220,7 +226,9 @@ async function main() {
   }
 
   const { backgroundArtwork } = await import(sharedArtworkPath)
-  const tempDirectory = await mkdtemp(path.join(os.tmpdir(), 'pastoral-splashes-'))
+  const tempDirectory = await mkdtemp(
+    path.join(os.tmpdir(), 'pastoral-splashes-')
+  )
 
   try {
     await rm(splashDirectory, { recursive: true, force: true })
@@ -245,7 +253,9 @@ async function main() {
     await rm(tempDirectory, { recursive: true, force: true })
   }
 
-  console.log(`Generados ${devices.length * 2} splash screens en public/splash_screens`)
+  console.log(
+    `Generados ${devices.length * 2} splash screens en public/splash_screens`
+  )
   console.log('Actualizadas las definiciones en lib/pwa/splash-screens.ts')
 }
 

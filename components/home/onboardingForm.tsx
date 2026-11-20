@@ -21,6 +21,7 @@ import {
   FieldTitle,
 } from '@/components/ui/field'
 import {
+  IconCircleCheck,
   IconChevronLeft,
   IconChevronRight,
   IconLoader2,
@@ -40,7 +41,6 @@ import {
   InputGroupInput,
 } from '../ui/input-group'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Progress } from '../ui/progress'
 import { lookupDni } from '@/actions/lookup'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
@@ -84,7 +84,6 @@ export default function OnboardingForm({
   const currentForm = steps[currentStep]
 
   const isLastStep = currentStep === steps.length - 1
-  const progress = ((currentStep + 1) / steps.length) * 100
 
   const [allowCustomName, setAllowCustomName] = useState<boolean>(false)
   const [isNoDni, setIsNoDni] = useState(false)
@@ -140,10 +139,14 @@ export default function OnboardingForm({
     if (!dni) return
 
     if (!isDniValid(dni)) {
-      toast.error('Ingresa un DNI válido de 8 dígitos.')
+      form.setError('dni', {
+        type: 'manual',
+        message: 'Ingresa un DNI válido de 8 dígitos.',
+      })
       return
     }
 
+    form.clearErrors('dni')
     startLookupTransition(async () => {
       let response: Awaited<ReturnType<typeof lookupDni>>
       try {
@@ -254,28 +257,35 @@ export default function OnboardingForm({
                       </InputGroupButton>
                     </div>
                     <InputGroup
-                      aria-disabled={allowCustomName || isLookupSuccess}
+                      aria-disabled={
+                        isNoDni || isLookupSuccess || isLookupPending
+                      }
                     >
                       <InputGroupInput
                         {...field}
                         id='dni'
                         aria-invalid={fieldState.invalid}
-                        placeholder='Ingrese su número de DNI'
+                        placeholder='Número de DNI'
                         autoComplete='off'
                         inputMode='numeric'
                         maxLength={8}
-                        disabled={allowCustomName || isLookupSuccess}
+                        className='tabular-nums'
+                        disabled={isNoDni || isLookupSuccess || isLookupPending}
+                        onChange={(event) => {
+                          field.onChange(event)
+                          form.clearErrors('dni')
+                        }}
                       />
                       <InputGroupAddon align='inline-end' className='shrink-0'>
                         <InputGroupButton
                           variant='ghost'
-                          size='xs'
-                          className='text-primary h-7 rounded-sm px-2 text-xs'
+                          size='sm'
+                          className='text-primary hover:bg-primary/10 hover:text-primary disabled:text-muted-foreground h-7 rounded-sm px-2 text-sm disabled:opacity-60'
                           disabled={
-                            allowCustomName ||
+                            isNoDni ||
                             isLookupSuccess ||
                             isLookupPending ||
-                            !isDniValid(form.getValues('dni'))
+                            !/[0-9]/.test(field.value ?? '')
                           }
                           onClick={handleLookupDni}
                         >
@@ -307,14 +317,26 @@ export default function OnboardingForm({
                   >
                     Nombres
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    id='firstName'
-                    aria-invalid={fieldState.invalid}
-                    placeholder='Ingrese sus nombres'
-                    autoComplete='off'
-                    disabled={!allowCustomName || isLookupSuccess}
-                  />
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      id='firstName'
+                      aria-invalid={fieldState.invalid}
+                      placeholder='Ingrese sus nombres'
+                      autoComplete='off'
+                      readOnly={isLookupSuccess}
+                      disabled={!allowCustomName && !isLookupSuccess}
+                    />
+                    {isLookupSuccess && (
+                      <InputGroupAddon align='inline-end'>
+                        <IconCircleCheck
+                          className='size-4 text-emerald-600'
+                          aria-hidden='true'
+                        />
+                        <span className='sr-only'>Identidad verificada</span>
+                      </InputGroupAddon>
+                    )}
+                  </InputGroup>
                   {allowCustomName && !isLookupSuccess && (
                     <FieldDescription>
                       Tal como figura en tu documento.
@@ -337,14 +359,26 @@ export default function OnboardingForm({
                   >
                     Apellidos
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    id='lastName'
-                    aria-invalid={fieldState.invalid}
-                    placeholder='Ingrese sus dos apellidos'
-                    autoComplete='off'
-                    disabled={!allowCustomName || isLookupSuccess}
-                  />
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      id='lastName'
+                      aria-invalid={fieldState.invalid}
+                      placeholder='Ingrese sus dos apellidos'
+                      autoComplete='off'
+                      readOnly={isLookupSuccess}
+                      disabled={!allowCustomName && !isLookupSuccess}
+                    />
+                    {isLookupSuccess && (
+                      <InputGroupAddon align='inline-end'>
+                        <IconCircleCheck
+                          className='size-4 text-emerald-600'
+                          aria-hidden='true'
+                        />
+                        <span className='sr-only'>Identidad verificada</span>
+                      </InputGroupAddon>
+                    )}
+                  </InputGroup>
                   {allowCustomName && !isLookupSuccess && (
                     <FieldDescription>
                       Tal como figura en tu documento.
@@ -441,10 +475,6 @@ export default function OnboardingForm({
                       maxLength={10}
                     />
                   </InputGroup>
-                  <FieldDescription>
-                    Escribe 8 dígitos; los separadores se agregan
-                    automáticamente.
-                  </FieldDescription>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -545,16 +575,31 @@ export default function OnboardingForm({
 
   return (
     <Card className='w-full max-w-lg shrink-0 rounded-2xl shadow-xl max-md:-mx-6 max-md:w-[calc(100%+3rem)] max-md:max-w-none max-md:rounded-none max-md:bg-transparent max-md:py-0 max-md:shadow-none max-md:ring-0'>
-      <CardHeader className='space-y-4'>
-        <div className='space-y-2'>
-          <div className='flex items-center justify-between'>
-            <CardTitle>{currentForm.title}</CardTitle>
-            <p className='text-muted-foreground text-xs'>
-              Paso {currentStep + 1} de {steps.length}
-            </p>
-          </div>
+      <CardHeader className='gap-3'>
+        <div className='flex items-center justify-between gap-4'>
+          <CardTitle className='text-base leading-snug'>
+            {currentForm.title}
+          </CardTitle>
+          <span className='text-muted-foreground shrink-0 text-xs tabular-nums'>
+            {currentStep + 1} / {steps.length}
+          </span>
         </div>
-        <Progress value={progress} />
+        <div
+          role='progressbar'
+          aria-label='Progreso del registro'
+          aria-valuemin={0}
+          aria-valuemax={steps.length}
+          aria-valuenow={currentStep + 1}
+          aria-valuetext={`Paso ${currentStep + 1} de ${steps.length}: ${currentForm.title}`}
+          className='flex gap-1.5'
+        >
+          {steps.map((step, index) => (
+            <span
+              key={step.title}
+              className={`h-1 flex-1 rounded-full transition-colors ${index <= currentStep ? 'bg-primary' : 'bg-muted'}`}
+            />
+          ))}
+        </div>
       </CardHeader>
       <CardContent>
         <form
@@ -563,18 +608,19 @@ export default function OnboardingForm({
           className='w-full space-y-4 text-left'
         >
           {renderCurrentStepContent()}
-          <Field className='justify-between' orientation='horizontal'>
+          <Field className='justify-end' orientation='horizontal'>
             {currentStep > 0 && (
-              <Button type='button' variant='ghost' onClick={handleBackButton}>
+              <Button
+                type='button'
+                variant='ghost'
+                className='mr-auto'
+                onClick={handleBackButton}
+              >
                 <IconChevronLeft /> Anterior
               </Button>
             )}
             {!isLastStep && (
-              <Button
-                type='button'
-                variant='secondary'
-                onClick={handleNextButton}
-              >
+              <Button type='button' onClick={handleNextButton}>
                 Siguiente
                 <IconChevronRight />
               </Button>

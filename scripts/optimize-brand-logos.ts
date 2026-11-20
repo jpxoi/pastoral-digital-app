@@ -58,14 +58,13 @@ try {
 }
 
 const availableFiles = new Set(await readdir(sourceDirectory))
-const requiredFiles = [
-  ...logos.map(({ file }) => file),
-  'logo-icon.png',
-]
+const requiredFiles = [...logos.map(({ file }) => file), 'logo-icon.png']
 const missingFiles = requiredFiles.filter((file) => !availableFiles.has(file))
 
 if (missingFiles.length) {
-  throw new Error(`No se encontraron archivos fuente: ${missingFiles.join(', ')}`)
+  throw new Error(
+    `No se encontraron archivos fuente: ${missingFiles.join(', ')}`
+  )
 }
 
 await rm(outputDirectory, { recursive: true, force: true })
