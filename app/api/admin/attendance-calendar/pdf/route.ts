@@ -7,8 +7,6 @@ import { generateAttendanceCalendarPdf } from '@/lib/attendance-calendar-pdf'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
-export const runtime = 'nodejs'
-
 export async function GET() {
   const { userId } = await auth()
   if (!userId) {

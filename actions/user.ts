@@ -11,10 +11,10 @@ import { SelectUser } from '@/db/schema'
 import { updateUserSchedule } from '@/queries/update'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
+import { cacheTags } from '@/lib/cache'
 import { updateTag } from 'next/cache'
 import { Permission } from '@/types/permissions'
 import { updateUserRole } from '@/queries/update'
-import { deleteCatechistData } from '@/queries/delete'
 
 export const registerUser = async (
   values: z.infer<typeof OnboardingFormSchema>
@@ -36,7 +36,7 @@ export const registerUser = async (
     dateOfBirth: validatedFields.data.dateOfBirth,
   })
     .then(async (savedUser) => {
-      updateTag('users')
+      updateTag(cacheTags.usersList())
       const onboardingResult = await completeOnboarding(
         validatedFields.data.firstName,
         validatedFields.data.lastName,
@@ -99,7 +99,7 @@ export async function setUserSchedule(
 
   return await updateUserSchedule(userId, schedule)
     .then(async () => {
-      updateTag('users')
+      updateTag(cacheTags.usersList())
 
       return {
         success: 'Programa del catequista actualizado correctamente',
@@ -180,7 +180,7 @@ export async function setUserRole(userId: string, role: UserRole) {
           'No se pudo guardar el cambio en la base de datos. Se restauró el rol anterior en Clerk.',
       }
     }
-    updateTag('users')
+    updateTag(cacheTags.usersList())
     return { success: 'Rol del catequista actualizado correctamente.' }
   } catch (error) {
     console.error(error)
@@ -244,9 +244,10 @@ export async function removeCatechist(targetUserId: string) {
       ))
         throw error
     }
-    await deleteCatechistData(targetUserId)
-    for (const tag of ['users', 'attendance', 'sundayMasses']) updateTag(tag)
-    return { success: 'Catequista eliminado correctamente.' }
+    return {
+      success:
+        'Cuenta eliminada. La limpieza de sus datos se completará mediante el webhook.',
+    }
   } catch (error) {
     console.error('Could not delete catechist', error)
     return {

@@ -40,6 +40,10 @@ export const updateAttendanceRecordStatus = async (
     .update(attendanceRecordsTable)
     .set({ status, updatedAt: new Date() })
     .where(eq(attendanceRecordsTable.id, recordId))
+    .returning({
+      userId: attendanceRecordsTable.userId,
+      eventId: attendanceRecordsTable.eventId,
+    })
 }
 
 export const updateSundayMassRecordVerification = async (
@@ -61,7 +65,7 @@ export const updateSundayMassRecordVerification = async (
         eq(sundayMassesTable.status, SundayMassStatus.PENDING)
       )
     )
-    .returning({ id: sundayMassesTable.id })
+    .returning({ id: sundayMassesTable.id, userId: sundayMassesTable.userId })
   if (!rows.length)
     throw new Error(
       'El registro ya fue revisado o no existe. Actualiza la página.'

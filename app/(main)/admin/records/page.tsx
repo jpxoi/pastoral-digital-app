@@ -22,7 +22,7 @@ export default async function Page() {
       />
       <Suspense fallback={<AttendanceTableSkeleton />}>
         <AttendanceTable>
-          <RevalidateButton tag='attendance' />
+          <RevalidateButton resource='records' />
         </AttendanceTable>
       </Suspense>
     </>

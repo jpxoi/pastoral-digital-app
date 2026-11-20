@@ -8,11 +8,11 @@
   color: var(--foreground);
 }
 
-.topbar {
-  background: white !important;
+body:has(.marketing-root) .topbar {
+  background: var(--background) !important;
 }
 
-.bottombar {
+body:has(.marketing-root) .bottombar {
   background: transparent !important;
 }
 

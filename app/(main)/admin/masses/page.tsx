@@ -22,7 +22,7 @@ export default async function Page() {
       <PageHeader breadcrumb={<PageBreadcrumb label='Misas' />} />
       <PageActions>
         <div className='flex flex-wrap items-center gap-2'>
-          <RevalidateButton tag='sundayMasses' />
+          <RevalidateButton resource='masses' />
           <ExportMassesPdfButton />
         </div>
       </PageActions>

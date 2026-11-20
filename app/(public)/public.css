@@ -1,9 +1,7 @@
-@import 'tailwindcss';
-
-.topbar {
-  @apply bg-background!;
+body:has(.marketing-root) .topbar {
+  background: var(--background) !important;
 }
 
-.bottombar {
+body:has(.marketing-root) .bottombar {
   background: transparent !important;
 }

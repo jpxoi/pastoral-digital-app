@@ -1,13 +1,56 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-export default clerkMiddleware()
+function matchesPath(pathname: string, route: string) {
+  return pathname === route || pathname.startsWith(`${route}/`)
+}
+
+function isPublicPath(pathname: string) {
+  return (
+    pathname === '/' ||
+    matchesPath(pathname, '/home') ||
+    matchesPath(pathname, '/sign-in') ||
+    matchesPath(pathname, '/sign-up') ||
+    matchesPath(pathname, '/oauth-consent') ||
+    matchesPath(pathname, '/privacy') ||
+    matchesPath(pathname, '/terms')
+  )
+}
+
+const isOnboardingPath = (pathname: string) =>
+  matchesPath(pathname, '/onboarding')
+
+export default clerkMiddleware(async (auth, req) => {
+  const pathname = req.nextUrl.pathname
+
+  if (isPublicPath(pathname)) return NextResponse.next()
+
+  const { isAuthenticated, sessionClaims, redirectToSignIn } = await auth()
+
+  if (!isAuthenticated) return redirectToSignIn({ returnBackUrl: req.url })
+
+  if (isOnboardingPath(pathname)) {
+    if (sessionClaims?.metadata?.onboardingComplete === true) {
+      return NextResponse.redirect(new URL('/dashboard', req.url))
+    }
+
+    return NextResponse.next()
+  }
+
+  if (sessionClaims?.metadata?.onboardingComplete !== true) {
+    return NextResponse.redirect(new URL('/onboarding', req.url))
+  }
+
+  return NextResponse.next()
+})
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and static files, unless found in search params.
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Keep Clerk request context available to API routes that authorize themselves.
-    '/(api|trpc)(.*)',
+    // Skip Next.js internals, static files, and machine routes.
+    '/((?!_next|api/internal(?:/|$)|api/webhooks(?:/|$)|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|txt)).*)',
+    // Keep Clerk context for API routes that authorize themselves, except machine routes.
+    '/(api(?!/internal(?:/|$)|/webhooks(?:/|$))|trpc)(.*)',
+    // Keep Clerk's frontend API proxy active.
     '/__clerk/(.*)',
   ],
 }

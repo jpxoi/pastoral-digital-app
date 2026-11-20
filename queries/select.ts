@@ -10,18 +10,9 @@ import {
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
 import { asc, count, desc, eq, gte, lt, sql } from 'drizzle-orm'
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
+import { cacheTags } from '@/lib/cache'
 import { TZDate } from '@date-fns/tz'
-
-const CACHE_DURATION = {
-  HOUR: 3600,
-  SIX_HOURS: 3600 * 6,
-  TWELVE_HOURS: 3600 * 12,
-  DAY: 3600 * 24,
-  WEEK: 3600 * 24 * 7,
-  MONTH: 3600 * 24 * 28,
-  YEAR: 3600 * 24 * 365,
-}
 
 /* UsersTable */
 export const getUserForRoleChange = async (id: SelectUser['id']) => {
@@ -31,43 +22,25 @@ export const getUserForRoleChange = async (id: SelectUser['id']) => {
   })
 }
 
-export const getAllUsers = unstable_cache(
-  async () => {
-    return db.query.usersTable.findMany({
-      orderBy: (fields) => [
-        sql`${fields.firstName} || ' ' || ${fields.lastName}`,
-      ],
-    })
-  },
-  ['getAllUsers'],
-  {
-    revalidate: CACHE_DURATION.MONTH,
-    tags: ['users'],
-  }
-)
+export async function getAllUsers() {
+  'use cache'
+  cacheLife('days')
+  cacheTag(cacheTags.usersList())
 
-export const getUserById = unstable_cache(
-  async (id: SelectUser['id']) => {
-    return db.query.usersTable.findFirst({
-      where: eq(usersTable.id, id),
-    })
-  },
-  ['getUserById'],
-  {
-    revalidate: CACHE_DURATION.MONTH,
-  }
-)
+  return db.query.usersTable.findMany({
+    orderBy: (fields) => [
+      sql`${fields.firstName} || ' ' || ${fields.lastName}`,
+    ],
+  })
+}
 
-export const countAllUsers = unstable_cache(
-  async () => {
-    return db.$count(usersTable)
-  },
-  ['countAllUsers'],
-  {
-    revalidate: CACHE_DURATION.MONTH,
-    tags: ['users'],
-  }
-)
+export async function countAllUsers() {
+  'use cache'
+  cacheLife('days')
+  cacheTag(cacheTags.usersList())
+
+  return db.$count(usersTable)
+}
 
 export const getUserSchedule = async (userId: SelectUser['id']) => {
   const user = await db.query.usersTable.findFirst({
@@ -80,42 +53,43 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
   return user
 }
 
-const getUserBirthdaysForDate = unstable_cache(
-  async (peruDate: string) => {
-    return db.query.usersTable.findMany({
-      columns: { id: true, firstName: true, lastName: true, dateOfBirth: true },
-      where: sql`
+async function getUserBirthdaysForDate(peruDate: string) {
+  'use cache'
+  cacheLife('days')
+  cacheTag(cacheTags.usersList())
+
+  return db.query.usersTable.findMany({
+    columns: { id: true, firstName: true, lastName: true, dateOfBirth: true },
+    where: sql`
+    (
+      to_char(date_of_birth, 'MM-DD') BETWEEN
+        to_char((${peruDate}::date), 'MM-DD') AND
+        to_char((${peruDate}::date) + interval '60 days', 'MM-DD')
+    )
+    OR
+    (
+      to_char((${peruDate}::date) + interval '60 days', 'MM-DD') < to_char((${peruDate}::date), 'MM-DD') AND
       (
-        to_char(date_of_birth, 'MM-DD') BETWEEN
-          to_char((${peruDate}::date), 'MM-DD') AND
-          to_char((${peruDate}::date) + interval '60 days', 'MM-DD')
+        to_char(date_of_birth, 'MM-DD') >= to_char((${peruDate}::date), 'MM-DD') OR
+        to_char(date_of_birth, 'MM-DD') <= to_char((${peruDate}::date) + interval '60 days', 'MM-DD')
       )
-      OR
-      (
-        to_char((${peruDate}::date) + interval '60 days', 'MM-DD') < to_char((${peruDate}::date), 'MM-DD') AND
-        (
-          to_char(date_of_birth, 'MM-DD') >= to_char((${peruDate}::date), 'MM-DD') OR
-          to_char(date_of_birth, 'MM-DD') <= to_char((${peruDate}::date) + interval '60 days', 'MM-DD')
-        )
-      )
-    `,
-      orderBy: () => [
-        sql`to_char(date_of_birth, 'MM-DD')`,
-        sql`to_char(date_of_birth, 'YYYY')`,
-      ],
-    })
-  },
-  ['getUserBirthdaysPeru'],
-  {
-    revalidate: CACHE_DURATION.SIX_HOURS,
-    tags: ['users'],
-  }
-)
+    )
+  `,
+    orderBy: () => [
+      sql`to_char(date_of_birth, 'MM-DD')`,
+      sql`to_char(date_of_birth, 'YYYY')`,
+    ],
+  })
+}
 
 export const getUserBirthdays = (now = new Date()) =>
   getUserBirthdaysForDate(getPeruDateKey(now))
 
-export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
+export async function getUserAttendanceStats(userId: SelectUser['id']) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(cacheTags.attendance(), cacheTags.userAttendance(userId))
+
   const [
     stats = {
       totalOnTime: 0,
@@ -158,45 +132,26 @@ export const getUsersWithNoAttendanceRecord = async (
     .where(sql`${attendanceRecordsTable.id} IS NULL`)
 }
 
-export const countUsersWithNoAttendanceRecord = unstable_cache(
-  async (eventId: SelectEvent['id']) => {
-    return db
-      .select({
-        count: count(usersTable.id),
-      })
-      .from(usersTable)
-      .leftJoin(
-        attendanceRecordsTable,
-        sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventId}`
-      )
-      .where(sql`${attendanceRecordsTable.id} IS NULL`)
-      .then((result) => result[0]?.count || 0)
-  },
-  ['countUsersWithNoAttendanceRecord'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
-  }
-)
-
 /* AttendanceRecordsTable */
-export const getAllAttendanceRecords = unstable_cache(
-  async () => {
-    return db.query.attendanceRecordsTable.findMany({
-      with: {
-        user: true,
-        event: true,
-        registeredByUser: true,
-      },
-      orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
-    })
-  },
-  ['getAllAttendanceRecords'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
-  }
-)
+export async function getAllAttendanceRecords() {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(
+    cacheTags.attendance(),
+    cacheTags.attendanceList(),
+    cacheTags.usersList(),
+    cacheTags.eventsList()
+  )
+
+  return db.query.attendanceRecordsTable.findMany({
+    with: {
+      user: true,
+      event: true,
+      registeredByUser: true,
+    },
+    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
+  })
+}
 
 export const getLastAttendanceRecord = async () => {
   return db.query.attendanceRecordsTable.findFirst({
@@ -208,201 +163,210 @@ export const getLastAttendanceRecord = async () => {
   })
 }
 
-export const getAttendanceRecordsByUserId = unstable_cache(
-  async (userId: SelectUser['id'], limit: number | null = 100) => {
-    return db.query.attendanceRecordsTable.findMany({
-      where: eq(attendanceRecordsTable.userId, userId),
-      orderBy: (fields) => [desc(fields.checkInTime), desc(fields.eventId)],
-      with: {
-        user: true,
-        event: true,
-        registeredByUser: true,
-      },
-      limit: limit ?? undefined,
-    })
-  },
-  ['getAttendanceRecordsByUserId'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
-  }
-)
+export async function getAttendanceRecordsByUserId(
+  userId: SelectUser['id'],
+  limit: number | null = 100
+) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(
+    cacheTags.attendance(),
+    cacheTags.userAttendance(userId),
+    cacheTags.usersList(),
+    cacheTags.eventsList()
+  )
 
-export const getAttendanceRecordsByEventId = unstable_cache(
-  async (eventId: SelectEvent['id']) => {
-    return db.query.attendanceRecordsTable.findMany({
-      where: eq(attendanceRecordsTable.eventId, eventId),
-      orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
-      with: {
-        user: true,
-        registeredByUser: true,
-      },
-      limit: 200,
-    })
-  },
-  ['getAttendanceRecordsByEventId'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
-  }
-)
+  return db.query.attendanceRecordsTable.findMany({
+    where: eq(attendanceRecordsTable.userId, userId),
+    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.eventId)],
+    with: {
+      user: true,
+      event: true,
+      registeredByUser: true,
+    },
+    limit: limit ?? undefined,
+  })
+}
 
-export const getAttendanceCalendar = unstable_cache(
-  async () => {
-    try {
-      // Get all data in a single query with proper joins
-      const calendarData = await db
-        .select({
-          userId: usersTable.id,
-          firstName: usersTable.firstName,
-          lastName: usersTable.lastName,
-          eventId: eventsTable.id,
-          eventDate: eventsTable.date,
-          status: attendanceRecordsTable.status,
+export async function getAttendanceRecordsByEventId(
+  eventId: SelectEvent['id']
+) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(
+    cacheTags.attendance(),
+    cacheTags.eventAttendance(eventId),
+    cacheTags.usersList()
+  )
+
+  return db.query.attendanceRecordsTable.findMany({
+    where: eq(attendanceRecordsTable.eventId, eventId),
+    orderBy: (fields) => [desc(fields.checkInTime), desc(fields.userId)],
+    with: {
+      user: true,
+      registeredByUser: true,
+    },
+    limit: 200,
+  })
+}
+
+async function getAttendanceCalendarForDate(peruDate: string) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(
+    cacheTags.attendance(),
+    cacheTags.attendanceList(),
+    cacheTags.usersList(),
+    cacheTags.eventsList()
+  )
+
+  try {
+    // Get all data in a single query with proper joins
+    const calendarData = await db
+      .select({
+        userId: usersTable.id,
+        firstName: usersTable.firstName,
+        lastName: usersTable.lastName,
+        eventId: eventsTable.id,
+        eventDate: eventsTable.date,
+        status: attendanceRecordsTable.status,
+      })
+      .from(usersTable)
+      .leftJoin(eventsTable, sql`1=1`)
+      .leftJoin(
+        attendanceRecordsTable,
+        sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
+      )
+      .where(
+        sql`${eventsTable.date} IS NOT NULL AND ${eventsTable.date}::date <= ${peruDate}::date`
+      )
+      .orderBy(
+        sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
+        eventsTable.date
+      )
+
+    // Group the data by user
+    const userMap = new Map<string, Record<string, string | null>>()
+
+    for (const record of calendarData) {
+      if (!userMap.has(record.userId)) {
+        const fullName =
+          record.firstName && record.lastName
+            ? `${record.firstName} ${record.lastName}`
+            : record.firstName || record.lastName || 'Sin nombre'
+
+        userMap.set(record.userId, {
+          id: record.userId,
+          fullName,
         })
-        .from(usersTable)
-        .leftJoin(eventsTable, sql`1=1`)
-        .leftJoin(
-          attendanceRecordsTable,
-          sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
-        )
-        .where(
-          sql`${eventsTable.date} IS NOT NULL AND ${eventsTable.date}::date <= current_date::date`
-        )
-        .orderBy(
-          sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
-          eventsTable.date
-        )
-
-      // Group the data by user
-      const userMap = new Map<string, Record<string, string | null>>()
-
-      for (const record of calendarData) {
-        if (!userMap.has(record.userId)) {
-          const fullName =
-            record.firstName && record.lastName
-              ? `${record.firstName} ${record.lastName}`
-              : record.firstName || record.lastName || 'Sin nombre'
-
-          userMap.set(record.userId, {
-            id: record.userId,
-            fullName,
-          })
-        }
-
-        if (record.eventDate) {
-          const dateKey = new Date(record.eventDate).toISOString().split('T')[0]
-          userMap.get(record.userId)![dateKey] = record.status || null
-        }
       }
 
-      return Array.from(userMap.values())
-    } catch (error) {
-      console.error('Error generating attendance calendar:', error)
-      return []
+      if (record.eventDate) {
+        const dateKey = new Date(record.eventDate).toISOString().split('T')[0]
+        userMap.get(record.userId)![dateKey] = record.status || null
+      }
     }
-  },
-  ['getAttendanceCalendar'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
+
+    return Array.from(userMap.values())
+  } catch (error) {
+    console.error('Error generating attendance calendar:', error)
+    throw error
   }
-)
+}
+
+export const getAttendanceCalendar = (now = new Date()) =>
+  getAttendanceCalendarForDate(getPeruDateKey(now))
 
 /* EventsTable */
-export const getAllEvents = unstable_cache(
-  async () => {
-    return db.query.eventsTable.findMany({
-      orderBy: (fields) => [desc(fields.date)],
-      with: {
-        location: true,
-      },
-    })
-  },
-  ['getAllEvents'],
-  {
-    revalidate: CACHE_DURATION.HOUR,
-    tags: ['events'],
-  }
-)
+export async function getAllEvents() {
+  'use cache'
+  cacheLife('days')
+  cacheTag(cacheTags.eventsList())
 
-export const getAllLocations = async () => {
+  return db.query.eventsTable.findMany({
+    orderBy: (fields) => [desc(fields.date)],
+    with: {
+      location: true,
+    },
+  })
+}
+
+export async function getAllLocations() {
+  'use cache'
+  cacheLife('days')
+  cacheTag(cacheTags.locationsList())
+
   return db.query.locationsTable.findMany({
     orderBy: (fields) => [asc(fields.name)],
   })
 }
 
-export const getEventById = unstable_cache(
-  async (id: SelectEvent['id']) => {
-    return db.query.eventsTable.findFirst({
-      where: eq(eventsTable.id, id),
-      with: { location: true },
+export async function getEventById(id: SelectEvent['id']) {
+  'use cache'
+  cacheLife('days')
+  cacheTag(cacheTags.event(id))
+
+  return db.query.eventsTable.findFirst({
+    where: eq(eventsTable.id, id),
+    with: { location: true },
+  })
+}
+
+export async function getEventAttendanceStats(eventId: SelectEvent['id']) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(cacheTags.attendance(), cacheTags.eventAttendance(eventId))
+
+  const [
+    stats = {
+      totalOnTime: 0,
+      totalLate: 0,
+      totalLateJustified: 0,
+      totalAbsentees: 0,
+      totalAbsenteesJustified: 0,
+    },
+  ] = await db
+    .select({
+      totalOnTime: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
+      ),
+      totalLate: count(
+        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}) then 1 end`
+      ),
+      totalLateJustified: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.TARDANZA_JUSTIFICADA} then 1 end`
+      ),
+      totalAbsentees: count(
+        sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
+      ),
+      totalAbsenteesJustified: count(
+        sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.FALTA_JUSTIFICADA} then 1 end`
+      ),
     })
-  },
-  ['getEventById'],
-  {
-    revalidate: CACHE_DURATION.MONTH,
-  }
-)
+    .from(attendanceRecordsTable)
+    .where(eq(attendanceRecordsTable.eventId, eventId))
+    .groupBy() // Group all results together
 
-export const getEventAttendanceStats = unstable_cache(
-  async (eventId: SelectEvent['id']) => {
-    const [
-      stats = {
-        totalOnTime: 0,
-        totalLate: 0,
-        totalLateJustified: 0,
-        totalAbsentees: 0,
-        totalAbsenteesJustified: 0,
-      },
-    ] = await db
-      .select({
-        totalOnTime: count(
-          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.A_TIEMPO} then 1 end`
-        ),
-        totalLate: count(
-          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.TARDANZA}, ${AttendanceStatus.TARDANZA_JUSTIFICADA}) then 1 end`
-        ),
-        totalLateJustified: count(
-          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.TARDANZA_JUSTIFICADA} then 1 end`
-        ),
-        totalAbsentees: count(
-          sql`case when ${attendanceRecordsTable.status} in (${AttendanceStatus.FALTA_JUSTIFICADA}, ${AttendanceStatus.FALTA_INJUSTIFICADA}) then 1 end`
-        ),
-        totalAbsenteesJustified: count(
-          sql`case when ${attendanceRecordsTable.status} = ${AttendanceStatus.FALTA_JUSTIFICADA} then 1 end`
-        ),
-      })
-      .from(attendanceRecordsTable)
-      .where(eq(attendanceRecordsTable.eventId, eventId))
-      .groupBy() // Group all results together
+  return stats
+}
 
-    return stats
-  },
-  ['getEventAttendanceStats'],
-  {
-    revalidate: CACHE_DURATION.DAY,
-    tags: ['attendance'],
-  }
-)
+async function getUpcomingEventsForDate(peruDate: string) {
+  'use cache'
+  cacheLife('minutes')
+  cacheTag(cacheTags.eventsList())
 
-export const getUpcomingEvents = unstable_cache(
-  async () => {
-    return db.query.eventsTable.findMany({
-      where: sql`date >= current_date`,
-      orderBy: (fields) => [fields.date],
-      with: {
-        location: true,
-      },
-      limit: 6, // Multiple of 6
-    })
-  },
-  ['getUpcomingEvents'],
-  {
-    revalidate: CACHE_DURATION.SIX_HOURS,
-    tags: ['events'],
-  }
-)
+  return db.query.eventsTable.findMany({
+    where: sql`${eventsTable.date} >= ${peruDate}::date`,
+    orderBy: (fields) => [fields.date],
+    with: {
+      location: true,
+    },
+    limit: 6, // Multiple of 6
+  })
+}
+
+export const getUpcomingEvents = (now = new Date()) =>
+  getUpcomingEventsForDate(getPeruDateKey(now))
 
 export const getTodayEvents = async (now = new Date()) => {
   const peruNow = new TZDate(now.getTime(), 'America/Lima')
@@ -438,38 +402,39 @@ export const getAttendanceRecordForUserEvent = async (
   })
 
 /* MassesTable */
-export const getAllMasses = unstable_cache(
-  async () => {
-    return db.query.sundayMassesTable.findMany({
-      orderBy: (fields) => [desc(fields.id)],
-      with: {
-        user: true,
-        verifier: true,
-      },
-    })
-  },
-  ['getAllMasses'],
-  {
-    revalidate: CACHE_DURATION.SIX_HOURS,
-    tags: ['sundayMasses'],
-  }
-)
+export async function getAllMasses() {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(cacheTags.masses(), cacheTags.massesList(), cacheTags.usersList())
 
-export const getSundayMassesRecordsByUserId = unstable_cache(
-  async (userId: SelectUser['id'], limit: number | null = 100) => {
-    return db.query.sundayMassesTable.findMany({
-      where: eq(sundayMassesTable.userId, userId),
-      orderBy: (fields) => [desc(fields.sundayDate), desc(fields.id)],
-      with: {
-        user: true,
-        verifier: true,
-      },
-      limit: limit ?? undefined,
-    })
-  },
-  ['getSundayMassesRecordsByUserId'],
-  {
-    revalidate: CACHE_DURATION.SIX_HOURS,
-    tags: ['sundayMasses'],
-  }
-)
+  return db.query.sundayMassesTable.findMany({
+    orderBy: (fields) => [desc(fields.id)],
+    with: {
+      user: true,
+      verifier: true,
+    },
+  })
+}
+
+export async function getSundayMassesRecordsByUserId(
+  userId: SelectUser['id'],
+  limit: number | null = 100
+) {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(
+    cacheTags.masses(),
+    cacheTags.userMasses(userId),
+    cacheTags.usersList()
+  )
+
+  return db.query.sundayMassesTable.findMany({
+    where: eq(sundayMassesTable.userId, userId),
+    orderBy: (fields) => [desc(fields.sundayDate), desc(fields.id)],
+    with: {
+      user: true,
+      verifier: true,
+    },
+    limit: limit ?? undefined,
+  })
+}

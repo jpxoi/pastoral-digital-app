@@ -170,12 +170,12 @@ export const locationsTable = pgTable('locations', {
   id: uuid()
     .primaryKey()
     .default(sql`uuidv7()`),
-  name: text().notNull(),
+  name: text().notNull().unique(),
   address: text().notNull(),
   city: text().default('Trujillo').notNull(),
   postalCode: text('postal_code').notNull(),
   country: text('country').default('Perú').notNull(),
-  googleMapsUrl: text('google_maps_url').notNull(),
+  googleMapsUrl: text('google_maps_url').notNull().unique(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at')
     .notNull()
@@ -271,14 +271,20 @@ export const massEvidenceStateEnum = pgEnum('mass_evidence_state', [
   'deleted',
 ])
 
-export const massEvidenceFilesTable = pgTable('mass_evidence_files', {
-  key: text('key').primaryKey(),
-  userId: text('user_id').notNull(),
-  hash: text('hash').notNull(),
-  state: massEvidenceStateEnum('state').notNull().default('available'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at').notNull().defaultNow(),
-})
+export const massEvidenceFilesTable = pgTable(
+  'mass_evidence_files',
+  {
+    key: text('key').primaryKey(),
+    userId: text('user_id')
+      .references(() => usersTable.id, { onDelete: 'cascade' })
+      .notNull(),
+    hash: text('hash').notNull(),
+    state: massEvidenceStateEnum('state').notNull().default('available'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => [index('idx_mass_evidence_files_user_id').on(table.userId)]
+)
 
 /* Registro de Misas Dominicales */
 export const sundayMassesTable = pgTable(

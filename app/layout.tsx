@@ -1,3 +1,6 @@
+import { Suspense } from 'react'
+import { connection } from 'next/server'
+import Loading from './loading'
 import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
@@ -44,6 +47,12 @@ const clerkAppearance = {
   theme: shadcn,
 }
 
+// Keep session and clock-dependent UI request-bound; only DB queries opt into caching.
+async function RequestContent({ children }: { children: React.ReactNode }) {
+  await connection()
+  return children
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -71,7 +80,9 @@ export default function RootLayout({
           <SpeedInsights />
           <div className='topbar' aria-hidden='true'></div>
           <div className='bottombar' aria-hidden='true'></div>
-          {children}
+          <Suspense fallback={<Loading />}>
+            <RequestContent>{children}</RequestContent>
+          </Suspense>
         </ClerkProvider>
       </body>
     </html>

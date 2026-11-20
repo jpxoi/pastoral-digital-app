@@ -8,8 +8,6 @@ import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import { SundayMassStatus } from '@/types'
 
-export const runtime = 'nodejs'
-
 export async function GET() {
   const { userId } = await auth()
   if (!userId) {

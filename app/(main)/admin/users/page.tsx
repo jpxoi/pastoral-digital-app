@@ -27,7 +27,7 @@ export default async function Page() {
       <Suspense fallback={<UserTableSkeleton />}>
         <UsersTable canSetRole={canSetRole}>
           <div className='flex items-center gap-2'>
-            <RevalidateButton tag='users' />
+            <RevalidateButton resource='users' />
             {canGenerateFotochecks && <GenerateFotochecksButton />}
           </div>
         </UsersTable>

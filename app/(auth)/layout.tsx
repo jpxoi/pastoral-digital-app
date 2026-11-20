@@ -8,7 +8,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <main className='bg-primary relative isolate flex h-dvh w-full flex-col items-center justify-between max-md:overflow-hidden md:min-h-dvh md:gap-8 md:overflow-y-auto md:p-4'>
+    <main
+      data-browser-chrome='auth'
+      className='bg-primary relative isolate flex h-dvh w-full flex-col items-center justify-between max-md:overflow-hidden md:min-h-dvh md:gap-8 md:overflow-y-auto md:p-4'
+    >
       <Background className='z-0 h-[38%] md:h-full' />
       <div className='relative z-10 flex shrink-0 items-center justify-center px-8 py-8 md:px-6 md:py-2'>
         <PastoralSignature

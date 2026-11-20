@@ -120,8 +120,7 @@
   width: 89%;
   height: 11px;
   display: block;
-  /* Rainbow effect disabled for clarity, static color used instead */
-  background: #07309b;
+  background: var(--background);
   /* Hack to style the browser UI while making it invisible to the user */
   mask-image: linear-gradient(to right, transparent, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, transparent);
@@ -132,10 +131,14 @@
   width: 89%;
   height: 11px;
   display: block;
-  background: #ffffff;
+  background: var(--background);
   /* Hack to style the browser UI while making it invisible to the user */
   mask-image: linear-gradient(to right, transparent, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, transparent);
+}
+
+body:has([data-browser-chrome='wave']) .topbar {
+  background: #07309b;
 }
 
 :root {

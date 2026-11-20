@@ -24,7 +24,7 @@ export default async function Page() {
       <Suspense fallback={<AttendanceCalendarTableSkeleton />}>
         <AttendanceCalendarTable>
           <div className='flex items-center gap-2'>
-            <RevalidateButton tag='attendance' />
+            <RevalidateButton resource='calendar' />
             <ExportAttendanceCalendarPdfButton />
           </div>
         </AttendanceCalendarTable>

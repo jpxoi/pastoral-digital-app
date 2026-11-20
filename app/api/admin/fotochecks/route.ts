@@ -10,8 +10,6 @@ import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import { generateFotocheckPdf } from '@/lib/fotochecks/pdf'
 
-export const runtime = 'nodejs'
-
 const requestSchema = z
   .object({ userId: z.string().min(1).max(128).optional() })
   .strict()

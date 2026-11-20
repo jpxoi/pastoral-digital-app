@@ -1,7 +1,13 @@
-.topbar {
+body:has([data-browser-chrome='auth']) .topbar {
   background: #07309b !important;
 }
 
-.bottombar {
-  background: rgb(29, 95, 211) !important;
+body:has([data-browser-chrome='auth']) .bottombar {
+  background: white !important;
+}
+
+@media (min-width: 48rem) {
+  body:has([data-browser-chrome='auth']) .bottombar {
+    background: #07309b !important;
+  }
 }

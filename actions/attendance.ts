@@ -9,13 +9,13 @@ import {
   getAttendanceRecordForUserEvent,
   getEventForAttendance,
   getUsersWithNoAttendanceRecord,
-  getEventById,
   getLastAttendanceRecord,
   getTodayEvents,
   getUserSchedule,
 } from '@/queries/select'
 import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
+import { cacheTags } from '@/lib/cache'
 import { updateTag } from 'next/cache'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -30,6 +30,17 @@ import { deleteAttendanceRecord } from '@/queries/delete'
 import { calculateStatus } from '@/lib/attendance'
 import { UserSchedule } from '@/types'
 import { z } from 'zod'
+
+function invalidateAttendance(
+  records: readonly { userId: string; eventId: string }[]
+) {
+  const tags = new Set<string>([cacheTags.attendanceList()])
+  for (const record of records) {
+    tags.add(cacheTags.userAttendance(record.userId))
+    tags.add(cacheTags.eventAttendance(record.eventId))
+  }
+  for (const tag of tags) updateTag(tag)
+}
 
 export const registerAttendanceRecord = async (
   data: InsertAttendance
@@ -48,9 +59,8 @@ export const registerAttendanceRecord = async (
 
   return await createAttendanceRecord(data)
     .then(async () => {
+      invalidateAttendance([data])
       const lastAttendanceRecord = await getLastAttendanceRecord()
-
-      updateTag('attendance')
 
       if (data.status === AttendanceStatus.FALTA_JUSTIFICADA) {
         return {
@@ -161,11 +171,11 @@ export const registerQrAttendanceRecord = async (input: unknown) => {
       method: AttendanceRecordMethod.QR,
     })
 
+    invalidateAttendance([{ userId, eventId }])
     const lastAttendanceRecord = await getAttendanceRecordForUserEvent(
       userId,
       eventId
     )
-    updateTag('attendance')
 
     return {
       success: 'Asistencia registrada correctamente.',
@@ -192,7 +202,7 @@ export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
 
   return await createAttendanceRecords(data)
     .then(() => {
-      updateTag('attendance')
+      invalidateAttendance(data)
 
       return {
         success: 'Asistencias registrada correctamente.',
@@ -218,8 +228,8 @@ export const setAttendanceRecordStatus = async (
   }
 
   return await updateAttendanceRecordStatus(status, recordId)
-    .then(async () => {
-      updateTag('attendance')
+    .then(async (records) => {
+      invalidateAttendance(records)
 
       return {
         success: 'Estado de asistencia modificado correctamente.',
@@ -241,7 +251,7 @@ export const fillAbsenceRecords = async (eventId: string) => {
     return { error: 'No estás autorizado para modificar asistencias.' }
   }
 
-  const event = await getEventById(eventId)
+  const event = await getEventForAttendance(eventId)
 
   if (!event) {
     return { error: 'No se encontró el evento.' }
@@ -271,7 +281,7 @@ export const fillAbsenceRecords = async (eventId: string) => {
   try {
     await createAttendanceRecords(absenceRecords)
 
-    updateTag('attendance')
+    invalidateAttendance(absenceRecords)
 
     return {
       success: 'Faltas rellenadas correctamente.',
@@ -294,8 +304,8 @@ export const removeAttendanceRecord = async (
     return { error: 'No estás autorizado para eliminar asistencias.' }
   }
   return await deleteAttendanceRecord(recordId)
-    .then(async () => {
-      updateTag('attendance')
+    .then(async (records) => {
+      invalidateAttendance(records)
       return {
         success: 'Asistencia eliminada correctamente.',
       }

@@ -1,7 +1,8 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // custom config here
+  cacheComponents: true,
+  partialPrefetching: true,
 }
 
 export default nextConfig

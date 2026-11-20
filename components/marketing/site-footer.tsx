@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { cacheLife } from 'next/cache'
 import { PastoralSignature } from '@/components/shared/pastoral-signature'
 import { IconBrandInstagram } from '@tabler/icons-react'
 
@@ -13,7 +14,10 @@ const legal = [
   { href: '/privacy', label: 'Política de privacidad' },
 ] as const
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  'use cache'
+  cacheLife('days')
+
   return (
     <footer className='border-border bg-muted/40 border-t print:hidden'>
       <div className='mx-auto grid w-full max-w-6xl grid-cols-2 gap-8 px-4 py-12 md:px-6 lg:grid-cols-[2fr_1fr_1fr] lg:gap-10'>

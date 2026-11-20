@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { TZDate } from '@date-fns/tz'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
+import { cacheTags } from '@/lib/cache'
 import { updateTag } from 'next/cache'
 
 const EVENT_TIME_ZONE = 'America/Lima'
@@ -72,7 +73,7 @@ export async function postNewEvent(formValues: unknown) {
       locationId,
     })
 
-    updateTag('events')
+    updateTag(cacheTags.eventsList())
     return { success: 'El evento se creó correctamente.' }
   } catch (error) {
     console.error('Error creating event:', error)
@@ -102,7 +103,8 @@ export async function updateEventDetails(values: unknown) {
       .where(eq(eventsTable.id, id))
       .returning({ id: eventsTable.id })
     if (!updated.length) return { error: 'El evento ya no está disponible.' }
-    updateTag('events')
+    updateTag(cacheTags.eventsList())
+    updateTag(cacheTags.event(id))
     return { success: 'Evento actualizado correctamente.' }
   } catch (error) {
     console.error('Error updating event:', error)
