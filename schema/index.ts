@@ -1,6 +1,7 @@
 import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 import { isValidPhoneNumber } from 'libphonenumber-js'
 import { z } from 'zod'
+import { normalizeStudentCode } from '@/lib/student-code'
 
 const onboardingDateSchema = z
   .string()
@@ -60,7 +61,7 @@ export const OnboardingFormSchema = z
         }),
       }
     ),
-    studentCode: z.string().trim().nullish(),
+    studentCode: z.string().transform(normalizeStudentCode).nullish(),
     role: z.literal(UserRole.MEMBER).default(UserRole.MEMBER),
   })
   .superRefine((values, context) => {

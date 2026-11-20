@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { OnboardingFormSchema } from '@/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, type SubmitErrorHandler } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
 import { EmailInput } from '@/components/ui/email-input'
@@ -26,7 +26,8 @@ import {
   IconSearch,
 } from '@tabler/icons-react'
 import { Input } from '@/components/ui/input'
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
+import { normalizeStudentCode } from '@/lib/student-code'
 import { UserCategory, UserRole } from '@/types'
 import { registerUser } from '@/actions/user'
 import { toast } from 'sonner'
@@ -137,6 +138,29 @@ export default function OnboardingForm({
 
   const isDniValid = (dni: string) => dni.length === 8 && /^\d+$/.test(dni)
 
+  const [errorFieldToFocus, setErrorFieldToFocus] = useState<
+    keyof z.input<typeof OnboardingFormSchema> | null
+  >(null)
+
+  useEffect(() => {
+    if (errorFieldToFocus) {
+      form.setFocus(errorFieldToFocus)
+      setErrorFieldToFocus(null)
+    }
+  }, [currentStep, errorFieldToFocus, form])
+
+  const onInvalid: SubmitErrorHandler<z.input<typeof OnboardingFormSchema>> = (
+    errors
+  ) => {
+    const stepIndex = steps.findIndex((step) =>
+      step.fields.some((field) => errors[field])
+    )
+    if (stepIndex === -1) return
+    const field = steps[stepIndex].fields.find((field) => errors[field])
+    setCurrentStep(stepIndex)
+    setErrorFieldToFocus(field ?? null)
+  }
+
   const handleNextButton = async () => {
     const currentFields = steps[currentStep].fields
 
@@ -227,7 +251,17 @@ export default function OnboardingForm({
 
   const onSubmit = async (values: z.output<typeof OnboardingFormSchema>) => {
     startTransition(async () => {
-      await registerUser(values)
+      await registerUser({
+        id: values.id,
+        dni: values.dni,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phoneNumber: values.phoneNumber,
+        dateOfBirth: values.dateOfBirth,
+        category: values.category,
+        studentCode: values.studentCode,
+        role: values.role,
+      })
         .then(async (data: { success?: string; error?: string }) => {
           if (data?.error) {
             throw new Error(data?.error)
@@ -575,6 +609,13 @@ export default function OnboardingForm({
                       {...field}
                       id='studentCode'
                       value={field.value ?? ''}
+                      onChange={(event) =>
+                        field.onChange(event.target.value.toUpperCase())
+                      }
+                      onBlur={(event) => {
+                        field.onChange(normalizeStudentCode(event.target.value))
+                        field.onBlur()
+                      }}
                       aria-invalid={fieldState.invalid}
                       placeholder='Ej. P6A01 o S5B01'
                       autoComplete='off'
@@ -630,7 +671,7 @@ export default function OnboardingForm({
       <CardContent>
         <form
           id='multi-form'
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit, onInvalid)}
           className='w-full space-y-4 text-left'
         >
           {renderCurrentStepContent()}

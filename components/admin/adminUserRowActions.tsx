@@ -4,6 +4,16 @@ import { Row } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -71,6 +81,8 @@ export function AdminUserRowActions({
 }: DataTableRowActionsProps) {
   const { download, pending } = useFotocheckDownload()
   const [editingAssignments, setEditingAssignments] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const parsedRole = parseUserRole(row.original.role)
   return (
     <div className='flex gap-4' key={row.id}>
@@ -155,23 +167,8 @@ export function AdminUserRowActions({
             {canDelete && (
               <DropdownMenuItem
                 variant='destructive'
-                onSelect={() => {
-                  if (
-                    !window.confirm(
-                      `¿Eliminar permanentemente a ${row.original.firstName} ${row.original.lastName}, su cuenta y sus registros? Esta acción no se puede deshacer.`
-                    )
-                  )
-                    return
-                  toast.promise(removeCatechist(row.original.id), {
-                    loading: 'Eliminando catequista...',
-                    success: (data) => {
-                      if (data.error) throw new Error(data.error)
-                      return data.success
-                    },
-                    error: (error) =>
-                      error.message || 'Error al eliminar catequista.',
-                  })
-                }}
+                disabled={deleting}
+                onSelect={() => setConfirmingDelete(true)}
               >
                 <IconTrash />
                 Eliminar catequista
@@ -192,6 +189,46 @@ export function AdminUserRowActions({
           />
         </DialogContent>
       </Dialog>
+      {canDelete && (
+        <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>¿Eliminar catequista?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Se eliminará permanentemente a {row.original.firstName}{' '}
+                {row.original.lastName}, su cuenta y sus registros. Esta acción
+                no se puede deshacer.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                variant='destructive-solid'
+                disabled={deleting}
+                onClick={() => {
+                  setDeleting(true)
+                  const result = removeCatechist(row.original.id)
+                  toast.promise(result, {
+                    loading: 'Eliminando catequista...',
+                    success: (data) => {
+                      if (data.error) throw new Error(data.error)
+                      return data.success
+                    },
+                    error: (error) =>
+                      error.message || 'Error al eliminar catequista.',
+                  })
+                  void result.then(
+                    () => setDeleting(false),
+                    () => setDeleting(false)
+                  )
+                }}
+              >
+                Eliminar catequista
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       {editingAssignments && (
         <UserAssignmentEditor
           user={row.original}

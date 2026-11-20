@@ -9,6 +9,16 @@ import type { AssignmentCatalog } from '@/types/assignments'
 import CommunityDialog from '@/components/admin/communityDialog'
 import { Button } from '@/components/ui/button'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -25,7 +35,11 @@ export default function CommunityRowActions({
 }) {
   const [editing, setEditing] = useState(false)
   const [pending, setPending] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
   const router = useRouter()
+  const program = catalog.programs.find(
+    (program) => program.id === community.programId
+  )
 
   return (
     <>
@@ -48,37 +62,52 @@ export default function CommunityRowActions({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             variant='destructive'
-            onSelect={async () => {
-              const program = catalog.programs.find(
-                (program) => program.id === community.programId
-              )
-              if (
-                !window.confirm(
-                  `¿Eliminar permanentemente la comunidad ${community.name} de ${program?.name}? Esta acción no se puede deshacer. Solo se pueden eliminar comunidades sin catequistas asignados.`
-                )
-              )
-                return
-              setPending(true)
-              try {
-                const result = await deleteCommunity(community.id)
-                if ('error' in result) {
-                  toast.error(result.error)
-                  return
-                }
-                toast.success(result.success)
-                router.refresh()
-              } catch {
-                toast.error('No se pudo eliminar la comunidad.')
-              } finally {
-                setPending(false)
-              }
-            }}
+            disabled={pending}
+            onSelect={() => setConfirmingDelete(true)}
           >
             <IconTrash />
             Eliminar comunidad
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar comunidad?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Se eliminará permanentemente la comunidad {community.name}
+              {program ? ` de ${program.name}` : ''}. Esta acción no se puede
+              deshacer. Solo se pueden eliminar comunidades sin catequistas
+              asignados.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              variant='destructive-solid'
+              disabled={pending}
+              onClick={async () => {
+                setPending(true)
+                try {
+                  const result = await deleteCommunity(community.id)
+                  if ('error' in result) {
+                    toast.error(result.error)
+                    return
+                  }
+                  toast.success(result.success)
+                  router.refresh()
+                } catch {
+                  toast.error('No se pudo eliminar la comunidad.')
+                } finally {
+                  setPending(false)
+                }
+              }}
+            >
+              Eliminar comunidad
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       {editing && (
         <CommunityDialog
           catalog={catalog}
