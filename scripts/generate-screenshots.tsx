@@ -67,33 +67,72 @@ function compose(screen: Screenshot, logo: string) {
       <g transform="rotate(-7 540 1250)" filter="url(#shadow)">${place(screen.artwork, 170, 740, 740)}</g>`
   } else if (screen.presentation === 'window') {
     visual = `<g transform="translate(800 365)" filter="url(#shadow)">
-      <rect width="1140" height="850" rx="28" fill="#102d5b" stroke="#3a5684" stroke-width="3"/>
+      <rect width="1286" height="811" rx="28" fill="#102d5b" stroke="#3a5684" stroke-width="3"/>
       <circle cx="30" cy="28" r="5" fill="#7893b9"/><circle cx="50" cy="28" r="5" fill="#7893b9"/><circle cx="70" cy="28" r="5" fill="#7893b9"/>
       <rect x="390" y="16" width="360" height="24" rx="8" fill="#061b46"/>
-      ${place(screen.artwork, 18, 56, 1104)}
-      <rect x="18" y="700" width="1104" height="150" fill="#fff"/>
+      ${place(screen.artwork, 18, 56, 1250)}
+    </g>`
+  } else if (
+    !screen.wide &&
+    (screen.presentation === 'scanner' || screen.focusRecords)
+  ) {
+    const frameX = 80
+    const frameY = 740
+    const frameWidth = 920
+    const frameInset = 12
+    const artWidth = frameWidth - frameInset * 2
+    const isRecords = Boolean(screen.focusRecords)
+    const source = isRecords
+      ? {
+          ...screen.artwork,
+          svg: screen.artwork.svg.replace(
+            'viewBox="0 0 390 780"',
+            'viewBox="0 420 390 340"'
+          ),
+          height: 340,
+        }
+      : screen.artwork
+    const panelArtwork = {
+      ...source,
+      svg: source.svg.replace(/<rect\b[^>]*>(?:<\/rect>)?/, ''),
+    }
+    const frameHeight =
+      (artWidth * source.height) / source.width + frameInset * 2
+    visual = `<g filter="url(#shadow)">
+      <rect x="${frameX}" y="${frameY}" width="${frameWidth}" height="${frameHeight}" rx="40" fill="#102d5b" stroke="#3a5684" stroke-width="3"/>
+      <defs><clipPath id="panel-content"><rect x="${frameX + frameInset}" y="${frameY + frameInset}" width="${artWidth}" height="${frameHeight - frameInset * 2}" rx="28"/></clipPath></defs>
+      <g clip-path="url(#panel-content)"><rect x="${frameX + frameInset}" y="${frameY + frameInset}" width="${artWidth}" height="${frameHeight - frameInset * 2}" fill="#fff"/>${place(panelArtwork, frameX + frameInset, frameY + frameInset, artWidth)}</g>
     </g>`
   } else {
     const x = screen.wide ? 1070 : 130
-    const y = screen.wide ? 230 : 650
+    const compact =
+      !screen.wide && (screen.presentation === 'scanner' || screen.focusRecords)
+    const y = screen.wide ? 230 : compact ? 740 : 650
     const w = screen.wide ? 680 : 820
-    const h = screen.wide ? 1330 : 1700
+    const h = screen.wide ? 1330 : compact ? 940 : 1700
     const uiY =
       screen.presentation === 'scanner'
-        ? y + 240
+        ? y + (screen.wide ? 240 : 100)
         : y + 100 - (screen.focusRecords ? 850 : 0)
+    const cornerRadius = Math.round(w * 0.17)
+    const phoneArtwork = {
+      ...screen.artwork,
+      // The device supplies the white surface and clipping; omit the preview's own frame.
+      svg: screen.artwork.svg.replace(/<rect\b[^>]*>(?:<\/rect>)?/, ''),
+    }
     visual = `<g transform="rotate(${screen.wide ? 7 : -3} ${x + w / 2} ${y + h / 2})">
-      <rect x="${x - 7}" y="${y - 7}" width="${w + 14}" height="${h + 14}" rx="90" fill="#294266" filter="url(#shadow)"/>
-      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="84" fill="#09101e" stroke="#52647d" stroke-width="3"/>
-      <defs><clipPath id="screen"><rect x="${x + 18}" y="${y + 18}" width="${w - 36}" height="${h - 36}" rx="68"/></clipPath></defs>
+      <rect x="${x - 7}" y="${y - 7}" width="${w + 14}" height="${h + 14}" rx="${cornerRadius + 7}" fill="#294266" filter="url(#shadow)"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${cornerRadius}" fill="#09101e" stroke="#52647d" stroke-width="3"/>
+      <defs><clipPath id="screen"><rect x="${x + 18}" y="${y + 18}" width="${w - 36}" height="${h - 36}" rx="${cornerRadius - 18}"/></clipPath></defs>
       <g clip-path="url(#screen)">
         <rect x="${x + 18}" y="${y + 18}" width="${w - 36}" height="${h - 36}" fill="#fff"/>
-        ${place(screen.artwork, x + 20, uiY, w - 40)}
+        ${place(phoneArtwork, x + 20, uiY, w - 40)}
         <rect x="${x + 18}" y="${y + 18}" width="${w - 36}" height="76" fill="#fff"/>
-        <text x="${x + 52}" y="${y + 66}" fill="#101828" font-size="22" font-weight="600">9:41</text>
-        <rect x="${x + w / 2 - 78}" y="${y + 35}" width="156" height="36" rx="18" fill="#09101e"/>
-        <rect x="${x + w - 94}" y="${y + 47}" width="39" height="18" rx="5" fill="none" stroke="#101828" stroke-width="2"/>
-        <rect x="${x + w - 90}" y="${y + 51}" width="29" height="10" rx="2" fill="#101828"/>
+        <text x="${x + 80}" y="${y + 78}" fill="#101828" font-size="22" font-weight="600">9:41</text>
+        <rect x="${x + w * 0.35}" y="${y + 35}" width="${w * 0.3}" height="${w * 0.075}" rx="${w * 0.0375}" fill="#09101e"/>
+        <rect x="${x + w - 120}" y="${y + 59}" width="39" height="18" rx="5" fill="none" stroke="#101828" stroke-width="2"/>
+        <rect x="${x + w - 116}" y="${y + 63}" width="29" height="10" rx="2" fill="#101828"/>
+        ${compact ? `<rect x="${x + w / 2 - 90}" y="${y + h - 46}" width="180" height="7" rx="3.5" fill="#101828"/>` : ''}
       </g>
     </g>`
   }

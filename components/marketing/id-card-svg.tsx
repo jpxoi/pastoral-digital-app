@@ -59,9 +59,11 @@ export function IdCardSvg({ className }: { className?: string }) {
         />
       </g>
       <rect
-        width='280'
-        height='344'
-        rx='18'
+        x='0.75'
+        y='0.75'
+        width='278.5'
+        height='342.5'
+        rx='17.25'
         fill='none'
         stroke='#e2e8f0'
         strokeWidth='1.5'
