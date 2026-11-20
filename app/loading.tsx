@@ -1,14 +1,8 @@
-import Background from '@/components/shared/background'
 import { Spinner } from '@/components/ui/spinner'
 
 export default function Loading() {
   return (
-    <main
-      data-browser-chrome='wave'
-      className='flex h-dvh w-full flex-col items-center justify-center bg-center'
-    >
-      <Background />
-      <Spinner className='size-10 text-white' />
-    </main>
+    <main className='flex h-dvh w-full flex-col items-center justify-center bg-center'>
+      <Spinner className='text-prumary size-10' /></main>
   )
 }

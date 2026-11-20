@@ -47,6 +47,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { PastoralAppMark } from '@/components/shared/pastoral-signature'
 import { removeDevicePushSubscription } from '@/lib/push/client'
 import { toast } from 'sonner'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import PushNotificationsControl from '@/components/shared/pushNotificationsControl'
 
 type NavLink = {
   label: string
@@ -55,6 +63,7 @@ type NavLink = {
 }
 
 export function CustomSidebar() {
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [permissions, setPermissions] = useState<Set<Permission>>(new Set())
   const pathname = usePathname()
 
@@ -148,45 +157,31 @@ export function CustomSidebar() {
   ].filter((link): link is NavLink => Boolean(link))
 
   return (
-    <Sidebar
-      variant='floating'
-      collapsible='icon'
-      className='border-sidebar-border'
-    >
-      <SidebarHeader className='items-start px-3 pt-6 pb-2'>
-        <Link
-          href='/dashboard'
-          aria-label='Pastoral Digital App'
-          className='flex gap-3 px-2 transition-all group-data-[collapsible=icon]:px-0'
-        >
-          <PastoralAppMark className='aspect-square size-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white' />
-          <span className='truncate font-semibold group-data-[collapsible=icon]:hidden'>
-            Pastoral Digital App
-          </span>
-        </Link>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className='group-data-[collapsible=icon]:hidden'>
-            Principal
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            {links.map((link) => (
-              <NavItem
-                key={link.href}
-                link={link}
-                active={isRouteActive(pathname, link.href)}
-              />
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-        {adminLinks.length > 0 && (
+    <>
+      <Sidebar
+        variant='floating'
+        collapsible='icon'
+        className='border-sidebar-border'
+      >
+        <SidebarHeader className='items-start px-3 pt-6 pb-2'>
+          <Link
+            href='/dashboard'
+            aria-label='Pastoral Digital App'
+            className='flex gap-3 px-2 transition-all group-data-[collapsible=icon]:px-0'
+          >
+            <PastoralAppMark className='aspect-square size-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white' />
+            <span className='truncate font-semibold group-data-[collapsible=icon]:hidden'>
+              Pastoral Digital App
+            </span>
+          </Link>
+        </SidebarHeader>
+        <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel className='group-data-[collapsible=icon]:hidden'>
-              Administración
+              Principal
             </SidebarGroupLabel>
             <SidebarMenu>
-              {adminLinks.map((link) => (
+              {links.map((link) => (
                 <NavItem
                   key={link.href}
                   link={link}
@@ -195,16 +190,46 @@ export function CustomSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroup>
-        )}
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarUserButton />
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
+          {adminLinks.length > 0 && (
+            <SidebarGroup>
+              <SidebarGroupLabel className='group-data-[collapsible=icon]:hidden'>
+                Administración
+              </SidebarGroupLabel>
+              <SidebarMenu>
+                {adminLinks.map((link) => (
+                  <NavItem
+                    key={link.href}
+                    link={link}
+                    active={isRouteActive(pathname, link.href)}
+                  />
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          )}
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarUserButton
+                notificationsOpen={notificationsOpen}
+                onOpenNotifications={() => setNotificationsOpen(true)}
+              />
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+      <Dialog open={notificationsOpen} onOpenChange={setNotificationsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Notificaciones</DialogTitle>
+            <DialogDescription>
+              Gestiona los avisos de Pastoral Digital en este dispositivo.
+            </DialogDescription>
+          </DialogHeader>
+          <PushNotificationsControl variant='settings' />
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 
@@ -229,7 +254,13 @@ function NavItem({ link, active }: { link: NavLink; active: boolean }) {
   )
 }
 
-function SidebarUserButton() {
+function SidebarUserButton({
+  notificationsOpen,
+  onOpenNotifications,
+}: {
+  notificationsOpen: boolean
+  onOpenNotifications: () => void
+}) {
   const { user, isLoaded } = useUser()
   const { isMobile, setOpenMobile } = useSidebar()
   const { openUserProfile, signOut } = useClerk()
@@ -267,6 +298,9 @@ function SidebarUserButton() {
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
+        onCloseAutoFocus={(event) => {
+          if (notificationsOpen) event.preventDefault()
+        }}
         align='end'
         side={isMobile ? 'bottom' : 'right'}
         sideOffset={8}
@@ -292,13 +326,13 @@ function SidebarUserButton() {
         <DropdownMenuItem onSelect={() => openUserProfile()}>
           <IconSettings /> Administrar cuenta
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href='/dashboard#notifications'
-            onClick={() => setOpenMobile(false)}
-          >
-            <IconBell /> Notificaciones
-          </Link>
+        <DropdownMenuItem
+          onSelect={() => {
+            setOpenMobile(false)
+            onOpenNotifications()
+          }}
+        >
+          <IconBell /> Notificaciones
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

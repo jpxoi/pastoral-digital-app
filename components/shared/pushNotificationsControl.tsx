@@ -33,7 +33,13 @@ const descriptions: Record<Status, string> = {
   error: 'No se pudo consultar el estado de las notificaciones.',
 }
 
-export default function PushNotificationsControl() {
+const STATUS_CHANGE_EVENT = 'pastoral-push-status-change'
+
+export default function PushNotificationsControl({
+  variant = 'invitation',
+}: {
+  variant?: 'invitation' | 'settings'
+}) {
   const [status, setStatus] = useState<Status>('loading')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -106,12 +112,26 @@ export default function PushNotificationsControl() {
     const onVisibility = () => {
       if (!document.hidden) void refresh()
     }
+    const onStatusChange = (event: Event) => {
+      const next = (event as CustomEvent<Status>).detail
+      if (next === 'on' || next === 'off' || next === 'blocked') {
+        setStatus(next)
+        setError('')
+      }
+    }
     document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener(STATUS_CHANGE_EVENT, onStatusChange)
     return () => {
       window.clearTimeout(timer)
       document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener(STATUS_CHANGE_EVENT, onStatusChange)
     }
   }, [refresh])
+
+  function updateStatus(next: Status) {
+    setStatus(next)
+    window.dispatchEvent(new CustomEvent(STATUS_CHANGE_EVENT, { detail: next }))
+  }
 
   async function toggle() {
     setBusy(true)
@@ -119,13 +139,13 @@ export default function PushNotificationsControl() {
     try {
       if (status === 'on') {
         await removeDevicePushSubscription()
-        setStatus('off')
+        updateStatus('off')
         return
       }
       // Request permission directly from the click, before any network awaits.
       const permission = await Notification.requestPermission()
       if (permission !== 'granted') {
-        setStatus(permission === 'denied' ? 'blocked' : 'off')
+        updateStatus(permission === 'denied' ? 'blocked' : 'off')
         return
       }
       await navigator.serviceWorker.register('/service-worker.js', {
@@ -172,7 +192,7 @@ export default function PushNotificationsControl() {
           data?.error ?? 'No se pudieron activar las notificaciones.'
         )
       }
-      setStatus('on')
+      updateStatus('on')
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -184,11 +204,16 @@ export default function PushNotificationsControl() {
     }
   }
 
+  if (variant === 'invitation' && status !== 'off') return null
+
   return (
     <section
-      id='notifications'
-      aria-labelledby='notifications-title'
-      className='border-border flex scroll-mt-4 flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between'
+      aria-label='Notificaciones'
+      className={
+        variant === 'invitation'
+          ? 'border-border flex flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between'
+          : 'flex flex-col gap-4'
+      }
     >
       <div className='flex items-start gap-3'>
         <IconBell
@@ -196,9 +221,9 @@ export default function PushNotificationsControl() {
           aria-hidden='true'
         />
         <div className='space-y-1 text-left'>
-          <h2 id='notifications-title' className='font-semibold'>
-            Notificaciones
-          </h2>
+          {variant === 'invitation' && (
+            <h2 className='font-semibold'>Notificaciones</h2>
+          )}
           <p className='text-muted-foreground text-sm' aria-live='polite'>
             {descriptions[status]}
           </p>
