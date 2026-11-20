@@ -3,8 +3,8 @@ import { db } from '@/db/drizzle'
 import { locationsTable, programsTable } from '@/db/schema'
 
 const programs = [
-  { code: 'COMMUNION', name: 'Comunión' },
-  { code: 'CONFIRMATION', name: 'Confirmación' },
+  { code: 'communion', name: 'Comunión' },
+  { code: 'confirmation', name: 'Confirmación' },
 ]
 
 const locations = [

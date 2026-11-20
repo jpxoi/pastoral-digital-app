@@ -10,8 +10,6 @@ import {
   getEventForAttendance,
   getUsersWithNoAttendanceRecord,
   getLastAttendanceRecord,
-  getTodayEvents,
-  getUserSchedule,
 } from '@/queries/select'
 import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
@@ -28,7 +26,8 @@ import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
 import { deleteAttendanceRecord } from '@/queries/delete'
 import { calculateStatus } from '@/lib/attendance'
-import { UserSchedule } from '@/types'
+import { getQrAttendanceContext } from '@/queries/assignments'
+import { getAttendanceTurn } from '@/lib/assignments'
 import { z } from 'zod'
 
 function invalidateAttendance(
@@ -105,18 +104,12 @@ export const registerQrAttendanceRecord = async (input: unknown) => {
   }
 
   try {
-    const todayEvents = await getTodayEvents()
-    if (!todayEvents.some((event) => event.id === eventId)) {
+    const context = await getQrAttendanceContext(eventId, userId)
+    if (!context) {
       return { error: 'El evento seleccionado ya no está disponible para hoy.' }
     }
-
-    const [event, scannedUser] = await Promise.all([
-      getEventForAttendance(eventId),
-      getUserSchedule(userId),
-    ])
-
-    if (!event) return { error: 'No se encontró el evento seleccionado.' }
-    if (!scannedUser) {
+    const { event } = context
+    if (!context.userId) {
       return {
         error:
           'No se encontró al catequista en la base de datos. Verifica que esté registrado correctamente.',
@@ -143,24 +136,20 @@ export const registerQrAttendanceRecord = async (input: unknown) => {
       }
     }
 
-    const existingRecord = await getAttendanceRecordForUserEvent(
-      userId,
-      eventId
-    )
-    if (existingRecord) {
+    if (context.existingRecordId) {
       return {
         error:
           'Este catequista ya tiene asistencia registrada para el evento actual.',
       }
     }
 
-    const eventTime =
-      scannedUser.schedule === UserSchedule.FULL_TIME ||
-      scannedUser.schedule === UserSchedule.PRIMERA_COMUNION ||
-      scannedUser.schedule === UserSchedule.LOGISTICA ||
-      scannedUser.schedule === UserSchedule.SEMILLEROS
-        ? event.date
-        : event.secondTurnDate
+    const turnUsed = getAttendanceTurn(context.assignments)
+    if (!turnUsed) {
+      return {
+        error: 'El catequista no tiene asignaciones que definan su turno.',
+      }
+    }
+    const eventTime = turnUsed === 'first' ? event.date : event.secondTurnDate
 
     await createAttendanceRecord({
       userId,
@@ -169,6 +158,7 @@ export const registerQrAttendanceRecord = async (input: unknown) => {
       status: calculateStatus(now, new Date(eventTime)),
       registeredBy,
       method: AttendanceRecordMethod.QR,
+      turnUsed,
     })
 
     invalidateAttendance([{ userId, eventId }])

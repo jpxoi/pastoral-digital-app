@@ -1,15 +1,16 @@
 import { getFotocheckLabel } from '@/components/fotochecks/model'
 import { PastoralSignature } from '@/components/shared/pastoral-signature'
 import PastoralIdQRCode from './pastoraldQrCode'
+import type { CatechistAssignment } from '@/types/assignments'
 
 export function PastoralIdCard({
   userId,
   name,
-  schedule,
+  assignments,
 }: {
   userId: string
   name: string
-  schedule: string
+  assignments: CatechistAssignment[]
 }) {
   return (
     <div className='relative isolate flex w-full flex-col items-center overflow-hidden bg-white px-6 pt-7 pb-16 text-center'>
@@ -17,7 +18,7 @@ export function PastoralIdCard({
         <h3 className='max-w-72 text-xl leading-tight font-semibold break-words text-[#001944]'>
           {name}
         </h3>
-        <p className='text-primary text-sm'>{getFotocheckLabel(schedule)}</p>
+        <p className='text-primary text-sm'>{getFotocheckLabel(assignments)}</p>
       </div>
       <div className='z-10 mt-4 w-full max-w-72 rounded-lg bg-white'>
         <PastoralIdQRCode userId={userId} />

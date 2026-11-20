@@ -1,11 +1,15 @@
 'use client'
 
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { SelectUser } from '@/db/schema'
+import type {
+  AssignmentCatalog,
+  UserWithAssignments,
+} from '@/types/assignments'
 import { ColumnDef } from '@tanstack/react-table'
 import { calculateAge } from '@/lib/birthday'
 import UserCategoryLabel from '../shared/userCategoryLabel'
-import UserScheduleLabel from '../shared/userScheduleLabel'
+import UserAssignmentBadges from '../shared/userAssignmentBadges'
+import { getAssignmentKey } from '@/lib/assignments'
 import { AdminUserRowActions } from './adminUserRowActions'
 import { formatPhoneNumberIntl } from 'react-phone-number-input'
 import { UserRole } from '@/types'
@@ -47,8 +51,9 @@ const roleLabels: Record<UserRole, string> = {
 }
 
 export const getAdminUserColumns = (
-  canSetRole: boolean
-): ColumnDef<SelectUser>[] => [
+  canSetRole: boolean,
+  catalog: AssignmentCatalog
+): ColumnDef<UserWithAssignments>[] => [
   {
     id: 'nombreCompleto',
     accessorFn: (row) => `${row.firstName} ${row.lastName}`,
@@ -150,14 +155,23 @@ export const getAdminUserColumns = (
   },
   {
     id: 'programa',
-    accessorKey: 'schedule',
-    header: () => <span className='text-nowrap'>Programa</span>,
-    cell: ({ row }) => <UserScheduleLabel schedule={row.original.schedule} />,
+    accessorFn: (row) => row.catechistAssignments.map(getAssignmentKey),
+    getUniqueValues: (row) => row.catechistAssignments.map(getAssignmentKey),
+    filterFn: (row, id, values: string[]) =>
+      (row.getValue(id) as string[]).some((value) => values.includes(value)),
+    header: () => <span className='text-nowrap'>Asignaciones</span>,
+    cell: ({ row }) => (
+      <UserAssignmentBadges assignments={row.original.catechistAssignments} />
+    ),
   },
   {
     id: 'actions',
     cell: ({ row }) => (
-      <AdminUserRowActions row={row} canSetRole={canSetRole} />
+      <AdminUserRowActions
+        row={row}
+        canSetRole={canSetRole}
+        catalog={catalog}
+      />
     ),
   },
 ]

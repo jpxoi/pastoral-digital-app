@@ -41,7 +41,15 @@ paths:
                     lastName: García
                     email: ana@example.org
                     category: teacher
-                    schedule: confirmacion
+                    assignments:
+                      - id: 019e0000-0000-7000-8000-000000000001
+                        type: program
+                        programId: 019e0000-0000-7000-8000-000000000002
+                        program:
+                          id: 019e0000-0000-7000-8000-000000000002
+                          code: confirmation
+                          name: Confirmación
+                        community: null
                 pagination:
                   limit: 50
                   offset: 0
@@ -159,7 +167,7 @@ components:
 
     Catechist:
       type: object
-      required: [userId, firstName, lastName, email, category, schedule]
+      required: [userId, firstName, lastName, email, category, assignments]
       properties:
         userId:
           type: string
@@ -174,15 +182,46 @@ components:
         category:
           type: string
           enum: [student, alumni, teacher]
-        schedule:
-          type: string
-          enum:
-            - full-time
-            - primera-comunion
-            - confirmacion
-            - logistica
-            - semilleros
-            - coordinador
+        assignments:
+          type: array
+          maxItems: 2
+          description: Asignaciones vigentes; Semillero es exclusivo de Comunión. La comunidad es opcional.
+          items:
+            type: object
+            required: [id, type, programId, program, community]
+            properties:
+              id:
+                type: string
+                format: uuid
+              type:
+                type: string
+                enum: [program, semillero, coordinator, logistics]
+              programId:
+                type: [string, 'null']
+                format: uuid
+              program:
+                type: [object, 'null']
+                required: [id, code, name]
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  code:
+                    type: string
+                  name:
+                    type: string
+              community:
+                type: [object, 'null']
+                required: [id, name, responsibility]
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  responsibility:
+                    type: string
+                    enum: [guide, advisor, semillero]
 
     EventLocation:
       type: object

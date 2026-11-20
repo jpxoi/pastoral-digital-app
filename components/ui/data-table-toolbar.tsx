@@ -14,7 +14,7 @@ import {
   AttendanceStatusFilterOptions,
   UserCategoryFilterOptions,
   UserRoleFilterOptions,
-  UserScheduleFilterOptions,
+  UserAssignmentFilterOptions,
 } from '@/lib/filter'
 import { IconSearch, IconX } from '@tabler/icons-react'
 import type { ReactNode } from 'react'
@@ -84,8 +84,8 @@ export function DataTableToolbar<TData>({
           {table.getAllColumns().some((col) => col.id === 'programa') && (
             <DataTableFacetedFilter
               column={table.getColumn('programa')}
-              title='Programa'
-              options={UserScheduleFilterOptions}
+              title='Asignaciones'
+              options={UserAssignmentFilterOptions}
             />
           )}
           {table.getAllColumns().some((col) => col.id === 'evento') && (

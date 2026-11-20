@@ -13,6 +13,7 @@ import { asc, count, desc, eq, gte, lt, sql } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { cacheTags } from '@/lib/cache'
 import { TZDate } from '@date-fns/tz'
+import { assignmentRelations } from '@/queries/assignments'
 
 /* UsersTable */
 export const getUserForRoleChange = async (id: SelectUser['id']) => {
@@ -25,9 +26,12 @@ export const getUserForRoleChange = async (id: SelectUser['id']) => {
 export async function getAllUsers() {
   'use cache'
   cacheLife('days')
-  cacheTag(cacheTags.usersList())
+  cacheTag(cacheTags.usersList(), cacheTags.assignments())
 
   return db.query.usersTable.findMany({
+    with: {
+      catechistAssignments: { with: assignmentRelations },
+    },
     orderBy: (fields) => [
       sql`${fields.firstName} || ' ' || ${fields.lastName}`,
     ],
@@ -40,17 +44,6 @@ export async function countAllUsers() {
   cacheTag(cacheTags.usersList())
 
   return db.$count(usersTable)
-}
-
-export const getUserSchedule = async (userId: SelectUser['id']) => {
-  const user = await db.query.usersTable.findFirst({
-    where: eq(usersTable.id, userId),
-    columns: {
-      schedule: true,
-    },
-  })
-
-  return user
 }
 
 async function getUserBirthdaysForDate(peruDate: string) {

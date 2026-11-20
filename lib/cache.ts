@@ -3,6 +3,9 @@ export const cacheTags = {
   eventsList: () => 'event:list',
   event: (eventId: string) => `event:${eventId}`,
   locationsList: () => 'location:list',
+  assignmentCatalog: () => 'assignment:catalog',
+  assignments: () => 'assignment:list',
+  userAssignments: (userId: string) => `user:${userId}:assignments`,
   // Group tags support explicit full refreshes and cascading user deletion.
   attendance: () => 'attendance',
   attendanceList: () => 'attendance:list',

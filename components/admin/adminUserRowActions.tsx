@@ -26,41 +26,26 @@ import { IconCopy, IconPencil, IconQrcode } from '@tabler/icons-react'
 import { IconTrash } from '@tabler/icons-react'
 import { IconDots } from '@tabler/icons-react'
 import { toast } from 'sonner'
-import { UserRole, UserSchedule } from '@/types'
-import { SelectUser } from '@/db/schema'
+import { UserRole } from '@/types'
+import type {
+  AssignmentCatalog,
+  UserWithAssignments,
+} from '@/types/assignments'
+import { useState } from 'react'
+import UserAssignmentEditor from './userAssignmentEditor'
 import { PastoralIdCard } from '../dashboard/pastoral-id-card'
 import { useFotocheckDownload } from '@/components/fotochecks/generate-button'
 import { IconIdBadge2 } from '@tabler/icons-react'
-import { UserRoleFilterOptions, UserScheduleFilterOptions } from '@/lib/filter'
-import { setUserRole, setUserSchedule, removeCatechist } from '@/actions/user'
+import { UserRoleFilterOptions } from '@/lib/filter'
+import { setUserRole, removeCatechist } from '@/actions/user'
 
 interface DataTableRowActionsProps {
-  row: Row<SelectUser>
+  row: Row<UserWithAssignments>
   canSetRole: boolean
+  catalog: AssignmentCatalog
 }
 
-const handleSetUserSchedule = async (
-  schedule: UserSchedule,
-  userId: SelectUser['id']
-) => {
-  toast.promise(setUserSchedule(schedule, userId), {
-    loading: 'Cambiando programa del catequista...',
-    success: (data: { error?: string; success?: string }) => {
-      if (data.error) {
-        throw new Error(data.error)
-      }
-
-      if (data.success) {
-        return data.success
-      }
-    },
-    error: (error) => {
-      return error.message || 'Error al cambiar el programa del catequista.'
-    },
-  })
-}
-
-const handleSetUserRole = async (role: UserRole, userId: SelectUser['id']) => {
+const handleSetUserRole = async (role: UserRole, userId: string) => {
   toast.promise(setUserRole(userId, role), {
     loading: 'Cambiando rol del catequista...',
     success: (data: { error?: string; success?: string }) => {
@@ -74,8 +59,10 @@ const handleSetUserRole = async (role: UserRole, userId: SelectUser['id']) => {
 export function AdminUserRowActions({
   row,
   canSetRole,
+  catalog,
 }: DataTableRowActionsProps) {
   const { download, pending } = useFotocheckDownload()
+  const [editingAssignments, setEditingAssignments] = useState(false)
   return (
     <div className='flex gap-4' key={row.id}>
       <Dialog>
@@ -116,34 +103,10 @@ export function AdminUserRowActions({
               <IconIdBadge2 /> Generar fotocheck
             </DropdownMenuItem>
 
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>
-                <IconPencil />
-                Modificar programa
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup
-                  value={row.original.schedule}
-                  onValueChange={(value) => {
-                    handleSetUserSchedule(
-                      value as UserSchedule,
-                      row.original.id
-                    )
-                  }}
-                >
-                  {UserScheduleFilterOptions.map((option) => (
-                    <DropdownMenuRadioItem
-                      key={option.value}
-                      value={option.value}
-                      disabled={row.original.schedule === option.value}
-                    >
-                      <option.icon className='mr-2 size-4' />
-                      {option.label}
-                    </DropdownMenuRadioItem>
-                  ))}
-                </DropdownMenuRadioGroup>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
+            <DropdownMenuItem onSelect={() => setEditingAssignments(true)}>
+              <IconPencil />
+              Modificar asignaciones
+            </DropdownMenuItem>
 
             {canSetRole && (
               <DropdownMenuSub>
@@ -210,10 +173,17 @@ export function AdminUserRowActions({
           <PastoralIdCard
             userId={row.original.id}
             name={`${row.original.firstName.trim().split(/\s+/)[0]} ${row.original.lastName}`}
-            schedule={row.original.schedule}
+            assignments={row.original.catechistAssignments}
           />
         </DialogContent>
       </Dialog>
+      {editingAssignments && (
+        <UserAssignmentEditor
+          user={row.original}
+          catalog={catalog}
+          onClose={() => setEditingAssignments(false)}
+        />
+      )}
     </div>
   )
 }

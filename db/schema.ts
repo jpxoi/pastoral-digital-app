@@ -61,13 +61,18 @@ export const sundayMassStatusEnum = pgEnum('sunday_mass_status_enum', [
 
 export const catechistAssignmentTypeEnum = pgEnum(
   'catechist_assignment_type_enum',
-  ['PROGRAM', 'COORDINATOR', 'LOGISTICS']
+  ['program', 'semillero', 'coordinator', 'logistics']
 )
 
 export const communityResponsibilityEnum = pgEnum(
   'community_responsibility_enum',
-  ['GUIDE', 'ADVISOR', 'SEMILLERO']
+  ['guide', 'advisor', 'semillero']
 )
+
+export const attendanceTurnEnum = pgEnum('attendance_turn_enum', [
+  'first',
+  'second',
+])
 
 /* Tables */
 
@@ -129,6 +134,8 @@ export const attendanceRecordsTable = pgTable(
     method: AttendanceRecordMethodEnum()
       .default(AttendanceRecordMethod.QR)
       .notNull(),
+    // Null for historical/manual records whose actual turn is unknown.
+    turnUsed: attendanceTurnEnum('turn_used'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
       .notNull()
@@ -240,14 +247,14 @@ export const catechistAssignmentsTable = pgTable(
   (table) => [
     check(
       'chk_catechist_assignments_program_type',
-      sql`(${table.type} = 'PROGRAM' AND ${table.programId} IS NOT NULL) OR (${table.type} IN ('COORDINATOR', 'LOGISTICS') AND ${table.programId} IS NULL)`
+      sql`(${table.type} IN ('program', 'semillero') AND ${table.programId} IS NOT NULL) OR (${table.type} IN ('coordinator', 'logistics') AND ${table.programId} IS NULL)`
     ),
     uniqueIndex('unq_catechist_assignments_user_program')
       .on(table.userId, table.programId)
-      .where(sql`${table.type} = 'PROGRAM'`),
+      .where(sql`${table.type} IN ('program', 'semillero')`),
     uniqueIndex('unq_catechist_assignments_user_service')
       .on(table.userId, table.type)
-      .where(sql`${table.type} IN ('COORDINATOR', 'LOGISTICS')`),
+      .where(sql`${table.type} IN ('coordinator', 'logistics')`),
   ]
 )
 

@@ -1,8 +1,7 @@
-import { AttendanceStatus, UserCategory, UserRole, UserSchedule } from '@/types'
+import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 
 import {
   IconBackpack,
-  IconCalendarBolt,
   IconCalendarHeart,
   IconCalendarX,
   IconClockCheck,
@@ -53,35 +52,30 @@ export const UserCategoryFilterOptions = [
   },
 ]
 
-export const UserScheduleFilterOptions = [
-  {
-    label: 'Tiempo Completo',
-    value: UserSchedule.FULL_TIME,
-    icon: IconCalendarBolt,
-  },
+export const UserAssignmentFilterOptions = [
   {
     label: 'Coordinador',
-    value: UserSchedule.COORDINADOR,
+    value: 'coordinator',
     icon: IconUserStar,
   },
   {
     label: 'Primera Comunión',
-    value: UserSchedule.PRIMERA_COMUNION,
+    value: 'communion',
     icon: IconCross,
   },
   {
     label: 'Confirmación',
-    value: UserSchedule.CONFIRMACION,
+    value: 'confirmation',
     icon: IconFlame,
   },
   {
     label: 'Logística',
-    value: UserSchedule.LOGISTICA,
+    value: 'logistics',
     icon: IconPackageExport,
   },
   {
     label: 'Semilleros',
-    value: UserSchedule.SEMILLEROS,
+    value: 'semillero',
     icon: IconMoodKid,
   },
 ]

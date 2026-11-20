@@ -5,10 +5,10 @@ import { createUser } from '@/queries/insert'
 import { z } from 'zod'
 import { OnboardingFormSchema } from '@/schema'
 import { checkPermission } from '@/lib/roles'
-import { UserRole, UserSchedule } from '@/types'
-import { getUserForRoleChange, getUserSchedule } from '@/queries/select'
+import { UserRole } from '@/types'
+import { getUserForRoleChange } from '@/queries/select'
 import { SelectUser } from '@/db/schema'
-import { updateUserSchedule } from '@/queries/update'
+import { replaceUserAssignments } from '@/queries/assignments'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
 import { cacheTags } from '@/lib/cache'
@@ -89,20 +89,40 @@ const completeOnboarding = async (
   }
 }
 
-export async function setUserSchedule(
-  schedule: UserSchedule,
+const assignmentsInputSchema = z
+  .array(
+    z
+      .object({
+        type: z.enum(['program', 'semillero', 'coordinator', 'logistics']),
+        programId: z.uuid().nullable(),
+        communityId: z.uuid().nullable(),
+        responsibility: z.enum(['guide', 'advisor', 'semillero']).nullable(),
+      })
+      .strict()
+  )
+  .max(2)
+
+export async function setUserAssignments(
+  input: unknown,
   userId: SelectUser['id']
 ) {
   if (!(await checkPermission(Permission.CATECHISTS_EDIT_PROGRAM))) {
     return { error: 'No estás autorizado para realizar esta acción.' }
   }
 
-  return await updateUserSchedule(userId, schedule)
+  const parsed = assignmentsInputSchema.safeParse(input)
+  if (!parsed.success) {
+    return { error: 'Las asignaciones no son válidas.' }
+  }
+
+  return await replaceUserAssignments(userId, parsed.data)
     .then(async () => {
       updateTag(cacheTags.usersList())
+      updateTag(cacheTags.assignments())
+      updateTag(cacheTags.userAssignments(userId))
 
       return {
-        success: 'Programa del catequista actualizado correctamente',
+        success: 'Asignaciones del catequista actualizadas correctamente.',
       }
     })
     .catch((error) => {
@@ -111,7 +131,9 @@ export async function setUserSchedule(
         error:
           error.cause instanceof NeonDbError
             ? handleDbError(error.cause)
-            : 'Ocurrió un error al actualizar el programa del catequista.',
+            : error instanceof Error
+              ? error.message
+              : 'Ocurrió un error al actualizar las asignaciones.',
       }
     })
 }
@@ -185,41 +207,6 @@ export async function setUserRole(userId: string, role: UserRole) {
   } catch (error) {
     console.error(error)
     return { error: 'No se pudo actualizar el rol del catequista.' }
-  }
-}
-
-export async function fetchUserSchedule(userId: string) {
-  if (!(await checkPermission(Permission.ATTENDANCE_SCAN))) {
-    return { error: 'No estás autorizado para consultar el programa.' }
-  }
-
-  try {
-    const user = await getUserSchedule(userId)
-
-    if (!user) {
-      return {
-        error:
-          'No se encontró al catequista en la base de datos. Por favor, verifica que esté registrado correctamente',
-      }
-    }
-
-    if (!user.schedule) {
-      return {
-        error:
-          'No se encontró el horario del catequista en la base de datos. Por favor, contacta al administrador',
-      }
-    }
-
-    return {
-      success: 'Horario del usuario obtenido correctamente',
-      data: user.schedule,
-    }
-  } catch (err) {
-    console.error(err)
-    return {
-      error:
-        'Ocurrió un error inesperado al obtener el horario del catequista. Por favor, inténtalo nuevamente.',
-    }
   }
 }
 

@@ -33,7 +33,28 @@ export async function GET(request: NextRequest) {
         lastName: usersTable.lastName,
         email: usersTable.email,
         category: usersTable.category,
-        schedule: usersTable.schedule,
+        assignments: sql`
+          coalesce((
+            SELECT jsonb_agg(jsonb_build_object(
+              'id', assignment.id,
+              'type', assignment.type,
+              'programId', assignment.program_id,
+              'program', CASE WHEN program.id IS NOT NULL THEN jsonb_build_object(
+                'id', program.id, 'code', program.code, 'name', program.name
+              ) END,
+              'community', CASE WHEN community.id IS NOT NULL THEN jsonb_build_object(
+                'id', community.id, 'name', community.name,
+                'responsibility', membership.responsibility
+              ) END
+            ) ORDER BY assignment.type, program.code)
+            FROM catechist_assignments assignment
+            LEFT JOIN programs program ON program.id = assignment.program_id
+            LEFT JOIN catechist_community_assignments membership
+              ON membership.assignment_id = assignment.id
+            LEFT JOIN communities community ON community.id = membership.community_id
+            WHERE assignment.user_id = ${usersTable.id}
+          ), '[]'::jsonb)
+        `.as('assignments'),
       })
       .from(usersTable)
       .orderBy(
@@ -54,7 +75,7 @@ export async function GET(request: NextRequest) {
           lastName: pageQuery.lastName,
           email: pageQuery.email,
           category: pageQuery.category,
-          schedule: pageQuery.schedule,
+          assignments: pageQuery.assignments,
         },
       })
       .from(totalQuery)

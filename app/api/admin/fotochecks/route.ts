@@ -9,6 +9,7 @@ import { usersTable } from '@/db/schema'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import { generateFotocheckPdf } from '@/lib/fotochecks/pdf'
+import { assignmentRelations } from '@/queries/assignments'
 
 const requestSchema = z
   .object({ userId: z.string().min(1).max(128).optional() })
@@ -37,22 +38,25 @@ export async function POST(request: Request) {
       { status: 400 }
     )
   try {
-    const records = await db
-      .select({
-        id: usersTable.id,
-        firstName: usersTable.firstName,
-        lastName: usersTable.lastName,
-        schedule: usersTable.schedule,
-      })
-      .from(usersTable)
-      .where(
-        parsed.data.userId ? eq(usersTable.id, parsed.data.userId) : undefined
-      )
-      .orderBy(
+    const records = await db.query.usersTable.findMany({
+      columns: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+      with: {
+        catechistAssignments: { with: assignmentRelations },
+      },
+      where: parsed.data.userId
+        ? eq(usersTable.id, parsed.data.userId)
+        : undefined,
+      orderBy: [
         asc(usersTable.lastName),
         asc(usersTable.firstName),
-        asc(usersTable.id)
-      )
+        asc(usersTable.id),
+      ],
+    })
+
     if (!records.length)
       return NextResponse.json(
         { error: 'No hay catequistas disponibles.' },
@@ -63,7 +67,7 @@ export async function POST(request: Request) {
       name: `${person.firstName.trim().split(/\s+/)[0]} ${person.lastName}`
         .trim()
         .replace(/\s+/g, ' '),
-      schedule: person.schedule,
+      assignments: person.catechistAssignments,
     }))
     const logo = await readFile(
       path.join(process.cwd(), 'public/brand/optimized/logo-horizontal-600.png')

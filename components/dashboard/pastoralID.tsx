@@ -1,8 +1,7 @@
 import { PastoralIdCard } from './pastoral-id-card'
 import { currentUser } from '@clerk/nextjs/server'
 import PastoralIDSkeleton from './pastoralIDSkeleton'
-import { getUserSchedule } from '@/queries/select'
-import { UserSchedule } from '@/types'
+import { getUserAssignments } from '@/queries/assignments'
 
 export default async function PastoralId() {
   const user = await currentUser()
@@ -11,9 +10,7 @@ export default async function PastoralId() {
     return <PastoralIDSkeleton />
   }
 
-  const userSchedule = (await getUserSchedule(user.id)) as {
-    schedule: UserSchedule | null
-  }
+  const assignmentUser = await getUserAssignments(user.id)
 
   return (
     <PastoralIdCard
@@ -23,7 +20,7 @@ export default async function PastoralId() {
           .filter(Boolean)
           .join(' ') || 'Catequista'
       }
-      schedule={userSchedule?.schedule ?? UserSchedule.FULL_TIME}
+      assignments={assignmentUser?.catechistAssignments ?? []}
     />
   )
 }
