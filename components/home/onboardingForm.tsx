@@ -574,7 +574,10 @@ export default function OnboardingForm({
                       aria-invalid={fieldState.invalid}
                       disabled={false}
                     >
-                      {UserCategoryFilterOptions.map((item) => (
+                      {/* Los docentes se ajustan directamente en la base de datos por temas de seguridad. */}
+                      {UserCategoryFilterOptions.filter(
+                        (item) => item.value !== UserCategory.TEACHER
+                      ).map((item) => (
                         <RadioGroupPrimitive.Item
                           key={item.value}
                           value={item.value}
