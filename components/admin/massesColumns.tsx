@@ -1,10 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
-import { IconCheck, IconPhoto, IconX } from '@tabler/icons-react'
+import { IconCheck, IconLoader2, IconPhoto, IconX } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { FetchMassesProps, SundayMassStatus } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
@@ -14,40 +15,74 @@ import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
 import { format, parseISO } from 'date-fns'
 
-const handleVerifyMass = async (id: string) => {
-  toast.promise(verifyMassRecord(id), {
-    loading: 'Verificando misa...',
-    success: (data: { error?: string; success?: string }) => {
-      if (data.error) {
-        throw new Error(data.error)
-      }
+function MassReviewActions({ id }: { id: string }) {
+  const [pendingAction, setPendingAction] = useState<
+    'reject' | 'verify' | null
+  >(null)
 
-      if (data.success) {
+  const handleReview = async (action: 'reject' | 'verify') => {
+    setPendingAction(action)
+
+    const isVerify = action === 'verify'
+    const promise = isVerify ? verifyMassRecord(id) : rejectMassRecord(id)
+
+    toast.promise(promise, {
+      loading: isVerify ? 'Verificando misa...' : 'Rechazando misa...',
+      success: (data: { error?: string; success?: string }) => {
+        if (data.error) {
+          throw new Error(data.error)
+        }
+
         return data.success
-      }
-    },
-    error: (error) => {
-      return error.message || 'Ha ocurrido un error al verificar la misa.'
-    },
-  })
-}
+      },
+      error: (error) =>
+        error.message ||
+        `Ha ocurrido un error al ${isVerify ? 'verificar' : 'rechazar'} la misa.`,
+    })
 
-const handleRejectMass = async (id: string) => {
-  toast.promise(rejectMassRecord(id), {
-    loading: 'Rechazando misa...',
-    success: (data: { error?: string; success?: string }) => {
-      if (data.error) {
-        throw new Error(data.error)
-      }
+    try {
+      await promise
+    } catch {
+      // toast.promise reports the error to the user.
+    } finally {
+      setPendingAction(null)
+    }
+  }
 
-      if (data.success) {
-        return data.success
-      }
-    },
-    error: (error) => {
-      return error.message || 'Ha ocurrido un error al rechazar la misa.'
-    },
-  })
+  const isPending = pendingAction !== null
+
+  return (
+    <div className='flex gap-4'>
+      <Button
+        variant='outline'
+        className='h-8 w-8 p-0 hover:bg-red-50'
+        disabled={isPending}
+        aria-label={pendingAction === 'reject' ? 'Rechazando misa' : 'Rechazar'}
+        aria-busy={pendingAction === 'reject'}
+        onClick={() => handleReview('reject')}
+      >
+        {pendingAction === 'reject' ? (
+          <IconLoader2 className='h-4 w-4 animate-spin' />
+        ) : (
+          <IconX className='h-4 w-4 text-red-700 hover:text-red-800' />
+        )}
+      </Button>
+      <Button
+        variant='outline'
+        className='h-8 w-8 p-0 hover:bg-emerald-50'
+        disabled={isPending}
+        aria-label={pendingAction === 'verify' ? 'Verificando misa' : 'Aceptar'}
+        aria-busy={pendingAction === 'verify'}
+        onClick={() => handleReview('verify')}
+      >
+        {pendingAction === 'verify' ? (
+          <IconLoader2 className='h-4 w-4 animate-spin' />
+        ) : (
+          <IconCheck className='h-4 w-4 text-emerald-700 hover:text-emerald-800' />
+        )}
+      </Button>
+    </div>
+  )
 }
 
 export const getMassesColumns = (
@@ -141,34 +176,10 @@ export const getMassesColumns = (
     ? [
         {
           id: 'actions',
-          cell: ({ row }) => (
-            <div className='flex gap-4' key={row.id}>
-              {row.original.status === SundayMassStatus.PENDING && (
-                <Button
-                  variant='outline'
-                  className='h-8 w-8 p-0 hover:bg-red-50'
-                  onClick={() => {
-                    handleRejectMass(row.original.id)
-                  }}
-                >
-                  <span className='sr-only'>Rechazar</span>
-                  <IconX className='h-4 w-4 text-red-700 hover:text-red-800' />
-                </Button>
-              )}
-              {row.original.status === SundayMassStatus.PENDING && (
-                <Button
-                  variant='outline'
-                  className='h-8 w-8 p-0 hover:bg-emerald-50'
-                  onClick={() => {
-                    handleVerifyMass(row.original.id)
-                  }}
-                >
-                  <span className='sr-only'>Aceptar</span>
-                  <IconCheck className='h-4 w-4 text-emerald-700 hover:text-emerald-800' />
-                </Button>
-              )}
-            </div>
-          ),
+          cell: ({ row }) =>
+            row.original.status === SundayMassStatus.PENDING ? (
+              <MassReviewActions id={row.original.id} />
+            ) : null,
         } satisfies ColumnDef<FetchMassesProps>,
       ]
     : []),
