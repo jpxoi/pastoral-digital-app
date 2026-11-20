@@ -4,6 +4,10 @@ import { useRef, useState } from 'react'
 import { IconFileTypePdf, IconLoader2 } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import {
+  filenameFromContentDisposition,
+  PDF_FILENAMES,
+} from '@/lib/pdf-filenames'
 
 export default function ExportMassesPdfButton() {
   const [pending, setPending] = useState(false)
@@ -24,7 +28,10 @@ export default function ExportMassesPdfButton() {
       const url = URL.createObjectURL(await response.blob())
       const link = document.createElement('a')
       link.href = url
-      link.download = 'reporte-asistencia-misas.pdf'
+      link.download = filenameFromContentDisposition(
+        response.headers.get('Content-Disposition'),
+        PDF_FILENAMES.attendanceMasses
+      )
       document.body.appendChild(link)
       link.click()
       link.remove()

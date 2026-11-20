@@ -9,6 +9,7 @@ import { usersTable } from '@/db/schema'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import { generateFotocheckPdf } from '@/lib/fotochecks/pdf'
+import { buildFotocheckFilename } from '@/lib/pdf-filenames'
 import { assignmentRelations } from '@/queries/assignments'
 
 const requestSchema = z
@@ -73,10 +74,13 @@ export async function POST(request: Request) {
       path.join(process.cwd(), 'public/brand/optimized/logo-horizontal-600.png')
     )
     const buffer = await generateFotocheckPdf(people, logo)
+    const filename = buildFotocheckFilename(
+      parsed.data.userId ? people[0].name : undefined
+    )
     return new Response(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="fotochecks-pastoral.pdf"',
+        'Content-Disposition': `attachment; filename="${filename}"`,
         'Cache-Control': 'private, no-store',
         'X-Content-Type-Options': 'nosniff',
         'X-Fotocheck-Count': String(people.length),

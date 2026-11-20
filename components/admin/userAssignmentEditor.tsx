@@ -133,13 +133,10 @@ export default function UserAssignmentEditor({
       }}
     >
       <DialogContent className='max-h-[85dvh] gap-0 overflow-hidden p-0 sm:max-w-lg'>
-        <DialogHeader className='border-b px-6 pt-6 pb-4 text-left'>
+        <DialogHeader className='px-6 pt-6 pb-2 text-left'>
           <DialogTitle>Asignaciones</DialogTitle>
-          <p className='text-sm font-medium'>
-            {user.firstName} {user.lastName}
-          </p>
           <DialogDescription>
-            Elige hasta dos. Semilleros es exclusivo de Comunión.
+            {user.firstName} {user.lastName}
           </DialogDescription>
         </DialogHeader>
         <fieldset
@@ -183,8 +180,10 @@ export default function UserAssignmentEditor({
                   'rounded-xl border transition-colors',
                   selected
                     ? 'border-primary/40 bg-primary/5'
-                    : 'border-border hover:bg-muted/50',
-                  disabled && 'opacity-45'
+                    : cn(
+                        'border-border',
+                        disabled ? 'bg-muted/20' : 'hover:bg-muted/50'
+                      )
                 )}
               >
                 <label
@@ -218,7 +217,15 @@ export default function UserAssignmentEditor({
                 </label>
                 {selected && assignment.programId && (
                   <div className='border-primary/10 grid gap-3 border-t px-3 py-3 sm:grid-cols-2'>
-                    <label className='text-muted-foreground flex flex-col gap-1.5 text-xs font-medium'>
+                    <label
+                      className={cn(
+                        'text-muted-foreground flex flex-col gap-1.5 text-xs font-medium',
+                        !(
+                          assignment.communityId &&
+                          assignment.type === 'program'
+                        ) && 'sm:col-span-2'
+                      )}
+                    >
                       Comunidad opcional
                       <Select
                         value={assignment.communityId ?? 'no-community'}
@@ -235,7 +242,7 @@ export default function UserAssignmentEditor({
                           })
                         }
                       >
-                        <SelectTrigger className='bg-background h-9 w-full min-w-0 rounded-lg text-sm font-normal'>
+                        <SelectTrigger className='bg-background text-foreground h-9 w-full min-w-0 rounded-lg text-sm font-normal'>
                           <SelectValue placeholder='Sin comunidad' />
                         </SelectTrigger>
                         <SelectContent>
@@ -270,7 +277,7 @@ export default function UserAssignmentEditor({
                               })
                             }
                           >
-                            <SelectTrigger className='bg-background h-9 w-full min-w-0 rounded-lg text-sm font-normal'>
+                            <SelectTrigger className='bg-background text-foreground h-9 w-full min-w-0 rounded-lg text-sm font-normal'>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -292,7 +299,7 @@ export default function UserAssignmentEditor({
             )
           })}
         </fieldset>
-        <div className='bg-muted/20 flex items-center justify-between gap-3 border-t px-6 py-4'>
+        <div className='bg-muted/20 flex items-center justify-between gap-3 px-6 py-4'>
           <Badge variant='secondary' className='shrink-0'>
             {assignments.length} de 2
           </Badge>

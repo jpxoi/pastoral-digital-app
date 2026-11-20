@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { db } from '@/db/drizzle'
 import { sundayMassesTable, usersTable } from '@/db/schema'
 import { generateAttendanceCalendarPdf } from '@/lib/attendance-calendar-pdf'
+import { buildAttendanceReportFilename } from '@/lib/pdf-filenames'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import { AttendanceStatus, SundayMassStatus } from '@/types'
@@ -105,8 +106,7 @@ export async function GET() {
     return new Response(new Uint8Array(pdf), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition':
-          'attachment; filename="reporte-asistencia-misas.pdf"',
+        'Content-Disposition': `attachment; filename="${buildAttendanceReportFilename('attendanceMasses', now)}"`,
         'Cache-Control': 'private, no-store',
         'X-Content-Type-Options': 'nosniff',
       },

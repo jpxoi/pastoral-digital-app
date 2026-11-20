@@ -4,6 +4,10 @@ import { useRef, useState } from 'react'
 import { IconIdBadge2, IconLoader2 } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import {
+  filenameFromContentDisposition,
+  PDF_FILENAMES,
+} from '@/lib/pdf-filenames'
 
 export function useFotocheckDownload() {
   const [pending, setPending] = useState(false)
@@ -26,9 +30,10 @@ export function useFotocheckDownload() {
       const url = URL.createObjectURL(await response.blob())
       const link = document.createElement('a')
       link.href = url
-      link.download = userId
-        ? 'fotocheck-pastoral.pdf'
-        : 'fotochecks-pastoral.pdf'
+      link.download = filenameFromContentDisposition(
+        response.headers.get('Content-Disposition'),
+        userId ? PDF_FILENAMES.fotocheck : PDF_FILENAMES.fotochecks
+      )
       document.body.appendChild(link)
       link.click()
       link.remove()

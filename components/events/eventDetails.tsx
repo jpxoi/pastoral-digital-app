@@ -9,12 +9,14 @@ import EventAttendeesTable from '@/components/events/eventAttendeesTable'
 import EventAttendeesTableSkeleton from '@/components/events/eventAttendeesTableSkeleton'
 import EventPageActionButtons from '@/components/events/eventPageActionButtons'
 import EventSummaryCard from '@/components/events/eventSummaryCard'
+import { connection } from 'next/server'
 
 export default async function EventDetails({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
+  await connection()
   const { id } = await params
   const event = await getEventById(id)
 
