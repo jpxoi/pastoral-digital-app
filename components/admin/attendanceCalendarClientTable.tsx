@@ -17,7 +17,6 @@ const ATTENDANCE_LABELS: Record<string, { label: string; className: string }> =
   {
     'A TIEMPO': { label: 'A', className: 'text-green-700' },
     TARDANZA: { label: 'T', className: 'text-amber-700' },
-    'DOBLE TARDANZA': { label: 'TT', className: 'text-orange-700' },
     'FALTA INJUSTIFICADA': { label: 'F', className: 'text-red-700' },
     'FALTA JUSTIFICADA': { label: 'FJ', className: 'text-blue-700' },
     'TARDANZA JUSTIFICADA': { label: 'TJ', className: 'text-purple-700' },

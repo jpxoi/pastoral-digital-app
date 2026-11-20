@@ -96,8 +96,6 @@ function attendanceLabel(status: string | null | undefined) {
       return 'A'
     case 'TARDANZA':
       return 'T'
-    case 'DOBLE TARDANZA':
-      return 'TT'
     case 'FALTA INJUSTIFICADA':
       return 'F'
     case 'FALTA JUSTIFICADA':
@@ -115,8 +113,6 @@ function statusColor(status: string | null | undefined) {
       return rgb(0.13, 0.45, 0.29)
     case 'TARDANZA':
       return rgb(0.63, 0.43, 0.02)
-    case 'DOBLE TARDANZA':
-      return rgb(0.73, 0.31, 0.06)
     case 'FALTA INJUSTIFICADA':
       return rgb(0.68, 0.18, 0.18)
     case 'FALTA JUSTIFICADA':
