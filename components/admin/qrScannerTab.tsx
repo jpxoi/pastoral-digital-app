@@ -15,20 +15,16 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useTransition, useMemo, useRef } from 'react'
 import { IDetectedBarcode, Scanner } from '@yudiel/react-qr-scanner'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
-import { registerAttendanceRecord } from '@/actions/attendance'
-import { AttendanceRecordMethod, UserSchedule } from '@/types'
+import { registerQrAttendanceRecord } from '@/actions/attendance'
 import {
   ScanErrorScreen,
   ScanSuccessScreen,
-  ScanWarningScreen,
 } from '@/components/admin/scanStateScreen'
 import ErrorAlert from '@/components/shared/errorAlert'
-import { calculateStatus } from '@/lib/attendance'
-import { fetchUserSchedule } from '@/actions/user'
 
 import useSound from 'use-sound'
 import {
@@ -52,6 +48,13 @@ import { Badge } from '../ui/badge'
 import useSWR from 'swr'
 import { Spinner } from '../ui/spinner'
 import { Skeleton } from '../ui/skeleton'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select'
 
 const fetcher = async (url: string) => {
   const data = await fetch(url)
@@ -64,16 +67,18 @@ const fetcher = async (url: string) => {
   return json
 }
 
-const seenUserIds = new Set<string>()
-
 export default function QrScannerTab() {
   const [scanning, setScanning] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState(false)
-  const [warning, setWarning] = useState(false)
   const [cameraPermission, setCameraPermission] = useState<
     'granted' | 'denied' | 'prompt'
   >('prompt')
+  const [selectedEventId, setSelectedEventId] = useState('')
+  const [clock, setClock] = useState(() => new Date())
+  const inFlightScans = useRef(new Set<string>())
+  const successfulScans = useRef(new Set<string>())
+  const duplicateFeedbackAt = useRef(new Map<string, number>())
 
   const lastScanned = useLastScannedStore((state) => state.lastScanned)
   const addLastScanned = useLastScannedStore((state) => state.addLastScanned)
@@ -81,17 +86,38 @@ export default function QrScannerTab() {
   const [isRegistrationPending, startTransition] = useTransition()
 
   const { user, isLoaded } = useUser()
-  const { data: event, isLoading: eventIsLoading } = useSWR<SelectEvent>(
-    '/api/events/today',
-    fetcher,
-    {
-      // Disable revalidation on focus to prevent unnecessary revalidations
-      revalidateOnFocus: false,
-    }
+  const {
+    data: events,
+    error: eventError,
+    isLoading: eventIsLoading,
+    mutate: refreshEvents,
+  } = useSWR<SelectEvent[]>('/api/events/today', fetcher, {
+    revalidateOnFocus: true,
+    refreshInterval: 60_000,
+  })
+  const activeEventId = events?.some(
+    (todayEvent) => todayEvent.id === selectedEventId
   )
+    ? selectedEventId
+    : events?.length === 1
+      ? events[0].id
+      : ''
+  const event = events?.find((todayEvent) => todayEvent.id === activeEventId)
+  const scanningOpensAt = useMemo(
+    () =>
+      event
+        ? new Date(new Date(event.date).getTime() - 3 * 60 * 60 * 1000)
+        : null,
+    [event]
+  )
+  const canScanByTime = Boolean(scanningOpensAt && clock >= scanningOpensAt)
+
+  useEffect(() => {
+    const interval = setInterval(() => setClock(new Date()), 30_000)
+    return () => clearInterval(interval)
+  }, [])
 
   const [playSuccessSound] = useSound('/sounds/success.mp3')
-  const [playWarningSound] = useSound('/sounds/warning.mp3')
   const [playErrorSound] = useSound('/sounds/error.mp3')
 
   useEffect(() => {
@@ -131,30 +157,25 @@ export default function QrScannerTab() {
     playSuccessSound()
   }
 
-  const handleWarning = () => {
-    setWarning(true)
-    setTimeout(() => setWarning(false), 1000)
-
-    playWarningSound()
-  }
-
   const showError = (error: string) => {
     toast.error(error)
   }
 
   const handleScan = async (detectedCodes: IDetectedBarcode[]) => {
-    if (!detectedCodes) return
+    if (!detectedCodes?.length) return
 
-    const userScannedId = detectedCodes[0].rawValue
-
-    if (seenUserIds.has(userScannedId)) return
-
-    seenUserIds.add(userScannedId)
-
-    const checkInTime = new Date()
+    const userScannedId = detectedCodes[0].rawValue.trim()
 
     if (!event) {
-      handleError('No hay ningún evento programado para hoy.')
+      handleError('Selecciona un evento antes de escanear.')
+      return
+    }
+
+    if (!canScanByTime) {
+      handleError(
+        'El escaneo estará disponible 3 horas antes del inicio del evento.'
+      )
+      setScanning(false)
       return
     }
 
@@ -165,42 +186,30 @@ export default function QrScannerTab() {
       return
     }
 
+    const scanKey = `${event.id}:${userScannedId}`
+    if (inFlightScans.current.has(scanKey)) {
+      const now = Date.now()
+      const lastFeedback = duplicateFeedbackAt.current.get(scanKey) ?? 0
+      if (now - lastFeedback > 1500) {
+        toast.info('Este QR ya se está procesando.')
+        duplicateFeedbackAt.current.set(scanKey, now)
+      }
+      return
+    }
+    if (successfulScans.current.has(scanKey)) {
+      toast.info('Este QR ya se registró correctamente para este evento.')
+      return
+    }
+
+    inFlightScans.current.add(scanKey)
     toast.loading('Registrando asistencia...')
 
     startTransition(async () => {
       try {
-        const scannedUserSchedule = await fetchUserSchedule(userScannedId)
-
-        if (scannedUserSchedule.error) {
-          throw new Error(scannedUserSchedule.error)
-        }
-
-        const eventDate =
-          scannedUserSchedule.data === UserSchedule.FULL_TIME ||
-          scannedUserSchedule.data === UserSchedule.PRIMERA_COMUNION ||
-          scannedUserSchedule.data === UserSchedule.LOGISTICA ||
-          scannedUserSchedule.data === UserSchedule.SEMILLEROS
-            ? event.date
-            : event.secondTurnDate
-
-        const status = calculateStatus(checkInTime, new Date(eventDate))
-
-        if (checkInTime > new Date(event.endDate)) {
-          throw new Error(
-            'No puedes registrar asistencia después de la hora de finalización del evento.'
-          )
-        }
-
-        const newRecord = {
+        const data = await registerQrAttendanceRecord({
           userId: userScannedId,
           eventId: event.id,
-          checkInTime: checkInTime,
-          status: status,
-          registeredBy: user.id as string,
-          method: AttendanceRecordMethod.QR,
-        }
-
-        const data = await registerAttendanceRecord(newRecord)
+        })
 
         if (data.error) {
           throw new Error(data.error)
@@ -212,13 +221,8 @@ export default function QrScannerTab() {
           addLastScanned(data.lastAttendanceRecord)
         }
 
-        if (data.warning) {
-          handleWarning()
-          toast.warning(data.warning)
-          return
-        }
-
         if (data.success) {
+          successfulScans.current.add(scanKey)
           toast.success(data.success)
           handleSuccess()
           return
@@ -231,6 +235,9 @@ export default function QrScannerTab() {
             ? error.message
             : 'Ha ocurrido un error al registrar la asistencia.'
         )
+      } finally {
+        inFlightScans.current.delete(scanKey)
+        duplicateFeedbackAt.current.delete(scanKey)
       }
     })
   }
@@ -239,13 +246,52 @@ export default function QrScannerTab() {
     <>
       {error && <ScanErrorScreen />}
       {success && <ScanSuccessScreen />}
-      {warning && <ScanWarningScreen />}
       <div className='space-y-4'>
         {cameraPermission === 'denied' && (
           <ErrorAlert
             title='Acceso a la cámara denegado'
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />
+        )}
+        {eventError && (
+          <ErrorAlert
+            title='No se pudo cargar el evento'
+            description='Revisa tu conexión y vuelve a intentarlo.'
+          />
+        )}
+        {eventError && (
+          <Button variant='outline' onClick={() => refreshEvents()}>
+            Reintentar
+          </Button>
+        )}
+        {events && events.length > 1 && (
+          <div className='max-w-xl space-y-2'>
+            <p className='text-sm font-medium'>
+              Evento para registrar asistencia
+            </p>
+            <Select
+              value={activeEventId}
+              onValueChange={(value) => {
+                setScanning(false)
+                setSelectedEventId(value)
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder='Selecciona un evento' />
+              </SelectTrigger>
+              <SelectContent>
+                {events.map((todayEvent) => (
+                  <SelectItem key={todayEvent.id} value={todayEvent.id}>
+                    {todayEvent.name} ·{' '}
+                    {format(new Date(todayEvent.date), 'PP pp', {
+                      locale: es,
+                      in: tz('America/Lima'),
+                    })}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         )}
         <Item variant='outline'>
           <ItemMedia variant='icon'>
@@ -266,7 +312,13 @@ export default function QrScannerTab() {
             ) : (
               <>
                 <ItemTitle className='line-clamp-1 text-left'>
-                  {event ? event.name : 'No se encontró ningún evento'}
+                  {event
+                    ? event.name
+                    : events?.length
+                      ? 'Selecciona un evento'
+                      : eventError
+                        ? 'No se pudo cargar el evento'
+                        : 'No se encontró ningún evento'}
                 </ItemTitle>
                 <ItemDescription className='line-clamp-1 text-left'>
                   {event
@@ -274,17 +326,31 @@ export default function QrScannerTab() {
                         locale: es,
                         in: tz('America/Lima'),
                       })
-                    : 'No hay ningún evento programado para hoy.'}
+                    : events?.length
+                      ? 'Elige cuál evento vas a atender.'
+                      : eventError
+                        ? 'Vuelve a intentar cargar los eventos.'
+                        : 'No hay ningún evento programado para hoy.'}
                 </ItemDescription>
               </>
             )}
           </ItemContent>
-          {event && (
+          {event && canScanByTime && (
             <ItemActions>
               <Badge variant='default'>Evento del día</Badge>
             </ItemActions>
           )}
         </Item>
+        {event && !canScanByTime && scanningOpensAt && (
+          <p className='text-muted-foreground text-sm'>
+            El escaneo estará disponible desde{' '}
+            {format(scanningOpensAt, 'PP pp', {
+              locale: es,
+              in: tz('America/Lima'),
+            })}
+            .
+          </p>
+        )}
         <div className='grid grid-cols-1 gap-4 lg:grid-cols-2'>
           <Card className='w-full'>
             <CardHeader>
@@ -302,8 +368,34 @@ export default function QrScannerTab() {
                 ) : (
                   <div className='flex h-full items-center justify-center bg-gray-100'>
                     <Button
-                      disabled={!event || !isLoaded || isRegistrationPending}
-                      onClick={() => setScanning(true)}
+                      disabled={
+                        !event ||
+                        !canScanByTime ||
+                        !isLoaded ||
+                        isRegistrationPending
+                      }
+                      onClick={async () => {
+                        const latestEvents = await refreshEvents()
+                        const latestEvent = latestEvents?.find(
+                          (todayEvent) => todayEvent.id === activeEventId
+                        )
+                        if (!latestEvent) {
+                          toast.error(
+                            'El evento ya no está disponible. Actualiza la lista.'
+                          )
+                          return
+                        }
+                        const latestScanOpensAt =
+                          new Date(latestEvent.date).getTime() -
+                          3 * 60 * 60 * 1000
+                        if (Date.now() < latestScanOpensAt) {
+                          toast.error(
+                            'El escaneo estará disponible 3 horas antes del inicio del evento.'
+                          )
+                          return
+                        }
+                        setScanning(true)
+                      }}
                     >
                       Iniciar escáner
                     </Button>
@@ -313,7 +405,9 @@ export default function QrScannerTab() {
             </CardHeader>
             <CardFooter className='flex justify-between'>
               <Button
-                disabled={!event || !isLoaded || isRegistrationPending}
+                disabled={
+                  !event || !canScanByTime || !isLoaded || isRegistrationPending
+                }
                 variant='outline'
                 onClick={() => setScanning(!scanning)}
               >
@@ -321,7 +415,9 @@ export default function QrScannerTab() {
               </Button>
               <Button
                 variant='outline'
-                disabled={!event || !isLoaded || isRegistrationPending}
+                disabled={
+                  !event || !canScanByTime || !isLoaded || isRegistrationPending
+                }
                 onClick={() => {
                   setScanning(false)
                   setTimeout(() => setScanning(true), 100)

@@ -9,9 +9,16 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function AttendanceTableSkeleton() {
+export default function AttendanceTableSkeleton({
+  preview = false,
+}: {
+  preview?: boolean
+}) {
   return (
-    <DashboardSection title='Mis asistencias'>
+    <DashboardSection
+      title='Mis asistencias'
+      href={preview ? '/attendance' : undefined}
+    >
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

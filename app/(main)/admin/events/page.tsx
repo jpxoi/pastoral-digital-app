@@ -18,9 +18,7 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader
-        breadcrumb={<PageBreadcrumb label='Eventos' administration />}
-      />
+      <PageHeader breadcrumb={<PageBreadcrumb label='Eventos' />} />
       <PageActions>
         <Suspense fallback={<Skeleton className='h-9 w-36' />}>
           <EventCreateAction />

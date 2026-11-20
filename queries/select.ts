@@ -9,8 +9,9 @@ import {
   usersTable,
 } from '@/db/schema'
 import { AttendanceStatus } from '@/types'
-import { asc, between, count, desc, eq, sql } from 'drizzle-orm'
+import { asc, count, desc, eq, gte, lt, sql } from 'drizzle-orm'
 import { unstable_cache } from 'next/cache'
+import { TZDate } from '@date-fns/tz'
 
 const CACHE_DURATION = {
   HOUR: 3600,
@@ -399,18 +400,37 @@ export const getUpcomingEvents = unstable_cache(
   }
 )
 
-export const getTodayEvent = async () => {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+export const getTodayEvents = async (now = new Date()) => {
+  const peruNow = new TZDate(now.getTime(), 'America/Lima')
+  const startOfToday = new TZDate(
+    peruNow.getFullYear(),
+    peruNow.getMonth(),
+    peruNow.getDate(),
+    'America/Lima'
+  )
+  const startOfTomorrow = new TZDate(startOfToday)
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1)
 
-  return db.query.eventsTable.findFirst({
-    where: between(
-      eventsTable.date,
-      today,
-      new Date(today.getTime() + 86400000)
-    ),
+  return db.query.eventsTable.findMany({
+    where: (fields) =>
+      sql`${gte(fields.date, startOfToday)} AND ${lt(fields.date, startOfTomorrow)}`,
+    orderBy: (fields) => [asc(fields.date), asc(fields.id)],
   })
 }
+
+export const getEventForAttendance = async (id: SelectEvent['id']) =>
+  db.query.eventsTable.findFirst({
+    where: eq(eventsTable.id, id),
+  })
+
+export const getAttendanceRecordForUserEvent = async (
+  userId: SelectUser['id'],
+  eventId: SelectEvent['id']
+) =>
+  db.query.attendanceRecordsTable.findFirst({
+    where: sql`${attendanceRecordsTable.userId} = ${userId} AND ${attendanceRecordsTable.eventId} = ${eventId}`,
+    with: { user: true, registeredByUser: true },
+  })
 
 /* MassesTable */
 export const getAllMasses = unstable_cache(

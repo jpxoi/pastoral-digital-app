@@ -1,9 +1,8 @@
-import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
-import PageHeader from '@/components/shared/pageHeader'
 import { Metadata } from 'next'
 import EventsGrid from '@/components/events/eventsGrid'
 import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
+import PageHeader from '@/components/shared/pageHeader'
 
 export const metadata: Metadata = {
   title: 'Eventos | Pastoral Digital App',
@@ -14,7 +13,7 @@ export default async function Page() {
 
   return (
     <div className='mx-auto flex w-full max-w-360 flex-col gap-6'>
-      <PageHeader breadcrumb={<PageBreadcrumb label='Eventos' />} />
+      <PageHeader />
       <EventsGrid />
     </div>
   )

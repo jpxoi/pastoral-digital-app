@@ -36,7 +36,6 @@ export default async function AttendanceTable({
   return (
     <DashboardSection
       title='Mis asistencias'
-      count={preview ? undefined : attendanceRecords.length}
       href={preview ? '/attendance' : undefined}
     >
       {attendanceRecords.length > 0 ? (

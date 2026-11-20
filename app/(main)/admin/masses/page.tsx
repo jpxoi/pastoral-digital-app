@@ -19,9 +19,7 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader
-        breadcrumb={<PageBreadcrumb label='Misas' administration />}
-      />
+      <PageHeader breadcrumb={<PageBreadcrumb label='Misas' />} />
       <PageActions>
         <div className='flex flex-wrap items-center gap-2'>
           <RevalidateButton tag='sundayMasses' />

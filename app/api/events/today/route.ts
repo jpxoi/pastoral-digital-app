@@ -1,5 +1,5 @@
 import { checkPermission } from '@/lib/roles'
-import { getTodayEvent } from '@/queries/select'
+import { getTodayEvents } from '@/queries/select'
 import { Permission } from '@/types/permissions'
 import { auth } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
@@ -24,18 +24,9 @@ export async function GET() {
     )
   }
 
-  return await getTodayEvent()
-    .then(async (event) => {
-      if (!event) {
-        return NextResponse.json(
-          {
-            error: 'No hay ningún evento programado para hoy.',
-          },
-          { status: 404 }
-        )
-      }
-
-      return NextResponse.json(event, { status: 200 })
+  return await getTodayEvents()
+    .then((events) => {
+      return NextResponse.json(events, { status: 200 })
     })
     .catch((error) => {
       console.error(error)

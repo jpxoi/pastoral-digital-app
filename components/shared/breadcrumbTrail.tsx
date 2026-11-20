@@ -77,30 +77,14 @@ export default function BreadcrumbTrail({
   )
 }
 
-export function PageBreadcrumb({
-  label,
-  administration = false,
-}: {
-  label: string
-  administration?: boolean
-}): ReactNode {
-  return (
-    <BreadcrumbTrail
-      crumbs={
-        administration ? [{ label: 'Administración' }, { label }] : [{ label }]
-      }
-    />
-  )
+export function PageBreadcrumb({ label }: { label: string }): ReactNode {
+  return <BreadcrumbTrail crumbs={[{ label }]} />
 }
 
 export function AdminEventBreadcrumb({ label }: { label: string }) {
   return (
     <BreadcrumbTrail
-      crumbs={[
-        { label: 'Administración' },
-        { label: 'Eventos', href: '/admin/events' },
-        { label },
-      ]}
+      crumbs={[{ label: 'Eventos', href: '/admin/events' }, { label }]}
     />
   )
 }

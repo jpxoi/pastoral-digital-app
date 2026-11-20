@@ -1,10 +1,7 @@
 'use client'
 
-import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
-
-import PageHeader from '@/components/shared/pageHeader'
-
 import ErrorFallback from '@/components/shared/errorFallback'
+import { SidebarTrigger } from '@/components/ui/sidebar'
 
 export default function Error({
   error,
@@ -15,7 +12,9 @@ export default function Error({
 }) {
   return (
     <>
-      <PageHeader breadcrumb={<PageBreadcrumb label='Ocurrió un error' />} />
+      <header className='flex w-full items-center'>
+        <SidebarTrigger />
+      </header>
       <ErrorFallback error={error} reset={reset} />
     </>
   )

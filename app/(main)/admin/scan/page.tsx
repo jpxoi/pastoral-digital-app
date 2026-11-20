@@ -6,11 +6,7 @@ import QrScannerTab from '@/components/admin/qrScannerTab'
 export default function Page() {
   return (
     <>
-      <PageHeader
-        breadcrumb={
-          <PageBreadcrumb label='Escanear Código QR' administration />
-        }
-      />
+      <PageHeader breadcrumb={<PageBreadcrumb label='Escanear Código QR' />} />
       <QrScannerTab />
     </>
   )

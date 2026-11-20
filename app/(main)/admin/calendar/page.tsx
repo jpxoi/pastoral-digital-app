@@ -19,9 +19,7 @@ export default async function Page() {
   return (
     <>
       <PageHeader
-        breadcrumb={
-          <PageBreadcrumb label='Calendario de Asistencia' administration />
-        }
+        breadcrumb={<PageBreadcrumb label='Calendario de Asistencia' />}
       />
       <PageActions>
         <RevalidateButton tag='attendance' />

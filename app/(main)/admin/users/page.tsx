@@ -24,9 +24,7 @@ export default async function Page() {
 
   return (
     <>
-      <PageHeader
-        breadcrumb={<PageBreadcrumb label='Catequistas' administration />}
-      />
+      <PageHeader breadcrumb={<PageBreadcrumb label='Catequistas' />} />
       <PageActions>
         <RevalidateButton tag='users' />
         {canGenerateFotochecks && <GenerateFotochecksButton />}

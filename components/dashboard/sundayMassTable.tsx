@@ -22,7 +22,10 @@ export default async function SundayMassTable({
   } catch (error) {
     console.error('Failed to load getSundayMassesRecordsByUserId', error)
     return (
-      <DashboardSection title='Mis misas'>
+      <DashboardSection
+        title='Mis misas'
+        href={preview ? '/masses' : undefined}
+      >
         <ErrorAlert
           title='No se pudieron cargar tus misas'
           description='Inténtalo de nuevo más tarde.'
@@ -32,11 +35,7 @@ export default async function SundayMassTable({
   }
 
   return (
-    <DashboardSection
-      title='Mis misas'
-      count={preview ? undefined : massesRecords.length}
-      href={preview ? '/masses' : undefined}
-    >
+    <DashboardSection title='Mis misas' href={preview ? '/masses' : undefined}>
       {massesRecords.length > 0 ? (
         preview ? (
           <SimpleDataTable columns={SundayMassColumns} data={massesRecords} />

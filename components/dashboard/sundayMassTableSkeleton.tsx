@@ -9,9 +9,13 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function SundayMassTableSkeleton() {
+export default function SundayMassTableSkeleton({
+  preview = false,
+}: {
+  preview?: boolean
+}) {
   return (
-    <DashboardSection title='Mis misas'>
+    <DashboardSection title='Mis misas' href={preview ? '/masses' : undefined}>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

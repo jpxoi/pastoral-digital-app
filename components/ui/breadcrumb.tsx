@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { cn } from 'cn'
-import { IconChevronRight, IconDotsCircleHorizontal } from '@tabler/icons-react'
+import { IconChevronRight, IconDots } from '@tabler/icons-react'
 import { Slot } from 'radix-ui'
 
 function Breadcrumb({ ...props }: React.ComponentProps<'nav'>) {
@@ -91,7 +91,7 @@ function BreadcrumbEllipsis({
       className={cn('flex size-9 items-center justify-center', className)}
       {...props}
     >
-      <IconDotsCircleHorizontal className='size-4' />
+      <IconDots className='size-4' />
       <span className='sr-only'>More</span>
     </span>
   )

@@ -6,9 +6,13 @@ import {
   createAttendanceRecords,
 } from '@/queries/insert'
 import {
+  getAttendanceRecordForUserEvent,
+  getEventForAttendance,
   getUsersWithNoAttendanceRecord,
   getEventById,
   getLastAttendanceRecord,
+  getTodayEvents,
+  getUserSchedule,
 } from '@/queries/select'
 import { InsertAttendance, SelectAttendance } from '@/db/schema'
 import { NeonDbError } from '@neondatabase/serverless'
@@ -23,6 +27,9 @@ import {
 import { auth } from '@clerk/nextjs/server'
 import { updateAttendanceRecordStatus } from '@/queries/update'
 import { deleteAttendanceRecord } from '@/queries/delete'
+import { calculateStatus } from '@/lib/attendance'
+import { UserSchedule } from '@/types'
+import { z } from 'zod'
 
 export const registerAttendanceRecord = async (
   data: InsertAttendance
@@ -33,9 +40,8 @@ export const registerAttendanceRecord = async (
   lastAttendanceRecord?: FetchAttendanceProps
 }> => {
   if (
-    data.method === AttendanceRecordMethod.QR
-      ? !(await checkPermission(Permission.ATTENDANCE_SCAN))
-      : !(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))
+    data.method !== AttendanceRecordMethod.MANUAL ||
+    !(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))
   ) {
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
@@ -70,8 +76,117 @@ export const registerAttendanceRecord = async (
     })
 }
 
+const qrAttendanceInputSchema = z.object({
+  eventId: z.string().uuid(),
+  userId: z.string().min(1),
+})
+
+export const registerQrAttendanceRecord = async (input: unknown) => {
+  const parsedInput = qrAttendanceInputSchema.safeParse(input)
+  if (!parsedInput.success) {
+    return { error: 'El código QR o el evento no son válidos.' }
+  }
+
+  const { userId, eventId } = parsedInput.data
+  const { userId: registeredBy } = await auth()
+
+  if (!registeredBy || !(await checkPermission(Permission.ATTENDANCE_SCAN))) {
+    return { error: 'No estás autorizado para registrar asistencias.' }
+  }
+
+  try {
+    const todayEvents = await getTodayEvents()
+    if (!todayEvents.some((event) => event.id === eventId)) {
+      return { error: 'El evento seleccionado ya no está disponible para hoy.' }
+    }
+
+    const [event, scannedUser] = await Promise.all([
+      getEventForAttendance(eventId),
+      getUserSchedule(userId),
+    ])
+
+    if (!event) return { error: 'No se encontró el evento seleccionado.' }
+    if (!scannedUser) {
+      return {
+        error:
+          'No se encontró al catequista en la base de datos. Verifica que esté registrado correctamente.',
+      }
+    }
+
+    const now = new Date()
+    const firstTurnStartsAt = new Date(event.date)
+    const scanningOpensAt = new Date(
+      firstTurnStartsAt.getTime() - 3 * 60 * 60 * 1000
+    )
+
+    if (now < scanningOpensAt) {
+      return {
+        error:
+          'El escaneo estará disponible 3 horas antes del inicio del evento.',
+      }
+    }
+
+    if (now > new Date(event.endDate)) {
+      return {
+        error:
+          'No puedes registrar asistencia después de la hora de finalización del evento.',
+      }
+    }
+
+    const existingRecord = await getAttendanceRecordForUserEvent(
+      userId,
+      eventId
+    )
+    if (existingRecord) {
+      return {
+        error:
+          'Este catequista ya tiene asistencia registrada para el evento actual.',
+      }
+    }
+
+    const eventTime =
+      scannedUser.schedule === UserSchedule.FULL_TIME ||
+      scannedUser.schedule === UserSchedule.PRIMERA_COMUNION ||
+      scannedUser.schedule === UserSchedule.LOGISTICA ||
+      scannedUser.schedule === UserSchedule.SEMILLEROS
+        ? event.date
+        : event.secondTurnDate
+
+    await createAttendanceRecord({
+      userId,
+      eventId,
+      checkInTime: now,
+      status: calculateStatus(now, new Date(eventTime)),
+      registeredBy,
+      method: AttendanceRecordMethod.QR,
+    })
+
+    const lastAttendanceRecord = await getAttendanceRecordForUserEvent(
+      userId,
+      eventId
+    )
+    updateTag('attendance')
+
+    return {
+      success: 'Asistencia registrada correctamente.',
+      lastAttendanceRecord,
+    }
+  } catch (error) {
+    console.error(error)
+    return {
+      error:
+        error instanceof Error && error.cause instanceof NeonDbError
+          ? handleDbError(error.cause)
+          : 'Ha ocurrido un error al registrar la asistencia.',
+    }
+  }
+}
+
 export const registerAttendanceRecords = async (data: InsertAttendance[]) => {
-  if (!(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))) {
+  if (
+    data.some((record) => record.method !== AttendanceRecordMethod.MANUAL) ||
+    !(await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS))
+  ) {
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
 
