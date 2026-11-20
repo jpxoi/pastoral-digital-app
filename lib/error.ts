@@ -20,7 +20,7 @@ export const handleDbError = (error: NeonDbError) => {
   ) {
     return 'Tu usuario no tiene permisos para registrar asistencias. Por favor, contacta al administrador.'
   } else if (error.message.includes('unq_user_sunday_date')) {
-    return 'Ya has registrado una misa para hoy. No se permiten registros duplicados.'
+    return 'Ya tienes un registro de misa para ese domingo. No se permiten registros duplicados.'
   } else if (error.message.includes('sunday_masses_verified_by_users_id_fk')) {
     return 'No tienes permisos para verificar asistencia a misa. Por favor, contacta al administrador.'
   } else {
