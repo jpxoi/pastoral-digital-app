@@ -31,7 +31,7 @@ export default function ErrorFallback({
   const [showError, setShowError] = useState(false)
 
   return (
-    <Empty role='alert' className='h-full min-h-0'>
+    <Empty role='alert' className='h-full min-h-0 bg-background max-w-xl'>
       <EmptyHeader>
         <EmptyMedia variant='icon'>
           <IconAlertTriangle />
