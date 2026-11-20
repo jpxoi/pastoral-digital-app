@@ -33,6 +33,7 @@ export default function EventCard({ record }: { record: FetchEventProps }) {
 
   return (
     <Card
+      id={`event-${record.id}`}
       size='sm'
       className={cn(
         'h-full gap-3 text-left',

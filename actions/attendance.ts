@@ -29,6 +29,9 @@ import { calculateStatus } from '@/lib/attendance'
 import { getQrAttendanceContext } from '@/queries/assignments'
 import { getAttendanceTurn } from '@/lib/assignments'
 import { z } from 'zod'
+import { after } from 'next/server'
+import { sendUserPush } from '@/lib/push/send'
+import { attendanceUpdatedMessage } from '@/lib/push/payloads'
 
 function invalidateAttendance(
   records: readonly { userId: string; eventId: string }[]
@@ -220,6 +223,21 @@ export const setAttendanceRecordStatus = async (
   return await updateAttendanceRecordStatus(status, recordId)
     .then(async (records) => {
       invalidateAttendance(records)
+      after(async () => {
+        await Promise.all(
+          records.map(async (record) => {
+            try {
+              await sendUserPush(
+                record.userId,
+                `attendance:${record.id}:${record.updatedAt.toISOString()}`,
+                attendanceUpdatedMessage(record.id)
+              )
+            } catch {
+              console.error('No se pudo enviar la notificación de asistencia.')
+            }
+          })
+        )
+      })
 
       return {
         success: 'Estado de asistencia modificado correctamente.',

@@ -2,6 +2,7 @@ import Salutation from '@/components/dashboard/salutation'
 import PageHeader from '@/components/shared/pageHeader'
 import { Metadata } from 'next'
 import AttendanceSection from '@/components/dashboard/attendanceSection'
+import PushNotificationsControl from '@/components/shared/pushNotificationsControl'
 
 import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -19,6 +20,7 @@ export default async function PastoralDigitalPage() {
       <div className='pb-2'>
         <Salutation />
       </div>
+      <PushNotificationsControl />
       <AttendanceSection />
     </div>
   )

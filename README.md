@@ -100,6 +100,11 @@ NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
 UPLOADTHING_TOKEN=<your-uploadthing-token>
 
 JSONPE_API_KEY=<your-json-pe-api-key>
+
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=<your-vapid-public-key>
+VAPID_PRIVATE_KEY=<your-vapid-private-key>
+VAPID_SUBJECT=mailto:pastoral@ps.edu.pe
+CRON_SECRET=<token-aleatorio-de-256-bits>
 ```
 
 #### Webhooks de Clerk
@@ -109,6 +114,47 @@ Configura en Clerk un endpoint `POST /api/webhooks/clerk` para los eventos `user
 Guarda el signing secret del endpoint en `CLERK_WEBHOOK_SIGNING_SECRET`. El handler usa `verifyWebhook` de Clerk, que lee esta variable por defecto y valida la firma antes de procesar cada evento. En `user.updated`, la aplicación sincroniza el correo principal con la base de datos y conserva como fuente de verdad el nombre guardado allí. En `user.deleted`, elimina los datos asociados de la base y programa con `after()` la eliminación de los archivos de evidencia en UploadThing.
 
 El servidor de esta aplicación lee el secreto desde `INTERNAL_API_TOKEN`. En el backend que consume las APIs puedes guardarlo bajo el nombre sugerido `PASTORAL_API_TOKEN`; ese nombre es local y puedes elegir otro. Envía su valor en el encabezado `Authorization: Bearer <token>`. Mantén el secreto solo en servidores, nunca en código del navegador ni en variables `NEXT_PUBLIC_*`. Genéralo con `openssl rand -hex 32`, que produce 256 bits de entropía (64 caracteres hexadecimales). La especificación OpenAPI y los modelos de respuesta están en [`docs/internal-api.openapi.yaml`](docs/internal-api.openapi.yaml). Los endpoints disponibles son `GET /api/internal/catechists` y `GET /api/internal/events`.
+
+#### Notificaciones Web Push
+
+Se utiliza `web-push` con VAPID. Genera un par de claves una sola vez:
+
+```sh
+pnpm exec web-push generate-vapid-keys --json
+```
+
+Configura estas variables localmente y en el entorno de producción de Vercel:
+
+```env
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=<publicKey>
+VAPID_PRIVATE_KEY=<privateKey>
+VAPID_SUBJECT=mailto:pastoral@ps.edu.pe
+CRON_SECRET=<secreto-aleatorio-de-al-menos-32-caracteres>
+```
+
+La clave privada y `CRON_SECRET` permanecen exclusivamente en el servidor. Conserva el mismo par VAPID entre despliegues: cambiarlo obliga a renovar las suscripciones de los dispositivos. `CRON_SECRET` protege las rutas de envío; Vercel lo envía como `Authorization: Bearer …`.
+
+El esquema incorpora `push_subscriptions` y `push_deliveries`, con identificadores `uuidv7()`. Estas tablas deben existir antes de activar las notificaciones. La generación y aplicación de migraciones se realiza por separado.
+
+Los tres [Vercel Schedules](https://vercel.com/docs/schedules) se declaran en `vercel.json`, con zona `America/Lima` y jitter de 15 minutos compatible con Hobby:
+
+| Schedule         | Horario de Perú                    | Destinatarios                                                                         |
+| ---------------- | ---------------------------------- | ------------------------------------------------------------------------------------- |
+| `push-events`    | Viernes y sábados a las 6:00 p. m. | Todos los suscritos, por cada evento del día siguiente. Solo muestra el primer turno. |
+| `push-masses`    | Domingos a las 5:00 p. m.          | Suscritos sin registro de misa de ese domingo.                                        |
+| `push-birthdays` | Todos los días a las 9:00 a. m.    | Saludo al cumpleañero y un aviso agrupado de los demás cumpleaños a cada suscrito.    |
+
+Los cambios efectivos de estado de misa o asistencia disparan un envío después de guardar la operación, mediante `after()`. Los avisos de asistencia no revelan estados. Las notificaciones se activan desde Inicio o desde el menú de cuenta → Notificaciones, con un único permiso por dispositivo. En iPhone/iPad debe abrirse la PWA instalada en la pantalla de inicio. Cerrar sesión desde el menú desactiva la suscripción de ese dispositivo.
+
+Los envíos masivos consultan dispositivos y usuarios con un join, filtran misas ya registradas en esa misma consulta y reservan todas las entregas del lote con un único `INSERT … SELECT … ON CONFLICT DO NOTHING`. Las peticiones al servicio push se procesan de diez en diez; las suscripciones caducadas se eliminan por lote. El registro de entregas se conserva 90 días y evita repetir envíos ya reservados.
+
+Los horarios son aproximados por el jitter. Los handlers usan `ce-vssscheduledat` y descartan ejecuciones de más de 30 minutos para evitar recordatorios tardíos. Los targets `path` de Schedules no reintentan automáticamente; los errores se reflejan en sus logs y en una respuesta 503. Una repetición dentro de esa ventana, con la misma fecha programada, reintenta las entregas fallidas sin repetir las reservadas correctamente. Web Push no garantiza que el usuario vea o lea el aviso; una interrupción del proceso después de reservar puede dejar una entrega sin enviar.
+
+Pruebas locales sin enviar notificaciones reales:
+
+```sh
+pnpm exec tsx --test tests/push.test.ts
+```
 
 ### 5. Generar las migraciones de la base de datos
 

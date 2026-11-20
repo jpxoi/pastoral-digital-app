@@ -13,6 +13,33 @@ import { TZDate } from '@date-fns/tz'
 import { z } from 'zod'
 import { Permission } from '@/types/permissions'
 import { SundayMassStatus } from '@/types'
+import { after } from 'next/server'
+import { sendUserPush } from '@/lib/push/send'
+import { massReviewMessage } from '@/lib/push/payloads'
+
+function notifyMassReview(
+  records: { id: string; userId: string; sundayDate: string }[],
+  accepted: boolean
+) {
+  after(async () => {
+    await Promise.all(
+      records.map(async (record) => {
+        try {
+          const message = massReviewMessage(
+            record.id,
+            record.sundayDate,
+            accepted
+          )
+          await sendUserPush(record.userId, message.tag, message)
+        } catch {
+          console.error(
+            'No se pudo enviar la notificación de revisión de misa.'
+          )
+        }
+      })
+    )
+  })
+}
 
 export async function postNewMassRecord(
   formValues: z.infer<typeof NewSundayMassFormSchema>
@@ -101,6 +128,7 @@ export async function verifyMassRecord(massId: string) {
     verifiedById
   )
     .then((records) => {
+      notifyMassReview(records, true)
       updateTag(cacheTags.massesList())
       for (const record of records)
         updateTag(cacheTags.userMasses(record.userId))
@@ -139,6 +167,7 @@ export async function rejectMassRecord(massId: string) {
     verifiedById
   )
     .then((records) => {
+      notifyMassReview(records, false)
       updateTag(cacheTags.massesList())
       for (const record of records)
         updateTag(cacheTags.userMasses(record.userId))

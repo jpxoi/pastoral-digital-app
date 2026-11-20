@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "schedules": {
+    "push-events": {
+      "schedule": "0 18 * * 5,6",
+      "timezone": "America/Lima",
+      "jitter": 15,
+      "path": "/api/schedules/push/events",
+      "requestMethod": "POST"
+    },
+    "push-masses": {
+      "schedule": "0 17 * * 0",
+      "timezone": "America/Lima",
+      "jitter": 15,
+      "path": "/api/schedules/push/masses",
+      "requestMethod": "POST"
+    },
+    "push-birthdays": {
+      "schedule": "0 9 * * *",
+      "timezone": "America/Lima",
+      "jitter": 15,
+      "path": "/api/schedules/push/birthdays",
+      "requestMethod": "POST"
+    }
+  }
+}

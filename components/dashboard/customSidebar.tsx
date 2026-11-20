@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useClerk, useUser } from '@clerk/nextjs'
 import {
   IconBuildingChurch,
+  IconBell,
   IconCake,
   IconCalendar,
   IconDots,
@@ -44,6 +45,8 @@ import {
 } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PastoralAppMark } from '@/components/shared/pastoral-signature'
+import { removeDevicePushSubscription } from '@/lib/push/client'
+import { toast } from 'sonner'
 
 type NavLink = {
   label: string
@@ -228,7 +231,7 @@ function NavItem({ link, active }: { link: NavLink; active: boolean }) {
 
 function SidebarUserButton() {
   const { user, isLoaded } = useUser()
-  const { isMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
   const { openUserProfile, signOut } = useClerk()
 
   if (!isLoaded) {
@@ -289,8 +292,28 @@ function SidebarUserButton() {
         <DropdownMenuItem onSelect={() => openUserProfile()}>
           <IconSettings /> Administrar cuenta
         </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href='/dashboard#notifications'
+            onClick={() => setOpenMobile(false)}
+          >
+            <IconBell /> Notificaciones
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem variant='destructive' onSelect={() => signOut()}>
+        <DropdownMenuItem
+          variant='destructive'
+          onSelect={() => {
+            void (async () => {
+              try {
+                await removeDevicePushSubscription()
+                await signOut()
+              } catch {
+                toast.error('No se pudo cerrar sesión. Vuelve a intentarlo.')
+              }
+            })()
+          }}
+        >
           <IconLogout /> Cerrar sesión
         </DropdownMenuItem>
       </DropdownMenuContent>

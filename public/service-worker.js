@@ -111,3 +111,66 @@ async function trimCache(cache, maxEntries) {
   )
   await Promise.all(excessRequests.map((request) => cache.delete(request)))
 }
+
+self.addEventListener('push', (event) => {
+  if (!event.data) return
+  let message
+  try {
+    message = event.data.json()
+  } catch {
+    return
+  }
+  if (typeof message.title !== 'string' || typeof message.body !== 'string')
+    return
+  event.waitUntil(
+    self.registration.showNotification(message.title, {
+      body: message.body,
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      tag: typeof message.tag === 'string' ? message.tag : undefined,
+      data: { url: safeNotificationUrl(message.url) },
+    })
+  )
+})
+
+function safeNotificationUrl(value) {
+  try {
+    const url = new URL(
+      typeof value === 'string' ? value : '/dashboard',
+      self.location.origin
+    )
+    if (
+      url.origin === self.location.origin &&
+      [
+        '/dashboard',
+        '/events',
+        '/masses',
+        '/attendance',
+        '/birthdays',
+      ].includes(url.pathname)
+    )
+      return url.href
+  } catch {
+    /* Fall back to the dashboard for invalid URLs. */
+  }
+  return new URL('/dashboard', self.location.origin).href
+}
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  const url = safeNotificationUrl(event.notification.data?.url)
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+      })
+      for (const client of windows) {
+        if (new URL(client.url).origin !== self.location.origin) continue
+        const navigated = await client.navigate(url)
+        if (navigated) return navigated.focus()
+      }
+      return self.clients.openWindow(url)
+    })()
+  )
+})

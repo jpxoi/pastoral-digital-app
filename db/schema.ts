@@ -316,6 +316,45 @@ export const sundayMassesTable = pgTable(
 
 /* Relations */
 
+export const pushSubscriptionsTable = pgTable(
+  'push_subscriptions',
+  {
+    id: uuid()
+      .primaryKey()
+      .default(sql`uuidv7()`),
+    userId: text('user_id')
+      .references(() => usersTable.id, { onDelete: 'cascade' })
+      .notNull(),
+    endpoint: text().notNull().unique(),
+    p256dh: text().notNull(),
+    auth: text().notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => [index('idx_push_subscriptions_user_id').on(table.userId)]
+)
+
+export const pushDeliveriesTable = pgTable(
+  'push_deliveries',
+  {
+    id: uuid()
+      .primaryKey()
+      .default(sql`uuidv7()`),
+    subscriptionId: uuid('subscription_id')
+      .references(() => pushSubscriptionsTable.id, { onDelete: 'cascade' })
+      .notNull(),
+    notificationKey: text('notification_key').notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('unq_push_delivery').on(
+      table.subscriptionId,
+      table.notificationKey
+    ),
+    index('idx_push_deliveries_created_at').on(table.createdAt),
+  ]
+)
+
 export const attendanceRecordsRelations = relations(
   attendanceRecordsTable,
   ({ one }) => {
