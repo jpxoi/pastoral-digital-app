@@ -36,6 +36,8 @@ export type TurnAssignment = {
 export function getAttendanceTurn(
   assignments: readonly TurnAssignment[]
 ): 'first' | 'second' | null {
+  if (!assignments.length) return 'first'
+
   if (
     assignments.some(
       (a) =>

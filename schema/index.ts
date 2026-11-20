@@ -75,7 +75,7 @@ export const OnboardingFormSchema = z
     const studentCode = values.studentCode?.trim() ?? ''
     if (
       values.category === UserCategory.STUDENT &&
-      !/^(?:P6|S[1235])[A-H](?:0[1-9]|[1-3]\d|40)$/.test(studentCode)
+      !/^(?:P6|S[1-5])[A-H](?:0[1-9]|[1-3]\d|40)$/.test(studentCode)
     ) {
       context.addIssue({
         code: 'custom',

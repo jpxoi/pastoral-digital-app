@@ -10,7 +10,7 @@ import QRCode from 'qrcode'
 import {
   BRAND_BLUE,
   QR_BLUE,
-  getPrintedFotocheckLabel,
+  getFotocheckLabel,
   type FotocheckPerson,
 } from '@/components/fotochecks/model'
 
@@ -193,9 +193,7 @@ export async function generateFotocheckPdf(
         color: color(QR_BLUE),
       })
     )
-    const label = getPrintedFotocheckLabel(
-      person.assignments
-    ).toLocaleUpperCase('es-PE')
+    const label = getFotocheckLabel(person.assignments)
     sheet.drawText(label, {
       x: x + (mm(90) - regular.widthOfTextAtSize(label, 7)) / 2,
       y: firstBaseline - (lines.length - 1) * fontSize * 1.15 - mm(5),
