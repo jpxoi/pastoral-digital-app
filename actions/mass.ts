@@ -1,6 +1,6 @@
 'use server'
 
-import { handleDbError } from '@/lib/error'
+import { handleDbError, MassReviewConflictError } from '@/lib/error'
 import { checkPermission } from '@/lib/roles'
 import { createSundayMass } from '@/queries/insert'
 import { updateSundayMassRecordVerification } from '@/queries/update'
@@ -123,6 +123,10 @@ export async function verifyMassRecord(massId: string) {
       }
     })
     .catch((error) => {
+      if (error instanceof MassReviewConflictError) {
+        updateTag(cacheTags.massesList())
+        return { error: error.message, code: 'MASS_REVIEW_CONFLICT' as const }
+      }
       console.error(error)
       return {
         error:
@@ -162,6 +166,10 @@ export async function rejectMassRecord(massId: string) {
       }
     })
     .catch((error) => {
+      if (error instanceof MassReviewConflictError) {
+        updateTag(cacheTags.massesList())
+        return { error: error.message, code: 'MASS_REVIEW_CONFLICT' as const }
+      }
       console.error(error)
       return {
         error:

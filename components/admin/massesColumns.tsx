@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { ColumnDef } from '@tanstack/react-table'
@@ -16,6 +17,7 @@ import { tz } from '@date-fns/tz'
 import { format, parseISO } from 'date-fns'
 
 function MassReviewActions({ id }: { id: string }) {
+  const router = useRouter()
   const [pendingAction, setPendingAction] = useState<
     'reject' | 'verify' | null
   >(null)
@@ -43,6 +45,7 @@ function MassReviewActions({ id }: { id: string }) {
     try {
       const result = await promise
       if ('error' in result) {
+        if ('code' in result && result.code === 'MASS_REVIEW_CONFLICT') router.refresh()
         setPendingAction(null)
       }
     } catch {
@@ -136,6 +139,8 @@ export const getMassesColumns = (
   },
   {
     accessorKey: 'sundayDate',
+    filterFn: (row, columnId, values: string[]) =>
+      values.includes(row.getValue(columnId)),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Domingo' />
     ),
@@ -171,6 +176,8 @@ export const getMassesColumns = (
   {
     id: 'massStatus',
     accessorKey: 'status',
+    filterFn: (row, columnId, values: string[]) =>
+      values.includes(row.getValue(columnId)),
     header: () => <span className='text-nowrap'>Estado</span>,
     cell: ({ row }) => (
       <SundayMassStatusLabel
