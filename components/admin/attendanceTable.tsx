@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
-import { getAdminAttendanceColumns } from '@/components/admin/adminAttendanceColumns'
+import AttendanceTableClient from './attendanceTableClient'
 import { getAllAttendanceRecords } from '@/queries/select'
-import { DataTable } from '@/components/ui/data-table'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
@@ -15,12 +14,12 @@ export default async function AttendanceTable({
 
   return (
     <>
-      <DataTable
-        columns={getAdminAttendanceColumns(canDelete)}
-        data={attendanceRecords}
+      <AttendanceTableClient
+        canDelete={canDelete}
+        attendanceRecords={attendanceRecords}
       >
         {children}
-      </DataTable>
+      </AttendanceTableClient>
     </>
   )
 }
