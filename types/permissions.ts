@@ -22,6 +22,7 @@ export enum Permission {
   CATECHISTS_VIEW_PASTORAL_ID = 'catechists.view_pastoral_id',
   CATECHISTS_GENERATE_FOTOCHECKS = 'catechists.generate_fotochecks',
   CATECHISTS_ASSIGN_ROLE = 'catechists.assign_role',
+  CLERK_ORPHAN_USERS_DELETE = 'clerk.orphan_users.delete',
   MASSES_VIEW_RECORDS = 'masses.view_records',
   MASSES_REVIEW_RECORDS = 'masses.review_records',
 }

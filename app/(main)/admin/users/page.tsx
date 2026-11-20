@@ -5,6 +5,7 @@ import PageHeader from '@/components/shared/pageHeader'
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import UsersTable from '@/components/admin/usersTable'
+import { ClerkOrphanUsersButton } from '@/components/admin/clerk-orphan-users-button'
 import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
@@ -27,6 +28,9 @@ export default async function Page() {
   const canGenerateFotochecks = await checkPermission(
     Permission.CATECHISTS_GENERATE_FOTOCHECKS
   )
+  const canCleanClerkUsers = await checkPermission(
+    Permission.CLERK_ORPHAN_USERS_DELETE
+  )
 
   return (
     <>
@@ -42,6 +46,7 @@ export default async function Page() {
           <div className='flex items-center gap-2'>
             <RevalidateButton resource='users' />
             {canGenerateFotochecks && <GenerateFotochecksButton />}
+            {canCleanClerkUsers && <ClerkOrphanUsersButton />}
           </div>
         </UsersTable>
       </Suspense>
