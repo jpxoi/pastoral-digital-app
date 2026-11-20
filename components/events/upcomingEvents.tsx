@@ -1,10 +1,12 @@
 import { getUpcomingEvents } from '@/queries/select'
+import { connection } from 'next/server'
 import EventCard from './eventCard'
 import EmptyEvents from './emptyEvents'
 import { DashboardSection } from '@/components/dashboard/dashboard-section'
 
 export default async function UpcomingEvents() {
-  const upcomingEvents = await getUpcomingEvents()
+  await connection()
+  const upcomingEvents = await getUpcomingEvents(new Date())
   return (
     <DashboardSection title='Eventos'>
       <div className='flex flex-col gap-2 lg:grid lg:grid-cols-2 xl:grid-cols-3'>

@@ -358,7 +358,7 @@ async function getUpcomingEventsForDate(peruDate: string) {
   })
 }
 
-export const getUpcomingEvents = (now = new Date()) =>
+export const getUpcomingEvents = (now: Date) =>
   getUpcomingEventsForDate(getPeruDateKey(now))
 
 export const getTodayEvents = async (now = new Date()) => {

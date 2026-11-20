@@ -15,6 +15,13 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -213,50 +220,64 @@ export default function UserAssignmentEditor({
                   <div className='border-primary/10 grid gap-3 border-t px-3 py-3 sm:grid-cols-2'>
                     <label className='text-muted-foreground flex flex-col gap-1.5 text-xs font-medium'>
                       Comunidad opcional
-                      <select
-                        className='bg-background text-foreground focus-visible:ring-ring h-9 w-full min-w-0 rounded-lg border px-2 text-sm font-normal outline-none focus-visible:ring-2'
-                        value={assignment.communityId ?? ''}
-                        onChange={(event) =>
+                      <Select
+                        value={assignment.communityId ?? 'no-community'}
+                        onValueChange={(value) =>
                           updateAssignment(index, {
-                            communityId: event.target.value || null,
-                            responsibility: event.target.value
-                              ? assignment.type === 'semillero'
-                                ? 'semillero'
-                                : 'guide'
-                              : null,
+                            communityId:
+                              value === 'no-community' ? null : value,
+                            responsibility:
+                              value !== 'no-community'
+                                ? assignment.type === 'semillero'
+                                  ? 'semillero'
+                                  : 'guide'
+                                : null,
                           })
                         }
                       >
-                        <option value=''>Sin comunidad</option>
-                        {catalog.communities
-                          .filter(
-                            (community) =>
-                              community.programId === assignment.programId
-                          )
-                          .map((community) => (
-                            <option key={community.id} value={community.id}>
-                              {community.name}
-                            </option>
-                          ))}
-                      </select>
+                        <SelectTrigger className='bg-background h-9 w-full min-w-0 rounded-lg text-sm font-normal'>
+                          <SelectValue placeholder='Sin comunidad' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value='no-community'>
+                            Sin comunidad
+                          </SelectItem>
+                          {catalog.communities
+                            .filter(
+                              (community) =>
+                                community.programId === assignment.programId
+                            )
+                            .map((community) => (
+                              <SelectItem
+                                key={community.id}
+                                value={community.id}
+                              >
+                                {community.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
                     </label>
                     {assignment.communityId &&
                       assignment.type === 'program' && (
                         <label className='text-muted-foreground flex flex-col gap-1.5 text-xs font-medium'>
                           Responsabilidad
-                          <select
-                            className='bg-background text-foreground focus-visible:ring-ring h-9 w-full min-w-0 rounded-lg border px-2 text-sm font-normal outline-none focus-visible:ring-2'
-                            value={assignment.responsibility ?? ''}
-                            onChange={(event) =>
+                          <Select
+                            value={assignment.responsibility ?? 'guide'}
+                            onValueChange={(value) =>
                               updateAssignment(index, {
-                                responsibility: event.target.value as
-                                  'guide' | 'advisor',
+                                responsibility: value as 'guide' | 'advisor',
                               })
                             }
                           >
-                            <option value='guide'>Guía</option>
-                            <option value='advisor'>Asesor</option>
-                          </select>
+                            <SelectTrigger className='bg-background h-9 w-full min-w-0 rounded-lg text-sm font-normal'>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value='guide'>Guía</SelectItem>
+                              <SelectItem value='advisor'>Asesor</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </label>
                       )}
                     {assignment.communityId &&
