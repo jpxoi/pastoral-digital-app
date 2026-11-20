@@ -1,7 +1,7 @@
 'use server'
 
 const endpoint = 'https://api.json.pe/api/dni'
-const token = process.env.JSON_PE_API_KEY
+const token = process.env.JSONPE_API_KEY
 
 function toTitleCase(str: string): string {
   if (!str) return str

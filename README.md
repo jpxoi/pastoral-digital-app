@@ -98,7 +98,7 @@ NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
 
 UPLOADTHING_TOKEN=<your-uploadthing-token>
 
-JSON_PE_API_KEY=<your-json-pe-api-key>
+JSONPE_API_KEY=<your-json-pe-api-key>
 ```
 
 El servidor de esta aplicación lee el secreto desde `INTERNAL_API_TOKEN`. En el backend que consume las APIs puedes guardarlo bajo el nombre sugerido `PASTORAL_API_TOKEN`; ese nombre es local y puedes elegir otro. Envía su valor en el encabezado `Authorization: Bearer <token>`. Mantén el secreto solo en servidores, nunca en código del navegador ni en variables `NEXT_PUBLIC_*`. Genéralo con `openssl rand -hex 32`, que produce 256 bits de entropía (64 caracteres hexadecimales). La especificación OpenAPI y los modelos de respuesta están en [`docs/internal-api.openapi.yaml`](docs/internal-api.openapi.yaml). Los endpoints disponibles son `GET /api/internal/catechists` y `GET /api/internal/events`.
