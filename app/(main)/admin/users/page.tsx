@@ -1,4 +1,3 @@
-import PageActions from '@/components/shared/pageActions'
 import RevalidateButton from '@/components/shared/revalidateButton'
 import { GenerateFotochecksButton } from '@/components/fotochecks/generate-button'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
@@ -25,12 +24,13 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Catequistas' />} />
-      <PageActions>
-        <RevalidateButton tag='users' />
-        {canGenerateFotochecks && <GenerateFotochecksButton />}
-      </PageActions>
       <Suspense fallback={<UserTableSkeleton />}>
-        <UsersTable canSetRole={canSetRole} />
+        <UsersTable canSetRole={canSetRole}>
+          <div className='flex items-center gap-2'>
+            <RevalidateButton tag='users' />
+            {canGenerateFotochecks && <GenerateFotochecksButton />}
+          </div>
+        </UsersTable>
       </Suspense>
     </>
   )

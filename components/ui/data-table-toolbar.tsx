@@ -17,21 +17,29 @@ import {
   UserScheduleFilterOptions,
 } from '@/lib/filter'
 import { IconSearch, IconX } from '@tabler/icons-react'
+import type { ReactNode } from 'react'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  children?: ReactNode
 }
 
 export function DataTableToolbar<TData>({
   table,
+  children,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
   const globalFilter = String(table.getState().globalFilter ?? '')
 
   return (
-    <div className='flex items-center justify-between gap-2'>
-      <div className='flex flex-1 flex-col items-start max-sm:space-y-2 sm:flex-row sm:items-center sm:space-x-2'>
-        <InputGroup className='h-8 w-full sm:max-w-sm'>
+    <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 md:flex-row md:items-center'>
+        {children && (
+          <div className='order-first flex justify-end md:order-last md:ml-auto md:shrink-0'>
+            {children}
+          </div>
+        )}
+        <InputGroup className='order-2 h-8 w-full sm:max-w-sm md:order-first'>
           <InputGroupInput
             aria-label='Buscar registros'
             placeholder='Buscar registros...'
@@ -58,7 +66,7 @@ export function DataTableToolbar<TData>({
             </InputGroupAddon>
           )}
         </InputGroup>
-        <div className='flex flex-wrap items-center gap-2'>
+        <div className='order-3 flex flex-wrap items-center gap-2 md:order-2'>
           {table.getColumn('role') && (
             <DataTableFacetedFilter
               column={table.getColumn('role')}

@@ -29,6 +29,7 @@ import { SelectAttendance } from '@/db/schema'
 
 interface DataTableRowActionsProps {
   row: Row<FetchAttendanceProps>
+  canDelete: boolean
 }
 
 const handleSetAttendanceRecordStatus = async (
@@ -72,7 +73,10 @@ const handleDeleteAttendanceRecord = async (
   })
 }
 
-export function AdminAttendanceRowActions({ row }: DataTableRowActionsProps) {
+export function AdminAttendanceRowActions({
+  row,
+  canDelete,
+}: DataTableRowActionsProps) {
   return (
     <DropdownMenu key={row.id}>
       <DropdownMenuTrigger asChild>
@@ -125,14 +129,18 @@ export function AdminAttendanceRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => handleDeleteAttendanceRecord(row.original.id)}
-          className='text-red-500'
-        >
-          <IconTrash />
-          Eliminar registro
-        </DropdownMenuItem>
+        {canDelete && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              variant='destructive'
+              onClick={() => handleDeleteAttendanceRecord(row.original.id)}
+            >
+              <IconTrash />
+              Eliminar registro
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

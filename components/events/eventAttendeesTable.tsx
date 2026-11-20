@@ -1,6 +1,8 @@
 import { getAttendanceRecordsByEventId } from '@/queries/select'
 import { DataTable } from '../ui/data-table'
-import { EventAttendeesColumns } from './eventAttendeesColumns'
+import { getEventAttendeesColumns } from './eventAttendeesColumns'
+import { checkPermission } from '@/lib/roles'
+import { Permission } from '@/types/permissions'
 
 export default async function EventAttendeesTable({
   eventId,
@@ -8,10 +10,11 @@ export default async function EventAttendeesTable({
   eventId: string
 }) {
   const attendanceRecords = await getAttendanceRecordsByEventId(eventId)
+  const canDelete = await checkPermission(Permission.ATTENDANCE_MANAGE_RECORDS)
 
   return (
     <DataTable
-      columns={EventAttendeesColumns}
+      columns={getEventAttendeesColumns(canDelete)}
       data={attendanceRecords}
       globalFilterColumnId='catequista'
     />

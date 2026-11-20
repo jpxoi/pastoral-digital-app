@@ -8,6 +8,7 @@ import MassesTableSkeleton from '@/components/admin/massesTableSkeleton'
 import RevalidateButton from '@/components/shared/revalidateButton'
 import { requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
+import ExportMassesPdfButton from '@/components/admin/exportMassesPdfButton'
 
 export const metadata: Metadata = {
   title: 'Administrar Misas | Pastoral Digital App',
@@ -22,6 +23,7 @@ export default async function Page() {
       <PageActions>
         <div className='flex flex-wrap items-center gap-2'>
           <RevalidateButton tag='sundayMasses' />
+          <ExportMassesPdfButton />
         </div>
       </PageActions>
       <Suspense fallback={<MassesTableSkeleton />}>

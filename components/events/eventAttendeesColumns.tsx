@@ -9,7 +9,9 @@ import { format } from 'date-fns'
 import { tz } from '@date-fns/tz'
 import { es } from 'date-fns/locale'
 
-export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
+export const getEventAttendeesColumns = (
+  canDelete: boolean
+): ColumnDef<FetchAttendanceProps>[] => [
   {
     id: 'catequista',
     accessorFn: (row) => `${row.user.firstName} ${row.user.lastName}`,
@@ -81,7 +83,7 @@ export const EventAttendeesColumns: ColumnDef<FetchAttendanceProps>[] = [
   {
     id: 'acciones',
     cell: ({ row }) => {
-      return <AdminAttendanceRowActions row={row} />
+      return <AdminAttendanceRowActions row={row} canDelete={canDelete} />
     },
   },
 ]

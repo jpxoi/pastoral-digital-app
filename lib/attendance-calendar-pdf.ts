@@ -137,8 +137,13 @@ function formatDateKey(key: string) {
   })
 }
 
-function drawPageHeader(page: PDFPage, generatedAt: string, bold: PDFFont) {
-  drawText(page, 'REPORTE ASISTENCIA CATEQUESIS', MARGIN, 22, {
+function drawPageHeader(
+  page: PDFPage,
+  generatedAt: string,
+  reportTitle: string,
+  bold: PDFFont
+) {
+  drawText(page, reportTitle, MARGIN, 22, {
     font: bold,
     size: 9,
     color: rgb(0.03, 0.19, 0.61),
@@ -154,10 +159,11 @@ function drawPageHeader(page: PDFPage, generatedAt: string, bold: PDFFont) {
 export async function generateAttendanceCalendarPdf(
   people: AttendanceCalendarPdfPerson[],
   dateKeys: string[],
-  generatedAt: string
+  generatedAt: string,
+  reportTitle = 'REPORTE ASISTENCIA CATEQUESIS'
 ) {
   const pdf = await PDFDocument.create()
-  pdf.setTitle('Reporte asistencia catequesis')
+  pdf.setTitle(reportTitle)
   pdf.setAuthor('Pastoral Mariana')
   const regular = await pdf.embedFont(StandardFonts.Helvetica)
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold)
@@ -197,7 +203,7 @@ export async function generateAttendanceCalendarPdf(
     ) {
       const rows = rowGroups[rowGroupIndex]
       const page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
-      drawPageHeader(page, generatedLabel, bold)
+      drawPageHeader(page, generatedLabel, reportTitle, bold)
 
       const tableTop = HEADER_HEIGHT
       const totalTableWidth = PAGE_WIDTH - MARGIN * 2

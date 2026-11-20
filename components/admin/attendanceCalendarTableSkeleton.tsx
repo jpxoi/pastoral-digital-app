@@ -10,7 +10,7 @@ import {
 
 export default function AttendanceCalendarTableSkeleton() {
   return (
-    <div className='rounded-md border'>
+    <div className='min-h-0 flex-1 overflow-auto rounded-md border'>
       <Table className='text-left'>
         <TableHeader>
           <TableRow>

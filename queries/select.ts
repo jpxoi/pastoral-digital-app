@@ -416,6 +416,7 @@ export const getTodayEvents = async (now = new Date()) => {
     where: (fields) =>
       sql`${gte(fields.date, startOfToday)} AND ${lt(fields.date, startOfTomorrow)}`,
     orderBy: (fields) => [asc(fields.date), asc(fields.id)],
+    with: { location: true },
   })
 }
 

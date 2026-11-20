@@ -1,4 +1,3 @@
-import PageActions from '@/components/shared/pageActions'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
 import { Skeleton } from '@/components/ui/skeleton'
 import PageHeader from '@/components/shared/pageHeader'
@@ -19,11 +18,6 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Eventos' />} />
-      <PageActions>
-        <Suspense fallback={<Skeleton className='h-9 w-36' />}>
-          <EventCreateAction />
-        </Suspense>
-      </PageActions>
       <Suspense
         fallback={
           <p className='text-muted-foreground py-8 text-center text-sm'>
@@ -31,7 +25,11 @@ export default async function Page() {
           </p>
         }
       >
-        <AdminEventsTable />
+        <AdminEventsTable>
+          <Suspense fallback={<Skeleton className='h-9 w-36' />}>
+            <EventCreateAction />
+          </Suspense>
+        </AdminEventsTable>
       </Suspense>
     </>
   )

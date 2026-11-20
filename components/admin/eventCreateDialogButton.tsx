@@ -90,7 +90,7 @@ export default function EventCreateDialogButton({
       }}
     >
       <DialogTrigger asChild>
-        <Button disabled={locations.length === 0}>
+        <Button size='sm' disabled={locations.length === 0}>
           <IconPlus />
           Crear evento
         </Button>

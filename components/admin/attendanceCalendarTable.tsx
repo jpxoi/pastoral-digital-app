@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { getAttendanceCalendar } from '@/queries/select'
 import {
   Empty,
@@ -9,7 +10,11 @@ import {
 import { IconCalendarCancel } from '@tabler/icons-react'
 import AttendanceCalendarClientTable from '@/components/admin/attendanceCalendarClientTable'
 
-export default async function AttendanceCalendarTable() {
+export default async function AttendanceCalendarTable({
+  children,
+}: {
+  children?: ReactNode
+}) {
   const attendanceCalendar = await getAttendanceCalendar()
 
   if (!attendanceCalendar || attendanceCalendar.length === 0) {
@@ -30,6 +35,8 @@ export default async function AttendanceCalendarTable() {
   }
 
   return (
-    <AttendanceCalendarClientTable attendanceCalendar={attendanceCalendar} />
+    <AttendanceCalendarClientTable attendanceCalendar={attendanceCalendar}>
+      {children}
+    </AttendanceCalendarClientTable>
   )
 }

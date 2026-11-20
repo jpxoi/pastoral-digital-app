@@ -51,12 +51,7 @@ export default function EventFillAbsenteesButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          variant='destructive'
-          className='text-white'
-          size='sm'
-          disabled={isPending}
-        >
+        <Button variant='destructive-solid' size='sm' disabled={isPending}>
           Rellenar Faltas
         </Button>
       </AlertDialogTrigger>
@@ -73,7 +68,7 @@ export default function EventFillAbsenteesButton({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+            className='bg-destructive hover:bg-destructive/90 text-white'
             onClick={() => handleClick(eventId)}
           >
             Continuar

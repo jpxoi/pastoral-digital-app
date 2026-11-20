@@ -143,13 +143,13 @@ export function CustomSidebar() {
       collapsible='icon'
       className='border-sidebar-border'
     >
-      <SidebarHeader className='px-3 py-4 group-data-[collapsible=icon]:px-2'>
+      <SidebarHeader className='items-start px-3 py-4 group-data-[collapsible=icon]:px-2'>
         <Link
           href='/dashboard'
           aria-label='Pastoral Digital App'
-          className='flex h-10 w-full items-center justify-start gap-3 px-1 text-left font-medium group-data-[collapsible=icon]:px-0'
+          className='grid h-10 w-full min-w-0 grid-cols-[1.5rem_minmax(0,1fr)] items-center justify-items-start gap-3 px-1 text-left font-medium group-data-[collapsible=icon]:grid-cols-1 group-data-[collapsible=icon]:justify-items-center group-data-[collapsible=icon]:px-0'
         >
-          <PastoralAppMark className='size-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white object-contain' />
+          <PastoralAppMark className='size-6 justify-self-start rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white object-contain' />
           <span className='truncate group-data-[collapsible=icon]:hidden'>
             Pastoral Digital App
           </span>
@@ -283,10 +283,7 @@ function SidebarUserButton() {
           <IconSettings /> Administrar cuenta
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className='text-destructive focus:bg-destructive/10 focus:text-destructive [&_svg]:text-destructive'
-          onSelect={() => signOut()}
-        >
+        <DropdownMenuItem variant='destructive' onSelect={() => signOut()}>
           <IconLogout /> Cerrar sesión
         </DropdownMenuItem>
       </DropdownMenuContent>

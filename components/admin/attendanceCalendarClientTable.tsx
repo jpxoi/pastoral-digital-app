@@ -9,6 +9,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Input } from '@/components/ui/input'
+import type { ReactNode } from 'react'
 
 type AttendanceCalendarRow = Record<string, string | null>
 
@@ -42,8 +43,10 @@ function getStatus(status: string | null) {
 
 export default function AttendanceCalendarClientTable({
   attendanceCalendar,
+  children,
 }: {
   attendanceCalendar: AttendanceCalendarRow[]
+  children?: ReactNode
 }) {
   const [search, setSearch] = useState('')
   const dateColumns = useMemo(
@@ -62,20 +65,31 @@ export default function AttendanceCalendarClientTable({
   }, [attendanceCalendar, search])
 
   return (
-    <div className='space-y-3'>
-      <div className='relative w-full max-w-sm'>
-        <IconSearch className='text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2' />
-        <Input
-          type='search'
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder='Buscar por nombre'
-          aria-label='Buscar por nombre'
-          className='pl-9'
-        />
+    <div className='flex min-h-0 flex-1 flex-col gap-4'>
+      <div className='flex flex-col gap-2 md:flex-row md:items-center'>
+        {children && (
+          <div className='order-first flex justify-end md:order-last md:ml-auto md:shrink-0'>
+            {children}
+          </div>
+        )}
+        <div className='relative w-full max-w-sm'>
+          <IconSearch className='text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2' />
+          <Input
+            type='search'
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder='Buscar por nombre'
+            aria-label='Buscar por nombre'
+            className='h-8 pl-9'
+          />
+        </div>
       </div>
 
-      <div className='relative max-h-[calc(100dvh-13rem)] overflow-auto rounded-md border'>
+      <div
+        className={`relative min-h-0 overflow-auto rounded-md border ${
+          search.trim() ? 'max-h-[calc(100%-3rem)]' : 'flex-1'
+        }`}
+      >
         <table
           aria-label='Calendario de asistencia'
           className='w-max min-w-full border-separate border-spacing-0 text-left text-sm'

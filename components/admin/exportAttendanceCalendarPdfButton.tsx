@@ -41,6 +41,7 @@ export default function ExportAttendanceCalendarPdfButton() {
 
   return (
     <Button
+      size='sm'
       onClick={() => void download()}
       disabled={pending}
       aria-busy={pending}

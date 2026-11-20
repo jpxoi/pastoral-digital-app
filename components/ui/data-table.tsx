@@ -2,6 +2,7 @@
 'use client'
 
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 
 import {
   ColumnDef,
@@ -36,6 +37,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   getRowId?: (row: TData) => string
   globalFilterColumnId?: string
+  children?: ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -43,6 +45,7 @@ export function DataTable<TData, TValue>({
   data,
   getRowId,
   globalFilterColumnId,
+  children,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = useState({})
   const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
@@ -78,7 +81,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='space-y-4'>
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table}>{children}</DataTableToolbar>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

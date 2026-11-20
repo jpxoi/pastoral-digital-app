@@ -1,4 +1,3 @@
-import PageActions from '@/components/shared/pageActions'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
 import PageHeader from '@/components/shared/pageHeader'
 import { Suspense } from 'react'
@@ -22,12 +21,13 @@ export default async function Page() {
       <PageHeader
         breadcrumb={<PageBreadcrumb label='Calendario de Asistencia' />}
       />
-      <PageActions>
-        <RevalidateButton tag='attendance' />
-        <ExportAttendanceCalendarPdfButton />
-      </PageActions>
       <Suspense fallback={<AttendanceCalendarTableSkeleton />}>
-        <AttendanceCalendarTable />
+        <AttendanceCalendarTable>
+          <div className='flex items-center gap-2'>
+            <RevalidateButton tag='attendance' />
+            <ExportAttendanceCalendarPdfButton />
+          </div>
+        </AttendanceCalendarTable>
       </Suspense>
     </>
   )

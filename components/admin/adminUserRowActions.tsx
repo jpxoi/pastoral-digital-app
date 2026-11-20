@@ -174,7 +174,7 @@ export function AdminUserRowActions({
             )}
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem disabled className='text-red-500'>
+            <DropdownMenuItem variant='destructive' disabled>
               <IconTrash />
               Eliminar catequista
             </DropdownMenuItem>

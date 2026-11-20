@@ -1,4 +1,3 @@
-import PageActions from '@/components/shared/pageActions'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
 import PageHeader from '@/components/shared/pageHeader'
 import AttendanceTable from '@/components/admin/attendanceTable'
@@ -21,11 +20,10 @@ export default async function Page() {
       <PageHeader
         breadcrumb={<PageBreadcrumb label='Registro de Asistencia' />}
       />
-      <PageActions>
-        <RevalidateButton tag='attendance' />
-      </PageActions>
       <Suspense fallback={<AttendanceTableSkeleton />}>
-        <AttendanceTable />
+        <AttendanceTable>
+          <RevalidateButton tag='attendance' />
+        </AttendanceTable>
       </Suspense>
     </>
   )

@@ -101,16 +101,13 @@ export default function BirthdayList({
               aria-labelledby={`birthday-group-${id}`}
               className='flex flex-col gap-2'
             >
-              <div className='flex items-center gap-3'>
+              <div className='flex items-center'>
                 <h2
                   id={`birthday-group-${id}`}
                   className='shrink-0 text-sm font-semibold'
                 >
                   {title}
                 </h2>
-                <span className='bg-muted text-muted-foreground rounded-md px-1.5 py-0.5 text-xs tabular-nums'>
-                  {groupUsers.length}
-                </span>
               </div>
               <div className='grid gap-2 md:grid-cols-2 xl:grid-cols-3'>
                 {groupUsers.map(({ user }) => (

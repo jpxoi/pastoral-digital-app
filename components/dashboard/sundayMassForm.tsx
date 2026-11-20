@@ -303,8 +303,8 @@ export default function SundayMassForm() {
                         </div>
                       </div>
                       <Button
-                        variant='ghost'
-                        className='text-destructive hover:bg-destructive/10 hover:text-destructive shrink-0'
+                        variant='destructive-ghost'
+                        className='shrink-0'
                         size='icon'
                         onClick={handleRemoveEvidence}
                         disabled={isPending || isRemoving}

@@ -3,8 +3,9 @@
 import { Card, CardFooter, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import AttendanceStatusLabel from '@/components/shared/attendanceStatusLabel'
+import EventSummaryCard from '@/components/events/eventSummaryCard'
 
-import { SelectEvent } from '@/db/schema'
+import type { SelectEvent, SelectLocation } from '@/db/schema'
 
 import {
   Item,
@@ -27,14 +28,10 @@ import {
 import ErrorAlert from '@/components/shared/errorAlert'
 
 import useSound from 'use-sound'
-import {
-  IconCalendar,
-  IconCalendarOff,
-  IconUser,
-  IconUserOff,
-} from '@tabler/icons-react'
+import { IconCalendarOff, IconUser, IconUserOff } from '@tabler/icons-react'
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
@@ -46,7 +43,6 @@ import { tz } from '@date-fns/tz'
 import { es } from 'date-fns/locale'
 import { Badge } from '../ui/badge'
 import useSWR from 'swr'
-import { Spinner } from '../ui/spinner'
 import { Skeleton } from '../ui/skeleton'
 import {
   Select,
@@ -65,6 +61,10 @@ const fetcher = async (url: string) => {
   }
 
   return json
+}
+
+type TodayEvent = SelectEvent & {
+  location: SelectLocation | null
 }
 
 export default function QrScannerTab() {
@@ -91,7 +91,7 @@ export default function QrScannerTab() {
     error: eventError,
     isLoading: eventIsLoading,
     mutate: refreshEvents,
-  } = useSWR<SelectEvent[]>('/api/events/today', fetcher, {
+  } = useSWR<TodayEvent[]>('/api/events/today', fetcher, {
     revalidateOnFocus: true,
     refreshInterval: 60_000,
   })
@@ -253,17 +253,6 @@ export default function QrScannerTab() {
             description='Por favor, habilite el acceso en la configuración de su navegador para continuar.'
           />
         )}
-        {eventError && (
-          <ErrorAlert
-            title='No se pudo cargar el evento'
-            description='Revisa tu conexión y vuelve a intentarlo.'
-          />
-        )}
-        {eventError && (
-          <Button variant='outline' onClick={() => refreshEvents()}>
-            Reintentar
-          </Button>
-        )}
         {events && events.length > 1 && (
           <div className='max-w-xl space-y-2'>
             <p className='text-sm font-medium'>
@@ -293,54 +282,79 @@ export default function QrScannerTab() {
             </Select>
           </div>
         )}
-        <Item variant='outline'>
-          <ItemMedia variant='icon'>
-            {eventIsLoading ? (
-              <Spinner />
-            ) : event ? (
-              <IconCalendar />
-            ) : (
-              <IconCalendarOff className='text-destructive' />
-            )}
-          </ItemMedia>
-          <ItemContent>
-            {eventIsLoading ? (
-              <>
-                <Skeleton className='h-4.75 w-1/2 max-w-60' />
-                <Skeleton className='h-5.25 w-1/4 max-w-40' />
-              </>
-            ) : (
-              <>
-                <ItemTitle className='line-clamp-1 text-left'>
-                  {event
-                    ? event.name
-                    : events?.length
-                      ? 'Selecciona un evento'
-                      : eventError
-                        ? 'No se pudo cargar el evento'
-                        : 'No se encontró ningún evento'}
-                </ItemTitle>
-                <ItemDescription className='line-clamp-1 text-left'>
-                  {event
-                    ? format(new Date(event.date), 'PP pp', {
-                        locale: es,
-                        in: tz('America/Lima'),
-                      })
-                    : events?.length
-                      ? 'Elige cuál evento vas a atender.'
-                      : eventError
-                        ? 'Vuelve a intentar cargar los eventos.'
-                        : 'No hay ningún evento programado para hoy.'}
-                </ItemDescription>
-              </>
-            )}
-          </ItemContent>
-          {event && canScanByTime && (
-            <ItemActions>
-              <Badge variant='default'>Evento del día</Badge>
-            </ItemActions>
-          )}
-        </Item>
+        {eventIsLoading && !events ? (
+          <Card size='sm' className='w-full'>
+            <CardHeader className='gap-2'>
+              <Skeleton className='h-5 w-1/2 max-w-80' />
+              <Skeleton className='h-5 w-1/3 max-w-60' />
+            </CardHeader>
+          </Card>
+        ) : event ? (
+          <EventSummaryCard
+            event={event}
+            action={canScanByTime ? <Badge>Evento del día</Badge> : undefined}
+          />
+        ) : eventError && !events ? (
+          <Empty
+            className='bg-muted/20 flex-row justify-start gap-3 border-solid p-4 text-left'
+            role='status'
+          >
+            <EmptyMedia
+              variant='icon'
+              className='text-muted-foreground mb-0 size-9'
+            >
+              <IconCalendarOff />
+            </EmptyMedia>
+            <EmptyHeader className='max-w-none flex-1 items-start gap-1'>
+              <EmptyTitle className='text-base'>
+                No se pudo cargar el evento
+              </EmptyTitle>
+              <EmptyDescription>
+                Revisa tu conexión e inténtalo nuevamente.
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent className='w-auto'>
+              <Button variant='outline' onClick={() => void refreshEvents()}>
+                Reintentar
+              </Button>
+            </EmptyContent>
+          </Empty>
+        ) : events?.length ? (
+          <Empty
+            className='bg-muted/20 flex-row justify-start gap-3 border-solid p-4 text-left'
+            role='status'
+          >
+            <EmptyMedia
+              variant='icon'
+              className='text-muted-foreground mb-0 size-9'
+            >
+              <IconCalendarOff />
+            </EmptyMedia>
+            <EmptyHeader className='max-w-none items-start gap-1'>
+              <EmptyTitle className='text-base'>
+                Selecciona un evento
+              </EmptyTitle>
+              <EmptyDescription>
+                Elige cuál evento vas a atender.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <Empty
+            className='bg-muted/20 flex-row justify-start gap-3 border-solid p-4 text-left'
+            role='status'
+          >
+            <EmptyMedia
+              variant='icon'
+              className='text-muted-foreground mb-0 size-9'
+            >
+              <IconCalendarOff />
+            </EmptyMedia>
+            <EmptyHeader className='max-w-none items-start gap-1'>
+              <EmptyTitle className='text-base'>No hay eventos hoy</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
+        )}
         {event && !canScanByTime && scanningOpensAt && (
           <p className='text-muted-foreground text-sm'>
             El escaneo estará disponible desde{' '}
