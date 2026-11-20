@@ -143,12 +143,8 @@
           "name": "attendance_records_user_id_users_id_fk",
           "tableFrom": "attendance_records",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -156,12 +152,8 @@
           "name": "attendance_records_event_id_events_id_fk",
           "tableFrom": "attendance_records",
           "tableTo": "events",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["event_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -169,12 +161,8 @@
           "name": "attendance_records_registered_by_users_id_fk",
           "tableFrom": "attendance_records",
           "tableTo": "users",
-          "columnsFrom": [
-            "registered_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["registered_by"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -268,12 +256,8 @@
           "name": "events_location_id_locations_id_fk",
           "tableFrom": "events",
           "tableTo": "locations",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["location_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -499,12 +483,8 @@
           "name": "sunday_masses_user_id_users_id_fk",
           "tableFrom": "sunday_masses",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -512,12 +492,8 @@
           "name": "sunday_masses_verified_by_users_id_fk",
           "tableFrom": "sunday_masses",
           "tableTo": "users",
-          "columnsFrom": [
-            "verified_by"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["verified_by"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -527,16 +503,12 @@
         "sunday_masses_evidence_file_key_unique": {
           "name": "sunday_masses_evidence_file_key_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "evidence_file_key"
-          ]
+          "columns": ["evidence_file_key"]
         },
         "sunday_masses_evidence_file_hash_unique": {
           "name": "sunday_masses_evidence_file_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "evidence_file_hash"
-          ]
+          "columns": ["evidence_file_hash"]
         }
       },
       "policies": {},
@@ -640,9 +612,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -654,11 +624,7 @@
     "public.attendance_record_method_enum": {
       "name": "attendance_record_method_enum",
       "schema": "public",
-      "values": [
-        "manual",
-        "qr",
-        "nfc"
-      ]
+      "values": ["manual", "qr", "nfc"]
     },
     "public.attendance_status_enum": {
       "name": "attendance_status_enum",
@@ -675,19 +641,12 @@
     "public.user_category_enum": {
       "name": "user_category_enum",
       "schema": "public",
-      "values": [
-        "student",
-        "alumni",
-        "teacher"
-      ]
+      "values": ["student", "alumni", "teacher"]
     },
     "public.user_role_enum": {
       "name": "user_role_enum",
       "schema": "public",
-      "values": [
-        "member",
-        "admin"
-      ]
+      "values": ["member", "admin"]
     },
     "public.user_schedule_enum": {
       "name": "user_schedule_enum",

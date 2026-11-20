@@ -63,37 +63,43 @@ export const sundayMassStatusEnum = pgEnum('sunday_mass_status_enum', [
 
 /* Tables */
 
-export const usersTable = pgTable('users', {
-  id: text().primaryKey(),
-  dni: text(),
-  firstName: text('first_name').notNull(),
-  lastName: text('last_name').notNull(),
-  email: text().notNull().unique(),
-  phoneNumber: text('phone_number').notNull(),
-  dateOfBirth: date('date_of_birth').notNull(),
-  category: userCategoryEnum().notNull(),
-  studentCode: text('student_code'),
-  role: text('role', {
-    enum: [
-      UserRole.MEMBER,
-      UserRole.ADMIN,
-      UserRole.SCANNER,
-      UserRole.TEACHER,
-      UserRole.COORDINATOR,
-      UserRole.MANAGER,
-    ],
-  })
-    .default(UserRole.MEMBER)
-    .notNull(),
-  schedule: userScheduleEnum().default(UserSchedule.FULL_TIME).notNull(),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-  updatedAt: timestamp('updated_at')
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
-}, (table) => [
-  uniqueIndex('unq_users_dni').on(table.dni).where(sql`${table.dni} IS NOT NULL`),
-])
+export const usersTable = pgTable(
+  'users',
+  {
+    id: text().primaryKey(),
+    dni: text(),
+    firstName: text('first_name').notNull(),
+    lastName: text('last_name').notNull(),
+    email: text().notNull().unique(),
+    phoneNumber: text('phone_number').notNull(),
+    dateOfBirth: date('date_of_birth').notNull(),
+    category: userCategoryEnum().notNull(),
+    studentCode: text('student_code'),
+    role: text('role', {
+      enum: [
+        UserRole.MEMBER,
+        UserRole.ADMIN,
+        UserRole.SCANNER,
+        UserRole.TEACHER,
+        UserRole.COORDINATOR,
+        UserRole.MANAGER,
+      ],
+    })
+      .default(UserRole.MEMBER)
+      .notNull(),
+    schedule: userScheduleEnum().default(UserSchedule.FULL_TIME).notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at')
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex('unq_users_dni')
+      .on(table.dni)
+      .where(sql`${table.dni} IS NOT NULL`),
+  ]
+)
 
 export const attendanceRecordsTable = pgTable(
   'attendance_records',
