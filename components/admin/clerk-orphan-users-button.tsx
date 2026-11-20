@@ -10,6 +10,8 @@ import {
 } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -25,6 +27,7 @@ type OrphanUser = {
   id: string
   firstName: string
   lastName: string
+  imageUrl: string
   email: string
 }
 
@@ -100,7 +103,6 @@ export function ClerkOrphanUsersButton() {
       } else {
         setError(message)
       }
-      toast.error(message)
     } finally {
       setPending(false)
     }
@@ -111,7 +113,7 @@ export function ClerkOrphanUsersButton() {
       <Button
         type='button'
         size='sm'
-        variant='outline'
+        variant='destructive-ghost'
         onClick={() => {
           setOpen(true)
           void loadUsers()
@@ -126,24 +128,30 @@ export function ClerkOrphanUsersButton() {
           if (!pending) setOpen(nextOpen)
         }}
       >
-        <DialogContent className='max-h-[85vh] overflow-y-auto text-left sm:max-w-2xl'>
+        <DialogContent
+          className='max-h-[85vh] gap-4 overflow-y-auto p-5 text-left sm:max-w-xl'
+          style={{ width: 'min(36rem, calc(100vw - 2rem))' }}
+        >
           <DialogHeader>
-            <DialogTitle>
-              Usuarios de Clerk sin registro en la base de datos
-            </DialogTitle>
+            <DialogTitle>Limpiar usuarios de Clerk</DialogTitle>
             <DialogDescription>
-              Se comparan los usuarios de Clerk con los perfiles de esta
-              aplicación. Solo se mostrarán cuentas cuyo ID no existe en la base
-              de datos.
+              Cuentas de Clerk sin perfil en la aplicación.
             </DialogDescription>
           </DialogHeader>
 
           <div className='flex items-center justify-between gap-3'>
-            <p className='text-muted-foreground text-sm' aria-live='polite'>
-              {loading
-                ? 'Consultando Clerk y la base de datos…'
-                : `${users.length} ${users.length === 1 ? 'usuario encontrado' : 'usuarios encontrados'}`}
-            </p>
+            <div aria-live='polite' aria-atomic='true'>
+              {loading ? (
+                <Badge variant='secondary' className='gap-1.5'>
+                  <IconLoader2 className='animate-spin' />
+                  Cargando
+                </Badge>
+              ) : users.length > 0 ? (
+                <Badge variant='secondary'>
+                  {users.length} {users.length === 1 ? 'cuenta' : 'cuentas'}
+                </Badge>
+              ) : null}
+            </div>
             <Button
               type='button'
               size='sm'
@@ -151,73 +159,91 @@ export function ClerkOrphanUsersButton() {
               onClick={() => void loadUsers()}
               disabled={loading || pending}
             >
-              {loading ? (
-                <IconLoader2 className='animate-spin' />
-              ) : (
-                <IconRefresh />
-              )}
+              <IconRefresh />
               Actualizar
             </Button>
           </div>
 
           {loading ? (
-            <div className='text-muted-foreground rounded-md border px-4 py-8 text-center text-sm'>
-              Cargando vista previa…
+            <div
+              aria-hidden='true'
+              className='max-h-64 space-y-2 overflow-y-auto'
+            >
+              <div className='flex items-center gap-3 rounded-lg px-3 py-2'>
+                <div className='bg-muted size-9 animate-pulse rounded-full' />
+                <div className='flex-1 space-y-2'>
+                  <div className='bg-muted h-3 w-1/2 animate-pulse rounded' />
+                  <div className='bg-muted h-3 w-2/3 animate-pulse rounded' />
+                </div>
+              </div>
             </div>
           ) : users.length ? (
-            <div className='max-h-64 overflow-auto rounded-md border'>
-              <table className='w-full text-sm'>
-                <thead className='bg-muted/60 sticky top-0 text-left'>
-                  <tr>
-                    <th className='px-3 py-2 font-medium'>Nombre</th>
-                    <th className='px-3 py-2 font-medium'>Correo</th>
-                    <th className='px-3 py-2 font-medium'>ID de Clerk</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map((user) => (
-                    <tr key={user.id} className='border-t'>
-                      <td className='px-3 py-2'>
-                        {[user.firstName, user.lastName]
-                          .filter(Boolean)
-                          .join(' ') || 'Sin nombre'}
-                      </td>
-                      <td className='px-3 py-2'>{user.email || '—'}</td>
-                      <td className='text-muted-foreground max-w-40 truncate px-3 py-2 font-mono text-xs'>
+            <div className='max-h-64 space-y-2 overflow-y-auto'>
+              {users.map((user) => {
+                const name = [user.firstName, user.lastName]
+                  .filter(Boolean)
+                  .join(' ')
+                const initials = [user.firstName, user.lastName]
+                  .filter(Boolean)
+                  .map((part) => part[0])
+                  .join('')
+                  .toUpperCase()
+
+                return (
+                  <div
+                    key={user.id}
+                    className='grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 rounded-lg border bg-card px-3 py-2'
+                  >
+                    <Avatar className='row-span-2 size-9'>
+                      <AvatarImage src={user.imageUrl} alt='' />
+                      <AvatarFallback className='text-xs font-medium'>
+                        {initials || '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className='flex min-w-0 items-center justify-between gap-3'>
+                      <p className='truncate text-sm font-medium'>
+                        {name || 'Sin nombre'}
+                      </p>
+                      <p
+                        className='text-muted-foreground max-w-40 shrink-0 truncate text-right font-mono text-xs'
+                        title={user.id}
+                      >
                         {user.id}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </p>
+                    </div>
+                    <p className='text-muted-foreground min-w-0 truncate text-sm'>
+                      {user.email || 'Sin correo'}
+                    </p>
+                  </div>
+                )
+              })}
             </div>
           ) : (
             <div className='text-muted-foreground rounded-md border px-4 py-8 text-center text-sm'>
-              No hay usuarios de Clerk sin perfil en la base de datos.
+              No hay cuentas para limpiar.
             </div>
           )}
 
           {users.length > 0 && !loading && (
-            <div className='border-destructive/30 bg-destructive/5 space-y-3 rounded-md border p-3'>
-              <div className='flex gap-2 text-sm'>
+            <div className='space-y-2'>
+              <div className='flex items-start gap-2'>
                 <IconAlertTriangle className='text-destructive mt-0.5 size-4 shrink-0' />
-                <p>
-                  La eliminación es permanente en Clerk. Escribe{' '}
-                  <strong>ELIMINAR</strong> para confirmar la limpieza de las{' '}
-                  {users.length} cuentas listadas.
+                <p className='text-sm leading-5'>
+                  <span className='font-medium'>Eliminación permanente.</span>{' '}
+                  Las cuentas listadas se borrarán de Clerk.
                 </p>
               </div>
-              <div className='space-y-2'>
-                <Label htmlFor='clerk-cleanup-confirmation'>Confirmación</Label>
-                <Input
-                  id='clerk-cleanup-confirmation'
-                  value={confirmation}
-                  onChange={(event) => setConfirmation(event.target.value)}
-                  placeholder='ELIMINAR'
-                  autoComplete='off'
-                  disabled={pending}
-                />
-              </div>
+              <Label htmlFor='clerk-cleanup-confirmation'>
+                Escribe ELIMINAR
+              </Label>
+              <Input
+                id='clerk-cleanup-confirmation'
+                value={confirmation}
+                onChange={(event) => setConfirmation(event.target.value)}
+                autoComplete='off'
+                spellCheck={false}
+                disabled={pending}
+              />
             </div>
           )}
 
@@ -248,7 +274,7 @@ export function ClerkOrphanUsersButton() {
                 ) : (
                   <IconTrash />
                 )}
-                {pending ? 'Eliminando…' : `Eliminar ${users.length} usuarios`}
+                {pending ? 'Eliminando…' : 'Eliminar cuentas'}
               </Button>
             )}
           </DialogFooter>

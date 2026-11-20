@@ -45,8 +45,8 @@ export default async function Page() {
         >
           <div className='flex items-center gap-2'>
             <RevalidateButton resource='users' />
-            {canGenerateFotochecks && <GenerateFotochecksButton />}
             {canCleanClerkUsers && <ClerkOrphanUsersButton />}
+            {canGenerateFotochecks && <GenerateFotochecksButton />}
           </div>
         </UsersTable>
       </Suspense>

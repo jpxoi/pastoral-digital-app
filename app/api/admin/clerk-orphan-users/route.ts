@@ -60,6 +60,7 @@ async function listOrphanUsers() {
       id: user.id,
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
+      imageUrl: user.imageUrl ?? '',
       email:
         user.emailAddresses.find(({ id }) => id === user.primaryEmailAddressId)
           ?.emailAddress ?? '',
