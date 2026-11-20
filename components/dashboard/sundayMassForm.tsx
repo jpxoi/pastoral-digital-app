@@ -3,7 +3,11 @@
 import imageCompression from 'browser-image-compression'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadDropzone } from '@/lib/uploadthing'
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
+import {
+  getMassRegistrationWindow,
+  MASS_REGISTRATION_CLOSED_MESSAGE,
+} from '@/lib/mass-registration'
 import { useForm } from 'react-hook-form'
 import heic2any from 'heic2any'
 import { z } from 'zod'
@@ -43,7 +47,17 @@ interface Evidence {
   ufsUrl: string
 }
 
-export default function SundayMassForm() {
+export default function SundayMassForm({ closesAt }: { closesAt: number }) {
+  const [isRegistrationClosed, setIsRegistrationClosed] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => setIsRegistrationClosed(true),
+      Math.max(0, closesAt - Date.now())
+    )
+    return () => clearTimeout(timeout)
+  }, [closesAt])
+
   const [isOptimizing, setIsOptimizing] = useState(false)
   const [isRemoving, setIsRemoving] = useState(false)
   const [optimizationProgress, setOptimizationProgress] = useState(0)
@@ -64,6 +78,11 @@ export default function SundayMassForm() {
   })
 
   const handleBeforeUploadBegin = async (files: File[]) => {
+    const window = getMassRegistrationWindow()
+    if (!window.isOpen || window.closesAt.getTime() !== closesAt) {
+      setIsRegistrationClosed(true)
+      return []
+    }
     let file = files[0]
 
     if (!file || !file.type.startsWith('image/')) {
@@ -124,7 +143,11 @@ export default function SundayMassForm() {
   }
 
   const handleOnUploadError = (error: string) => {
-    if (error.includes('FileSizeMismatch')) {
+    if (error.includes(MASS_REGISTRATION_CLOSED_MESSAGE)) {
+      setIsRegistrationClosed(true)
+    } else if (error.includes('Ya tienes un registro de misa')) {
+      setError(error)
+    } else if (error.includes('FileSizeMismatch')) {
       setError('El archivo excede el tamaño máximo permitido (4MB).')
     } else if (error.includes('Unauthorized')) {
       setError('No tienes permiso para subir este archivo.')
@@ -170,6 +193,11 @@ export default function SundayMassForm() {
   }
 
   const onSubmit = (data: z.infer<typeof NewSundayMassFormSchema>) => {
+    const window = getMassRegistrationWindow()
+    if (!window.isOpen || window.closesAt.getTime() !== closesAt) {
+      setIsRegistrationClosed(true)
+      return
+    }
     setSuccess(null)
     setError(null)
 
@@ -243,6 +271,13 @@ export default function SundayMassForm() {
     return 'Cargando...'
   }
 
+  if (isRegistrationClosed)
+    return (
+      <p role='status' className='text-muted-foreground text-sm'>
+        El plazo de registro ya terminó. {MASS_REGISTRATION_CLOSED_MESSAGE}
+      </p>
+    )
+
   return (
     <>
       {success ? (
@@ -314,12 +349,12 @@ export default function SundayMassForm() {
                     </div>
                   ) : (
                     <UploadDropzone
-                      endpoint='massEvidenceUploader'
+                      endpoint='sundayMassEvidenceUploader'
                       className='ut-button:bg-background ut-button:text-foreground ut-button:text-sm ut-button:border ut-button:border-border ut-button:border-solid ut-button:after:bg-primary ut-button:w-44'
                       disabled={isOptimizing}
                       onBeforeUploadBegin={handleBeforeUploadBegin}
                       onClientUploadComplete={handleOnClientUploadComplete}
-                      onUploadError={(e) => handleOnUploadError(e.toString())}
+                      onUploadError={(e) => handleOnUploadError(e.message)}
                       onUploadAborted={handleOnUploadAborted}
                       onChange={() => {
                         setError(null)
