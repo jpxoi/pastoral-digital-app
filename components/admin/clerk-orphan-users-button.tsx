@@ -46,11 +46,14 @@ export function ClerkOrphanUsersButton() {
         cache: 'no-store',
       })
       const result = await response.json()
-      if (!response.ok) throw new Error(result.error || 'No se pudo cargar la vista previa.')
+      if (!response.ok)
+        throw new Error(result.error || 'No se pudo cargar la vista previa.')
       setUsers(result.users)
     } catch (cause) {
       const message =
-        cause instanceof Error ? cause.message : 'No se pudo cargar la vista previa.'
+        cause instanceof Error
+          ? cause.message
+          : 'No se pudo cargar la vista previa.'
       setError(message)
     } finally {
       setLoading(false)
@@ -78,7 +81,9 @@ export function ClerkOrphanUsersButton() {
         }
         deletedIds.push(...result.deletedIds)
       }
-      setUsers((current) => current.filter(({ id }) => !deletedIds.includes(id)))
+      setUsers((current) =>
+        current.filter(({ id }) => !deletedIds.includes(id))
+      )
       setConfirmation('')
       toast.success(`Se eliminaron ${deletedIds.length} usuarios de Clerk.`)
       router.refresh()
@@ -86,7 +91,9 @@ export function ClerkOrphanUsersButton() {
       const message =
         cause instanceof Error ? cause.message : 'No se pudo limpiar Clerk.'
       if (deletedIds.length) {
-        setUsers((current) => current.filter(({ id }) => !deletedIds.includes(id)))
+        setUsers((current) =>
+          current.filter(({ id }) => !deletedIds.includes(id))
+        )
         setError(
           `Se eliminaron ${deletedIds.length} usuarios antes del error. ${message} Actualiza la vista previa para continuar.`
         )
@@ -121,11 +128,13 @@ export function ClerkOrphanUsersButton() {
       >
         <DialogContent className='max-h-[85vh] overflow-y-auto text-left sm:max-w-2xl'>
           <DialogHeader>
-            <DialogTitle>Usuarios de Clerk sin registro en la base de datos</DialogTitle>
+            <DialogTitle>
+              Usuarios de Clerk sin registro en la base de datos
+            </DialogTitle>
             <DialogDescription>
               Se comparan los usuarios de Clerk con los perfiles de esta
-              aplicación. Solo se mostrarán cuentas cuyo ID no existe en la
-              base de datos.
+              aplicación. Solo se mostrarán cuentas cuyo ID no existe en la base
+              de datos.
             </DialogDescription>
           </DialogHeader>
 
@@ -189,7 +198,7 @@ export function ClerkOrphanUsersButton() {
           )}
 
           {users.length > 0 && !loading && (
-            <div className='space-y-3 rounded-md border border-destructive/30 bg-destructive/5 p-3'>
+            <div className='border-destructive/30 bg-destructive/5 space-y-3 rounded-md border p-3'>
               <div className='flex gap-2 text-sm'>
                 <IconAlertTriangle className='text-destructive mt-0.5 size-4 shrink-0' />
                 <p>

@@ -16,10 +16,16 @@ const requestSchema = z
 async function authorize() {
   const { userId } = await auth()
   if (!userId) {
-    return NextResponse.json({ error: 'Inicia sesión para continuar.' }, { status: 401 })
+    return NextResponse.json(
+      { error: 'Inicia sesión para continuar.' },
+      { status: 401 }
+    )
   }
   if (!(await checkPermission(Permission.CLERK_ORPHAN_USERS_DELETE))) {
-    return NextResponse.json({ error: 'No tienes permiso para limpiar usuarios de Clerk.' }, { status: 403 })
+    return NextResponse.json(
+      { error: 'No tienes permiso para limpiar usuarios de Clerk.' },
+      { status: 403 }
+    )
   }
   return null
 }
@@ -52,9 +58,8 @@ async function listOrphanUsers() {
       firstName: user.firstName ?? '',
       lastName: user.lastName ?? '',
       email:
-        user.emailAddresses.find(
-          ({ id }) => id === user.primaryEmailAddressId
-        )?.emailAddress ?? '',
+        user.emailAddresses.find(({ id }) => id === user.primaryEmailAddressId)
+          ?.emailAddress ?? '',
     }))
 }
 
@@ -64,7 +69,10 @@ export async function GET() {
 
   try {
     const users = await listOrphanUsers()
-    return NextResponse.json({ users }, { headers: { 'Cache-Control': 'no-store' } })
+    return NextResponse.json(
+      { users },
+      { headers: { 'Cache-Control': 'no-store' } }
+    )
   } catch (error) {
     console.error('Could not list Clerk users missing from the database', error)
     return NextResponse.json(
@@ -80,13 +88,19 @@ export async function POST(request: Request) {
 
   const parsed = requestSchema.safeParse(await request.json().catch(() => null))
   if (!parsed.success) {
-    return NextResponse.json({ error: 'La solicitud no es válida.' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'La solicitud no es válida.' },
+      { status: 400 }
+    )
   }
 
   const requestedIds = [...new Set(parsed.data.userIds)]
   if (requestedIds.length !== parsed.data.userIds.length) {
     return NextResponse.json(
-      { error: 'La lista contiene usuarios repetidos. Actualiza la vista previa.' },
+      {
+        error:
+          'La lista contiene usuarios repetidos. Actualiza la vista previa.',
+      },
       { status: 400 }
     )
   }
