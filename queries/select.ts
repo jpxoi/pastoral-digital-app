@@ -1,3 +1,4 @@
+import { getPeruDateKey } from '@/lib/birthday'
 import { db } from '@/db/drizzle'
 import {
   attendanceRecordsTable,
@@ -78,21 +79,22 @@ export const getUserSchedule = async (userId: SelectUser['id']) => {
   return user
 }
 
-export const getUserBirthdays = unstable_cache(
-  async () => {
+const getUserBirthdaysForDate = unstable_cache(
+  async (peruDate: string) => {
     return db.query.usersTable.findMany({
+      columns: { id: true, firstName: true, lastName: true, dateOfBirth: true },
       where: sql`
       (
-        to_char(date_of_birth, 'MM-DD') BETWEEN 
-          to_char(current_date, 'MM-DD') AND 
-          to_char(current_date + interval '60 days', 'MM-DD')
+        to_char(date_of_birth, 'MM-DD') BETWEEN
+          to_char((${peruDate}::date), 'MM-DD') AND
+          to_char((${peruDate}::date) + interval '60 days', 'MM-DD')
       )
       OR
       (
-        to_char(current_date + interval '60 days', 'MM-DD') < to_char(current_date, 'MM-DD') AND
+        to_char((${peruDate}::date) + interval '60 days', 'MM-DD') < to_char((${peruDate}::date), 'MM-DD') AND
         (
-          to_char(date_of_birth, 'MM-DD') >= to_char(current_date, 'MM-DD') OR
-          to_char(date_of_birth, 'MM-DD') <= to_char(current_date + interval '60 days', 'MM-DD')
+          to_char(date_of_birth, 'MM-DD') >= to_char((${peruDate}::date), 'MM-DD') OR
+          to_char(date_of_birth, 'MM-DD') <= to_char((${peruDate}::date) + interval '60 days', 'MM-DD')
         )
       )
     `,
@@ -102,12 +104,15 @@ export const getUserBirthdays = unstable_cache(
       ],
     })
   },
-  ['getUserBirthdays'],
+  ['getUserBirthdaysPeru'],
   {
     revalidate: CACHE_DURATION.SIX_HOURS,
     tags: ['users'],
   }
 )
+
+export const getUserBirthdays = (now = new Date()) =>
+  getUserBirthdaysForDate(getPeruDateKey(now))
 
 export const getUserAttendanceStats = async (userId: SelectUser['id']) => {
   const [

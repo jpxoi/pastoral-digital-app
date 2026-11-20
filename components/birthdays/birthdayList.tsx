@@ -1,6 +1,4 @@
-'use client'
-
-import { useMemo } from 'react'
+import { TZDate } from '@date-fns/tz'
 import type { SelectUser } from '@/db/schema'
 import {
   Empty,
@@ -18,14 +16,14 @@ type BirthdayUser = Pick<
   'id' | 'firstName' | 'lastName' | 'dateOfBirth'
 >
 
-function getBirthdayGroup(dateOfBirth: string) {
-  const daysUntil = getDaysUntilBirthday(dateOfBirth)
+function getBirthdayGroup(dateOfBirth: string, now: Date) {
+  const daysUntil = getDaysUntilBirthday(dateOfBirth, now)
   if (daysUntil === 0) return 'today'
   if (daysUntil === 1) return 'tomorrow'
   if (daysUntil <= 7) return 'week'
 
-  const birthday = getThisYearBirthday(dateOfBirth)
-  const today = new Date()
+  const birthday = getThisYearBirthday(dateOfBirth, now)
+  const today = new TZDate(now.getTime(), 'America/Lima')
   if (
     birthday.getFullYear() === today.getFullYear() &&
     birthday.getMonth() === today.getMonth()
@@ -53,24 +51,29 @@ const groups = [
   { id: 'later', title: 'Más adelante' },
 ] as const
 
-export default function BirthdayList({ users }: { users: BirthdayUser[] }) {
-  const upcomingUsers = useMemo(
-    () =>
-      users
-        .map((user) => ({
-          user,
-          daysUntil: getDaysUntilBirthday(user.dateOfBirth),
-          group: getBirthdayGroup(user.dateOfBirth),
-        }))
-        .sort((a, b) => {
-          const dayDifference = a.daysUntil - b.daysUntil
-          if (dayDifference !== 0) return dayDifference
-          const nameA = `${a.user.firstName} ${a.user.lastName}`
-          const nameB = `${b.user.firstName} ${b.user.lastName}`
-          return nameA.localeCompare(nameB, 'es-PE')
-        }),
-    [users]
-  )
+export default function BirthdayList({
+  users,
+  now,
+}: {
+  users: BirthdayUser[]
+  now: Date
+}) {
+  const upcomingUsers = users
+    .map((user) => ({
+      user,
+      daysUntil: getDaysUntilBirthday(user.dateOfBirth, now),
+      group: getBirthdayGroup(user.dateOfBirth, now),
+    }))
+    .sort((a, b) => {
+      const difference = a.daysUntil - b.daysUntil
+      return (
+        difference ||
+        `${a.user.firstName} ${a.user.lastName}`.localeCompare(
+          `${b.user.firstName} ${b.user.lastName}`,
+          'es-PE'
+        )
+      )
+    })
 
   return (
     <div className='flex flex-col gap-5 text-left'>
@@ -116,6 +119,7 @@ export default function BirthdayList({ users }: { users: BirthdayUser[] }) {
                     firstName={user.firstName}
                     lastName={user.lastName}
                     dateOfBirth={user.dateOfBirth}
+                    now={now}
                   />
                 ))}
               </div>

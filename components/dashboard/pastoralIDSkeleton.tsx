@@ -1,23 +1,18 @@
-import { PastoralIdBackground } from './pastoralIdBackground'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function PastoralIDSkeleton() {
   return (
-    <div className='bg-card text-card-foreground relative isolate flex w-full min-w-0 flex-col gap-2 p-8 pb-2 sm:gap-4 sm:p-16 sm:pb-4'>
-      <PastoralIdBackground className='pointer-events-none absolute inset-0 -z-10 size-full' />
-      <div className='flex grow flex-col items-center justify-start gap-2'>
-        <div className='m-0 mx-auto flex aspect-square h-auto w-full flex-col items-center justify-center rounded-lg bg-white p-4 text-center sm:max-w-sm'>
-          <Skeleton className='aspect-square size-full' />
-        </div>
-        <div className='m-0 mx-auto flex h-auto w-full items-center justify-center rounded-lg bg-white p-0 sm:max-w-sm'>
-          <Skeleton className='h-5 w-full max-w-72' />
-        </div>
+    <div
+      className='flex w-full flex-col items-center bg-white px-6 pt-7 pb-16'
+      role='status'
+      aria-label='Cargando Pastoral ID'
+    >
+      <div className='flex flex-col items-center gap-1'>
+        <Skeleton className='h-6 w-60 max-w-full' />
+        <Skeleton className='h-5 w-36' />
       </div>
-
-      <div className='flex w-full flex-col items-center justify-center gap-1'>
-        <Skeleton className='mt-0.5 h-7 w-full max-w-64' />
-        <Skeleton className='mb-0.5 h-5 w-20' />
-      </div>
+      <Skeleton className='mt-4 aspect-square w-full max-w-72 rounded-lg' />
+      <Skeleton className='mt-2 h-[38px] w-28' />
     </div>
   )
 }

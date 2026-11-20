@@ -7,7 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
@@ -16,14 +15,22 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { IconCopy, IconPencil, IconQrcode } from '@tabler/icons-react'
 import { IconTrash } from '@tabler/icons-react'
 import { IconDots } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { UserRole, UserSchedule } from '@/types'
 import { SelectUser } from '@/db/schema'
-import PastoralIdQRCode from '../dashboard/pastoraldQrCode'
+import { PastoralIdCard } from '../dashboard/pastoral-id-card'
+import { useFotocheckDownload } from '@/components/fotochecks/generate-button'
+import { IconIdBadge2 } from '@tabler/icons-react'
 import { UserRoleFilterOptions, UserScheduleFilterOptions } from '@/lib/filter'
 import { setUserRole, setUserSchedule } from '@/actions/user'
 
@@ -68,6 +75,7 @@ export function AdminUserRowActions({
   row,
   canSetRole,
 }: DataTableRowActionsProps) {
+  const { download, pending } = useFotocheckDownload()
   return (
     <div className='flex gap-4' key={row.id}>
       <Dialog>
@@ -79,7 +87,6 @@ export function AdminUserRowActions({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Acciones</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() =>
                 navigator.clipboard
@@ -101,6 +108,13 @@ export function AdminUserRowActions({
                 Ver Pastoral ID
               </DropdownMenuItem>
             </DialogTrigger>
+
+            <DropdownMenuItem
+              disabled={pending}
+              onSelect={() => void download(row.original.id)}
+            >
+              <IconIdBadge2 /> Generar fotocheck
+            </DropdownMenuItem>
 
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
@@ -166,8 +180,17 @@ export function AdminUserRowActions({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <DialogContent>
-          <PastoralIdQRCode userId={row.original.id} />
+        <DialogContent className='max-h-[calc(100dvh-2rem)] gap-0 overflow-x-hidden overflow-y-auto border-none p-0 sm:max-w-sm'>
+          <DialogHeader className='border-b p-4 pr-12'>
+            <DialogTitle className='flex items-center gap-2'>
+              <IconQrcode /> Pastoral ID
+            </DialogTitle>
+          </DialogHeader>
+          <PastoralIdCard
+            userId={row.original.id}
+            name={`${row.original.firstName.trim().split(/\s+/)[0]} ${row.original.lastName}`}
+            schedule={row.original.schedule}
+          />
         </DialogContent>
       </Dialog>
     </div>

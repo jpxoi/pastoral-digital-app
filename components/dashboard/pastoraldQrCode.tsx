@@ -1,14 +1,18 @@
-import Image from 'next/image'
+import { QRCodeSVG } from 'qrcode.react'
+import { QR_BLUE } from '@/components/fotochecks/model'
 
 export default function PastoralIdQRCode({ userId }: { userId: string }) {
   return (
-    <Image
-      src={`https://quickchart.io/qr?text=${userId}&size=300&margin=2&dark=001944&ecLevel=L&format=svg`}
-      className='m-0 mx-auto h-auto w-full rounded-lg p-0 sm:max-w-sm'
-      width={300}
-      height={300}
-      unoptimized={true}
-      alt='Pastoral ID QR Code'
+    <QRCodeSVG
+      value={userId}
+      size={288}
+      level='M'
+      boostLevel={false}
+      marginSize={4}
+      fgColor={QR_BLUE}
+      bgColor='#ffffff'
+      title='Código QR de Pastoral ID'
+      className='mx-auto block h-auto w-full max-w-72 rounded-lg'
     />
   )
 }

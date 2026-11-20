@@ -2,61 +2,105 @@ import { AttendanceStatus, UserCategory, UserRole } from '@/types'
 import { isValidPhoneNumber } from 'libphonenumber-js'
 import { z } from 'zod'
 
-export const OnboardingFormSchema = z.object({
-  id: z.string().trim().nonempty('El ID es requerido para crear un usuario'),
-  dni: z
-    .string()
-    .trim()
-    .nonempty('El DNI es requerido para crear un usuario.')
-    .refine(
-      (val) => val.length === 8 && /^[0-9]+$/.test(val),
-      'El DNI proporcionado es inválido'
+const onboardingDateSchema = z
+  .string()
+  .regex(/^\d{2}\/\d{2}\/\d{4}$/, 'Ingresa tu fecha como DD/MM/AAAA.')
+  .refine((value) => {
+    const [day, month, year] = value.split('/').map(Number)
+    const date = new Date(year, month - 1, day)
+
+    return (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    )
+  }, 'Ingresa una fecha válida.')
+  .transform((value) => {
+    const [day, month, year] = value.split('/').map(Number)
+    return new Date(year, month - 1, day)
+  })
+
+export const OnboardingFormSchema = z
+  .object({
+    id: z.string().trim().nonempty('El ID es requerido para crear un usuario'),
+    dni: z
+      .string()
+      .trim()
+      .transform((value) => value || null),
+    firstName: z
+      .string()
+      .trim()
+      .nonempty('El nombre es requerido para crear un usuario.')
+      .transform((val) => val.trim()),
+    lastName: z
+      .string()
+      .trim()
+      .nonempty('El apellido es requerido para crear un usuario.')
+      .transform((val) => val.trim()),
+    email: z.string().email('Correo electrónico inválido'),
+    phoneNumber: z
+      .string()
+      .refine(isValidPhoneNumber, 'Número de teléfono inválido'),
+    dateOfBirth: onboardingDateSchema,
+    category: z.enum(
+      [UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER],
+      {
+        error: () => ({
+          message: 'Debes seleccionar tu vínculo con la institución',
+        }),
+      }
     ),
-  firstName: z
-    .string()
-    .trim()
-    .nonempty('El nombre es requerido para crear un usuario.')
-    .transform((val) => val.trim()),
-  lastName: z
-    .string()
-    .trim()
-    .nonempty('El apellido es requerido para crear un usuario.')
-    .transform((val) => val.trim()),
-  email: z.string().email('Correo electrónico inválido'),
-  phoneNumber: z
-    .string()
-    .refine(isValidPhoneNumber, 'Número de teléfono inválido'),
-  dateOfBirth: z
-    .date({
-      error: () => ({ message: 'La fecha de nacimiento es requerida' }),
-    })
-    .refine((val) => {
-      const today = new Date()
-      const minAge = new Date(
-        today.getFullYear() - 13,
-        today.getMonth(),
-        today.getDate()
-      )
-      return val < today && val <= minAge
-    }, 'Debes tener al menos 13 años de edad para registrarte'),
-  category: z.enum(
-    [UserCategory.STUDENT, UserCategory.ALUMNI, UserCategory.TEACHER],
-    {
-      error: () => ({
-        message: 'Debes seleccionar tu vínculo con la institución',
-      }),
+    studentCode: z.string().trim().optional(),
+    role: z.literal(UserRole.MEMBER).default(UserRole.MEMBER),
+  })
+  .superRefine((values, context) => {
+    if (values.dni && !/^\d{8}$/.test(values.dni)) {
+      context.addIssue({
+        code: 'custom',
+        path: ['dni'],
+        message: 'El DNI debe tener 8 dígitos.',
+      })
     }
-  ),
-  studentCode: z
-    .string()
-    .length(5, 'El código de estudiante debe tener 5 caracteres')
-    .optional()
-    .refine(
-      (code) => !code || /^[SP][156][A-H]\d{2}$/.test(code),
-      'El código de estudiante debe seguir el formato del colegio. (Ej. S5A01)'
-    ),
-  role: z.enum([UserRole.ADMIN, UserRole.MEMBER]),
-})
+
+    const studentCode = values.studentCode?.trim() ?? ''
+    if (
+      values.category === UserCategory.STUDENT &&
+      !/^[SP][156][A-H]\d{2}$/.test(studentCode)
+    ) {
+      context.addIssue({
+        code: 'custom',
+        path: ['studentCode'],
+        message: 'Usa el formato de código de estudiante, por ejemplo S5B01.',
+      })
+    }
+
+    const minimumAge = {
+      [UserCategory.STUDENT]: 13,
+      [UserCategory.ALUMNI]: 16,
+      [UserCategory.TEACHER]: 18,
+    }[values.category]
+    const today = new Date()
+    const earliestBirthDate = new Date(
+      today.getFullYear() - minimumAge,
+      today.getMonth(),
+      today.getDate()
+    )
+
+    if (values.dateOfBirth > earliestBirthDate) {
+      context.addIssue({
+        code: 'custom',
+        path: ['dateOfBirth'],
+        message: `Debes tener al menos ${minimumAge} años para registrarte como ${values.category === UserCategory.TEACHER ? 'docente' : values.category === UserCategory.ALUMNI ? 'exalumno' : 'alumno'}.`,
+      })
+    }
+  })
+  .transform((values) => ({
+    ...values,
+    studentCode:
+      values.category === UserCategory.STUDENT
+        ? values.studentCode?.trim() || null
+        : null,
+  }))
 
 export const NewAttendanceRecordFormSchema = z.object({
   userId: z.string().nonempty('El ID de usuario es requerido'),

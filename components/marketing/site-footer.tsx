@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LogoImageWide } from '@/components/shared/logoImage'
+import { PastoralSignature } from '@/components/shared/pastoral-signature'
 import { IconBrandInstagram } from '@tabler/icons-react'
 
 const product = [
@@ -18,8 +18,9 @@ export function SiteFooter() {
     <footer className='border-border bg-muted/40 border-t print:hidden'>
       <div className='mx-auto grid w-full max-w-6xl grid-cols-2 gap-8 px-4 py-12 md:px-6 lg:grid-cols-[2fr_1fr_1fr] lg:gap-10'>
         <div className='col-span-2 flex flex-col gap-3 lg:col-span-1'>
-          <LogoImageWide
+          <PastoralSignature
             variant='dark'
+            sizes='108px'
             className='h-9 w-auto self-start object-contain'
           />
           <p className='text-muted-foreground max-w-sm text-sm leading-relaxed'>

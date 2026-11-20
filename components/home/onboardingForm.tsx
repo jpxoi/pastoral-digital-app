@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { EmailInput } from '@/components/ui/email-input'
 import {
   Field,
@@ -33,7 +32,6 @@ import { UserCategory, UserRole } from '@/types'
 import { registerUser } from '@/actions/user'
 import { toast } from 'sonner'
 import { PhoneInput } from '../ui/phone-input'
-import { DatePicker } from '../ui/date-picker'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import {
   InputGroup,
@@ -50,23 +48,30 @@ import { useUser } from '@clerk/nextjs'
 const steps = [
   {
     title: 'Información Personal',
-    fields: ['dni', 'firstName', 'lastName'] as (keyof z.infer<
+    fields: ['dni', 'firstName', 'lastName'] as (keyof z.input<
       typeof OnboardingFormSchema
     >)[],
   },
   {
     title: 'Información de Contacto',
-    fields: ['email', 'phoneNumber', 'dateOfBirth'] as (keyof z.infer<
+    fields: ['email', 'phoneNumber', 'dateOfBirth'] as (keyof z.input<
       typeof OnboardingFormSchema
     >)[],
   },
   {
-    title: 'Información Academica',
-    fields: ['category', 'studentCode', 'role'] as (keyof z.infer<
+    title: 'Información Académica',
+    fields: ['category', 'studentCode'] as (keyof z.input<
       typeof OnboardingFormSchema
     >)[],
   },
 ]
+
+function formatDateInput(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 8)
+  if (digits.length <= 2) return digits
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
+}
 
 export default function OnboardingForm({
   userId,
@@ -82,16 +87,20 @@ export default function OnboardingForm({
   const progress = ((currentStep + 1) / steps.length) * 100
 
   const [allowCustomName, setAllowCustomName] = useState<boolean>(false)
+  const [isNoDni, setIsNoDni] = useState(false)
   const [isLookupPending, startLookupTransition] = useTransition()
   const [isLookupSuccess, setIsLookupSuccess] = useState<boolean>(false)
 
-  const [isConfirmed, setIsConfirmed] = useState<boolean>(false)
   const [isPending, startTransition] = useTransition()
 
   const { user } = useUser()
   const router = useRouter()
 
-  const form = useForm<z.infer<typeof OnboardingFormSchema>>({
+  const form = useForm<
+    z.input<typeof OnboardingFormSchema>,
+    unknown,
+    z.output<typeof OnboardingFormSchema>
+  >({
     resolver: zodResolver(OnboardingFormSchema),
     defaultValues: {
       id: userId,
@@ -100,7 +109,7 @@ export default function OnboardingForm({
       lastName: '',
       email: userEmail,
       phoneNumber: '',
-      dateOfBirth: undefined,
+      dateOfBirth: '',
       category: undefined,
       studentCode: undefined,
       role: UserRole.MEMBER,
@@ -108,7 +117,7 @@ export default function OnboardingForm({
     mode: 'onChange',
   })
 
-  const isDniValid = (dni: string) => dni.length === 8 && /^[0-9]+$/.test(dni)
+  const isDniValid = (dni: string) => dni.length === 8 && /^\d+$/.test(dni)
 
   const handleNextButton = async () => {
     const currentFields = steps[currentStep].fields
@@ -131,12 +140,20 @@ export default function OnboardingForm({
     if (!dni) return
 
     if (!isDniValid(dni)) {
-      toast.error('DNI inválido')
+      toast.error('Ingresa un DNI válido de 8 dígitos.')
       return
     }
 
     startLookupTransition(async () => {
-      const response = await lookupDni(dni)
+      let response: Awaited<ReturnType<typeof lookupDni>>
+      try {
+        response = await lookupDni(dni)
+      } catch {
+        response = {
+          success: false,
+          error: 'No se pudo consultar el DNI. Ingresa tus datos manualmente.',
+        }
+      }
 
       if (response.success && response.data) {
         form.setValue('firstName', response.data.firstName)
@@ -154,12 +171,39 @@ export default function OnboardingForm({
     })
   }
 
-  const handleNoDni = () => {
-    setAllowCustomName(true)
-    form.setValue('dni', '00000000')
+  const resetDniFlow = () => {
+    form.resetField('dni')
+    form.resetField('firstName')
+    form.resetField('lastName')
+    setAllowCustomName(false)
+    setIsNoDni(false)
+    setIsLookupSuccess(false)
+    setCurrentStep(0)
   }
 
-  const onSubmit = async (values: z.infer<typeof OnboardingFormSchema>) => {
+  const handleDniModeButton = () => {
+    if (isLookupSuccess) {
+      resetDniFlow()
+      return
+    }
+
+    if (isNoDni) {
+      form.resetField('dni')
+      form.resetField('firstName')
+      form.resetField('lastName')
+      setAllowCustomName(false)
+      setIsNoDni(false)
+      return
+    }
+
+    form.resetField('dni')
+    form.resetField('firstName')
+    form.resetField('lastName')
+    setAllowCustomName(true)
+    setIsNoDni(true)
+  }
+
+  const onSubmit = async (values: z.output<typeof OnboardingFormSchema>) => {
     startTransition(async () => {
       await registerUser(values)
         .then(async (data: { success?: string; error?: string }) => {
@@ -198,10 +242,15 @@ export default function OnboardingForm({
                       <InputGroupButton
                         variant='link'
                         size='xs'
-                        disabled={allowCustomName || isLookupSuccess}
-                        onClick={handleNoDni}
+                        className='h-auto px-0 text-xs'
+                        disabled={isLookupPending}
+                        onClick={handleDniModeButton}
                       >
-                        No tengo DNI
+                        {isLookupSuccess
+                          ? 'No son mis datos'
+                          : isNoDni
+                            ? 'Tengo DNI'
+                            : 'No tengo DNI'}
                       </InputGroupButton>
                     </div>
                     <InputGroup
@@ -213,14 +262,15 @@ export default function OnboardingForm({
                         aria-invalid={fieldState.invalid}
                         placeholder='Ingrese su número de DNI'
                         autoComplete='off'
-                        inputMode='tel'
+                        inputMode='numeric'
                         maxLength={8}
                         disabled={allowCustomName || isLookupSuccess}
                       />
-                      <InputGroupAddon align='inline-end'>
+                      <InputGroupAddon align='inline-end' className='shrink-0'>
                         <InputGroupButton
-                          variant='default'
-                          size='sm'
+                          variant='ghost'
+                          size='xs'
+                          className='text-primary h-7 rounded-sm px-2 text-xs'
                           disabled={
                             allowCustomName ||
                             isLookupSuccess ||
@@ -234,7 +284,7 @@ export default function OnboardingForm({
                           ) : (
                             <IconSearch />
                           )}
-                          {!isLookupPending && 'Buscar'}
+                          {isLookupPending ? 'Buscando...' : 'Buscar'}
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
@@ -267,8 +317,7 @@ export default function OnboardingForm({
                   />
                   {allowCustomName && !isLookupSuccess && (
                     <FieldDescription>
-                      Escribe tu nombre tal y como aparece en tu documento de
-                      identidad.
+                      Tal como figura en tu documento.
                     </FieldDescription>
                   )}
                   {fieldState.invalid && (
@@ -298,8 +347,7 @@ export default function OnboardingForm({
                   />
                   {allowCustomName && !isLookupSuccess && (
                     <FieldDescription>
-                      Escribe tus apellidos tal y como aparecen en tu documento
-                      de identidad.
+                      Tal como figura en tu documento.
                     </FieldDescription>
                   )}
                   {fieldState.invalid && (
@@ -376,14 +424,27 @@ export default function OnboardingForm({
                   >
                     Fecha de nacimiento
                   </FieldLabel>
-                  <DatePicker
-                    id='dateOfBirth'
-                    value={field.value}
-                    onChange={field.onChange}
-                    aria-invalid={fieldState.invalid}
-                    placeholder=''
-                    disabled={false}
-                  />
+                  <InputGroup>
+                    <InputGroupInput
+                      id='dateOfBirth'
+                      name={field.name}
+                      ref={field.ref}
+                      value={field.value}
+                      onBlur={field.onBlur}
+                      onChange={(event) =>
+                        field.onChange(formatDateInput(event.target.value))
+                      }
+                      aria-invalid={fieldState.invalid}
+                      placeholder='DD/MM/AAAA'
+                      inputMode='numeric'
+                      autoComplete='bday'
+                      maxLength={10}
+                    />
+                  </InputGroup>
+                  <FieldDescription>
+                    Escribe 8 dígitos; los separadores se agregan
+                    automáticamente.
+                  </FieldDescription>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -438,6 +499,10 @@ export default function OnboardingForm({
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
+                    <FieldDescription>
+                      Edad mínima: 13 años para alumno, 16 para exalumno y 18
+                      para docente.
+                    </FieldDescription>
                   </FieldSet>
                 )
               }}
@@ -455,9 +520,12 @@ export default function OnboardingForm({
                       {...field}
                       id='studentCode'
                       aria-invalid={fieldState.invalid}
-                      placeholder='Ingrese su código de estudiante'
+                      placeholder='Ej. S5B01'
                       autoComplete='off'
                     />
+                    <FieldDescription>
+                      Código de 5 caracteres, por ejemplo S5B01.
+                    </FieldDescription>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -465,23 +533,6 @@ export default function OnboardingForm({
                 )}
               />
             )}
-            <Field orientation='horizontal'>
-              <Checkbox
-                id='confirmationCheckbox'
-                checked={isConfirmed}
-                onCheckedChange={(checked) =>
-                  setIsConfirmed(checked as boolean)
-                }
-              />
-              <FieldContent>
-                <FieldLabel htmlFor='confirmationCheckbox'>
-                  Sacramento de la confirmación
-                </FieldLabel>
-                <FieldDescription>
-                  Doy fe de que he recibido el sacramento de la confirmación.
-                </FieldDescription>
-              </FieldContent>
-            </Field>
           </FieldGroup>
         )
       }
@@ -493,7 +544,7 @@ export default function OnboardingForm({
   }
 
   return (
-    <Card className='w-full max-w-md'>
+    <Card className='w-full max-w-lg shrink-0 rounded-2xl shadow-xl max-md:-mx-6 max-md:w-[calc(100%+3rem)] max-md:max-w-none max-md:rounded-none max-md:bg-transparent max-md:py-0 max-md:shadow-none max-md:ring-0'>
       <CardHeader className='space-y-4'>
         <div className='space-y-2'>
           <div className='flex items-center justify-between'>
@@ -509,7 +560,7 @@ export default function OnboardingForm({
         <form
           id='multi-form'
           onSubmit={form.handleSubmit(onSubmit)}
-          className='max-w-(--breakpoint-sm) space-y-4 text-left'
+          className='w-full space-y-4 text-left'
         >
           {renderCurrentStepContent()}
           <Field className='justify-between' orientation='horizontal'>
@@ -529,11 +580,7 @@ export default function OnboardingForm({
               </Button>
             )}
             {isLastStep && (
-              <Button
-                type='submit'
-                form='multi-form'
-                disabled={!isConfirmed || isPending}
-              >
+              <Button type='submit' form='multi-form' disabled={isPending}>
                 {isPending ? (
                   <IconLoader2 className='animate-spin' />
                 ) : (

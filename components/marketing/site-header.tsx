@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { LogoImageWide } from '@/components/shared/logoImage'
+import { PastoralSignature } from '@/components/shared/pastoral-signature'
 import { Button } from '@/components/ui/button'
 
 const nav = [
@@ -22,7 +22,11 @@ export function SiteHeader({
           aria-label='Pastoral Digital, ir al inicio'
           className='focus-visible:ring-ring rounded-sm focus-visible:ring-2 focus-visible:outline-none'
         >
-          <LogoImageWide variant='dark' className='h-8 w-auto object-contain' />
+          <PastoralSignature
+            variant='dark'
+            sizes='96px'
+            className='h-8 w-auto object-contain'
+          />
         </Link>
         {variant === 'marketing' ? (
           <nav

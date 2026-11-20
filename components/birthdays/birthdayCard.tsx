@@ -1,3 +1,4 @@
+import { TZDate } from '@date-fns/tz'
 import { Card, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { IconCake } from '@tabler/icons-react'
@@ -19,28 +20,33 @@ type BirthdayCardProps = {
   firstName: string
   lastName: string
   dateOfBirth: string
+  now: Date
 }
 
 export default function BirthdayCard({
   firstName,
   lastName,
   dateOfBirth,
+  now,
 }: BirthdayCardProps) {
-  const daysUntil = getDaysUntilBirthday(dateOfBirth)
+  const daysUntil = getDaysUntilBirthday(dateOfBirth, now)
   const isToday = daysUntil === 0
 
-  const birthday = getThisYearBirthday(dateOfBirth)
-  const relativeDate = getBirthdayRelativeDate(dateOfBirth)
+  const birthday = getThisYearBirthday(dateOfBirth, now)
+  const relativeDate = getBirthdayRelativeDate(dateOfBirth, now)
 
   const fullDate = birthday.toLocaleDateString('es-PE', {
+    timeZone: 'America/Lima',
     day: 'numeric',
     month: 'long',
     year: 'numeric',
   })
   const shortDate = birthday.toLocaleDateString('es-PE', {
+    timeZone: 'America/Lima',
     day: 'numeric',
     month: 'short',
-    ...(birthday.getFullYear() !== new Date().getFullYear()
+    ...(birthday.getFullYear() !==
+    new TZDate(now.getTime(), 'America/Lima').getFullYear()
       ? { year: 'numeric' as const }
       : {}),
   })
@@ -83,7 +89,9 @@ export default function BirthdayCard({
         </div>
         <p className='text-muted-foreground text-xs leading-normal'>
           Cumple{' '}
-          <span className='font-medium'>{getTurnsAge(dateOfBirth)} años</span>
+          <span className='font-medium'>
+            {getTurnsAge(dateOfBirth, now)} años
+          </span>
         </p>
       </CardHeader>
     </Card>

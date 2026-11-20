@@ -1,7 +1,7 @@
 'use server'
 
-const endpoint = 'https://api.yupay.dev'
-const token = process.env.YUPAY_API_KEY!
+const endpoint = 'https://api.json.pe/api/dni'
+const token = process.env.JSON_PE_API_KEY
 
 function toTitleCase(str: string): string {
   if (!str) return str
@@ -27,45 +27,67 @@ export async function lookupDni(dni: string) {
     }
   }
 
-  const response = await fetch(
-    `${endpoint}/v1/dni/${encodeURIComponent(dni)}`,
-    {
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ dni }),
+      cache: 'no-store',
+    })
+
+    if (!response.ok) {
+      return { success: false, error: 'No se pudo validar el DNI.' }
+    }
+
+    const responseBody = (await response.json()) as {
+      success?: boolean
+      data?: {
+        dni?: string
+        nombres?: string
+        apellidoPaterno?: string
+        apellidoMaterno?: string
+        nombreCompleto?: string
+      }
+    }
+    const data = responseBody.data
+
+    if (
+      responseBody.success === false ||
+      !data?.nombres?.trim() ||
+      !data.apellidoPaterno?.trim() ||
+      (data.dni && data.dni !== dni)
+    ) {
+      return {
+        success: false,
+        error: 'No encontramos datos suficientes para validar el DNI.',
+      }
+    }
+
+    const firstName = toTitleCase(data.nombres)
+    const firstLastName = toTitleCase(data.apellidoPaterno)
+    const secondLastName = toTitleCase(data.apellidoMaterno ?? '')
+    const fullName = toTitleCase(data.nombreCompleto ?? '')
+    const lastName = [firstLastName, secondLastName].filter(Boolean).join(' ')
+
+    return {
+      success: true,
+      data: {
+        firstName,
+        lastName,
+        firstLastName,
+        secondLastName,
+        fullName,
+        documentNumber: data.dni ?? dni,
       },
     }
-  )
-
-  if (!response.ok) {
+  } catch {
     return {
       success: false,
-      error: 'DNI no encontrado',
+      error:
+        'No se pudo consultar el DNI. Puedes ingresar tus datos manualmente.',
     }
-  }
-
-  const data = (await response.json()) as {
-    dni: string
-    nombres: string
-    apellidoPaterno: string
-    apellidoMaterno: string
-    nombreCompleto: string
-  }
-
-  const firstName = toTitleCase(data.nombres)
-  const firstLastName = toTitleCase(data.apellidoPaterno)
-  const secondLastName = toTitleCase(data.apellidoMaterno)
-  const fullName = toTitleCase(data.nombreCompleto)
-  const lastName = [firstLastName, secondLastName].filter(Boolean).join(' ')
-
-  return {
-    success: true,
-    data: {
-      firstName,
-      lastName,
-      firstLastName,
-      secondLastName,
-      fullName,
-      documentNumber: data.dni,
-    },
   }
 }

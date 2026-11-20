@@ -22,8 +22,8 @@ export default function PastoralIdDialog() {
           Mi Pastoral ID
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[calc(100dvh-2rem)] gap-0 overflow-x-hidden overflow-y-auto border-none p-0'>
-        <DialogHeader className='p-6 pr-12'>
+      <DialogContent className='max-h-[calc(100dvh-2rem)] gap-0 overflow-x-hidden overflow-y-auto border-none p-0 sm:max-w-sm'>
+        <DialogHeader className='border-b p-4 pr-12'>
           <DialogTitle className='flex items-center gap-2'>
             <IconQrcode size={24} />
             Mi Pastoral ID

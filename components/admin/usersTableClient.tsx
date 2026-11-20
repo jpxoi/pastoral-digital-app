@@ -2,7 +2,7 @@
 
 import { DataTable } from '@/components/ui/data-table'
 import { getAdminUserColumns } from '@/components/admin/adminUserColumns'
-import { SelectUser } from '@/db/schema'
+import type { SelectUser } from '@/db/schema'
 
 export default function UsersTableClient({
   canSetRole,
@@ -12,6 +12,10 @@ export default function UsersTableClient({
   userRecords: SelectUser[]
 }) {
   return (
-    <DataTable columns={getAdminUserColumns(canSetRole)} data={userRecords} />
+    <DataTable
+      columns={getAdminUserColumns(canSetRole)}
+      data={userRecords}
+      getRowId={(row) => row.id}
+    />
   )
 }

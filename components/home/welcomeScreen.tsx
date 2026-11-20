@@ -1,4 +1,4 @@
-import { LogoImageWide } from '@/components/shared/logoImage'
+import { PastoralSignature } from '@/components/shared/pastoral-signature'
 import LoginPrompt from '@/components/home/loginPrompt'
 import OfflineAlert from '@/components/shared/offlineAlert'
 
@@ -15,12 +15,14 @@ export default function WelcomeScreen() {
         </h1>
 
         <div className='space-y-6 p-4 pb-8 text-white sm:p-8 sm:text-black'>
-          <LogoImageWide
+          <PastoralSignature
             variant='light'
+            sizes='240px'
             className='mx-auto block max-w-60 sm:hidden'
           />
-          <LogoImageWide
+          <PastoralSignature
             variant='dark'
+            sizes='200px'
             className='mx-auto hidden max-w-50 sm:block'
           />
           <OfflineAlert />
