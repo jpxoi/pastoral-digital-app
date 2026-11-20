@@ -1,5 +1,20 @@
 'use server'
 
+import { auth } from '@clerk/nextjs/server'
+import { z } from 'zod'
+
+const dniDataSchema = z.object({
+  numero: z.string().regex(/^[0-9]{8}$/),
+  nombres: z.string().trim().min(1),
+  apellido_paterno: z.string().trim().min(1),
+  apellido_materno: z.string().trim().optional(),
+  nombre_completo: z.string().optional(),
+})
+const lookupResponseSchema = z.discriminatedUnion('success', [
+  z.object({ success: z.literal(true), data: dniDataSchema }),
+  z.object({ success: z.literal(false), message: z.string().optional() }),
+])
+
 const endpoint = 'https://api.json.pe/api/dni'
 const token = process.env.JSONPE_API_KEY
 
@@ -7,13 +22,18 @@ function toTitleCase(str: string): string {
   if (!str) return str
   return str
     .toLowerCase()
-    .split(' ')
+    .trim()
+    .split(/\s+/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 }
 
 export async function lookupDni(dni: string) {
-  if (dni.length !== 8 || !/^[0-9]+$/.test(dni)) {
+  const { userId } = await auth()
+  if (!userId)
+    return { success: false, error: 'Inicia sesión para consultar tu DNI.' }
+
+  if (typeof dni !== 'string' || !/^[0-9]{8}$/.test(dni)) {
     return {
       success: false,
       error: 'DNI inválido',
@@ -36,40 +56,37 @@ export async function lookupDni(dni: string) {
       },
       body: JSON.stringify({ dni }),
       cache: 'no-store',
+      signal: AbortSignal.timeout(15_000),
     })
 
-    if (!response.ok) {
-      return { success: false, error: 'No se pudo validar el DNI.' }
-    }
-
-    const responseBody = (await response.json()) as {
-      success?: boolean
-      data?: {
-        dni?: string
-        nombres?: string
-        apellidoPaterno?: string
-        apellidoMaterno?: string
-        nombreCompleto?: string
-      }
-    }
-    const data = responseBody.data
-
-    if (
-      responseBody.success === false ||
-      !data?.nombres?.trim() ||
-      !data.apellidoPaterno?.trim() ||
-      (data.dni && data.dni !== dni)
-    ) {
+    if (response.status === 404)
+      return { success: false, error: 'No se encontró el DNI consultado.' }
+    if (!response.ok)
       return {
         success: false,
-        error: 'No encontramos datos suficientes para validar el DNI.',
+        error:
+          'El servicio de consulta no está disponible. Inténtalo más tarde.',
       }
-    }
+
+    const parsed = lookupResponseSchema.safeParse(await response.json())
+    if (!parsed.success)
+      return {
+        success: false,
+        error: 'El servicio devolvió una respuesta inválida.',
+      }
+    if (!parsed.data.success)
+      return { success: false, error: 'No se pudo validar el DNI consultado.' }
+    const data = parsed.data.data
+    if (data.numero !== dni)
+      return {
+        success: false,
+        error: 'Los datos recibidos no corresponden al DNI consultado.',
+      }
 
     const firstName = toTitleCase(data.nombres)
-    const firstLastName = toTitleCase(data.apellidoPaterno)
-    const secondLastName = toTitleCase(data.apellidoMaterno ?? '')
-    const fullName = toTitleCase(data.nombreCompleto ?? '')
+    const firstLastName = toTitleCase(data.apellido_paterno)
+    const secondLastName = toTitleCase(data.apellido_materno ?? '')
+    const fullName = toTitleCase(data.nombre_completo ?? '')
     const lastName = [firstLastName, secondLastName].filter(Boolean).join(' ')
 
     return {
@@ -80,7 +97,7 @@ export async function lookupDni(dni: string) {
         firstLastName,
         secondLastName,
         fullName,
-        documentNumber: data.dni ?? dni,
+        documentNumber: data.numero,
       },
     }
   } catch {
