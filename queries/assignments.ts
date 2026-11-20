@@ -29,7 +29,7 @@ export async function getUserAssignments(userId: string) {
 
   return db.query.usersTable.findFirst({
     where: eq(usersTable.id, userId),
-    columns: { id: true },
+    columns: { id: true, firstName: true, lastName: true },
     with: { catechistAssignments: { with: assignmentRelations } },
   })
 }

@@ -1,22 +1,25 @@
+import { auth } from '@clerk/nextjs/server'
 import { PastoralIdCard } from './pastoral-id-card'
-import { currentUser } from '@clerk/nextjs/server'
 import PastoralIDSkeleton from './pastoralIDSkeleton'
 import { getUserAssignments } from '@/queries/assignments'
 
 export default async function PastoralId() {
-  const user = await currentUser()
+  const { userId } = await auth()
 
-  if (!user) {
+  if (!userId) {
     return <PastoralIDSkeleton />
   }
 
-  const assignmentUser = await getUserAssignments(user.id)
+  const assignmentUser = await getUserAssignments(userId)
 
   return (
     <PastoralIdCard
-      userId={user.id}
+      userId={userId}
       name={
-        [user.firstName?.trim().split(/\s+/)[0], user.lastName]
+        [
+          assignmentUser?.firstName?.trim().split(/\s+/)[0],
+          assignmentUser?.lastName,
+        ]
           .filter(Boolean)
           .join(' ') || 'Catequista'
       }
