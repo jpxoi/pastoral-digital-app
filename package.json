@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "typecheck": "next typegen && tsc --noEmit",
     "assets:logos": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/optimize-brand-logos.ts",
+    "assets:splash-screens": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-pwa-splash-screens.ts",
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",

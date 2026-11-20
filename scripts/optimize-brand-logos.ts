@@ -80,7 +80,9 @@ for (const logo of logos) {
 }
 for (const width of [24, 48, 72]) {
   for (const format of Object.keys(formatOptions)) {
-    await removeIfExists(path.join(outputDirectory, `app-icon-${width}.${format}`))
+    await removeIfExists(
+      path.join(outputDirectory, `app-icon-${width}.${format}`)
+    )
   }
 }
 

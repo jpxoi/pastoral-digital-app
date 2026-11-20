@@ -1,11 +1,9 @@
 import { Spinner } from '@/components/ui/spinner'
-import Background from '@/components/shared/background'
 
 export default function Loading() {
   return (
-    <main className='flex h-screen w-full flex-col items-center justify-center bg-center'>
-      <Background />
-      <Spinner className='size-10 text-white' />
+    <main className='flex w-full flex-col items-center justify-center bg-center max-md:h-full'>
+      <Spinner className='text-primary size-10 md:text-white' />
     </main>
   )
 }
