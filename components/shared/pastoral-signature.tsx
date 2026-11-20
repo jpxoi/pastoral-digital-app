@@ -80,7 +80,7 @@ export function PastoralAppMark({ className }: { className?: string }) {
   const widths = [96, 144] as const
 
   return (
-    <picture className='contents'>
+    <picture className={cn('block overflow-hidden', className)}>
       <source
         type='image/avif'
         srcSet={getDensitySourceSet(file, widths, 'avif', 24)}
@@ -96,7 +96,7 @@ export function PastoralAppMark({ className }: { className?: string }) {
         height={144}
         alt=''
         decoding='async'
-        className={cn('block h-auto', className)}
+        className='block size-full'
       />
     </picture>
   )

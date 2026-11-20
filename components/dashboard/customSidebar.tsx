@@ -143,14 +143,14 @@ export function CustomSidebar() {
       collapsible='icon'
       className='border-sidebar-border'
     >
-      <SidebarHeader className='items-center px-3 py-3 group-data-[collapsible=icon]:p-2'>
+      <SidebarHeader className='items-start px-3 pt-6 pb-2'>
         <Link
           href='/dashboard'
           aria-label='Pastoral Digital App'
-          className='flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-md px-2 py-1.5 text-left text-sm font-medium group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0'
+          className='flex gap-3 px-2 group-data-[collapsible=icon]:px-0 transition-all'
         >
-          <PastoralAppMark className='size-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white' />
-          <span className='truncate group-data-[collapsible=icon]:hidden'>
+          <PastoralAppMark className='size-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-white aspect-square' />
+          <span className='truncate font-semibold group-data-[collapsible=icon]:hidden'>
             Pastoral Digital App
           </span>
         </Link>
