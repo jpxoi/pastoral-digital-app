@@ -45,7 +45,8 @@ function MassReviewActions({ id }: { id: string }) {
     try {
       const result = await promise
       if ('error' in result) {
-        if ('code' in result && result.code === 'MASS_REVIEW_CONFLICT') router.refresh()
+        if ('code' in result && result.code === 'MASS_REVIEW_CONFLICT')
+          router.refresh()
         setPendingAction(null)
       }
     } catch {
