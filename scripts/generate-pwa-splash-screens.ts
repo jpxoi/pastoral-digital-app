@@ -153,7 +153,8 @@ function renderSvg(
     .map(({ d, fill }) => `<path d="${d}" fill="${fill}"/>`)
     .join('')
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${artwork.viewBox}" preserveAspectRatio="xMidYMid slice"><rect width="900" height="675" fill="${artwork.color}"/>${paths}</svg>`
+  // Keep the full wave composition stretched to each screen, as in the original assets.
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${artwork.viewBox}" preserveAspectRatio="none"><rect width="900" height="675" fill="${artwork.color}"/>${paths}</svg>`
 }
 
 async function writeSplash(
