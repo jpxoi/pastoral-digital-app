@@ -1,12 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import { IconCalendar } from '@tabler/icons-react'
-import { es } from 'date-fns/locale'
+import { subYears } from 'date-fns'
 
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import {
   Drawer,
   DrawerClose,
@@ -17,25 +17,16 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from '@/components/ui/input-group'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import { WheelPicker, WheelPickerWrapper } from '@/components/wheel-picker'
 
-type BirthDateInputProps = Omit<
+type BirthDateInputProps = Pick<
   React.ComponentProps<'input'>,
-  'value' | 'onChange' | 'type'
+  'id' | 'name' | 'disabled' | 'className' | 'aria-invalid' | 'aria-describedby'
 > & {
   value: string
   onChange: (value: string) => void
+  onBlur?: () => void
+  ref?: React.RefCallback<HTMLInputElement | HTMLButtonElement>
 }
 
 function parseDate(value: string) {
@@ -56,11 +47,7 @@ function formatDate(date: Date) {
   return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getFullYear()).padStart(4, '0')}`
 }
 
-function formatInput(value: string) {
-  // Browsers may supply an ISO date when autofilling a birthday.
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return value.split('-').reverse().join('/')
-  }
+function formatDateInput(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 8)
   if (digits.length < 2) return digits
   if (digits.length < 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
@@ -80,19 +67,25 @@ export function BirthDateInput({
   const labelId = React.useId()
   const today = new Date()
   today.setHours(0, 0, 0, 0)
+  const maxDate = subYears(today, 13)
   const selected = parseDate(value)
   const firstYear = Math.min(1900, selected?.getFullYear() ?? 1900)
-  const lastYear = today.getFullYear()
-  const lastMonth = draft.year === lastYear ? today.getMonth() + 1 : 12
+  const lastYear = maxDate.getFullYear()
+  const lastMonth = draft.year === lastYear ? maxDate.getMonth() + 1 : 12
   const lastDay = Math.min(
     new Date(draft.year, draft.month, 0).getDate(),
-    draft.year === lastYear && draft.month === lastMonth ? today.getDate() : 31
+    draft.year === lastYear && draft.month === lastMonth
+      ? maxDate.getDate()
+      : 31
   )
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
-      const initial =
-        selected && selected <= today ? selected : new Date(lastYear - 18, 0, 1)
+      const initial = selected
+        ? selected <= maxDate
+          ? selected
+          : maxDate
+        : new Date(today.getFullYear() - 18, 0, 1)
       setDraft({
         day: initial.getDate(),
         month: initial.getMonth() + 1,
@@ -107,33 +100,22 @@ export function BirthDateInput({
       const next = { ...previous, [part]: nextValue }
       next.month = Math.min(
         next.month,
-        next.year === lastYear ? today.getMonth() + 1 : 12
+        next.year === lastYear ? maxDate.getMonth() + 1 : 12
       )
       next.day = Math.min(
         next.day,
         new Date(next.year, next.month, 0).getDate(),
-        next.year === lastYear && next.month === today.getMonth() + 1
-          ? today.getDate()
+        next.year === lastYear && next.month === maxDate.getMonth() + 1
+          ? maxDate.getDate()
           : 31
       )
       return next
     })
   }
 
-  const trigger = (
-    <InputGroupButton
-      size='icon-sm'
-      disabled={disabled}
-      aria-label='Seleccionar fecha de nacimiento'
-      className='size-11 md:size-8'
-    >
-      <IconCalendar aria-hidden='true' />
-    </InputGroupButton>
-  )
-
-  const input = (button: React.ReactNode) => (
-    <InputGroup className='h-11 md:h-9'>
-      <InputGroupInput
+  if (!isMobile) {
+    return (
+      <Input
         {...props}
         value={value}
         disabled={disabled}
@@ -142,7 +124,7 @@ export function BirthDateInput({
         autoComplete='bday'
         placeholder='DD/MM/AAAA'
         maxLength={10}
-        className={`text-base md:text-sm ${className ?? ''}`}
+        className={className}
         onChange={(event) => {
           let next = event.target.value
           if (
@@ -152,44 +134,9 @@ export function BirthDateInput({
             next === value.slice(0, -1)
           )
             next = next.slice(0, -1)
-          onChange(formatInput(next))
+          onChange(formatDateInput(next))
         }}
       />
-      <InputGroupAddon align='inline-end'>{button}</InputGroupAddon>
-    </InputGroup>
-  )
-
-  if (!isMobile) {
-    return (
-      <Popover open={open} onOpenChange={handleOpenChange}>
-        {input(<PopoverTrigger asChild>{trigger}</PopoverTrigger>)}
-        <PopoverContent
-          align='end'
-          className='w-auto p-0'
-          collisionPadding={16}
-        >
-          <Calendar
-            locale={es}
-            mode='single'
-            captionLayout='dropdown'
-            startMonth={new Date(firstYear, 0)}
-            endMonth={today}
-            disabled={{ after: today }}
-            selected={selected}
-            defaultMonth={
-              selected && selected <= today
-                ? selected
-                : new Date(lastYear - 18, 0)
-            }
-            autoFocus
-            onSelect={(date) => {
-              if (!date) return
-              onChange(formatDate(date))
-              setOpen(false)
-            }}
-          />
-        </PopoverContent>
-      </Popover>
     )
   }
 
@@ -200,7 +147,22 @@ export function BirthDateInput({
       handleOnly
       repositionInputs={false}
     >
-      {input(<DrawerTrigger asChild>{trigger}</DrawerTrigger>)}
+      <DrawerTrigger asChild>
+        <Button
+          {...props}
+          type='button'
+          variant='outline'
+          disabled={disabled}
+          className={cn(
+            'h-9 w-full min-w-0 justify-start text-left font-normal',
+            className
+          )}
+        >
+          <span className={cn('truncate', !value && 'text-muted-foreground')}>
+            {value || 'DD/MM/AAAA'}
+          </span>
+        </Button>
+      </DrawerTrigger>
       <DrawerContent className='overflow-y-auto pb-[env(safe-area-inset-bottom)]'>
         <DrawerHeader>
           <DrawerTitle>Fecha de nacimiento</DrawerTitle>
