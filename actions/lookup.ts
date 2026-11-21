@@ -3,6 +3,9 @@
 import { auth } from '@clerk/nextjs/server'
 import { z } from 'zod'
 import { logger } from '@/lib/logger'
+import { db } from '@/db/drizzle'
+import { usersTable } from '@/db/schema'
+import { and, eq, ne } from 'drizzle-orm'
 
 const dniDataSchema = z.object({
   numero: z.string().regex(/^[0-9]{8}$/),
@@ -41,15 +44,29 @@ export async function lookupDni(dni: string) {
     }
   }
 
-  if (!token) {
-    logger.error('DNI lookup API key is not configured', { userId })
-    return {
-      success: false,
-      error: 'Token de API no configurado',
-    }
-  }
-
   try {
+    const existingUser = await db.query.usersTable.findFirst({
+      columns: { id: true },
+      where: and(eq(usersTable.dni, dni), ne(usersTable.id, userId)),
+    })
+
+    if (existingUser) {
+      return {
+        success: false,
+        code: 'DNI_IN_USE' as const,
+        error:
+          'No podemos continuar con este DNI. Si ya tienes una cuenta, inicia sesión con tu correo anterior o contacta con soporte.',
+      }
+    }
+
+    if (!token) {
+      logger.error('DNI lookup API key is not configured', { userId })
+      return {
+        success: false,
+        error: 'Token de API no configurado',
+      }
+    }
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {

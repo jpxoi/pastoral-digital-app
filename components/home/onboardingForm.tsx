@@ -195,6 +195,15 @@ export default function OnboardingForm({
         }
       }
 
+      if ('code' in response && response.code === 'DNI_IN_USE') {
+        form.setError('dni', { type: 'manual', message: response.error })
+        form.setValue('firstName', '')
+        form.setValue('lastName', '')
+        setAllowCustomName(false)
+        setIsLookupSuccess(false)
+        return
+      }
+
       if (response.success && response.data) {
         form.setValue('firstName', response.data.firstName)
         form.setValue('lastName', response.data.lastName)
