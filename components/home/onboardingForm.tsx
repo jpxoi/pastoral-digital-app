@@ -26,6 +26,7 @@ import {
   IconSearch,
 } from '@tabler/icons-react'
 import { Input } from '@/components/ui/input'
+import { BirthDateInput } from '@/components/ui/birth-date-input'
 import { useEffect, useState, useTransition } from 'react'
 import { normalizeStudentCode } from '@/lib/student-code'
 import { UserCategory, UserRole } from '@/types'
@@ -66,13 +67,6 @@ const steps = [
     >)[],
   },
 ]
-
-function formatDateInput(value: string) {
-  const digits = value.replace(/\D/g, '').slice(0, 8)
-  if (digits.length < 2) return digits
-  if (digits.length < 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`
-}
 
 function describeDateInput(value: string | undefined) {
   if (!value || !/^\d{2}\/\d{2}\/\d{4}$/.test(value)) return null
@@ -518,32 +512,19 @@ export default function OnboardingForm({
                   >
                     Fecha de nacimiento
                   </FieldLabel>
-                  <Input
+                  <BirthDateInput
                     {...field}
                     id='dateOfBirth'
-                    type='text'
-                    inputMode='numeric'
-                    placeholder='DD/MM/AAAA'
-                    maxLength={10}
-                    onChange={(event) => {
-                      let value = event.target.value
-                      const inputType = (event.nativeEvent as InputEvent)
-                        .inputType
-                      if (
-                        inputType === 'deleteContentBackward' &&
-                        field.value?.endsWith('/') &&
-                        value === field.value.slice(0, -1)
-                      ) {
-                        value = value.slice(0, -1)
-                      }
-                      field.onChange(formatDateInput(value))
-                    }}
                     aria-invalid={fieldState.invalid}
-                    autoComplete='bday'
-                    className='min-w-0'
+                    aria-describedby={
+                      describeDateInput(field.value)
+                        ? 'dateOfBirth-description'
+                        : undefined
+                    }
                   />
                   {describeDateInput(field.value) && (
                     <FieldDescription
+                      id='dateOfBirth-description'
                       aria-live='polite'
                       className='-mt-1! text-xs leading-snug'
                     >
