@@ -385,8 +385,7 @@ export default function OnboardingForm({
                       aria-invalid={fieldState.invalid}
                       placeholder='Ingrese sus nombres'
                       autoComplete='off'
-                      readOnly={isLookupSuccess}
-                      disabled={!allowCustomName && !isLookupSuccess}
+                      disabled={isLookupSuccess || !allowCustomName}
                     />
                     {isLookupSuccess && (
                       <InputGroupAddon align='inline-end'>
@@ -427,8 +426,7 @@ export default function OnboardingForm({
                       aria-invalid={fieldState.invalid}
                       placeholder='Ingrese sus dos apellidos'
                       autoComplete='off'
-                      readOnly={isLookupSuccess}
-                      disabled={!allowCustomName && !isLookupSuccess}
+                      disabled={isLookupSuccess || !allowCustomName}
                     />
                     {isLookupSuccess && (
                       <InputGroupAddon align='inline-end'>
