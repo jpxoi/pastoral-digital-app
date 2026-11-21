@@ -18,7 +18,8 @@
     "db:pull": "drizzle-kit pull",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "video:registro": "node scripts/pastoral-video/render.mjs"
   },
   "dependencies": {
     "@clerk/localizations": "^4.25.0",
