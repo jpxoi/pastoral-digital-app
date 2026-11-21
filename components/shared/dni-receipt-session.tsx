@@ -13,7 +13,8 @@ export default function DniReceiptSession() {
     try {
       const currentKey = userId ? `${DNI_STORAGE_PREFIX}${userId}` : null
       for (const key of Object.keys(sessionStorage)) {
-        if (key.startsWith(DNI_STORAGE_PREFIX) && key !== currentKey) sessionStorage.removeItem(key)
+        if (key.startsWith(DNI_STORAGE_PREFIX) && key !== currentKey)
+          sessionStorage.removeItem(key)
       }
     } catch {
       // Browser storage is optional.
