@@ -20,7 +20,17 @@ const toPeruDate = (value: string) => {
   const [year, month, day] = date.split('-').map(Number)
   const [hours, minutes] = time.split(':').map(Number)
 
-  return new TZDate(year, month - 1, day, hours, minutes, EVENT_TIME_ZONE)
+  const peruDate = new TZDate(
+    year,
+    month - 1,
+    day,
+    hours,
+    minutes,
+    EVENT_TIME_ZONE
+  )
+
+  // Drizzle must serialize UTC, not TZDate's local ISO string with an offset.
+  return new Date(peruDate.getTime())
 }
 
 export async function postNewEvent(formValues: unknown) {
