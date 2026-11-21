@@ -157,17 +157,14 @@ const localTimeSchema = z
   .string()
   .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Ingresa una hora válida.')
 
-export const NewEventFormSchema = z
+const EventScheduleSchema = z
   .object({
-    name: z.string().trim().min(1, 'El nombre del evento es obligatorio.'),
-    description: z.string().trim(),
     firstTurnDate: localDateSchema,
     firstTurnTime: localTimeSchema,
     secondTurnDate: z.union([z.literal(''), localDateSchema]),
     secondTurnTime: z.union([z.literal(''), localTimeSchema]),
     endDate: localDateSchema,
     endTime: localTimeSchema,
-    locationId: z.uuid('Selecciona una ubicación válida.'),
   })
   .superRefine((values, context) => {
     const hasSecondTurnDate = values.secondTurnDate.length > 0
@@ -208,3 +205,15 @@ export const NewEventFormSchema = z
       })
     }
   })
+
+export const NewEventFormSchema = EventScheduleSchema.safeExtend({
+  name: z.string().trim().min(1, 'El nombre del evento es obligatorio.'),
+  description: z.string().trim(),
+  locationId: z.uuid('Selecciona una ubicación válida.'),
+})
+
+export const UpdateEventFormSchema = EventScheduleSchema.safeExtend({
+  id: z.uuid(),
+  name: z.string().trim().min(1).max(200),
+  description: z.string().trim().max(5000),
+})
