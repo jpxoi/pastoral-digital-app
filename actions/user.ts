@@ -9,6 +9,8 @@ import { checkPermission } from '@/lib/roles'
 import { UserRole } from '@/types'
 import { getUserForRoleChange } from '@/queries/select'
 import { SelectUser } from '@/db/schema'
+import { DniReceiptError, verifyDniReceipt } from '@/lib/dni-receipt-server'
+import { DNI_IN_USE_MESSAGE } from '@/lib/dni-receipt'
 import { replaceUserAssignments } from '@/queries/assignments'
 import { handleDbError } from '@/lib/error'
 import { NeonDbError } from '@neondatabase/serverless'
@@ -19,26 +21,29 @@ import { updateUserRole } from '@/queries/update'
 import { hasRolePermission } from '@/lib/permissions'
 
 export const registerUser = async (
-  values: Omit<z.infer<typeof OnboardingFormSchema>, 'email'>
+  values: Omit<z.infer<typeof OnboardingFormSchema>, 'email'> & {
+    dniReceipt?: string | null
+  }
 ) => {
   const { userId } = await auth()
   if (!userId) return { error: 'No se encontró el usuario autenticado.' }
 
   const log = logger.with({ module: 'onboarding', userId })
   let email: string | undefined
+
   try {
     const account = await currentUser()
     email = account?.primaryEmailAddress?.emailAddress
   } catch (error) {
     log.error('Failed to fetch Clerk account during onboarding', { error })
-    return {
-      error: 'No se pudo completar el registro. Intenta nuevamente.',
-    }
+    return { error: 'No se pudo completar el registro. Intenta nuevamente.' }
   }
+
   if (!email) {
     log.error('Clerk account has no primary email during onboarding')
     return { error: 'No se pudo completar el registro. Intenta nuevamente.' }
   }
+
   const validatedFields = OnboardingFormSchema.safeParse({
     ...values,
     id: userId,
@@ -52,31 +57,58 @@ export const registerUser = async (
     }
   }
 
-  return await createUser({
+  let canonicalNames: { firstName: string; lastName: string } | undefined
+
+  try {
+    const dni = validatedFields.data.dni
+
+    if (dni) {
+      const data = await verifyDniReceipt(values.dniReceipt, userId, dni)
+
+      if (data.source === 'jsonpe')
+        canonicalNames = { firstName: data.firstName, lastName: data.lastName }
+    } else if (values.dniReceipt != null) {
+      throw new DniReceiptError('DNI_RECEIPT_INVALID')
+    }
+  } catch (error) {
+    if (error instanceof DniReceiptError)
+      return { error: error.message, code: error.code }
+    log.error('Failed to validate DNI registration', {
+      errorName: error instanceof Error ? error.name : 'UnknownError',
+    })
+    return { error: 'No se pudo validar tu DNI. Inténtalo nuevamente.' }
+  }
+
+  const userData = {
     ...validatedFields.data,
-    id: userId,
-    dateOfBirth: validatedFields.data.dateOfBirth,
-  })
+    ...canonicalNames,
+  }
+
+  return await createUser(userData)
     .then(async (savedUser) => {
       updateTag(cacheTags.usersList())
       const onboardingResult = await completeOnboarding(
-        validatedFields.data.firstName,
-        validatedFields.data.lastName,
+        userData.firstName,
+        userData.lastName,
         savedUser.role as UserRole
       )
 
-      if (onboardingResult.error) {
-        throw new Error(onboardingResult.error)
-      }
+      if (onboardingResult.error) throw new Error(onboardingResult.error)
 
-      if (onboardingResult.success) {
+      if (onboardingResult.success)
         return { success: 'Usuario registrado exitosamente' }
-      }
-
       return { error: 'Error al completar el registro del usuario' }
     })
     .catch((error) => {
       log.error('Failed to register user', { error })
+      const databaseError = error?.cause ?? error
+      if (
+        databaseError?.code === '23505' &&
+        (databaseError?.constraint_name === 'unq_users_dni' ||
+          databaseError?.constraint === 'unq_users_dni')
+      ) {
+        return { error: DNI_IN_USE_MESSAGE, code: 'DNI_IN_USE' as const }
+      }
       return { error: 'Error al registrar el usuario. Intenta nuevamente.' }
     })
 }
