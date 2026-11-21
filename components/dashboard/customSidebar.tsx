@@ -249,9 +249,12 @@ function SidebarUserButton({
 
   if (!isLoaded) {
     return (
-      <SidebarMenuButton size='lg'>
-        <Skeleton className='size-8 rounded-full' />
-        <Skeleton className='h-4 flex-1' />
+      <SidebarMenuButton
+        size='lg'
+        className='h-14 gap-3 px-3 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0!'
+      >
+        <Skeleton className='size-10 rounded-full group-data-[collapsible=icon]:size-8!' />
+        <Skeleton className='h-4 flex-1 group-data-[collapsible=icon]:hidden' />
       </SidebarMenuButton>
     )
   }
@@ -267,16 +270,16 @@ function SidebarUserButton({
         <SidebarMenuButton
           size='lg'
           tooltip={name}
-          className='hover:text-sidebar-foreground active:text-sidebar-foreground data-[state=open]:text-sidebar-foreground data-[state=open]:hover:text-sidebar-foreground hover:bg-white/10 active:bg-white/15 data-[state=open]:bg-white/10 data-[state=open]:hover:bg-white/10'
+          className='h-14 gap-3 px-3 text-base hover:bg-white/10 hover:text-sidebar-foreground active:bg-white/15 active:text-sidebar-foreground data-[state=open]:bg-white/10 data-[state=open]:text-sidebar-foreground data-[state=open]:hover:bg-white/10 data-[state=open]:hover:text-sidebar-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! [&>svg]:size-5'
         >
-          <Avatar className='size-8 rounded-full after:border-0'>
+          <Avatar className='size-10 rounded-full after:border-0 group-data-[collapsible=icon]:size-8!'>
             <AvatarImage src={user.imageUrl} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <span className='grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden'>
-            <span className='truncate text-sm font-medium'>{name}</span>
+            <span className='truncate text-base font-medium'>{name}</span>
           </span>
-          <IconDots className='ml-auto size-4 group-data-[collapsible=icon]:hidden' />
+          <IconDots className='ml-auto size-5 group-data-[collapsible=icon]:hidden' />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -286,17 +289,17 @@ function SidebarUserButton({
         align='end'
         side={isMobile ? 'bottom' : 'right'}
         sideOffset={8}
-        className='w-64 max-w-[calc(100vw-1rem)] min-w-0 text-left'
+        className='w-72 max-w-[calc(100vw-1rem)] min-w-0 text-left'
       >
         <DropdownMenuGroup>
-          <DropdownMenuLabel>
+          <DropdownMenuLabel className='p-3 text-sm font-normal text-foreground'>
             <div className='flex items-center gap-3 text-left'>
-              <Avatar className='size-9'>
+              <Avatar className='size-10'>
                 <AvatarImage src={user.imageUrl} alt={name} />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className='grid min-w-0 flex-1 leading-tight'>
-                <span className='truncate font-medium'>{name}</span>
+                <span className='truncate text-sm font-medium'>{name}</span>
                 <span className='text-muted-foreground truncate text-xs'>
                   {user.primaryEmailAddress?.emailAddress}
                 </span>
@@ -305,10 +308,14 @@ function SidebarUserButton({
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => openUserProfile()}>
+        <DropdownMenuItem
+          className='px-3 py-2'
+          onSelect={() => openUserProfile()}
+        >
           <IconSettings /> Administrar cuenta
         </DropdownMenuItem>
         <DropdownMenuItem
+          className='px-3 py-2'
           onSelect={() => {
             setOpenMobile(false)
             onOpenNotifications()
@@ -319,6 +326,7 @@ function SidebarUserButton({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant='destructive'
+          className='px-3 py-2'
           onSelect={() => {
             void (async () => {
               try {
