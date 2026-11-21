@@ -1,3 +1,4 @@
+import DniReceiptSession from '@/components/shared/dni-receipt-session'
 import { Suspense } from 'react'
 import { connection } from 'next/server'
 import Loading from './loading'
@@ -96,6 +97,7 @@ export default function RootLayout({
               <RequestContent>{children}</RequestContent>
             </Suspense>
           </TooltipProvider>
+          <DniReceiptSession />
         </ClerkProvider>
       </body>
     </html>

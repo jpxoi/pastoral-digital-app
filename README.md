@@ -100,12 +100,19 @@ NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/onboarding
 UPLOADTHING_TOKEN=<your-uploadthing-token>
 
 JSONPE_API_KEY=<your-json-pe-api-key>
+# Base64 de al menos 32 bytes aleatorios; solo servidor.
+ONBOARDING_DNI_SIGNING_SECRET=<your-dni-signing-secret>
 
 NEXT_PUBLIC_VAPID_PUBLIC_KEY=<your-vapid-public-key>
 VAPID_PRIVATE_KEY=<your-vapid-private-key>
 VAPID_SUBJECT=mailto:pastoral@ps.edu.pe
 CRON_SECRET=<token-aleatorio-de-256-bits>
 ```
+
+Genera `ONBOARDING_DNI_SIGNING_SECRET` con `openssl rand -base64 32` y
+configúralo también en el entorno de despliegue. No uses un prefijo
+`NEXT_PUBLIC_`. Los comprobantes de DNI duran 15 minutos y se verifican al
+registrar; cambiar el secreto invalida los comprobantes pendientes.
 
 #### Webhooks de Clerk
 
