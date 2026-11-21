@@ -1,6 +1,6 @@
 import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
-import { desc, eq, sql } from 'drizzle-orm'
+import { desc, eq, lt, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { db } from '@/db/drizzle'
 import { attendanceRecordsTable, eventsTable, usersTable } from '@/db/schema'
@@ -11,6 +11,8 @@ import {
 import { buildAttendanceReportFilename } from '@/lib/pdf-filenames'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
+import { getPeruDateKey } from '@/lib/birthday'
+import { getPeruDayRange } from '@/lib/peru-time'
 
 export async function GET() {
   const { userId } = await auth()
@@ -29,8 +31,10 @@ export async function GET() {
   }
 
   try {
+    const now = new Date()
+    const { end } = getPeruDayRange(getPeruDateKey(now))
     // Keep the last event of each day, matching the calendar's date-based cells.
-    const dateKey = sql<string>`to_char(${eventsTable.date}, 'YYYY-MM-DD')`
+    const dateKey = sql<string>`to_char(${eventsTable.date} AT TIME ZONE 'UTC' AT TIME ZONE 'America/Lima', 'YYYY-MM-DD')`
 
     const calendarEvents = db.$with('calendar_events').as(
       db
@@ -39,7 +43,7 @@ export async function GET() {
           dateKey: dateKey.as('date_key'),
         })
         .from(eventsTable)
-        .where(sql`${eventsTable.date}::date <= current_date`)
+        .where(lt(eventsTable.date, end))
         .orderBy(dateKey, desc(eventsTable.date), desc(eventsTable.id))
     )
 
@@ -102,7 +106,6 @@ export async function GET() {
       )
     }
 
-    const now = new Date()
     const generatedDate = new Intl.DateTimeFormat('es-PE', {
       timeZone: 'America/Lima',
       dateStyle: 'short',

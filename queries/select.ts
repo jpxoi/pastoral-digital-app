@@ -13,7 +13,7 @@ import { AttendanceStatus, SundayMassStatus } from '@/types'
 import { asc, count, desc, eq, gte, lt, sql } from 'drizzle-orm'
 import { cacheLife, cacheTag } from 'next/cache'
 import { cacheTags } from '@/lib/cache'
-import { TZDate } from '@date-fns/tz'
+import { getPeruDayRange } from '@/lib/peru-time'
 import { assignmentRelations } from '@/queries/assignments'
 
 /* UsersTable */
@@ -215,6 +215,7 @@ async function getAttendanceCalendarForDate(peruDate: string) {
   )
 
   try {
+    const { end } = getPeruDayRange(peruDate)
     // Get all data in a single query with proper joins
     const calendarData = await db
       .select({
@@ -231,12 +232,11 @@ async function getAttendanceCalendarForDate(peruDate: string) {
         attendanceRecordsTable,
         sql`${attendanceRecordsTable.userId} = ${usersTable.id} AND ${attendanceRecordsTable.eventId} = ${eventsTable.id}`
       )
-      .where(
-        sql`${eventsTable.date} IS NOT NULL AND ${eventsTable.date}::date <= ${peruDate}::date`
-      )
+      .where(lt(eventsTable.date, end))
       .orderBy(
         sql`${usersTable.firstName} || ' ' || ${usersTable.lastName}`,
-        eventsTable.date
+        eventsTable.date,
+        eventsTable.id
       )
 
     // Group the data by user
@@ -256,7 +256,7 @@ async function getAttendanceCalendarForDate(peruDate: string) {
       }
 
       if (record.eventDate) {
-        const dateKey = new Date(record.eventDate).toISOString().split('T')[0]
+        const dateKey = getPeruDateKey(record.eventDate)
         userMap.get(record.userId)![dateKey] = record.status || null
       }
     }
@@ -348,9 +348,10 @@ async function getUpcomingEventsForDate(peruDate: string) {
   'use cache'
   cacheLife('minutes')
   cacheTag(cacheTags.eventsList())
+  const { start } = getPeruDayRange(peruDate)
 
   return db.query.eventsTable.findMany({
-    where: sql`${eventsTable.date} >= ${peruDate}::date`,
+    where: gte(eventsTable.date, start),
     orderBy: (fields) => [fields.date],
     with: {
       location: true,
@@ -363,19 +364,11 @@ export const getUpcomingEvents = (now: Date) =>
   getUpcomingEventsForDate(getPeruDateKey(now))
 
 export const getTodayEvents = async (now = new Date()) => {
-  const peruNow = new TZDate(now.getTime(), 'America/Lima')
-  const startOfToday = new TZDate(
-    peruNow.getFullYear(),
-    peruNow.getMonth(),
-    peruNow.getDate(),
-    'America/Lima'
-  )
-  const startOfTomorrow = new TZDate(startOfToday)
-  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1)
+  const { start, end } = getPeruDayRange(getPeruDateKey(now))
 
   return db.query.eventsTable.findMany({
     where: (fields) =>
-      sql`${gte(fields.date, startOfToday)} AND ${lt(fields.date, startOfTomorrow)}`,
+      sql`${gte(fields.date, start)} AND ${lt(fields.date, end)}`,
     orderBy: (fields) => [asc(fields.date), asc(fields.id)],
     with: { location: true },
   })

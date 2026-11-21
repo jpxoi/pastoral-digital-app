@@ -14,7 +14,8 @@ import type { AssignmentInput } from '@/types/assignments'
 import { validateAssignments } from '@/lib/assignments'
 import { cacheLife, cacheTag } from 'next/cache'
 import { cacheTags } from '@/lib/cache'
-import { TZDate } from '@date-fns/tz'
+import { getPeruDateKey } from '@/lib/birthday'
+import { getPeruDayRange } from '@/lib/peru-time'
 import type { TurnAssignment } from '@/lib/assignments'
 
 export const assignmentRelations = {
@@ -62,15 +63,7 @@ async function queryAssignmentCatalog() {
 
 // Fresh context for QR registration: all decisions use the same database snapshot.
 export async function getQrAttendanceContext(eventId: string, userId: string) {
-  const now = new TZDate(new Date(), 'America/Lima')
-  const start = new TZDate(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    'America/Lima'
-  )
-  const end = new TZDate(start)
-  end.setDate(end.getDate() + 1)
+  const { start, end } = getPeruDayRange(getPeruDateKey())
 
   const [context] = await db
     .select({

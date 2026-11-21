@@ -113,6 +113,8 @@ export default function AttendanceCalendarClientTable({
                   className='bg-background sticky top-0 z-20 h-10 min-w-20 border-b px-3 text-center align-middle font-semibold whitespace-nowrap'
                 >
                   {new Date(dateKey).toLocaleDateString('es-PE', {
+                    // The key is already a Peruvian calendar date, not an instant.
+                    timeZone: 'UTC',
                     month: 'short',
                     day: 'numeric',
                   })}
