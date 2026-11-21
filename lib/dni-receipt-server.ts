@@ -48,7 +48,8 @@ export async function verifyDniReceipt(
   userId: string,
   dni: string
 ) {
-  if (typeof receipt !== 'string' || !receipt || receipt.length > 4096) throw new DniReceiptError('DNI_RECEIPT_INVALID')
+  if (typeof receipt !== 'string' || !receipt || receipt.length > 4096)
+    throw new DniReceiptError('DNI_RECEIPT_INVALID')
   // Configuration failures must not be mistaken for a bad client receipt.
   const key = signingKey()
   try {
