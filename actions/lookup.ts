@@ -6,6 +6,12 @@ import { logger } from '@/lib/logger'
 import { db } from '@/db/drizzle'
 import { usersTable } from '@/db/schema'
 import { and, eq, ne } from 'drizzle-orm'
+import { issueDniReceipt } from '@/lib/dni-receipt-server'
+import {
+  DNI_IN_USE_MESSAGE,
+  type DniLookupResult,
+  type DniReceiptData,
+} from '@/lib/dni-receipt'
 
 const dniDataSchema = z.object({
   numero: z.string().regex(/^[0-9]{8}$/),
@@ -32,7 +38,31 @@ function toTitleCase(str: string): string {
     .join(' ')
 }
 
-export async function lookupDni(dni: string) {
+async function manualResult(
+  userId: string,
+  dni: string,
+  reason: 'not_found' | 'unavailable',
+  context: { status?: number; cause?: 'timeout' | 'network' }
+): Promise<DniLookupResult> {
+  const data: DniReceiptData = { source: 'manual', dni, reason }
+  const receipt = await issueDniReceipt(userId, data)
+  logger.warn('DNI lookup enabled manual entry', {
+    userId,
+    reason,
+    ...context,
+  })
+  return {
+    success: true,
+    data,
+    receipt,
+    message:
+      reason === 'not_found'
+        ? 'No encontramos información para este DNI. Puedes ingresar tus nombres manualmente.'
+        : 'No pudimos consultar tu DNI en este momento. Puedes ingresar tus nombres manualmente.',
+  }
+}
+
+export async function lookupDni(dni: string): Promise<DniLookupResult> {
   const { userId } = await auth()
   if (!userId)
     return { success: false, error: 'Inicia sesión para consultar tu DNI.' }
@@ -54,8 +84,7 @@ export async function lookupDni(dni: string) {
       return {
         success: false,
         code: 'DNI_IN_USE' as const,
-        error:
-          'No podemos continuar con este DNI. Si ya tienes una cuenta, inicia sesión con tu correo anterior o contacta con soporte.',
+        error: DNI_IN_USE_MESSAGE,
       }
     }
 
@@ -67,19 +96,36 @@ export async function lookupDni(dni: string) {
       }
     }
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ dni }),
-      cache: 'no-store',
-      signal: AbortSignal.timeout(15_000),
-    })
+    let response: Response
+    try {
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ dni }),
+        cache: 'no-store',
+        signal: AbortSignal.timeout(15_000),
+      })
+    } catch (error) {
+      return await manualResult(userId, dni, 'unavailable', {
+        cause:
+          error instanceof Error && error.name === 'TimeoutError'
+            ? 'timeout'
+            : 'network',
+      })
+    }
 
     if (response.status === 404)
-      return { success: false, error: 'No se encontró el DNI consultado.' }
+      return await manualResult(userId, dni, 'not_found', {
+        status: response.status,
+      })
+    if (response.status === 429 || response.status >= 500)
+      return await manualResult(userId, dni, 'unavailable', {
+        status: response.status,
+      })
+
     if (!response.ok) {
       logger.error('DNI lookup service request failed', {
         userId,
@@ -87,8 +133,7 @@ export async function lookupDni(dni: string) {
       })
       return {
         success: false,
-        error:
-          'El servicio de consulta no está disponible. Inténtalo más tarde.',
+        error: 'No se pudo consultar tu DNI. Inténtalo nuevamente.',
       }
     }
 
@@ -113,22 +158,20 @@ export async function lookupDni(dni: string) {
       }
     }
 
-    const firstName = toTitleCase(data.nombres)
-    const firstLastName = toTitleCase(data.apellido_paterno)
-    const secondLastName = toTitleCase(data.apellido_materno ?? '')
-    const fullName = toTitleCase(data.nombre_completo ?? '')
-    const lastName = [firstLastName, secondLastName].filter(Boolean).join(' ')
+    const dataToSign: DniReceiptData = {
+      source: 'jsonpe',
+      dni: data.numero,
+      firstName: toTitleCase(data.nombres),
+      lastName: [data.apellido_paterno, data.apellido_materno ?? '']
+        .filter(Boolean)
+        .map(toTitleCase)
+        .join(' '),
+    }
 
     return {
       success: true,
-      data: {
-        firstName,
-        lastName,
-        firstLastName,
-        secondLastName,
-        fullName,
-        documentNumber: data.numero,
-      },
+      data: dataToSign,
+      receipt: await issueDniReceipt(userId, dataToSign),
     }
   } catch (error) {
     logger.error('DNI lookup failed', {
@@ -137,8 +180,7 @@ export async function lookupDni(dni: string) {
     })
     return {
       success: false,
-      error:
-        'No se pudo consultar el DNI. Puedes ingresar tus datos manualmente.',
+      error: 'No se pudo consultar tu DNI. Inténtalo nuevamente.',
     }
   }
 }
