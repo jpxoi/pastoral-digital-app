@@ -40,7 +40,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-import { AttendanceRecordMethod, AttendanceStatus } from '@/types'
+import { AttendanceRecordMethod } from '@/types'
+import { AttendanceStatusFilterOptions } from '@/lib/filter'
 import { useUser } from '@clerk/nextjs'
 import {
   Command,
@@ -254,9 +255,9 @@ export default function EventAddRecordButton({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.values(AttendanceStatus).map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {status}
+                      {AttendanceStatusFilterOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
                         </SelectItem>
                       ))}
                     </SelectContent>
