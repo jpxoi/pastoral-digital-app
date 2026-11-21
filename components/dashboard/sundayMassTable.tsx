@@ -6,8 +6,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { getSundayMassesRecordsByUserId } from '@/queries/select'
 import { PersonalRecordsTable } from './personal-records-table'
-import { SimpleDataTable } from '@/components/ui/simple-data-table'
-import { SundayMassColumns } from './sundayMassColumns'
+import PersonalRecordsPreview from './personal-records-preview'
 
 export default async function SundayMassTable({
   preview = true,
@@ -39,7 +38,7 @@ export default async function SundayMassTable({
     <DashboardSection title='Mis misas' href={preview ? '/masses' : undefined}>
       {massesRecords.length > 0 ? (
         preview ? (
-          <SimpleDataTable columns={SundayMassColumns} data={massesRecords} />
+          <PersonalRecordsPreview kind='masses' data={massesRecords} />
         ) : (
           <PersonalRecordsTable kind='masses' data={massesRecords} />
         )

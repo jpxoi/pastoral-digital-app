@@ -6,8 +6,7 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { getAttendanceRecordsByUserId } from '@/queries/select'
 import { PersonalRecordsTable } from './personal-records-table'
-import { SimpleDataTable } from '@/components/ui/simple-data-table'
-import { UserAttendanceColumns } from '@/components/dashboard/userAttendanceColumns'
+import PersonalRecordsPreview from './personal-records-preview'
 
 export default async function AttendanceTable({
   preview = true,
@@ -41,10 +40,7 @@ export default async function AttendanceTable({
     >
       {attendanceRecords.length > 0 ? (
         preview ? (
-          <SimpleDataTable
-            columns={UserAttendanceColumns}
-            data={attendanceRecords}
-          />
+          <PersonalRecordsPreview kind='attendance' data={attendanceRecords} />
         ) : (
           <PersonalRecordsTable kind='attendance' data={attendanceRecords} />
         )

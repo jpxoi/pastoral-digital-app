@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import BreadcrumbTrail from '@/components/shared/breadcrumbTrail'
 import PageHeader from '@/components/shared/pageHeader'
 import MassReviewClient from '@/components/admin/massReviewClient'
-import { Skeleton } from '@/components/ui/skeleton'
+import MassReviewSkeleton from '@/components/admin/massReviewSkeleton'
 import { requirePermission } from '@/lib/roles'
 import { getPendingMasses } from '@/queries/select'
 import { Permission } from '@/types/permissions'
@@ -30,18 +30,7 @@ export default async function Page() {
           />
         }
       />
-      <Suspense
-        fallback={
-          <div
-            role='status'
-            aria-label='Cargando misas pendientes'
-            className='space-y-4'
-          >
-            <Skeleton className='h-8 w-56' />
-            <Skeleton className='h-[65dvh] w-full rounded-xl' />
-          </div>
-        }
-      >
+      <Suspense fallback={<MassReviewSkeleton />}>
         <PendingMassReview />
       </Suspense>
     </>

@@ -152,11 +152,8 @@ export const getAdminUserColumns = (
 
       const Icon = roleIcons[role]
       return (
-        <Badge
-          variant={roleVariants[role]}
-          className='h-8 rounded-lg text-nowrap'
-        >
-          <Icon className='size-4' />
+        <Badge variant={roleVariants[role]}>
+          <Icon />
           {roleLabels[role]}
         </Badge>
       )

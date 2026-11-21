@@ -40,7 +40,7 @@ export default function Salutation() {
   const firstName = user?.firstName?.trim().split(/\s+/)[0]
 
   if (!isLoaded || !greeting) {
-    return <Skeleton className='h-9 w-80 max-w-full self-start' />
+    return <Skeleton className='h-7 w-80 max-w-full self-start sm:h-8' />
   }
 
   return (

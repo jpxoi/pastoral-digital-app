@@ -9,7 +9,7 @@ export default function DashboardLoading() {
     <div className='flex w-full flex-col gap-6'>
       <PageHeader />
       <div className='w-full pb-2'>
-        <Skeleton className='h-9 w-80 max-w-full' />
+        <Skeleton className='h-7 w-80 max-w-full sm:h-8' />
       </div>
       <div className='flex w-full flex-col gap-8'>
         <DashboardCardsSkeleton />

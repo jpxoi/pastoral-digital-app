@@ -9,20 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 
-import {
-  IconCalendar,
-  IconCalendarPlus,
-  IconClock,
-  IconMapPin,
-} from '@tabler/icons-react'
-import { EventCardAction } from './eventCardAction'
-import { Suspense } from 'react'
-import { Skeleton } from '../ui/skeleton'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { tz } from '@date-fns/tz'
+import { IconCalendarPlus, IconMapPin } from '@tabler/icons-react'
+import { EventDateTime } from './eventDateTime'
 
 export default function EventCard({ record }: { record: FetchEventProps }) {
   const isToday = isEventToday(new Date(record.date))
@@ -30,6 +20,19 @@ export default function EventCard({ record }: { record: FetchEventProps }) {
   const isHappeningNow =
     new Date(record.date) <= new Date() &&
     new Date(record.endDate) >= new Date()
+
+  const calendarParams = new URLSearchParams({
+    action: 'TEMPLATE',
+    dates: [record.date, record.endDate]
+      .map(
+        (date) =>
+          new Date(date).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+      )
+      .join('/'),
+    details: record.description ?? '',
+    location: record.location.name,
+    text: record.name,
+  })
 
   return (
     <Card
@@ -57,29 +60,7 @@ export default function EventCard({ record }: { record: FetchEventProps }) {
           </span>
         </div>
         <CardDescription className='flex flex-col gap-1 text-xs'>
-          <span className='flex items-center gap-2'>
-            <IconCalendar className='size-3.5 shrink-0' />
-            <span>
-              {format(record.date, 'PPP', {
-                locale: es,
-                in: tz('America/Lima'),
-              })}
-            </span>
-          </span>
-          <span className='flex items-center gap-2'>
-            <IconClock className='size-3.5 shrink-0' />
-            <span>
-              {format(record.date, 'p', {
-                locale: es,
-                in: tz('America/Lima'),
-              })}{' '}
-              -{' '}
-              {format(record.endDate, 'p', {
-                locale: es,
-                in: tz('America/Lima'),
-              })}
-            </span>
-          </span>
+          <EventDateTime date={record.date} endDate={record.endDate} />
           <a
             href={record.location.googleMapsUrl}
             target='_blank'
@@ -91,54 +72,21 @@ export default function EventCard({ record }: { record: FetchEventProps }) {
           </a>
         </CardDescription>
       </CardHeader>
-      <CardContent className='mt-auto flex flex-wrap items-center justify-between gap-2'>
-        <div className='flex items-center gap-1'>
-          <Button
-            asChild
-            variant='ghost'
-            className='hover:text-primary size-7 p-1 hover:bg-blue-50 [&_svg]:size-5'
+      <CardContent className='mt-auto items-start'>
+        <Button
+          asChild
+          variant='link'
+          className='text-primary h-7 gap-1.5 p-0 text-xs'
+        >
+          <a
+            href={`https://calendar.google.com/calendar/render?${calendarParams}`}
+            target='_blank'
+            rel='noopener noreferrer'
           >
-            <a
-              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${new Date(record.date).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}/${new Date(record.endDate).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'}&details=${record.description}&location=${record.location.name}&text=${record.name}`}
-              target='_blank'
-              rel='noreferrer'
-              className='text-muted-foreground'
-              aria-label='Añadir evento a Google Calendar'
-            >
-              <IconCalendarPlus className='size-5' />
-            </a>
-          </Button>
-        </div>
-        <div className='flex flex-wrap items-center gap-2'>
-          {!isHappeningNow && (
-            <a
-              href={new URL(
-                `https://wa.me/51936523900?text=Hola, me gustaría justificar mi inasistencia al evento ${record.name}, a realizarse el ${format(
-                  record.date,
-                  'PPP',
-                  {
-                    locale: es,
-                    in: tz('America/Lima'),
-                  }
-                )} a las ${format(record.date, 'p', {
-                  locale: es,
-                  in: tz('America/Lima'),
-                })}`
-              ).toString()}
-              target='_blank'
-              rel='noreferrer'
-              className={cn(
-                buttonVariants({ variant: 'link' }),
-                'text-primary h-7 px-1 text-xs'
-              )}
-            >
-              Justificar Inasistencia
-            </a>
-          )}
-          <Suspense fallback={<Skeleton className='h-6 w-28' />}>
-            <EventCardAction id={record.id} date={new Date(record.date)} />
-          </Suspense>
-        </div>
+            <IconCalendarPlus className='size-3.5' aria-hidden='true' />
+            Añadir al calendario
+          </a>
+        </Button>
       </CardContent>
     </Card>
   )

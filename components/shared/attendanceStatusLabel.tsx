@@ -16,33 +16,33 @@ export default function AttendanceStatusLabel({
 }) {
   const statusMapping: { [key: string]: JSX.Element } = {
     [AttendanceStatus.A_TIEMPO]: (
-      <Badge variant={'green'} className='h-8 rounded-lg'>
-        <IconClockCheck className='size-4' />
-        <span className='text-nowrap'>A TIEMPO</span>
+      <Badge variant={'green'}>
+        <IconClockCheck />
+        <span>A TIEMPO</span>
       </Badge>
     ),
     [AttendanceStatus.TARDANZA]: (
-      <Badge variant={'orange'} className='h-8 rounded-lg'>
-        <IconClockExclamation className='size-4' />
-        <span className='text-nowrap'>TARDANZA</span>
+      <Badge variant={'orange'}>
+        <IconClockExclamation />
+        <span>TARDANZA</span>
       </Badge>
     ),
     [AttendanceStatus.FALTA_INJUSTIFICADA]: (
-      <Badge variant={'red'} className='h-8 rounded-lg'>
-        <IconCalendarX className='size-4' />
-        <span className='text-nowrap'>FALTA NO JUSTIFICADA</span>
+      <Badge variant={'red'}>
+        <IconCalendarX />
+        <span>FALTA INJUSTIFICADA</span>
       </Badge>
     ),
     [AttendanceStatus.TARDANZA_JUSTIFICADA]: (
-      <Badge variant={'purple'} className='h-8 rounded-lg'>
-        <IconClockHeart className='size-4' />
-        <span className='text-nowrap'>TARDANZA JUSTIFICADA</span>
+      <Badge variant={'purple'}>
+        <IconClockHeart />
+        <span>TARDANZA JUSTIFICADA</span>
       </Badge>
     ),
     [AttendanceStatus.FALTA_JUSTIFICADA]: (
-      <Badge variant={'blue'} className='h-8 rounded-lg'>
-        <IconCalendarHeart className='size-4' />
-        <span className='text-nowrap'>FALTA JUSTIFICADA</span>
+      <Badge variant={'blue'}>
+        <IconCalendarHeart />
+        <span>FALTA JUSTIFICADA</span>
       </Badge>
     ),
   }

@@ -1,3 +1,4 @@
+import AdminEventsTableSkeleton from '@/components/admin/adminEventsTableSkeleton'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
 import { Skeleton } from '@/components/ui/skeleton'
 import PageHeader from '@/components/shared/pageHeader'
@@ -21,16 +22,10 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Eventos' />} />
-      <Suspense
-        fallback={
-          <p className='text-muted-foreground py-8 text-center text-sm'>
-            Cargando eventos…
-          </p>
-        }
-      >
+      <Suspense fallback={<AdminEventsTableSkeleton />}>
         <AdminEventsTable canEditEvents={canEditEvents}>
           {canCreateEvents && (
-            <Suspense fallback={<Skeleton className='h-9 w-36' />}>
+            <Suspense fallback={<Skeleton className='h-8 w-36' />}>
               <EventCreateAction />
             </Suspense>
           )}

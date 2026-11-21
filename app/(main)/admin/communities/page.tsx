@@ -1,3 +1,4 @@
+import CommunitiesTableSkeleton from '@/components/admin/communitiesTableSkeleton'
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { PageBreadcrumb } from '@/components/shared/breadcrumbTrail'
@@ -22,13 +23,7 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Comunidades' />} />
-      <Suspense
-        fallback={
-          <p className='text-muted-foreground py-8 text-center text-sm'>
-            Cargando comunidades…
-          </p>
-        }
-      >
+      <Suspense fallback={<CommunitiesTableSkeleton />}>
         <CommunitiesTable />
       </Suspense>
     </>

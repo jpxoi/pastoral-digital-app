@@ -6,10 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { IconCalendar, IconMapPin } from '@tabler/icons-react'
-import { format } from 'date-fns'
-import { es } from 'date-fns/locale'
-import { tz } from '@date-fns/tz'
+import { IconMapPin } from '@tabler/icons-react'
+import { EventDateTime } from './eventDateTime'
 import type { SelectEvent, SelectLocation } from '@/db/schema'
 
 type EventSummary = SelectEvent & {
@@ -31,25 +29,11 @@ export default function EventSummaryCard({
           {event.name}
         </CardTitle>
         <CardDescription className='flex flex-col gap-1 text-sm'>
-          <span className='flex items-center gap-2'>
-            <IconCalendar className='size-4 shrink-0' />
-            <span>
-              {format(new Date(event.date), 'PPP', {
-                locale: es,
-                in: tz('America/Lima'),
-              })}{' '}
-              ·{' '}
-              {format(new Date(event.date), 'p', {
-                locale: es,
-                in: tz('America/Lima'),
-              })}{' '}
-              -{' '}
-              {format(new Date(event.endDate), 'p', {
-                locale: es,
-                in: tz('America/Lima'),
-              })}
-            </span>
-          </span>
+          <EventDateTime
+            date={event.date}
+            endDate={event.endDate}
+            size='default'
+          />
           {event.location && (
             <a
               href={event.location.googleMapsUrl}

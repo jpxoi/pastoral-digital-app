@@ -124,7 +124,7 @@ export const AttendanceStatusFilterOptions = [
     icon: IconClockHeart,
   },
   {
-    label: 'FALTA NO JUSTIFICADA',
+    label: 'FALTA INJUSTIFICADA',
     value: AttendanceStatus.FALTA_INJUSTIFICADA,
     icon: IconCalendarX,
   },

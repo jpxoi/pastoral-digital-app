@@ -7,12 +7,13 @@ export default function PastoralIDSkeleton() {
       role='status'
       aria-label='Cargando Pastoral ID'
     >
-      <div className='flex flex-col items-center gap-1'>
+      <span className='sr-only'>Cargando Pastoral ID</span>
+      <div className='flex w-full flex-col items-center gap-1'>
         <Skeleton className='h-6 w-60 max-w-full' />
         <Skeleton className='h-5 w-36' />
       </div>
       <Skeleton className='mt-4 aspect-square w-full max-w-72 rounded-lg' />
-      <Skeleton className='mt-2 h-[38px] w-28' />
+      <Skeleton className='mt-2 h-9.5 w-28' />
     </div>
   )
 }

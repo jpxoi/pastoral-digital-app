@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/form'
 import { addDays, format, parseISO, startOfDay, subDays } from 'date-fns'
 import { DatePicker } from '@/components/ui/date-picker'
+import { TimePicker } from '@/components/ui/time-picker'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -203,11 +204,7 @@ export default function EventCreateDialogButton({
                             Hora del primer turno
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              type='time'
-                              className='max-w-full min-w-0'
-                              {...field}
-                            />
+                            <TimePicker {...field} minuteStep={15} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -279,11 +276,7 @@ export default function EventCreateDialogButton({
                             Hora del segundo turno
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              type='time'
-                              className='max-w-full min-w-0'
-                              {...field}
-                            />
+                            <TimePicker {...field} minuteStep={15} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -332,11 +325,7 @@ export default function EventCreateDialogButton({
                             Hora de fin del evento
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              type='time'
-                              className='max-w-full min-w-0'
-                              {...field}
-                            />
+                            <TimePicker {...field} minuteStep={15} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

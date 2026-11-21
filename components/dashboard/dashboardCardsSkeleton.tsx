@@ -8,6 +8,7 @@ export default function DashboardCardsSkeleton() {
       aria-label='Cargando resumen'
       role='status'
     >
+      <span className='sr-only'>Cargando resumen</span>
       {[
         'border-emerald-200/70 bg-emerald-50',
         'border-amber-200/70 bg-amber-50',
@@ -17,14 +18,15 @@ export default function DashboardCardsSkeleton() {
         <Item
           key={surface}
           variant='outline'
-          className={`px-3 py-4 sm:px-5 ${surface}`}
+          aria-hidden='true'
+          className={`min-w-0 px-3 py-4 sm:px-5 ${surface}`}
         >
           <ItemContent className='min-w-0 gap-3'>
-            <div className='flex h-[17.5px] items-center gap-2'>
+            <div className='flex h-5 items-center gap-2'>
               <Skeleton className='size-4 shrink-0' />
-              <Skeleton className='h-4 w-24 max-w-full' />
+              <Skeleton className='h-3 w-24 min-w-0 sm:h-4' />
             </div>
-            <Skeleton className='h-[30px] w-12' />
+            <Skeleton className='h-7.5 w-12' />
           </ItemContent>
         </Item>
       ))}

@@ -1,15 +1,5 @@
-import { AdminEventBreadcrumb } from '@/components/shared/breadcrumbTrail'
-import PageHeader from '@/components/shared/pageHeader'
-import { Empty } from '@/components/ui/empty'
-import { Spinner } from '@/components/ui/spinner'
+import EventDetailsSkeleton from '@/components/events/eventDetailsSkeleton'
 
 export default function Loading() {
-  return (
-    <>
-      <PageHeader breadcrumb={<AdminEventBreadcrumb label='Cargando…' />} />
-      <Empty>
-        <Spinner className='size-10' />
-      </Empty>
-    </>
-  )
+  return <EventDetailsSkeleton />
 }

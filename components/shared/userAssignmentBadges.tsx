@@ -39,12 +39,8 @@ export default function UserAssignmentBadges({
         const Icon = style.icon
 
         return (
-          <Badge
-            key={assignment.id}
-            variant={style.variant}
-            className='h-8 rounded-lg text-nowrap'
-          >
-            <Icon className='size-4' />
+          <Badge key={assignment.id} variant={style.variant}>
+            <Icon />
             {getAssignmentLabel(assignment)}
           </Badge>
         )

@@ -10,21 +10,21 @@ export default function UserCategoryLabel({
 }) {
   const categoryMapping: { [key: string]: JSX.Element } = {
     student: (
-      <Badge variant={'sky'} className='h-8 rounded-lg'>
-        <IconBackpack className='size-4' />
-        <span className='text-nowrap'>Alumno</span>
+      <Badge variant={'sky'}>
+        <IconBackpack />
+        <span>Alumno</span>
       </Badge>
     ),
     alumni: (
-      <Badge variant={'emerald'} className='h-8 rounded-lg'>
-        <IconSchoolOff className='size-4' />
-        <span className='text-nowrap'>Exalumno</span>
+      <Badge variant={'emerald'}>
+        <IconSchoolOff />
+        <span>Exalumno</span>
       </Badge>
     ),
     teacher: (
-      <Badge variant={'violet'} className='h-8 rounded-lg'>
-        <IconSchool className='size-4' />
-        <span className='text-nowrap'>Docente</span>
+      <Badge variant={'violet'}>
+        <IconSchool />
+        <span>Docente</span>
       </Badge>
     ),
   }

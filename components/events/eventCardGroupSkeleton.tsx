@@ -6,7 +6,12 @@ export default function EventCardGroupSkeleton({
   count?: number
 }) {
   return (
-    <div className='flex flex-col gap-2 lg:grid lg:grid-cols-2 xl:grid-cols-3'>
+    <div
+      className='flex flex-col gap-2 lg:grid lg:grid-cols-2 xl:grid-cols-3'
+      role='status'
+      aria-label='Cargando eventos'
+    >
+      <span className='sr-only'>Cargando eventos</span>
       {Array.from({ length: count }).map((_, i) => (
         <EventCardSkeleton key={i} />
       ))}
