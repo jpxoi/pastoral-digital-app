@@ -301,7 +301,6 @@ export default function OnboardingForm({
         form.setValue('lastName', response.data.lastName)
         setAllowCustomName(false)
         setIsLookupSuccess(true)
-        toast.success('DNI encontrado, se han autocompletado los campos.')
       } else {
         setIsLookupSuccess(false)
         setAllowCustomName(true)
@@ -500,16 +499,27 @@ export default function OnboardingForm({
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
-                    {dniLookupMessage && (
+                    {(isLookupSuccess || dniLookupMessage) && (
                       <div
                         role='status'
-                        className='flex items-start gap-2 text-sm text-amber-800'
+                        className={`flex items-start gap-2 text-sm ${isLookupSuccess ? 'text-emerald-700' : 'text-amber-800'}`}
                       >
-                        <IconAlertTriangle
-                          aria-hidden='true'
-                          className='mt-0.5 size-4 shrink-0'
-                        />
-                        <p>{dniLookupMessage}</p>
+                        {isLookupSuccess ? (
+                          <IconCircleCheck
+                            aria-hidden='true'
+                            className='mt-0.5 size-4 shrink-0'
+                          />
+                        ) : (
+                          <IconAlertTriangle
+                            aria-hidden='true'
+                            className='mt-0.5 size-4 shrink-0'
+                          />
+                        )}
+                        <p>
+                          {isLookupSuccess
+                            ? 'Datos del DNI cargados correctamente.'
+                            : dniLookupMessage}
+                        </p>
                       </div>
                     )}
                     {fieldState.invalid && (
