@@ -24,6 +24,7 @@ import {
   FieldLegend,
 } from '@/components/ui/field'
 import {
+  IconAlertTriangle,
   IconCircleCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -119,6 +120,7 @@ export default function OnboardingForm({
   const [isNoDni, setIsNoDni] = useState(false)
   const [isLookupPending, startLookupTransition] = useTransition()
   const [isLookupSuccess, setIsLookupSuccess] = useState<boolean>(false)
+  const [dniLookupMessage, setDniLookupMessage] = useState<string | null>(null)
 
   const [isPending, startRegistrationTransition] = useTransition()
   const [dniReceipt, setDniReceipt] = useState<string | null>(null)
@@ -161,6 +163,7 @@ export default function OnboardingForm({
   }, [currentStep, errorFieldToFocus, form])
 
   function saveReceipt(receipt: string | null) {
+    setDniLookupMessage(null)
     setDniReceipt(receipt)
     storeDniReceipt(userId, receipt)
   }
@@ -272,6 +275,7 @@ export default function OnboardingForm({
     }
 
     form.clearErrors('dni')
+    setDniLookupMessage(null)
     startLookupTransition(async () => {
       let response: Awaited<ReturnType<typeof lookupDni>>
       try {
@@ -288,7 +292,6 @@ export default function OnboardingForm({
       if (!response.success) {
         if (response.code === 'DNI_IN_USE') invalidateReceipt()
         form.setError('dni', { type: 'manual', message: response.error })
-        toast.error(response.error)
         return
       }
 
@@ -302,8 +305,10 @@ export default function OnboardingForm({
       } else {
         setIsLookupSuccess(false)
         setAllowCustomName(true)
-        toast.error(
-          response.message ?? 'Puedes ingresar tus nombres manualmente.'
+        setDniLookupMessage(
+          response.data.reason === 'not_found'
+            ? 'No encontramos información para este DNI. Ingresa tus nombres y apellidos manualmente.'
+            : 'No pudimos consultar tu DNI. Ingresa tus nombres y apellidos manualmente.'
         )
       }
     })
@@ -495,6 +500,18 @@ export default function OnboardingForm({
                         </InputGroupButton>
                       </InputGroupAddon>
                     </InputGroup>
+                    {dniLookupMessage && (
+                      <div
+                        role='status'
+                        className='flex items-start gap-2 text-sm text-amber-800'
+                      >
+                        <IconAlertTriangle
+                          aria-hidden='true'
+                          className='mt-0.5 size-4 shrink-0'
+                        />
+                        <p>{dniLookupMessage}</p>
+                      </div>
+                    )}
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
