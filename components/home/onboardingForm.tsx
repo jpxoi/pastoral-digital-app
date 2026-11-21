@@ -27,7 +27,13 @@ import {
 } from '@tabler/icons-react'
 import { Input } from '@/components/ui/input'
 import { BirthDateInput } from '@/components/ui/birth-date-input'
-import { useEffect, useState, useTransition } from 'react'
+import {
+  startTransition,
+  useEffect,
+  useEffectEvent,
+  useState,
+  useTransition,
+} from 'react'
 import { normalizeStudentCode } from '@/lib/student-code'
 import { UserCategory, UserRole } from '@/types'
 import { registerUser } from '@/actions/user'
@@ -44,6 +50,11 @@ import {
 } from '../ui/input-group'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { lookupDni } from '@/actions/lookup'
+import {
+  loadDniReceipt,
+  readDniReceipt,
+  storeDniReceipt,
+} from '@/lib/dni-receipt'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 
@@ -104,7 +115,8 @@ export default function OnboardingForm({
   const [isLookupPending, startLookupTransition] = useTransition()
   const [isLookupSuccess, setIsLookupSuccess] = useState<boolean>(false)
 
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startRegistrationTransition] = useTransition()
+  const [dniReceipt, setDniReceipt] = useState<string | null>(null)
 
   const { user } = useUser()
   const router = useRouter()
@@ -143,6 +155,76 @@ export default function OnboardingForm({
     }
   }, [currentStep, errorFieldToFocus, form])
 
+  function saveReceipt(receipt: string | null) {
+    setDniReceipt(receipt)
+    storeDniReceipt(userId, receipt)
+  }
+
+  function invalidateReceipt(message?: string) {
+    saveReceipt(null)
+    setAllowCustomName(false)
+    setIsLookupSuccess(false)
+    form.setValue('firstName', '')
+    form.setValue('lastName', '')
+    if (message) {
+      setCurrentStep(0)
+      setErrorFieldToFocus('dni')
+      form.setError('dni', { type: 'manual', message })
+    }
+  }
+
+  useEffect(() => {
+    const receipt = loadDniReceipt(userId)
+    if (!receipt) return
+    const { data } = readDniReceipt(receipt, userId)
+    startTransition(() => {
+      setDniReceipt(receipt)
+      form.setValue('dni', data.dni)
+      if (data.source === 'jsonpe') {
+        form.setValue('firstName', data.firstName)
+        form.setValue('lastName', data.lastName)
+        setIsLookupSuccess(true)
+      } else {
+        setAllowCustomName(true)
+      }
+    })
+  }, [form, userId])
+
+  const onReceiptExpired = useEffectEvent(() => {
+    invalidateReceipt(
+      'Tu consulta de DNI venció. Consulta nuevamente para continuar.'
+    )
+  })
+
+  useEffect(() => {
+    if (!dniReceipt) return
+    let expiresAt: number
+    try {
+      expiresAt = readDniReceipt(dniReceipt, userId).exp * 1000
+    } catch {
+      expiresAt = Date.now()
+    }
+    const timer = window.setTimeout(
+      () => {
+        onReceiptExpired()
+      },
+      Math.max(0, expiresAt - Date.now())
+    )
+    return () => window.clearTimeout(timer)
+  }, [dniReceipt, userId])
+
+  function checkDniReceipt(dni: string | null | undefined) {
+    if (!dni) return true
+    try {
+      if (!dniReceipt || readDniReceipt(dniReceipt, userId).data.dni !== dni)
+        throw new Error('Missing receipt')
+      return true
+    } catch {
+      invalidateReceipt('Consulta tu DNI para continuar con el registro.')
+      return false
+    }
+  }
+
   const onInvalid: SubmitErrorHandler<z.input<typeof OnboardingFormSchema>> = (
     errors
   ) => {
@@ -156,6 +238,7 @@ export default function OnboardingForm({
   }
 
   const handleNextButton = async () => {
+    if (currentStep === 0 && !checkDniReceipt(form.getValues('dni'))) return
     const currentFields = steps[currentStep].fields
 
     const isValid = await form.trigger(currentFields)
@@ -191,36 +274,38 @@ export default function OnboardingForm({
       } catch {
         response = {
           success: false,
-          error: 'No se pudo consultar el DNI. Ingresa tus datos manualmente.',
+          error: 'No se pudo consultar tu DNI. Inténtalo nuevamente.',
         }
       }
 
-      if ('code' in response && response.code === 'DNI_IN_USE') {
+      // Ignore an in-flight result if the document has changed.
+      if (form.getValues('dni') !== dni) return
+      if (!response.success) {
+        if (response.code === 'DNI_IN_USE') invalidateReceipt()
         form.setError('dni', { type: 'manual', message: response.error })
-        form.setValue('firstName', '')
-        form.setValue('lastName', '')
-        setAllowCustomName(false)
-        setIsLookupSuccess(false)
+        toast.error(response.error)
         return
       }
 
-      if (response.success && response.data) {
+      saveReceipt(response.receipt)
+      if (response.data.source === 'jsonpe') {
         form.setValue('firstName', response.data.firstName)
         form.setValue('lastName', response.data.lastName)
-
         setAllowCustomName(false)
         setIsLookupSuccess(true)
-
         toast.success('DNI encontrado, se han autocompletado los campos.')
       } else {
-        toast.error(response.error)
-
+        setIsLookupSuccess(false)
         setAllowCustomName(true)
+        toast.error(
+          response.message ?? 'Puedes ingresar tus nombres manualmente.'
+        )
       }
     })
   }
 
   const resetDniFlow = () => {
+    saveReceipt(null)
     form.resetField('dni')
     form.resetField('firstName')
     form.resetField('lastName')
@@ -231,6 +316,7 @@ export default function OnboardingForm({
   }
 
   const handleDniModeButton = () => {
+    saveReceipt(null)
     if (isLookupSuccess) {
       resetDniFlow()
       return
@@ -253,8 +339,10 @@ export default function OnboardingForm({
   }
 
   const onSubmit = async (values: z.output<typeof OnboardingFormSchema>) => {
-    startTransition(async () => {
+    if (!checkDniReceipt(values.dni)) return
+    startRegistrationTransition(async () => {
       await registerUser({
+        dniReceipt,
         id: values.id,
         dni: values.dni,
         firstName: values.firstName,
@@ -265,12 +353,14 @@ export default function OnboardingForm({
         studentCode: values.studentCode,
         role: values.role,
       })
-        .then(async (data: { success?: string; error?: string }) => {
+        .then(async (data) => {
           if (data?.error) {
+            if ('code' in data && data.code) invalidateReceipt(data.error)
             throw new Error(data?.error)
           }
 
-          if (data?.success) {
+          if ('success' in data && data.success) {
+            saveReceipt(null)
             await user?.reload()
             toast.success(data.success)
             router.push('/dashboard')
@@ -331,9 +421,11 @@ export default function OnboardingForm({
                         className='text-base tabular-nums md:text-sm'
                         disabled={isNoDni || isLookupSuccess || isLookupPending}
                         onChange={(event) => {
-                          field.onChange(
-                            event.target.value.replace(/\D/g, '').slice(0, 8)
-                          )
+                          const dni = event.target.value
+                            .replace(/\D/g, '')
+                            .slice(0, 8)
+                          if (dni !== field.value) invalidateReceipt()
+                          field.onChange(dni)
                           form.clearErrors('dni')
                         }}
                       />
@@ -346,6 +438,7 @@ export default function OnboardingForm({
                             isNoDni ||
                             isLookupSuccess ||
                             isLookupPending ||
+                            Boolean(dniReceipt) ||
                             !/[0-9]/.test(field.value ?? '')
                           }
                           onClick={handleLookupDni}
@@ -393,7 +486,7 @@ export default function OnboardingForm({
                           className='size-4 text-emerald-600'
                           aria-hidden='true'
                         />
-                        <span className='sr-only'>Identidad verificada</span>
+                        <span className='sr-only'>Datos consultados</span>
                       </InputGroupAddon>
                     )}
                   </InputGroup>
@@ -434,7 +527,7 @@ export default function OnboardingForm({
                           className='size-4 text-emerald-600'
                           aria-hidden='true'
                         />
-                        <span className='sr-only'>Identidad verificada</span>
+                        <span className='sr-only'>Datos consultados</span>
                       </InputGroupAddon>
                     )}
                   </InputGroup>
