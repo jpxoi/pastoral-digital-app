@@ -1,5 +1,10 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
+import { applyFormErrors } from '@/lib/form-errors'
+import { FormServerError } from '@/components/shared/form-server-error'
+
 import { z } from 'zod'
 import { NewAttendanceRecordFormSchema } from '@/schema'
 
@@ -84,36 +89,35 @@ export default function EventAddRecordButton({
   const onSubmit = async (
     values: z.infer<typeof NewAttendanceRecordFormSchema>
   ) => {
-    startTransition(() => {
-      toast.promise(
-        registerAttendanceRecord({
+    form.clearErrors()
+    startTransition(async () => {
+      try {
+        const result = await registerAttendanceRecord({
           eventId,
           userId: values.userId,
           registeredBy: registeredBy?.id || '',
           checkInTime: new Date(),
           method: AttendanceRecordMethod.MANUAL,
           status: values.status,
-        }),
-        {
-          loading: 'Registrando asistencia...',
-          success: (data: { error?: string; success?: string }) => {
-            if (data.error) {
-              throw new Error(data.error)
-            }
-
-            if (data.success) {
-              form.reset({ userId: '', status: undefined })
-              return data.success
-            }
-          },
-          error: (error) => {
-            return (
-              error.message ||
-              'Ha ocurrido un error al registrar la asistencia.'
-            )
-          },
+        })
+        if (result.error || result.fieldErrors) {
+          applyFormErrors(form, result, ['userId', 'status'])
+          return
         }
-      )
+        if (result.warning) toast.warning(result.warning)
+        else if (result.success) toast.success(result.success)
+        else {
+          applyFormErrors(form, {}, [])
+          return
+        }
+        form.reset({ userId: '', status: undefined })
+      } catch {
+        applyFormErrors(
+          form,
+          { error: 'Ha ocurrido un error al registrar la asistencia.' },
+          []
+        )
+      }
     })
   }
   return (
@@ -161,6 +165,7 @@ export default function EventAddRecordButton({
                             type='button'
                             variant='outline'
                             role='combobox'
+                            disabled={isPending || !isLoaded}
                             aria-expanded={isCatechistPickerOpen}
                             className='w-full justify-between font-normal'
                           >
@@ -179,6 +184,7 @@ export default function EventAddRecordButton({
                       >
                         <Command>
                           <CommandInput
+                            disabled={isPending}
                             value={catechistSearch}
                             onValueChange={setCatechistSearch}
                             placeholder='Buscar catequista...'
@@ -195,6 +201,7 @@ export default function EventAddRecordButton({
                                 return (
                                   <CommandItem
                                     key={catechist.id}
+                                    disabled={isPending}
                                     value={searchValue}
                                     onSelect={() => {
                                       field.onChange(catechist.id)
@@ -236,7 +243,11 @@ export default function EventAddRecordButton({
               render={({ field }) => (
                 <FormItem className='grid gap-2'>
                   <FormLabel>Estado</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    disabled={isPending}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder='Seleccione el estado' />
@@ -254,9 +265,18 @@ export default function EventAddRecordButton({
                 </FormItem>
               )}
             />
+            <FormServerError
+              message={form.formState.errors.root?.serverError?.message}
+            />
             <DialogFooter>
-              <Button type='submit' size='sm' disabled={isPending || !isLoaded}>
-                Enviar
+              <Button
+                type='submit'
+                size='sm'
+                disabled={isPending || !isLoaded}
+                aria-busy={isPending}
+              >
+                {isPending && <Spinner aria-hidden='true' />}
+                {isPending ? 'Registrando…' : 'Registrar'}
               </Button>
             </DialogFooter>
           </form>

@@ -1,5 +1,10 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
+import { applyFormErrors } from '@/lib/form-errors'
+import { FormServerError } from '@/components/shared/form-server-error'
+
 import imageCompression from 'browser-image-compression'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadDropzone } from '@/lib/uploadthing'
@@ -243,25 +248,33 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
     }
     setSuccess(null)
     setError(null)
+    form.clearErrors()
 
     // Note: startTransition takes a standard synchronous callback that wraps async code
     startTransition(async () => {
       try {
         const response = await postNewMassRecord(data)
 
-        if ('error' in response) {
-          setError(response.error)
+        if (!response.success) {
+          applyFormErrors(form, response, ['parish', 'evidenceFileKey'])
           return
         }
 
-        if ('success' in response) {
+        if (response.success) {
           setSuccess(response.success)
           form.reset()
           setEvidence(null)
         }
       } catch (error) {
         console.error('Submission error', { error })
-        setError('Ocurrió un error inesperado. Por favor, inténtalo de nuevo.')
+        applyFormErrors(
+          form,
+          {
+            error:
+              'Ocurrió un error inesperado. Por favor, inténtalo de nuevo.',
+          },
+          []
+        )
       }
     })
   }
@@ -397,7 +410,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                     <UploadDropzone
                       endpoint='sundayMassEvidenceUploader'
                       className='ut-button:bg-background ut-button:text-foreground ut-button:text-sm ut-button:border ut-button:border-border ut-button:border-solid ut-button:after:bg-primary ut-button:w-44'
-                      disabled={isOptimizing}
+                      disabled={isOptimizing || isPending || isRemoving}
                       onBeforeUploadBegin={handleBeforeUploadBegin}
                       onClientUploadComplete={handleOnClientUploadComplete}
                       onUploadError={(e) => handleOnUploadError(e.message)}
@@ -426,6 +439,9 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
               )}
             />
 
+            <FormServerError
+              message={form.formState.errors.root?.serverError?.message}
+            />
             {error && (
               <div className='text-destructive rounded-lg border border-red-500 bg-red-50 p-4 text-sm font-medium'>
                 {error}
@@ -433,16 +449,11 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
             )}
             <Button
               disabled={!evidence || isPending || isRemoving}
+              aria-busy={isPending}
               type='submit'
             >
-              {isPending ? (
-                <div className='flex items-center gap-2'>
-                  <IconLoader2 className='animate-spin' />
-                  Registrando...
-                </div>
-              ) : (
-                'Registrar Misa'
-              )}
+              {isPending && <Spinner aria-hidden='true' />}
+              {isPending ? 'Registrando…' : 'Registrar Misa'}
             </Button>
           </form>
         </Form>

@@ -1,5 +1,7 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { setUserAssignments } from '@/actions/user'
@@ -205,7 +207,7 @@ export default function UserAssignmentEditor({
                   <span className='flex-1'>{option.label}</span>
                   <Checkbox
                     checked={selected}
-                    disabled={disabled}
+                    disabled={pending || disabled}
                     onCheckedChange={() =>
                       setAssignments((current) =>
                         selected
@@ -228,6 +230,7 @@ export default function UserAssignmentEditor({
                     >
                       Comunidad opcional
                       <Select
+                        disabled={pending}
                         value={assignment.communityId ?? 'no-community'}
                         onValueChange={(value) =>
                           updateAssignment(index, {
@@ -270,6 +273,7 @@ export default function UserAssignmentEditor({
                         <label className='text-muted-foreground flex flex-col gap-1.5 text-xs font-medium'>
                           Responsabilidad
                           <Select
+                            disabled={pending}
                             value={assignment.responsibility ?? 'guide'}
                             onValueChange={(value) =>
                               updateAssignment(index, {
@@ -307,8 +311,13 @@ export default function UserAssignmentEditor({
             <Button variant='outline' disabled={pending} onClick={onClose}>
               Cancelar
             </Button>
-            <Button disabled={pending} onClick={() => void save()}>
-              {pending ? 'Guardando...' : 'Guardar asignaciones'}
+            <Button
+              disabled={pending}
+              onClick={() => void save()}
+              aria-busy={pending}
+            >
+              {pending && <Spinner aria-hidden='true' />}
+              {pending ? 'Guardando…' : 'Guardar'}
             </Button>
           </div>
         </div>

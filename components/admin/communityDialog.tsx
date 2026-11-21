@@ -1,5 +1,7 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
 import { useId, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -8,6 +10,8 @@ import type { AssignmentCatalog } from '@/types/assignments'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { FormServerError } from '@/components/shared/form-server-error'
+import type { FormActionError } from '@/types/form-actions'
 import {
   Select,
   SelectContent,
@@ -42,6 +46,9 @@ export default function CommunityDialog({
     community?.programId ?? defaultProgramId ?? ''
   )
   const [error, setError] = useState<string>()
+  const [fieldErrors, setFieldErrors] = useState<
+    FormActionError['fieldErrors']
+  >({})
 
   return (
     <Dialog
@@ -62,12 +69,14 @@ export default function CommunityDialog({
           </DialogDescription>
         </DialogHeader>
         <form
+          noValidate
           className='space-y-4'
           onSubmit={async (event) => {
             event.preventDefault()
             const data = new FormData(event.currentTarget)
             setPending(true)
             setError(undefined)
+            setFieldErrors({})
             try {
               const result = community
                 ? await updateCommunity({
@@ -75,9 +84,34 @@ export default function CommunityDialog({
                     name: data.get('name'),
                   })
                 : await createCommunity({ programId, name: data.get('name') })
-              if ('error' in result) {
-                setError(result.error)
-                toast.error(result.error)
+              if (!result.success) {
+                setFieldErrors(result.fieldErrors ?? {})
+                const hiddenErrors = Object.entries(result.fieldErrors ?? {})
+                  .filter(
+                    ([field]) =>
+                      field !== 'name' && (field !== 'programId' || !!community)
+                  )
+                  .flatMap(([, messages]) =>
+                    messages?.[0] ? [messages[0]] : []
+                  )
+                const generalErrors = [result.error, ...hiddenErrors].filter(
+                  Boolean
+                )
+                if (generalErrors.length) setError(generalErrors.join(' '))
+                else if (!result.fieldErrors)
+                  setError(
+                    'No se pudo guardar la comunidad. Inténtalo nuevamente.'
+                  )
+                const firstField =
+                  !community && result.fieldErrors?.programId?.length
+                    ? 'program'
+                    : result.fieldErrors?.name?.length
+                      ? 'name'
+                      : null
+                if (firstField)
+                  requestAnimationFrame(() =>
+                    document.getElementById(`${id}-${firstField}`)?.focus()
+                  )
                 return
               }
               toast.success(result.success)
@@ -85,7 +119,6 @@ export default function CommunityDialog({
               router.refresh()
             } catch {
               setError('No se pudo guardar la comunidad. Inténtalo nuevamente.')
-              toast.error('No se pudo guardar la comunidad.')
             } finally {
               setPending(false)
             }
@@ -95,11 +128,26 @@ export default function CommunityDialog({
             <Label htmlFor={`${id}-program`}>Programa</Label>
             <Select
               value={programId}
-              onValueChange={setProgramId}
+              onValueChange={(value) => {
+                setProgramId(value)
+                setFieldErrors((current) => ({
+                  ...current,
+                  programId: undefined,
+                }))
+              }}
               disabled={pending || !!community}
               required
             >
-              <SelectTrigger id={`${id}-program`} className='w-full'>
+              <SelectTrigger
+                id={`${id}-program`}
+                className='w-full'
+                aria-invalid={!!fieldErrors?.programId?.length}
+                aria-describedby={
+                  fieldErrors?.programId?.length
+                    ? `${id}-program-error`
+                    : undefined
+                }
+              >
                 <SelectValue placeholder='Selecciona un programa' />
               </SelectTrigger>
               <SelectContent>
@@ -110,6 +158,15 @@ export default function CommunityDialog({
                 ))}
               </SelectContent>
             </Select>
+            {!community && fieldErrors?.programId?.[0] && (
+              <p
+                id={`${id}-program-error`}
+                role='alert'
+                className='text-destructive text-sm'
+              >
+                {fieldErrors.programId[0]}
+              </p>
+            )}
           </div>
           <div className='space-y-2'>
             <Label htmlFor={`${id}-name`}>Nombre</Label>
@@ -120,18 +177,25 @@ export default function CommunityDialog({
               required
               maxLength={200}
               disabled={pending}
-              aria-describedby={error ? `${id}-error` : undefined}
+              onChange={() =>
+                setFieldErrors((current) => ({ ...current, name: undefined }))
+              }
+              aria-invalid={!!fieldErrors?.name?.length}
+              aria-describedby={
+                fieldErrors?.name?.length ? `${id}-name-error` : undefined
+              }
             />
+            {fieldErrors?.name?.[0] && (
+              <p
+                id={`${id}-name-error`}
+                role='alert'
+                className='text-destructive text-sm'
+              >
+                {fieldErrors.name[0]}
+              </p>
+            )}
           </div>
-          {error && (
-            <p
-              id={`${id}-error`}
-              role='alert'
-              className='text-destructive text-sm'
-            >
-              {error}
-            </p>
-          )}
+          <FormServerError message={error} />
           <DialogFooter>
             <Button
               type='button'
@@ -141,9 +205,16 @@ export default function CommunityDialog({
             >
               Cancelar
             </Button>
-            <Button type='submit' disabled={pending || !programId}>
+            <Button
+              type='submit'
+              disabled={pending || !programId}
+              aria-busy={pending}
+            >
+              {pending && <Spinner aria-hidden='true' />}
               {pending
-                ? 'Guardando...'
+                ? community
+                  ? 'Guardando…'
+                  : 'Creando…'
                 : community
                   ? 'Guardar cambios'
                   : 'Crear comunidad'}

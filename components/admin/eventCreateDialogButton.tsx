@@ -1,5 +1,10 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
+import { applyFormErrors } from '@/lib/form-errors'
+import { FormServerError } from '@/components/shared/form-server-error'
+
 import { postNewEvent } from '@/actions/event'
 import {
   Dialog,
@@ -66,17 +71,34 @@ export default function EventCreateDialogButton({
   })
 
   const onSubmit = async (values: EventFormValues) => {
-    const response = await postNewEvent(values)
-
-    if ('error' in response) {
-      toast.error(response.error)
-      return
+    form.clearErrors()
+    try {
+      const response = await postNewEvent(values)
+      if (!response.success) {
+        applyFormErrors(form, response, [
+          'name',
+          'description',
+          'firstTurnDate',
+          'firstTurnTime',
+          'secondTurnDate',
+          'secondTurnTime',
+          'endDate',
+          'endTime',
+          'locationId',
+        ])
+        return
+      }
+      toast.success(response.success)
+      form.reset()
+      setOpen(false)
+      router.refresh()
+    } catch {
+      applyFormErrors(
+        form,
+        { error: 'No se pudo crear el evento. Inténtalo nuevamente.' },
+        []
+      )
     }
-
-    toast.success(response.success)
-    form.reset()
-    setOpen(false)
-    router.refresh()
   }
 
   return (
@@ -120,7 +142,11 @@ export default function EventCreateDialogButton({
                     <FormLabel className='block w-full text-left'>
                       Ubicación
                     </FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select
+                      disabled={form.formState.isSubmitting}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder='Selecciona una ubicación' />
@@ -142,6 +168,9 @@ export default function EventCreateDialogButton({
                 )}
               />
 
+              <FormServerError
+                message={form.formState.errors.root?.serverError?.message}
+              />
               <DialogFooter>
                 <Button
                   type='button'
@@ -151,7 +180,14 @@ export default function EventCreateDialogButton({
                 >
                   Cancelar
                 </Button>
-                <Button type='submit' disabled={form.formState.isSubmitting}>
+                <Button
+                  type='submit'
+                  disabled={form.formState.isSubmitting}
+                  aria-busy={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting && (
+                    <Spinner aria-hidden='true' />
+                  )}
                   {form.formState.isSubmitting ? 'Creando…' : 'Crear evento'}
                 </Button>
               </DialogFooter>

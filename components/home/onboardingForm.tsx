@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/incompatible-library */
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
+import { applyFormErrors } from '@/lib/form-errors'
+import { FormServerError } from '@/components/shared/form-server-error'
+
 import { z } from 'zod'
 
 import { OnboardingFormSchema } from '@/schema'
@@ -339,6 +344,7 @@ export default function OnboardingForm({
   }
 
   const onSubmit = async (values: z.output<typeof OnboardingFormSchema>) => {
+    form.clearErrors()
     if (!checkDniReceipt(values.dni)) return
     startRegistrationTransition(async () => {
       await registerUser({
@@ -354,9 +360,31 @@ export default function OnboardingForm({
         role: values.role,
       })
         .then(async (data) => {
-          if (data?.error) {
-            if ('code' in data && data.code) invalidateReceipt(data.error)
-            throw new Error(data?.error)
+          if (!data.success) {
+            if (data.code) invalidateReceipt()
+            applyFormErrors(
+              form,
+              data,
+              steps
+                .flatMap((step) => step.fields)
+                .filter((field) => field !== 'email'),
+              { focus: false }
+            )
+            const stepIndex = steps.findIndex((step) =>
+              step.fields.some(
+                (field) =>
+                  field !== 'email' && data.fieldErrors?.[field]?.length
+              )
+            )
+            if (stepIndex !== -1) {
+              const field = steps[stepIndex].fields.find(
+                (field) =>
+                  field !== 'email' && data.fieldErrors?.[field]?.length
+              )
+              setCurrentStep(stepIndex)
+              setErrorFieldToFocus(field ?? null)
+            }
+            return
           }
 
           if ('success' in data && data.success) {
@@ -367,7 +395,16 @@ export default function OnboardingForm({
           }
         })
         .catch((error) => {
-          toast.error(error.message)
+          applyFormErrors(
+            form,
+            {
+              error:
+                error instanceof Error
+                  ? error.message
+                  : 'No se pudo completar el registro. Inténtalo nuevamente.',
+            },
+            []
+          )
         })
     })
   }
@@ -392,7 +429,7 @@ export default function OnboardingForm({
                         variant='link'
                         size='xs'
                         className='h-auto px-0 text-xs'
-                        disabled={isLookupPending}
+                        disabled={isPending || isLookupPending}
                         onClick={handleDniModeButton}
                       >
                         {isLookupSuccess
@@ -419,7 +456,12 @@ export default function OnboardingForm({
                         pattern='[0-9]{8}'
                         maxLength={8}
                         className='text-base tabular-nums md:text-sm'
-                        disabled={isNoDni || isLookupSuccess || isLookupPending}
+                        disabled={
+                          isPending ||
+                          isNoDni ||
+                          isLookupSuccess ||
+                          isLookupPending
+                        }
                         onChange={(event) => {
                           const dni = event.target.value
                             .replace(/\D/g, '')
@@ -435,6 +477,7 @@ export default function OnboardingForm({
                           size='sm'
                           className='text-primary hover:bg-primary/10 hover:text-primary disabled:text-muted-foreground h-7 rounded-sm px-2 text-sm disabled:opacity-60'
                           disabled={
+                            isPending ||
                             isNoDni ||
                             isLookupSuccess ||
                             isLookupPending ||
@@ -478,7 +521,9 @@ export default function OnboardingForm({
                       aria-invalid={fieldState.invalid}
                       placeholder='Ingrese sus nombres'
                       autoComplete='off'
-                      disabled={isLookupSuccess || !allowCustomName}
+                      disabled={
+                        isPending || isLookupSuccess || !allowCustomName
+                      }
                     />
                     {isLookupSuccess && (
                       <InputGroupAddon align='inline-end'>
@@ -519,7 +564,9 @@ export default function OnboardingForm({
                       aria-invalid={fieldState.invalid}
                       placeholder='Ingrese sus dos apellidos'
                       autoComplete='off'
-                      disabled={isLookupSuccess || !allowCustomName}
+                      disabled={
+                        isPending || isLookupSuccess || !allowCustomName
+                      }
                     />
                     {isLookupSuccess && (
                       <InputGroupAddon align='inline-end'>
@@ -588,6 +635,7 @@ export default function OnboardingForm({
                   <PhoneInput
                     {...field}
                     id='phoneNumber'
+                    disabled={isPending}
                     type='tel'
                     inputMode='tel'
                     aria-invalid={fieldState.invalid}
@@ -615,6 +663,7 @@ export default function OnboardingForm({
                   <BirthDateInput
                     {...field}
                     id='dateOfBirth'
+                    disabled={isPending}
                     aria-invalid={fieldState.invalid}
                     aria-describedby={
                       describeDateInput(field.value)
@@ -656,7 +705,7 @@ export default function OnboardingForm({
                       value={field.value}
                       onValueChange={field.onChange}
                       aria-invalid={fieldState.invalid}
-                      disabled={false}
+                      disabled={isPending}
                     >
                       {/* Los docentes se ajustan directamente en la base de datos por temas de seguridad. */}
                       {UserCategoryFilterOptions.filter(
@@ -666,7 +715,7 @@ export default function OnboardingForm({
                           key={item.value}
                           value={item.value}
                           aria-invalid={fieldState.invalid}
-                          className='border-input text-foreground hover:bg-muted/50 data-[state=checked]:border-primary data-[state=checked]:bg-primary/5 data-[state=checked]:text-primary focus-visible:ring-ring flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
+                          className='border-input text-foreground hover:bg-muted/50 data-[state=checked]:border-primary data-[state=checked]:bg-primary/5 data-[state=checked]:text-primary focus-visible:ring-ring flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
                         >
                           <item.icon
                             className='size-5 shrink-0'
@@ -695,6 +744,7 @@ export default function OnboardingForm({
                     <Input
                       {...field}
                       id='studentCode'
+                      disabled={isPending}
                       value={field.value ?? ''}
                       onChange={(event) =>
                         field.onChange(event.target.value.toUpperCase())
@@ -762,6 +812,9 @@ export default function OnboardingForm({
           className='w-full space-y-4 text-left'
         >
           {renderCurrentStepContent()}
+          <FormServerError
+            message={form.formState.errors.root?.serverError?.message}
+          />
           <Field className='justify-end' orientation='horizontal'>
             {currentStep > 0 && (
               <Button
@@ -769,23 +822,30 @@ export default function OnboardingForm({
                 variant='ghost'
                 className='mr-auto'
                 onClick={handleBackButton}
+                disabled={isPending}
               >
                 <IconChevronLeft /> Anterior
               </Button>
             )}
             {!isLastStep && (
-              <Button type='button' onClick={handleNextButton}>
+              <Button
+                type='button'
+                onClick={handleNextButton}
+                disabled={isPending}
+              >
                 Siguiente
                 <IconChevronRight />
               </Button>
             )}
             {isLastStep && (
-              <Button type='submit' form='multi-form' disabled={isPending}>
-                {isPending ? (
-                  <IconLoader2 className='animate-spin' />
-                ) : (
-                  'Registrarme'
-                )}
+              <Button
+                type='submit'
+                form='multi-form'
+                disabled={isPending}
+                aria-busy={isPending}
+              >
+                {isPending && <Spinner aria-hidden='true' />}
+                {isPending ? 'Registrando…' : 'Registrarme'}
               </Button>
             )}
           </Field>

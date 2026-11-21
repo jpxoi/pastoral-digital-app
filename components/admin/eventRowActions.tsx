@@ -1,5 +1,10 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
+
+import { applyFormErrors } from '@/lib/form-errors'
+import { FormServerError } from '@/components/shared/form-server-error'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -95,22 +100,39 @@ export default function EventRowActions({ event }: { event: FetchEventProps }) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(async (values) => {
+              form.clearErrors()
               try {
                 const result = await updateEventDetails(values)
-                if ('error' in result) {
-                  toast.error(result.error)
+                if (!result.success) {
+                  applyFormErrors(form, result, [
+                    'name',
+                    'description',
+                    'firstTurnDate',
+                    'firstTurnTime',
+                    'secondTurnDate',
+                    'secondTurnTime',
+                    'endDate',
+                    'endTime',
+                  ])
                   return
                 }
                 toast.success(result.success)
                 setOpen(false)
                 router.refresh()
               } catch {
-                toast.error('No se pudo actualizar el evento.')
+                applyFormErrors(
+                  form,
+                  { error: 'No se pudo actualizar el evento.' },
+                  []
+                )
               }
             })}
             className='flex flex-col gap-5'
           >
             <EventFormFields minuteStep={1} />
+            <FormServerError
+              message={form.formState.errors.root?.serverError?.message}
+            />
             <DialogFooter>
               <Button
                 type='button'
@@ -120,8 +142,9 @@ export default function EventRowActions({ event }: { event: FetchEventProps }) {
               >
                 Cancelar
               </Button>
-              <Button type='submit' disabled={pending}>
-                {pending ? 'Guardando...' : 'Guardar cambios'}
+              <Button type='submit' disabled={pending} aria-busy={pending}>
+                {pending && <Spinner aria-hidden='true' />}
+                {pending ? 'Guardando…' : 'Guardar cambios'}
               </Button>
             </DialogFooter>
           </form>
