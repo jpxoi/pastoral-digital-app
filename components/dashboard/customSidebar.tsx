@@ -251,9 +251,9 @@ function SidebarUserButton({
     return (
       <SidebarMenuButton
         size='lg'
-        className='h-14 gap-3 px-3 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0!'
+        className='group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0!'
       >
-        <Skeleton className='size-10 rounded-full group-data-[collapsible=icon]:size-8!' />
+        <Skeleton className='size-8 rounded-full' />
         <Skeleton className='h-4 flex-1 group-data-[collapsible=icon]:hidden' />
       </SidebarMenuButton>
     )
@@ -270,16 +270,16 @@ function SidebarUserButton({
         <SidebarMenuButton
           size='lg'
           tooltip={name}
-          className='hover:text-sidebar-foreground active:text-sidebar-foreground data-[state=open]:text-sidebar-foreground data-[state=open]:hover:text-sidebar-foreground h-14 gap-3 px-3 text-base group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! hover:bg-white/10 active:bg-white/15 data-[state=open]:bg-white/10 data-[state=open]:hover:bg-white/10 [&>svg]:size-5'
+          className='hover:text-sidebar-foreground active:text-sidebar-foreground data-[state=open]:text-sidebar-foreground data-[state=open]:hover:text-sidebar-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! hover:bg-white/10 active:bg-white/15 data-[state=open]:bg-white/10 data-[state=open]:hover:bg-white/10'
         >
-          <Avatar className='size-10 rounded-full group-data-[collapsible=icon]:size-8! after:border-0'>
+          <Avatar className='size-8 rounded-full after:border-0'>
             <AvatarImage src={user.imageUrl} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
           <span className='grid min-w-0 flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden'>
-            <span className='truncate text-base font-medium'>{name}</span>
+            <span className='truncate text-sm font-medium'>{name}</span>
           </span>
-          <IconDots className='ml-auto size-5 group-data-[collapsible=icon]:hidden' />
+          <IconDots className='ml-auto size-4 group-data-[collapsible=icon]:hidden' />
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent

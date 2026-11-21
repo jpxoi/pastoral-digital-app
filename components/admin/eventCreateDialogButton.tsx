@@ -18,6 +18,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { addDays, format, parseISO, startOfDay, subDays } from 'date-fns'
+import { DatePicker } from '@/components/ui/date-picker'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -52,6 +54,9 @@ export default function EventCreateDialogButton({
 }) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const today = startOfDay(new Date())
+  const minEventDate = subDays(today, 14)
+  const maxEventDate = addDays(today, 365)
   const form = useForm<EventFormValues>({
     resolver: zodResolver(NewEventFormSchema),
     defaultValues: {
@@ -94,8 +99,8 @@ export default function EventCreateDialogButton({
           Crear evento
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[90vh] overflow-y-auto text-left sm:max-w-2xl'>
-        <DialogHeader className='text-left'>
+      <DialogContent className='max-h-[90dvh] overflow-y-auto text-left sm:max-w-2xl'>
+        <DialogHeader className='min-w-0 text-left'>
           <DialogTitle>Crear evento</DialogTitle>
           <DialogDescription>
             Completa los datos del evento y define sus turnos de asistencia.
@@ -116,7 +121,7 @@ export default function EventCreateDialogButton({
                 control={form.control}
                 name='name'
                 render={({ field }) => (
-                  <FormItem className='text-left'>
+                  <FormItem className='min-w-0 text-left'>
                     <FormLabel className='block w-full text-left'>
                       Nombre del evento
                     </FormLabel>
@@ -136,7 +141,7 @@ export default function EventCreateDialogButton({
                 control={form.control}
                 name='description'
                 render={({ field }) => (
-                  <FormItem className='text-left'>
+                  <FormItem className='min-w-0 text-left'>
                     <FormLabel className='block w-full text-left'>
                       Descripción (opcional)
                     </FormLabel>
@@ -153,24 +158,37 @@ export default function EventCreateDialogButton({
               />
 
               <div className='grid gap-5 sm:grid-cols-2'>
-                <section className='flex flex-col gap-3'>
+                <section className='flex min-w-0 flex-col gap-3'>
                   <div className='flex items-center justify-between gap-3'>
                     <h3 className='text-sm font-semibold'>Primer turno</h3>
                     <span className='rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-800'>
                       Comunión
                     </span>
                   </div>
-                  <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
+                  <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,7rem)] gap-3'>
                     <FormField
                       control={form.control}
                       name='firstTurnDate'
                       render={({ field }) => (
-                        <FormItem className='text-left'>
+                        <FormItem className='min-w-0 text-left'>
                           <FormLabel className='sr-only'>
                             Fecha del primer turno
                           </FormLabel>
                           <FormControl>
-                            <Input type='date' {...field} />
+                            <DatePicker
+                              {...field}
+                              value={
+                                field.value ? parseISO(field.value) : undefined
+                              }
+                              onChange={(date) =>
+                                field.onChange(
+                                  date ? format(date, 'yyyy-MM-dd') : ''
+                                )
+                              }
+                              placeholder='Elegir fecha'
+                              minDate={minEventDate}
+                              maxDate={maxEventDate}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -180,12 +198,16 @@ export default function EventCreateDialogButton({
                       control={form.control}
                       name='firstTurnTime'
                       render={({ field }) => (
-                        <FormItem className='text-left'>
+                        <FormItem className='min-w-0 text-left'>
                           <FormLabel className='sr-only'>
                             Hora del primer turno
                           </FormLabel>
                           <FormControl>
-                            <Input type='time' {...field} />
+                            <Input
+                              type='time'
+                              className='max-w-full min-w-0'
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -194,7 +216,7 @@ export default function EventCreateDialogButton({
                   </div>
                 </section>
 
-                <section className='flex flex-col gap-3'>
+                <section className='flex min-w-0 flex-col gap-3'>
                   <div className='flex items-center justify-between gap-3'>
                     <div className='flex items-center gap-1.5'>
                       <h3 className='text-sm font-semibold'>Segundo turno</h3>
@@ -219,17 +241,30 @@ export default function EventCreateDialogButton({
                       Confirmación
                     </span>
                   </div>
-                  <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
+                  <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,7rem)] gap-3'>
                     <FormField
                       control={form.control}
                       name='secondTurnDate'
                       render={({ field }) => (
-                        <FormItem className='text-left'>
+                        <FormItem className='min-w-0 text-left'>
                           <FormLabel className='sr-only'>
                             Fecha del segundo turno
                           </FormLabel>
                           <FormControl>
-                            <Input type='date' {...field} />
+                            <DatePicker
+                              {...field}
+                              value={
+                                field.value ? parseISO(field.value) : undefined
+                              }
+                              onChange={(date) =>
+                                field.onChange(
+                                  date ? format(date, 'yyyy-MM-dd') : ''
+                                )
+                              }
+                              placeholder='Elegir fecha'
+                              minDate={minEventDate}
+                              maxDate={maxEventDate}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -239,12 +274,69 @@ export default function EventCreateDialogButton({
                       control={form.control}
                       name='secondTurnTime'
                       render={({ field }) => (
-                        <FormItem className='text-left'>
+                        <FormItem className='min-w-0 text-left'>
                           <FormLabel className='sr-only'>
                             Hora del segundo turno
                           </FormLabel>
                           <FormControl>
-                            <Input type='time' {...field} />
+                            <Input
+                              type='time'
+                              className='max-w-full min-w-0'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </section>
+
+                <section className='flex min-w-0 flex-col gap-3'>
+                  <h3 className='text-sm font-semibold'>Fin del evento</h3>
+                  <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,7rem)] gap-3'>
+                    <FormField
+                      control={form.control}
+                      name='endDate'
+                      render={({ field }) => (
+                        <FormItem className='min-w-0 text-left'>
+                          <FormLabel className='sr-only'>
+                            Fecha de fin del evento
+                          </FormLabel>
+                          <FormControl>
+                            <DatePicker
+                              {...field}
+                              value={
+                                field.value ? parseISO(field.value) : undefined
+                              }
+                              onChange={(date) =>
+                                field.onChange(
+                                  date ? format(date, 'yyyy-MM-dd') : ''
+                                )
+                              }
+                              placeholder='Elegir fecha'
+                              minDate={minEventDate}
+                              maxDate={maxEventDate}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='endTime'
+                      render={({ field }) => (
+                        <FormItem className='min-w-0 text-left'>
+                          <FormLabel className='sr-only'>
+                            Hora de fin del evento
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type='time'
+                              className='max-w-full min-w-0'
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -254,47 +346,11 @@ export default function EventCreateDialogButton({
                 </section>
               </div>
 
-              <section className='flex flex-col gap-3'>
-                <h3 className='text-sm font-semibold'>Fin del evento</h3>
-                <div className='grid grid-cols-[minmax(0,1fr)_110px] gap-3'>
-                  <FormField
-                    control={form.control}
-                    name='endDate'
-                    render={({ field }) => (
-                      <FormItem className='text-left'>
-                        <FormLabel className='sr-only'>
-                          Fecha de fin del evento
-                        </FormLabel>
-                        <FormControl>
-                          <Input type='date' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='endTime'
-                    render={({ field }) => (
-                      <FormItem className='text-left'>
-                        <FormLabel className='sr-only'>
-                          Hora de fin del evento
-                        </FormLabel>
-                        <FormControl>
-                          <Input type='time' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </section>
-
               <FormField
                 control={form.control}
                 name='locationId'
                 render={({ field }) => (
-                  <FormItem className='text-left'>
+                  <FormItem className='min-w-0 text-left'>
                     <FormLabel className='block w-full text-left'>
                       Ubicación
                     </FormLabel>

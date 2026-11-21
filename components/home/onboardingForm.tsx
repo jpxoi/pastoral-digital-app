@@ -319,14 +319,18 @@ export default function OnboardingForm({
                         id='dni'
                         value={field.value ?? ''}
                         aria-invalid={fieldState.invalid}
+                        type='text'
                         placeholder='Número de DNI'
                         autoComplete='off'
                         inputMode='numeric'
+                        pattern='[0-9]{8}'
                         maxLength={8}
-                        className='tabular-nums'
+                        className='text-base tabular-nums md:text-sm'
                         disabled={isNoDni || isLookupSuccess || isLookupPending}
                         onChange={(event) => {
-                          field.onChange(event)
+                          field.onChange(
+                            event.target.value.replace(/\D/g, '').slice(0, 8)
+                          )
                           form.clearErrors('dni')
                         }}
                       />
@@ -490,6 +494,8 @@ export default function OnboardingForm({
                   <PhoneInput
                     {...field}
                     id='phoneNumber'
+                    type='tel'
+                    inputMode='tel'
                     aria-invalid={fieldState.invalid}
                     placeholder='912 345 678'
                     autoComplete='off'
@@ -512,33 +518,30 @@ export default function OnboardingForm({
                   >
                     Fecha de nacimiento
                   </FieldLabel>
-                  <InputGroup>
-                    <InputGroupInput
-                      id='dateOfBirth'
-                      name={field.name}
-                      ref={field.ref}
-                      value={field.value}
-                      onBlur={field.onBlur}
-                      onChange={(event) => {
-                        let value = event.target.value
-                        const inputType = (event.nativeEvent as InputEvent)
-                          .inputType
-                        if (
-                          inputType === 'deleteContentBackward' &&
-                          field.value?.endsWith('/') &&
-                          value === field.value.slice(0, -1)
-                        ) {
-                          value = value.slice(0, -1)
-                        }
-                        field.onChange(formatDateInput(value))
-                      }}
-                      aria-invalid={fieldState.invalid}
-                      placeholder='DD/MM/AAAA'
-                      inputMode='numeric'
-                      autoComplete='bday'
-                      maxLength={10}
-                    />
-                  </InputGroup>
+                  <Input
+                    {...field}
+                    id='dateOfBirth'
+                    type='text'
+                    inputMode='numeric'
+                    placeholder='DD/MM/AAAA'
+                    maxLength={10}
+                    onChange={(event) => {
+                      let value = event.target.value
+                      const inputType = (event.nativeEvent as InputEvent)
+                        .inputType
+                      if (
+                        inputType === 'deleteContentBackward' &&
+                        field.value?.endsWith('/') &&
+                        value === field.value.slice(0, -1)
+                      ) {
+                        value = value.slice(0, -1)
+                      }
+                      field.onChange(formatDateInput(value))
+                    }}
+                    aria-invalid={fieldState.invalid}
+                    autoComplete='bday'
+                    className='min-w-0'
+                  />
                   {describeDateInput(field.value) && (
                     <FieldDescription
                       aria-live='polite'
