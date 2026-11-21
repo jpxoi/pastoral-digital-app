@@ -270,9 +270,9 @@ function SidebarUserButton({
         <SidebarMenuButton
           size='lg'
           tooltip={name}
-          className='h-14 gap-3 px-3 text-base hover:bg-white/10 hover:text-sidebar-foreground active:bg-white/15 active:text-sidebar-foreground data-[state=open]:bg-white/10 data-[state=open]:text-sidebar-foreground data-[state=open]:hover:bg-white/10 data-[state=open]:hover:text-sidebar-foreground group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! [&>svg]:size-5'
+          className='hover:text-sidebar-foreground active:text-sidebar-foreground data-[state=open]:text-sidebar-foreground data-[state=open]:hover:text-sidebar-foreground h-14 gap-3 px-3 text-base group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0! hover:bg-white/10 active:bg-white/15 data-[state=open]:bg-white/10 data-[state=open]:hover:bg-white/10 [&>svg]:size-5'
         >
-          <Avatar className='size-10 rounded-full after:border-0 group-data-[collapsible=icon]:size-8!'>
+          <Avatar className='size-10 rounded-full group-data-[collapsible=icon]:size-8! after:border-0'>
             <AvatarImage src={user.imageUrl} alt={name} />
             <AvatarFallback>{initials}</AvatarFallback>
           </Avatar>
@@ -292,7 +292,7 @@ function SidebarUserButton({
         className='w-72 max-w-[calc(100vw-1rem)] min-w-0 text-left'
       >
         <DropdownMenuGroup>
-          <DropdownMenuLabel className='p-3 text-sm font-normal text-foreground'>
+          <DropdownMenuLabel className='text-foreground p-3 text-sm font-normal'>
             <div className='flex items-center gap-3 text-left'>
               <Avatar className='size-10'>
                 <AvatarImage src={user.imageUrl} alt={name} />
