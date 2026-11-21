@@ -357,8 +357,8 @@ export default function QrScannerTab() {
         )}
         {event && !canScanByTime && scanningOpensAt && (
           <p className='text-muted-foreground text-sm'>
-            El escaneo estará disponible desde{' '}
-            {format(scanningOpensAt, 'PP pp', {
+            El escaneo estará disponible desde las{' '}
+            {format(scanningOpensAt, 'HH:mm', {
               locale: es,
               in: tz('America/Lima'),
             })}
