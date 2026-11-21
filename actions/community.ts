@@ -1,5 +1,8 @@
 'use server'
 
+import { formValidationError } from '@/lib/form-validation'
+import type { FormActionResult } from '@/types/form-actions'
+
 import { logger } from '@/lib/logger'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
@@ -11,11 +14,17 @@ import { cacheTags } from '@/lib/cache'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 
-const communityNameSchema = z.string().trim().min(1).max(200)
+const communityNameSchema = z
+  .string()
+  .trim()
+  .min(1, 'Ingresa el nombre de la comunidad.')
+  .max(200, 'El nombre no debe superar los 200 caracteres.')
+
 const createSchema = z.object({
-  programId: z.uuid(),
+  programId: z.uuid('Selecciona un programa válido.'),
   name: communityNameSchema,
 })
+
 const updateSchema = z.object({ id: z.uuid(), name: communityNameSchema })
 
 async function canManageCommunities() {
@@ -48,16 +57,14 @@ function communityError(
   return { error: 'No se pudo guardar el cambio. Inténtalo nuevamente.' }
 }
 
-export async function createCommunity(values: unknown) {
+export async function createCommunity(
+  values: unknown
+): Promise<FormActionResult> {
   if (!(await canManageCommunities())) {
     return { error: 'No estás autorizado para administrar comunidades.' }
   }
   const parsed = createSchema.safeParse(values)
-  if (!parsed.success)
-    return {
-      error:
-        'Selecciona un programa e ingresa un nombre de hasta 200 caracteres.',
-    }
+  if (!parsed.success) return formValidationError(parsed.error)
 
   try {
     const [program] = await db
@@ -66,7 +73,11 @@ export async function createCommunity(values: unknown) {
       .where(eq(programsTable.id, parsed.data.programId))
       .limit(1)
     if (!program)
-      return { error: 'El programa seleccionado ya no está disponible.' }
+      return {
+        fieldErrors: {
+          programId: ['El programa seleccionado ya no está disponible.'],
+        },
+      }
     await db.insert(communitiesTable).values(parsed.data)
     invalidateCommunities()
     return { success: 'Comunidad creada correctamente.' }
@@ -78,13 +89,14 @@ export async function createCommunity(values: unknown) {
   }
 }
 
-export async function updateCommunity(values: unknown) {
+export async function updateCommunity(
+  values: unknown
+): Promise<FormActionResult> {
   if (!(await canManageCommunities())) {
     return { error: 'No estás autorizado para administrar comunidades.' }
   }
   const parsed = updateSchema.safeParse(values)
-  if (!parsed.success)
-    return { error: 'Ingresa un nombre de hasta 200 caracteres.' }
+  if (!parsed.success) return formValidationError(parsed.error)
 
   try {
     // Keep the program fixed so existing assignments remain consistent.

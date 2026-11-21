@@ -30,6 +30,9 @@ import { calculateStatus } from '@/lib/attendance'
 import { getQrAttendanceContext } from '@/queries/assignments'
 import { getAttendanceTurn } from '@/lib/assignments'
 import { z } from 'zod'
+import { NewAttendanceRecordFormSchema } from '@/schema'
+import { formValidationError } from '@/lib/form-validation'
+import type { FormActionError } from '@/types/form-actions'
 import { after } from 'next/server'
 import { sendUsersPush } from '@/lib/push/send'
 import { attendanceUpdatedMessage } from '@/lib/push/payloads'
@@ -51,6 +54,7 @@ export const registerAttendanceRecord = async (
   success?: string
   warning?: string
   error?: string
+  fieldErrors?: FormActionError['fieldErrors']
   lastAttendanceRecord?: FetchAttendanceProps
 }> => {
   if (
@@ -60,7 +64,11 @@ export const registerAttendanceRecord = async (
     return { error: 'No estás autorizado para registrar asistencias.' }
   }
 
-  return await createAttendanceRecord(data)
+  const parsed = NewAttendanceRecordFormSchema.safeParse(data)
+  if (!parsed.success) return formValidationError(parsed.error)
+
+  const validatedData = { ...data, ...parsed.data }
+  return await createAttendanceRecord(validatedData)
     .then(async () => {
       invalidateAttendance([data])
       const lastAttendanceRecord = await getLastAttendanceRecord()

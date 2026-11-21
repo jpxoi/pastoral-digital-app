@@ -1,5 +1,8 @@
 'use server'
 
+import { formValidationError } from '@/lib/form-validation'
+import type { FormActionResult } from '@/types/form-actions'
+
 import { logger } from '@/lib/logger'
 import { handleDbError, MassReviewConflictError } from '@/lib/error'
 import { checkPermission } from '@/lib/roles'
@@ -45,11 +48,11 @@ function notifyMassReview(
 
 export async function postNewMassRecord(
   formValues: z.infer<typeof NewSundayMassFormSchema>
-) {
+): Promise<FormActionResult> {
   const validatedFields = NewSundayMassFormSchema.safeParse(formValues)
 
   if (!validatedFields.success)
-    return { error: 'Algunos de los campos son inválidos.' }
+    return formValidationError(validatedFields.error)
 
   const { userId } = await auth()
 
@@ -86,8 +89,11 @@ export async function postNewMassRecord(
         return { error: MASS_REGISTRATION_CLOSED_MESSAGE }
       if (error instanceof Error && error.message === 'EVIDENCE_UNAVAILABLE')
         return {
-          error:
-            'La evidencia no está disponible o no te pertenece. Vuelve a adjuntar la imagen.',
+          fieldErrors: {
+            evidenceFileKey: [
+              'La evidencia no está disponible o no te pertenece. Vuelve a adjuntar la imagen.',
+            ],
+          },
         }
       return {
         error:

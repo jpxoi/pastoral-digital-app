@@ -1,5 +1,8 @@
 'use server'
 
+import { formValidationError } from '@/lib/form-validation'
+import type { FormActionResult } from '@/types/form-actions'
+
 import { logger } from '@/lib/logger'
 import { auth, clerkClient, currentUser } from '@clerk/nextjs/server'
 import { createUser } from '@/queries/insert'
@@ -24,7 +27,7 @@ export const registerUser = async (
   values: Omit<z.infer<typeof OnboardingFormSchema>, 'email'> & {
     dniReceipt?: string | null
   }
-) => {
+): Promise<FormActionResult> => {
   const { userId } = await auth()
   if (!userId) return { error: 'No se encontró el usuario autenticado.' }
 
@@ -51,10 +54,7 @@ export const registerUser = async (
   })
 
   if (!validatedFields.success) {
-    return {
-      error:
-        'Error al validar los campos. Por favor, verifica los datos ingresados',
-    }
+    return formValidationError(validatedFields.error)
   }
 
   let canonicalNames: { firstName: string; lastName: string } | undefined
@@ -72,7 +72,7 @@ export const registerUser = async (
     }
   } catch (error) {
     if (error instanceof DniReceiptError)
-      return { error: error.message, code: error.code }
+      return { fieldErrors: { dni: [error.message] }, code: error.code }
     log.error('Failed to validate DNI registration', {
       errorName: error instanceof Error ? error.name : 'UnknownError',
     })
@@ -107,7 +107,10 @@ export const registerUser = async (
         (databaseError?.constraint_name === 'unq_users_dni' ||
           databaseError?.constraint === 'unq_users_dni')
       ) {
-        return { error: DNI_IN_USE_MESSAGE, code: 'DNI_IN_USE' as const }
+        return {
+          fieldErrors: { dni: [DNI_IN_USE_MESSAGE] },
+          code: 'DNI_IN_USE' as const,
+        }
       }
       return { error: 'Error al registrar el usuario. Intenta nuevamente.' }
     })

@@ -1,5 +1,8 @@
 'use server'
 
+import { formValidationError } from '@/lib/form-validation'
+import type { FormActionResult } from '@/types/form-actions'
+
 import { logger } from '@/lib/logger'
 import { db } from '@/db/drizzle'
 import { eventsTable, locationsTable } from '@/db/schema'
@@ -33,7 +36,9 @@ const toPeruDate = (value: string) => {
   return new Date(peruDate.getTime())
 }
 
-export async function postNewEvent(formValues: unknown) {
+export async function postNewEvent(
+  formValues: unknown
+): Promise<FormActionResult> {
   const { userId } = await auth()
 
   if (!userId) return { error: 'Inicia sesión para crear eventos.' }
@@ -44,7 +49,7 @@ export async function postNewEvent(formValues: unknown) {
   const validatedFields = NewEventFormSchema.safeParse(formValues)
 
   if (!validatedFields.success) {
-    return { error: 'Revisa los campos del evento e inténtalo nuevamente.' }
+    return formValidationError(validatedFields.error)
   }
 
   const {
@@ -67,7 +72,11 @@ export async function postNewEvent(formValues: unknown) {
       .limit(1)
 
     if (!location) {
-      return { error: 'La ubicación seleccionada ya no está disponible.' }
+      return {
+        fieldErrors: {
+          locationId: ['La ubicación seleccionada ya no está disponible.'],
+        },
+      }
     }
 
     await createEvent({
@@ -91,13 +100,15 @@ export async function postNewEvent(formValues: unknown) {
   }
 }
 
-export async function updateEventDetails(values: unknown) {
+export async function updateEventDetails(
+  values: unknown
+): Promise<FormActionResult> {
   const { userId } = await auth()
   if (!userId || !(await checkPermission(Permission.EVENTS_EDIT))) {
     return { error: 'No estás autorizado para editar eventos.' }
   }
   const parsed = UpdateEventFormSchema.safeParse(values)
-  if (!parsed.success) return { error: parsed.error.issues[0].message }
+  if (!parsed.success) return formValidationError(parsed.error)
 
   try {
     const {
