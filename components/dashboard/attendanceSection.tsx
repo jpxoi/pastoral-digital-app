@@ -5,13 +5,13 @@ import DashboardCards from './dashboardCards'
 import DashboardCardsSkeleton from './dashboardCardsSkeleton'
 import SundayMassTable from './sundayMassTable'
 import SundayMassTableSkeleton from './sundayMassTableSkeleton'
-import SundayMassBanner from './sundayMassBanner'
+import MassRegistration from './massRegistration'
 
 export default function AttendanceSection() {
   return (
     <div className='flex w-full flex-col gap-8'>
       <Suspense fallback={null}>
-        <SundayMassBanner />
+        <MassRegistration />
       </Suspense>
       <Suspense fallback={<DashboardCardsSkeleton />}>
         <DashboardCards />

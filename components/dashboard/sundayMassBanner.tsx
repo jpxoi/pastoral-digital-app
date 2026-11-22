@@ -1,32 +1,13 @@
 import { IconBuildingChurch } from '@tabler/icons-react'
-import { getMassRegistrationWindow } from '@/lib/mass-registration'
-import { auth } from '@clerk/nextjs/server'
-import { db } from '@/db/drizzle'
-import { sundayMassesTable } from '@/db/schema'
-import { and, eq } from 'drizzle-orm'
-import { connection } from 'next/server'
 import MassRegistrationDialog from './massRegistrationDialog'
 
-export default async function SundayMassBanner() {
-  await connection()
-  const window = getMassRegistrationWindow()
-  if (!window.isOpen) return null
-
-  const { userId } = await auth()
-  if (!userId) return null
-
-  const [record] = await db
-    .select({ id: sundayMassesTable.id })
-    .from(sundayMassesTable)
-    .where(
-      and(
-        eq(sundayMassesTable.userId, userId),
-        eq(sundayMassesTable.sundayDate, window.sundayDate)
-      )
-    )
-    .limit(1)
-  if (record) return null
-
+export default function SundayMassBanner({
+  initiallyOpen,
+  closesAt,
+}: {
+  initiallyOpen: boolean
+  closesAt: number
+}) {
   return (
     <div className='border-primary/20 bg-primary/5 flex flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between sm:px-5'>
       <div className='flex min-w-0 items-start gap-3'>
@@ -43,8 +24,9 @@ export default async function SundayMassBanner() {
         </div>
       </div>
       <MassRegistrationDialog
-        initiallyOpen={false}
-        closesAt={window.closesAt.getTime()}
+        key={`${closesAt}:${initiallyOpen}`}
+        initiallyOpen={initiallyOpen}
+        closesAt={closesAt}
       />
     </div>
   )

@@ -51,7 +51,13 @@ interface Evidence {
   ufsUrl: string
 }
 
-export default function SundayMassForm({ closesAt }: { closesAt: number }) {
+export default function SundayMassForm({
+  closesAt,
+  onSuccess,
+}: {
+  closesAt: number
+  onSuccess: () => void
+}) {
   const [isRegistrationClosed, setIsRegistrationClosed] = useState(false)
 
   useEffect(() => {
@@ -277,6 +283,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
           setSuccess(response.success)
           form.reset()
           setEvidence(null)
+          onSuccess()
         }
       } catch (error) {
         console.error('Submission error', { error })

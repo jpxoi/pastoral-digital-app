@@ -11,12 +11,12 @@ export default function PageHeader({ breadcrumb }: PageHeaderProps) {
   return (
     <header className='flex w-full items-center justify-between gap-3 text-left'>
       <div className='flex min-w-0 flex-1 items-center gap-2'>
-        <SidebarTrigger />
+        <SidebarTrigger className='max-md:size-8' />
         {breadcrumb && (
           <>
             <Separator
               orientation='vertical'
-              className='my-auto h-4 shrink-0'
+              className='my-auto h-5 shrink-0 md:h-4'
             />
             {breadcrumb}
           </>

@@ -8,13 +8,13 @@ import {
   MASS_REGISTRATION_CLOSED_MESSAGE,
 } from '@/lib/mass-registration'
 import { SundayMassStatus } from '@/types'
-import MassRegistrationDialog from './massRegistrationDialog'
+import SundayMassBanner from './sundayMassBanner'
 import RegistrationNotice from './massRegistrationNotice'
 
 export default async function MassRegistration({
   searchParams,
 }: {
-  searchParams: Promise<{
+  searchParams?: Promise<{
     register?: string | string[]
     sunday?: string | string[]
   }>
@@ -23,7 +23,7 @@ export default async function MassRegistration({
   const { userId } = await auth()
   if (!userId) return null
 
-  const { register, sunday } = await searchParams
+  const { register, sunday } = (await searchParams) ?? {}
   const window = getMassRegistrationWindow()
 
   if (register === '1' && sunday && sunday !== window.sundayDate)
@@ -33,8 +33,6 @@ export default async function MassRegistration({
         description='El plazo del recordatorio que abriste ya terminó. Revisa tus registros en Mis misas.'
       />
     )
-
-  if (!window.isOpen && register !== '1') return null
 
   const [record] = await db
     .select({ status: sundayMassesTable.status })
@@ -48,7 +46,6 @@ export default async function MassRegistration({
     .limit(1)
 
   if (record) {
-    if (register !== '1') return null
     return (
       <RegistrationNotice
         status={record.status}
@@ -78,7 +75,7 @@ export default async function MassRegistration({
     )
 
   return (
-    <MassRegistrationDialog
+    <SundayMassBanner
       initiallyOpen={register === '1'}
       closesAt={window.closesAt.getTime()}
     />
