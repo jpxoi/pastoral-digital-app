@@ -69,7 +69,6 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
   const [evidence, setEvidence] = useState<Evidence | null>(null)
 
   const [success, setSuccess] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
 
   const [isPending, startTransition] = useTransition()
 
@@ -185,55 +184,68 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
   ) => {
     const evidence = res[0]
 
-    setError(null)
+    form.clearErrors('root.serverError')
     setEvidence(evidence)
     form.setValue('evidenceFileKey', evidence.key, { shouldValidate: true })
   }
 
   const handleOnUploadError = (error: string) => {
-    if (error.includes(MASS_REGISTRATION_CLOSED_MESSAGE)) {
-      setIsRegistrationClosed(true)
-    } else if (error.includes('Ya tienes un registro de misa')) {
-      setError(error)
-    } else if (error.includes('FileSizeMismatch')) {
-      setError('El archivo excede el tamaño máximo permitido (4MB).')
-    } else if (error.includes('Unauthorized')) {
-      setError('No tienes permiso para subir este archivo.')
-    } else if (error.includes('InvalidFileType')) {
-      setError('El archivo debe ser una imagen.')
-    } else {
-      setError('Ha ocurrido un error al subir el archivo.')
-    }
-
+    form.clearErrors('root.serverError')
     setEvidence(null)
     form.resetField('evidenceFileKey')
+
+    if (error.includes(MASS_REGISTRATION_CLOSED_MESSAGE)) {
+      setIsRegistrationClosed(true)
+      return
+    }
+
+    let message = 'Ha ocurrido un error al subir el archivo.'
+    if (error.includes('FileSizeMismatch')) {
+      message = 'La imagen supera los 4 MB. Selecciona una imagen más pequeña.'
+    } else if (error.includes('Ya tienes un registro de misa')) {
+      message = error
+    } else if (error.includes('Unauthorized')) {
+      message = 'No tienes permiso para subir este archivo.'
+    } else if (error.includes('InvalidFileType')) {
+      message = 'El archivo debe ser una imagen.'
+    }
+
+    form.setError('evidenceFileKey', { type: 'upload', message })
   }
 
   const handleOnUploadAborted = () => {
-    toast.dismiss()
-    toast.error('Se canceló la subida del archivo.')
-
+    form.clearErrors('root.serverError')
     setEvidence(null)
     form.resetField('evidenceFileKey')
+    form.setError('evidenceFileKey', {
+      type: 'upload',
+      message: 'Se canceló la subida del archivo.',
+    })
   }
 
   const handleRemoveEvidence = async () => {
     if (!evidence || isPending || isRemoving) return
 
     setIsRemoving(true)
+    form.clearErrors('root.serverError')
     try {
       const result = await removeFile(evidence.key)
       if (!result.success) {
-        setError(
-          'No se pudo eliminar la evidencia. Si ya está registrada, no puede eliminarse. Inténtalo de nuevo.'
-        )
+        form.setError('root.serverError', {
+          type: 'server',
+          message:
+            'No se pudo eliminar la evidencia. Si ya está registrada, no puede eliminarse. Inténtalo de nuevo.',
+        })
         return
       }
       setEvidence(null)
       form.resetField('evidenceFileKey')
-      setError(null)
+      form.clearErrors('root.serverError')
     } catch {
-      setError('No se pudo eliminar la evidencia. Inténtalo de nuevo.')
+      form.setError('root.serverError', {
+        type: 'server',
+        message: 'No se pudo eliminar la evidencia. Inténtalo de nuevo.',
+      })
     } finally {
       setIsRemoving(false)
     }
@@ -246,7 +258,6 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
       return
     }
     setSuccess(null)
-    setError(null)
     form.clearErrors()
 
     // Note: startTransition takes a standard synchronous callback that wraps async code
@@ -431,7 +442,13 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                       onUploadError={(e) => handleOnUploadError(e.message)}
                       onUploadAborted={handleOnUploadAborted}
                       onChange={() => {
-                        setError(null)
+                        form.clearErrors('root.serverError')
+                        if (
+                          form.getFieldState('evidenceFileKey').error?.type ===
+                          'upload'
+                        ) {
+                          form.clearErrors('evidenceFileKey')
+                        }
                       }}
                       uploadProgressGranularity='fine'
                       config={{
@@ -454,11 +471,6 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
             <FormServerError
               message={form.formState.errors.root?.serverError?.message}
             />
-            {error && (
-              <div className='text-destructive rounded-lg border border-red-500 bg-red-50 p-4 text-sm font-medium'>
-                {error}
-              </div>
-            )}
             <div className='flex justify-end'>
               <Button
                 disabled={!evidence || isPending || isRemoving}
