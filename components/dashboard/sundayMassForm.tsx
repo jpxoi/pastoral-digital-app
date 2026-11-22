@@ -14,7 +14,6 @@ import {
   MASS_REGISTRATION_CLOSED_MESSAGE,
 } from '@/lib/mass-registration'
 import { useForm } from 'react-hook-form'
-import heic2any from 'heic2any'
 import { z } from 'zod'
 
 import { NewSundayMassFormSchema } from '@/schema'
@@ -120,6 +119,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
 
       if (isHeicOrHeif) {
         try {
+          const { default: heic2any } = await import('heic2any')
           const converted = await heic2any({
             blob: file,
             toType: 'image/jpeg',

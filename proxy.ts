@@ -21,6 +21,10 @@ const isOnboardingPath = (pathname: string) =>
 export default clerkMiddleware(async (auth, req) => {
   const pathname = req.nextUrl.pathname
 
+  // UploadThing verifies callbacks itself; new uploads authenticate in its middleware.
+  // Keep Clerk context available there without redirecting server-to-server callbacks.
+  if (matchesPath(pathname, '/api/uploadthing')) return NextResponse.next()
+
   if (isLandingPath(pathname)) {
     const { isAuthenticated, sessionClaims } = await auth()
 
