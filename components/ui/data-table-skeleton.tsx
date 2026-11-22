@@ -1,4 +1,7 @@
 import { cn } from '@/lib/utils'
+import type { ReactNode } from 'react'
+import PageActions from '@/components/shared/pageActions'
+import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
@@ -17,12 +20,61 @@ export type SkeletonColumn = {
   align?: 'right'
 }
 
+export function TableActionsSkeleton({
+  kind,
+  primary = true,
+  menu = true,
+}: {
+  kind: 'events' | 'records' | 'calendar' | 'users' | 'masses' | 'communities'
+  primary?: boolean
+  menu?: boolean
+}) {
+  const refresh = <Skeleton className='h-9 w-full sm:size-8' />
+  if (kind === 'records') return <Skeleton className='h-9 w-full sm:size-8' />
+  if (kind === 'events')
+    return (
+      <PageActions className={primary ? undefined : 'grid-cols-1'}>
+        {refresh}
+        {primary && <Skeleton className='h-9 w-full sm:h-8 sm:w-36' />}
+      </PageActions>
+    )
+  if (kind === 'users')
+    return (
+      <PageActions className='grid-cols-[auto_minmax(0,1fr)]'>
+        <Skeleton className='h-9 w-28 sm:size-8' />
+        {(primary || menu) && (
+          <ButtonGroup className='w-full min-w-0 sm:w-auto'>
+            {primary && (
+              <Skeleton className='h-9 min-w-0 flex-1 sm:h-8 sm:w-44 sm:flex-none' />
+            )}
+            {primary && menu && <ButtonGroupSeparator />}
+            {menu && <Skeleton className='size-9 sm:size-8' />}
+          </ButtonGroup>
+        )}
+      </PageActions>
+    )
+  return (
+    <PageActions>
+      {refresh}
+      {kind === 'masses' && <Skeleton className='h-9 w-full sm:h-8 sm:w-32' />}
+      {primary && (
+        <Skeleton
+          className={cn(
+            'h-9 w-full sm:h-8 sm:w-36',
+            kind === 'masses' && 'order-first col-span-2 sm:order-last'
+          )}
+        />
+      )}
+    </PageActions>
+  )
+}
+
 export function TableToolbarSkeleton({
   filters = 0,
   actions = false,
 }: {
   filters?: number
-  actions?: boolean
+  actions?: ReactNode
 }) {
   return (
     <div
@@ -30,16 +82,19 @@ export function TableToolbarSkeleton({
       className='flex flex-col gap-2 md:flex-row md:items-center'
     >
       {actions && (
-        <div className='order-first flex justify-end gap-2 md:order-last md:ml-auto md:shrink-0'>
-          <Skeleton className='size-8' />
-          <Skeleton className='h-8 w-36' />
+        <div className='order-first flex w-full justify-end sm:w-auto md:order-last md:ml-auto md:shrink-0'>
+          {typeof actions === 'boolean' ? (
+            <TableActionsSkeleton kind='communities' />
+          ) : (
+            actions
+          )}
         </div>
       )}
-      <Skeleton className='order-2 h-8 w-full sm:max-w-sm md:order-first' />
+      <Skeleton className='order-2 h-9 w-full sm:h-8 sm:max-w-sm md:order-first' />
       {filters > 0 && (
         <div className='order-3 flex flex-wrap items-center gap-2 md:order-2'>
           {Array.from({ length: filters }, (_, index) => (
-            <Skeleton key={index} className='h-8 w-24' />
+            <Skeleton key={index} className='h-9 w-24 sm:h-8' />
           ))}
         </div>
       )}
@@ -87,7 +142,7 @@ export function DataTableSkeleton({
   columns: SkeletonColumn[]
   rows?: number
   filters?: number
-  actions?: boolean
+  actions?: ReactNode
   preview?: boolean
   label?: string
 }) {

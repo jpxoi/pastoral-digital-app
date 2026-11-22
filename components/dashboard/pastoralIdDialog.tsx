@@ -17,7 +17,7 @@ export default function PastoralIdDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={'sm'} aria-label='Mi Pastoral ID'>
+        <Button size={'sm'} className='h-9 sm:h-8' aria-label='Mi Pastoral ID'>
           <IconQrcode />
           <span>Mi Pastoral ID</span>
         </Button>

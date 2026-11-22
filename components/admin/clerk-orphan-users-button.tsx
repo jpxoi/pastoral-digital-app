@@ -7,6 +7,7 @@ import {
   IconLoader2,
   IconRefresh,
   IconTrash,
+  IconChevronDown,
 } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -15,6 +16,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Dialog,
   DialogContent,
@@ -32,7 +39,11 @@ type OrphanUser = {
   email: string
 }
 
-export function ClerkOrphanUsersButton() {
+export function ClerkOrphanUsersButton({
+  grouped = false,
+}: {
+  grouped?: boolean
+}) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [users, setUsers] = useState<OrphanUser[]>([])
@@ -111,19 +122,37 @@ export function ClerkOrphanUsersButton() {
 
   return (
     <>
-      <Button
-        type='button'
-        size='sm'
-        variant='outline'
-        className='border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive'
-        onClick={() => {
-          setOpen(true)
-          void loadUsers()
-        }}
-      >
-        <IconTrash />
-        Limpiar Clerk
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            type='button'
+            size='icon-sm'
+            variant={grouped ? 'default' : 'outline'}
+            className='size-9 sm:size-8'
+            aria-label='Más acciones'
+            title='Más acciones'
+          >
+            <IconChevronDown />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align='end'
+          onCloseAutoFocus={(event) => {
+            if (open) event.preventDefault()
+          }}
+        >
+          <DropdownMenuItem
+            variant='destructive'
+            onSelect={() => {
+              setOpen(true)
+              void loadUsers()
+            }}
+          >
+            <IconTrash />
+            Limpiar Clerk
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <Dialog
         open={open}
         onOpenChange={(nextOpen) => {

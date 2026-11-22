@@ -17,4 +17,4 @@ export const cacheTags = {
 } as const
 
 export type RefreshResource =
-  'users' | 'records' | 'calendar' | 'masses' | 'communities'
+  'users' | 'records' | 'calendar' | 'masses' | 'communities' | 'events'

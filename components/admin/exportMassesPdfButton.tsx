@@ -49,6 +49,8 @@ export default function ExportMassesPdfButton() {
   return (
     <Button
       size='sm'
+      variant='outline'
+      className='h-9 w-full sm:h-8 sm:w-auto'
       onClick={() => void download()}
       disabled={pending}
       aria-busy={pending}

@@ -7,6 +7,7 @@ import { hasRolePermission } from '@/lib/permissions'
 import { Permission } from '@/types/permissions'
 
 const refreshTargets = {
+  events: { tag: cacheTags.eventsList(), permission: Permission.EVENTS_EDIT },
   users: { tag: cacheTags.usersList(), permission: Permission.CATECHISTS_VIEW },
   records: {
     tag: cacheTags.attendanceList(),
@@ -42,11 +43,18 @@ export default async function revalidate(resource: RefreshResource) {
   }
 
   const target = refreshTargets[resource]
-  if (!hasRolePermission(sessionClaims?.metadata?.role, target.permission)) {
+  if (
+    !hasRolePermission(sessionClaims?.metadata?.role, target.permission) &&
+    !(
+      resource === 'events' &&
+      hasRolePermission(sessionClaims?.metadata?.role, Permission.EVENTS_CREATE)
+    )
+  ) {
     return { error: 'No estás autorizado para actualizar estos datos.' }
   }
 
   updateTag(target.tag)
+  if (resource === 'events') updateTag(cacheTags.locationsList())
   if (resource === 'users') {
     updateTag(cacheTags.assignments())
     updateTag(cacheTags.assignmentCatalog())

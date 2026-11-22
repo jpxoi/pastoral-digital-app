@@ -11,7 +11,7 @@ export default function PageHeader({ breadcrumb }: PageHeaderProps) {
   return (
     <header className='flex w-full items-center justify-between gap-3 text-left'>
       <div className='flex min-w-0 flex-1 items-center gap-2'>
-        <SidebarTrigger className='max-md:size-8' />
+        <SidebarTrigger className='max-sm:size-9 sm:max-md:size-8 max-sm:[&_svg]:size-5' />
         {breadcrumb && (
           <>
             <Separator

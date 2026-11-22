@@ -1,10 +1,17 @@
-import { DataTableSkeleton } from '@/components/ui/data-table-skeleton'
+import {
+  DataTableSkeleton,
+  TableActionsSkeleton,
+} from '@/components/ui/data-table-skeleton'
 
-export default function AdminEventsTableSkeleton() {
+export default function AdminEventsTableSkeleton({
+  canCreate = true,
+}: {
+  canCreate?: boolean
+}) {
   return (
     <DataTableSkeleton
       filters={0}
-      actions={true}
+      actions={<TableActionsSkeleton kind='events' primary={canCreate} />}
       columns={[
         { label: 'Evento', width: 'w-48' },
         { label: 'Primer turno', width: 'w-40' },

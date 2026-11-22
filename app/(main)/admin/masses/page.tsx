@@ -11,6 +11,7 @@ import ExportMassesPdfButton from '@/components/admin/exportMassesPdfButton'
 import Link from 'next/link'
 import { IconPhotoCheck } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
+import PageActions from '@/components/shared/pageActions'
 
 export const metadata: Metadata = {
   title: 'Administrar misas',
@@ -23,12 +24,16 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Misas' />} />
-      <Suspense fallback={<MassesTableSkeleton />}>
+      <Suspense fallback={<MassesTableSkeleton canReview={canReview} />}>
         <MassesTable>
-          <div className='flex flex-wrap items-center gap-2'>
+          <PageActions>
             <RevalidateButton resource='masses' />
             {canReview && (
-              <Button asChild size='sm' variant='outline'>
+              <Button
+                asChild
+                size='sm'
+                className='order-first col-span-2 h-9 w-full sm:order-last sm:h-8 sm:w-auto'
+              >
                 <Link href='/admin/masses/review'>
                   <IconPhotoCheck />
                   Revisar pendientes
@@ -36,7 +41,7 @@ export default async function Page() {
               </Button>
             )}
             <ExportMassesPdfButton />
-          </div>
+          </PageActions>
         </MassesTable>
       </Suspense>
     </>

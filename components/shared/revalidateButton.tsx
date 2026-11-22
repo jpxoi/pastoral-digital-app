@@ -30,15 +30,19 @@ export default function RevalidateButton({
 
   return (
     <Button
-      variant='ghost'
+      variant='outline'
       disabled={isPending}
-      size='icon'
+      size='icon-sm'
+      className='h-9 w-full gap-1.5 px-2.5 sm:size-8 sm:border-transparent sm:bg-transparent sm:px-0 sm:shadow-none'
       aria-label={isPending ? 'Actualizando...' : 'Actualizar'}
       title={isPending ? 'Actualizando...' : 'Actualizar'}
       aria-busy={isPending}
       onClick={handleClick}
     >
       <IconRefresh className={cn('h-4 w-4', isPending && 'animate-spin')} />
+      <span className='sm:hidden'>
+        {isPending ? 'Actualizando…' : 'Actualizar'}
+      </span>
     </Button>
   )
 }

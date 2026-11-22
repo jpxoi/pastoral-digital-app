@@ -8,6 +8,7 @@ import RevalidateButton from '@/components/shared/revalidateButton'
 import ExportAttendanceCalendarPdfButton from '@/components/admin/exportAttendanceCalendarPdfButton'
 import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
+import PageActions from '@/components/shared/pageActions'
 
 export const metadata: Metadata = {
   title: 'Calendario de asistencias',
@@ -24,12 +25,14 @@ export default async function Page() {
       <PageHeader
         breadcrumb={<PageBreadcrumb label='Calendario de Asistencia' />}
       />
-      <Suspense fallback={<AttendanceCalendarTableSkeleton />}>
+      <Suspense
+        fallback={<AttendanceCalendarTableSkeleton canExport={canExportPdf} />}
+      >
         <AttendanceCalendarTable>
-          <div className='flex items-center gap-2'>
+          <PageActions>
             <RevalidateButton resource='calendar' />
             {canExportPdf && <ExportAttendanceCalendarPdfButton />}
-          </div>
+          </PageActions>
         </AttendanceCalendarTable>
       </Suspense>
     </>

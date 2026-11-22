@@ -1,10 +1,25 @@
-import { DataTableSkeleton } from '@/components/ui/data-table-skeleton'
+import {
+  DataTableSkeleton,
+  TableActionsSkeleton,
+} from '@/components/ui/data-table-skeleton'
 
-export default function UserTableSkeleton() {
+export default function UserTableSkeleton({
+  canGenerate = true,
+  canClean = true,
+}: {
+  canGenerate?: boolean
+  canClean?: boolean
+}) {
   return (
     <DataTableSkeleton
       filters={3}
-      actions={true}
+      actions={
+        <TableActionsSkeleton
+          kind='users'
+          primary={canGenerate}
+          menu={canClean}
+        />
+      }
       columns={[
         { label: 'Nombre Completo', width: 'w-56' },
         { label: 'Correo Electrónico', width: 'w-48' },

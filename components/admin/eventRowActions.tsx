@@ -31,7 +31,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
 
@@ -90,12 +89,12 @@ export default function EventRowActions({ event }: { event: FetchEventProps }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DialogContent className='max-h-[90dvh] overflow-y-auto text-left sm:max-w-2xl'>
+      <DialogContent
+        aria-describedby={undefined}
+        className='max-h-[90dvh] overflow-y-auto text-left sm:max-w-2xl'
+      >
         <DialogHeader className='min-w-0 text-left'>
           <DialogTitle>Editar evento</DialogTitle>
-          <DialogDescription>
-            Actualiza el nombre, la descripción y los horarios del evento.
-          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -106,7 +105,6 @@ export default function EventRowActions({ event }: { event: FetchEventProps }) {
                 if (!result.success) {
                   applyFormErrors(form, result, [
                     'name',
-                    'description',
                     'firstTurnDate',
                     'firstTurnTime',
                     'secondTurnDate',

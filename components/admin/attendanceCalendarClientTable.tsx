@@ -76,7 +76,7 @@ export default function AttendanceCalendarClientTable({
     <div className='flex min-h-0 flex-1 flex-col gap-4'>
       <div className='flex flex-col gap-2 md:flex-row md:items-center'>
         {children && (
-          <div className='order-first flex justify-end md:order-last md:ml-auto md:shrink-0'>
+          <div className='order-first flex w-full justify-end sm:w-auto md:order-last md:ml-auto md:shrink-0'>
             {children}
           </div>
         )}
@@ -88,7 +88,7 @@ export default function AttendanceCalendarClientTable({
             onChange={(event) => setSearch(event.target.value)}
             placeholder='Buscar por nombre'
             aria-label='Buscar por nombre'
-            className='h-8 pl-9'
+            className='h-9 pl-9 sm:h-8'
           />
         </div>
       </div>

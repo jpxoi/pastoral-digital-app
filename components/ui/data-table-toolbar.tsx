@@ -43,11 +43,11 @@ export function DataTableToolbar<TData>({
     <div className='flex flex-col gap-2'>
       <div className='flex flex-col gap-2 md:flex-row md:items-center'>
         {children && (
-          <div className='order-first flex justify-end md:order-last md:ml-auto md:shrink-0'>
+          <div className='order-first flex w-full justify-end sm:w-auto md:order-last md:ml-auto md:shrink-0'>
             {children}
           </div>
         )}
-        <InputGroup className='order-2 h-8 w-full sm:max-w-sm md:order-first'>
+        <InputGroup className='order-2 h-9 w-full sm:h-8 sm:max-w-sm md:order-first'>
           <InputGroupInput
             aria-label='Buscar registros'
             placeholder='Buscar registros...'
@@ -74,7 +74,7 @@ export function DataTableToolbar<TData>({
             </InputGroupAddon>
           )}
         </InputGroup>
-        <div className='order-3 flex flex-wrap items-center gap-2 md:order-2'>
+        <div className='order-3 col-span-2 flex flex-wrap items-center gap-2 md:order-2'>
           {facetedFilters.map((filter) => (
             <DataTableFacetedFilter
               key={filter.columnId}
@@ -132,7 +132,7 @@ export function DataTableToolbar<TData>({
             <Button
               variant='ghost'
               onClick={() => table.resetColumnFilters()}
-              className='h-8 px-2 lg:px-3'
+              className='h-9 px-2 sm:h-8 lg:px-3'
             >
               Limpiar
               <IconX />

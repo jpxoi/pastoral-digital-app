@@ -56,12 +56,15 @@ export function GenerateFotochecksButton() {
   return (
     <Button
       size='sm'
+      className='h-9 min-w-0 flex-1 sm:h-8 sm:flex-none'
       onClick={() => void download()}
       disabled={pending}
       aria-busy={pending}
     >
       {pending ? <IconLoader2 className='animate-spin' /> : <IconIdBadge2 />}
-      {pending ? 'Generando fotochecks...' : 'Generar fotochecks'}
+      <span className='truncate'>
+        {pending ? 'Generando fotochecks...' : 'Generar fotochecks'}
+      </span>
     </Button>
   )
 }

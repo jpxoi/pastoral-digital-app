@@ -1,8 +1,20 @@
 import type { ReactNode } from 'react'
+import { cn } from '@/lib/utils'
 
-export default function PageActions({ children }: { children: ReactNode }) {
+export default function PageActions({
+  children,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+}) {
   return (
-    <div className='flex w-full flex-wrap items-center justify-end gap-2'>
+    <div
+      className={cn(
+        'grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:flex-wrap sm:items-center sm:justify-end',
+        className
+      )}
+    >
       {children}
     </div>
   )

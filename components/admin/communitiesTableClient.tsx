@@ -10,6 +10,7 @@ import RevalidateButton from '@/components/shared/revalidateButton'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
+import PageActions from '@/components/shared/pageActions'
 
 export default function CommunitiesTableClient({
   catalog,
@@ -63,17 +64,18 @@ export default function CommunitiesTableClient({
           },
         ]}
       >
-        <div className='flex flex-wrap items-center justify-end gap-2'>
+        <PageActions>
           <RevalidateButton resource='communities' />
           <Button
             size='sm'
+            className='h-9 w-full sm:h-8 sm:w-auto'
             disabled={!catalog.programs.length}
             onClick={() => setCreating(true)}
           >
             <IconPlus />
             Crear comunidad
           </Button>
-        </div>
+        </PageActions>
       </DataTable>
       {!catalog.programs.length && (
         <p className='text-muted-foreground text-sm'>

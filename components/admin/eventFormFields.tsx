@@ -15,7 +15,6 @@ import {
 import { DatePicker } from '@/components/ui/date-picker'
 import { TimePicker } from '@/components/ui/time-picker'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Tooltip,
   TooltipContent,
@@ -49,27 +48,6 @@ export default function EventFormFields({
                 disabled={form.formState.isSubmitting}
                 placeholder='Ej. Encuentro de catequesis'
                 autoFocus
-                {...field}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name='description'
-        render={({ field }) => (
-          <FormItem className='min-w-0 text-left'>
-            <FormLabel className='block w-full text-left'>
-              Descripción (opcional)
-            </FormLabel>
-            <FormControl>
-              <Textarea
-                disabled={form.formState.isSubmitting}
-                placeholder='Detalles del evento'
-                rows={3}
                 {...field}
               />
             </FormControl>

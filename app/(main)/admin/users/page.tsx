@@ -9,6 +9,8 @@ import { ClerkOrphanUsersButton } from '@/components/admin/clerk-orphan-users-bu
 import UserTableSkeleton from '@/components/admin/userTableSkeleton'
 import { checkPermission, requirePermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
+import PageActions from '@/components/shared/pageActions'
+import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'
 
 export const metadata: Metadata = {
   title: 'Administrar catequistas',
@@ -35,7 +37,14 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Catequistas' />} />
-      <Suspense fallback={<UserTableSkeleton />}>
+      <Suspense
+        fallback={
+          <UserTableSkeleton
+            canGenerate={canGenerateFotochecks}
+            canClean={canCleanClerkUsers}
+          />
+        }
+      >
         <UsersTable
           canSetRole={canSetRole}
           canDelete={canDelete}
@@ -43,11 +52,23 @@ export default async function Page() {
           canViewPastoralId={canViewPastoralId}
           canGenerateFotochecks={canGenerateFotochecks}
         >
-          <div className='flex items-center gap-2'>
+          <PageActions className='grid-cols-[auto_minmax(0,1fr)]'>
             <RevalidateButton resource='users' />
-            {canCleanClerkUsers && <ClerkOrphanUsersButton />}
-            {canGenerateFotochecks && <GenerateFotochecksButton />}
-          </div>
+            {(canGenerateFotochecks || canCleanClerkUsers) && (
+              <ButtonGroup
+                aria-label='Acciones de catequistas'
+                className='w-full min-w-0 sm:w-auto'
+              >
+                {canGenerateFotochecks && <GenerateFotochecksButton />}
+                {canGenerateFotochecks && canCleanClerkUsers && (
+                  <ButtonGroupSeparator className='bg-primary-foreground/25' />
+                )}
+                {canCleanClerkUsers && (
+                  <ClerkOrphanUsersButton grouped={canGenerateFotochecks} />
+                )}
+              </ButtonGroup>
+            )}
+          </PageActions>
         </UsersTable>
       </Suspense>
     </>

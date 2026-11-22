@@ -1,7 +1,14 @@
 import { Skeleton } from '@/components/ui/skeleton'
-import { TableToolbarSkeleton } from '@/components/ui/data-table-skeleton'
+import {
+  TableToolbarSkeleton,
+  TableActionsSkeleton,
+} from '@/components/ui/data-table-skeleton'
 
-export default function AttendanceCalendarTableSkeleton() {
+export default function AttendanceCalendarTableSkeleton({
+  canExport = true,
+}: {
+  canExport?: boolean
+}) {
   return (
     <div
       className='flex min-h-0 flex-1 flex-col gap-4'
@@ -9,7 +16,9 @@ export default function AttendanceCalendarTableSkeleton() {
       aria-label='Cargando calendario de asistencia'
     >
       <span className='sr-only'>Cargando calendario de asistencia</span>
-      <TableToolbarSkeleton actions />
+      <TableToolbarSkeleton
+        actions={<TableActionsSkeleton kind='calendar' primary={canExport} />}
+      />
       <div
         aria-hidden='true'
         className='relative min-h-0 flex-1 overflow-auto rounded-md border'

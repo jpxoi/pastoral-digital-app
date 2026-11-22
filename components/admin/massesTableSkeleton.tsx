@@ -1,10 +1,17 @@
-import { DataTableSkeleton } from '@/components/ui/data-table-skeleton'
+import {
+  DataTableSkeleton,
+  TableActionsSkeleton,
+} from '@/components/ui/data-table-skeleton'
 
-export default function MassesTableSkeleton() {
+export default function MassesTableSkeleton({
+  canReview = true,
+}: {
+  canReview?: boolean
+}) {
   return (
     <DataTableSkeleton
       filters={3}
-      actions={true}
+      actions={<TableActionsSkeleton kind='masses' primary={canReview} />}
       columns={[
         { label: 'Nombre Completo', width: 'w-56' },
         { label: 'Categoría', width: 'w-24', badge: 'default' },

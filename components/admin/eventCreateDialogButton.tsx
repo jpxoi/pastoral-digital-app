@@ -9,7 +9,6 @@ import { postNewEvent } from '@/actions/event'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -77,7 +76,6 @@ export default function EventCreateDialogButton({
       if (!response.success) {
         applyFormErrors(form, response, [
           'name',
-          'description',
           'firstTurnDate',
           'firstTurnTime',
           'secondTurnDate',
@@ -109,17 +107,21 @@ export default function EventCreateDialogButton({
       }}
     >
       <DialogTrigger asChild>
-        <Button size='sm' disabled={locations.length === 0}>
+        <Button
+          size='sm'
+          className='h-9 w-full sm:h-8 sm:w-auto'
+          disabled={locations.length === 0}
+        >
           <IconPlus />
           Crear evento
         </Button>
       </DialogTrigger>
-      <DialogContent className='max-h-[90dvh] overflow-y-auto text-left sm:max-w-2xl'>
+      <DialogContent
+        aria-describedby={undefined}
+        className='max-h-[90dvh] overflow-y-auto text-left sm:max-w-2xl'
+      >
         <DialogHeader className='min-w-0 text-left'>
           <DialogTitle>Crear evento</DialogTitle>
-          <DialogDescription>
-            Completa los datos del evento y define sus turnos de asistencia.
-          </DialogDescription>
         </DialogHeader>
 
         {locations.length === 0 ? (
@@ -130,7 +132,7 @@ export default function EventCreateDialogButton({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className='flex flex-col gap-5'
+              className='flex min-w-0 flex-col gap-5'
             >
               <EventFormFields minDate={minEventDate} maxDate={maxEventDate} />
 
@@ -148,15 +150,16 @@ export default function EventCreateDialogButton({
                       onValueChange={field.onChange}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className='min-w-0 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left'>
                           <SelectValue placeholder='Selecciona una ubicación' />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className='w-(--radix-select-trigger-width) max-w-(--radix-select-content-available-width)'>
                         {locations.map((location) => (
                           <SelectItem
                             key={location.id}
                             value={String(location.id)}
+                            className='whitespace-normal [&>span:last-child]:min-w-0 [&>span:last-child]:wrap-anywhere'
                           >
                             {location.name} — {location.address}
                           </SelectItem>

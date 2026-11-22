@@ -5,7 +5,7 @@ export default async function EventCreateAction() {
   const locations = await getAllLocations()
 
   return (
-    <div className='flex flex-col items-start gap-2 sm:items-end'>
+    <div className='flex w-full flex-col items-start gap-2 sm:w-auto sm:items-end'>
       <EventCreateDialogButton locations={locations} />
       {locations.length === 0 && (
         <p className='text-sm text-neutral-500'>

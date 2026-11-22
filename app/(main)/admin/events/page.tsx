@@ -9,6 +9,8 @@ import EventCreateAction from '@/components/admin/eventCreateAction'
 import { checkPermission } from '@/lib/roles'
 import { Permission } from '@/types/permissions'
 import { redirect } from 'next/navigation'
+import RevalidateButton from '@/components/shared/revalidateButton'
+import PageActions from '@/components/shared/pageActions'
 
 export const metadata: Metadata = {
   title: 'Administrar eventos',
@@ -22,13 +24,20 @@ export default async function Page() {
   return (
     <>
       <PageHeader breadcrumb={<PageBreadcrumb label='Eventos' />} />
-      <Suspense fallback={<AdminEventsTableSkeleton />}>
+      <Suspense
+        fallback={<AdminEventsTableSkeleton canCreate={canCreateEvents} />}
+      >
         <AdminEventsTable canEditEvents={canEditEvents}>
-          {canCreateEvents && (
-            <Suspense fallback={<Skeleton className='h-8 w-36' />}>
-              <EventCreateAction />
-            </Suspense>
-          )}
+          <PageActions className={canCreateEvents ? undefined : 'grid-cols-1'}>
+            <RevalidateButton resource='events' />
+            {canCreateEvents && (
+              <Suspense
+                fallback={<Skeleton className='h-9 w-full sm:h-8 sm:w-36' />}
+              >
+                <EventCreateAction />
+              </Suspense>
+            )}
+          </PageActions>
         </AdminEventsTable>
       </Suspense>
     </>

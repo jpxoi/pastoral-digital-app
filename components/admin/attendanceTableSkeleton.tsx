@@ -1,10 +1,13 @@
-import { DataTableSkeleton } from '@/components/ui/data-table-skeleton'
+import {
+  DataTableSkeleton,
+  TableActionsSkeleton,
+} from '@/components/ui/data-table-skeleton'
 
 export default function AttendanceTableSkeleton() {
   return (
     <DataTableSkeleton
       filters={2}
-      actions={true}
+      actions={<TableActionsSkeleton kind='records' />}
       columns={[
         { label: 'Catequista', width: 'w-56' },
         { label: 'Evento', width: 'w-44' },
