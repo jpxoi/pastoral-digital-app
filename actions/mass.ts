@@ -91,7 +91,7 @@ export async function postNewMassRecord(
         return {
           fieldErrors: {
             evidenceFileKey: [
-              'La evidencia no está disponible o no te pertenece. Vuelve a adjuntar la imagen.',
+              'No se pudo validar la evidencia. Vuelve a adjuntar la imagen.',
             ],
           },
         }

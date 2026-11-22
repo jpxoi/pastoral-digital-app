@@ -42,7 +42,7 @@ export const ourFileRouter = {
 
       if (record)
         throw new UploadThingError(
-          'Ya tienes un registro de misa para este domingo.'
+          'Ya registraste tu asistencia a misa para este domingo.'
         )
 
       return { userId, sundayDate: window.sundayDate }

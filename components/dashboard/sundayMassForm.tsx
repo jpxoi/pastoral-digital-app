@@ -199,15 +199,17 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
       return
     }
 
-    let message = 'Ha ocurrido un error al subir el archivo.'
+    let message = 'No se pudo subir la imagen. Inténtalo de nuevo.'
     if (error.includes('FileSizeMismatch')) {
       message = 'La imagen supera los 4 MB. Selecciona una imagen más pequeña.'
-    } else if (error.includes('Ya tienes un registro de misa')) {
+    } else if (error.includes('Ya registraste tu asistencia a misa')) {
       message = error
     } else if (error.includes('Unauthorized')) {
-      message = 'No tienes permiso para subir este archivo.'
+      message =
+        'No se pudo autorizar la subida. Vuelve a iniciar sesión e inténtalo de nuevo.'
     } else if (error.includes('InvalidFileType')) {
-      message = 'El archivo debe ser una imagen.'
+      message =
+        'El archivo seleccionado no es una imagen. Selecciona una imagen.'
     }
 
     form.setError('evidenceFileKey', { type: 'upload', message })
@@ -219,7 +221,8 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
     form.resetField('evidenceFileKey')
     form.setError('evidenceFileKey', {
       type: 'upload',
-      message: 'Se canceló la subida del archivo.',
+      message:
+        'Se canceló la subida. Selecciona la imagen para volver a intentarlo.',
     })
   }
 
@@ -233,8 +236,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
       if (!result.success) {
         form.setError('root.serverError', {
           type: 'server',
-          message:
-            'No se pudo eliminar la evidencia. Si ya está registrada, no puede eliminarse. Inténtalo de nuevo.',
+          message: 'No se pudo eliminar la imagen. Inténtalo de nuevo.',
         })
         return
       }
@@ -244,7 +246,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
     } catch {
       form.setError('root.serverError', {
         type: 'server',
-        message: 'No se pudo eliminar la evidencia. Inténtalo de nuevo.',
+        message: 'No se pudo eliminar la imagen. Inténtalo de nuevo.',
       })
     } finally {
       setIsRemoving(false)

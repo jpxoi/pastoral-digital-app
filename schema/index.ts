@@ -129,14 +129,14 @@ export const NewSundayMassFormSchema = z.object({
   parish: z
     .string()
     .trim()
-    .min(3, 'El nombre de la parroquia debe tener al menos 3 caracteres')
-    .max(45, 'El nombre de la parroquia no puede exceder los 45 caracteres')
-    .nonempty('El nombre de la parroquia es requerido')
+    .nonempty('Ingresa el nombre de la parroquia.')
+    .min(3, 'Ingresa al menos 3 caracteres.')
+    .max(45, 'El nombre de la parroquia debe tener como máximo 45 caracteres.')
     .transform((val) => val.trim()),
   evidenceFileKey: z
     .string()
     .trim()
-    .nonempty('La evidencia de asistencia es requerida'),
+    .nonempty('Adjunta una imagen como evidencia de tu asistencia a misa.'),
 })
 
 const localDateSchema = z
