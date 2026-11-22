@@ -21,7 +21,6 @@ import { NewSundayMassFormSchema } from '@/schema'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -389,8 +388,14 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                           <p className='truncate text-sm font-medium'>
                             {evidence.name}
                           </p>
-                          <span className='text-muted-foreground text-xs'>
-                            {formatFileSize(evidence.size)}
+                          <span
+                            className='text-muted-foreground text-xs'
+                            role='status'
+                            aria-live='polite'
+                          >
+                            {isRemoving
+                              ? 'Eliminando imagen…'
+                              : formatFileSize(evidence.size)}
                           </span>
                         </div>
                       </div>
@@ -399,11 +404,20 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                         variant='destructive-ghost'
                         className='shrink-0'
                         size='icon'
-                        aria-label='Eliminar evidencia'
+                        aria-label={
+                          isRemoving
+                            ? 'Eliminando imagen'
+                            : 'Eliminar evidencia'
+                        }
+                        aria-busy={isRemoving}
                         onClick={() => void handleRemoveEvidence()}
                         disabled={isPending || isRemoving}
                       >
-                        <IconTrash size={16} />
+                        {isRemoving ? (
+                          <Spinner aria-hidden='true' />
+                        ) : (
+                          <IconTrash size={16} />
+                        )}
                       </Button>
                     </div>
                   ) : (
@@ -432,9 +446,6 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                     />
                   )}
                   <FormMessage />
-                  <FormDescription>
-                    Adjunta una imagen de hasta 4 MB.
-                  </FormDescription>
                 </FormItem>
               )}
             />
