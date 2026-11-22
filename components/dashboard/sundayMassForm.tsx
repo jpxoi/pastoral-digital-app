@@ -260,6 +260,7 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
         }
 
         if (response.success) {
+          toast.success(response.success)
           setSuccess(response.success)
           form.reset()
           setEvidence(null)
@@ -458,14 +459,16 @@ export default function SundayMassForm({ closesAt }: { closesAt: number }) {
                 {error}
               </div>
             )}
-            <Button
-              disabled={!evidence || isPending || isRemoving}
-              aria-busy={isPending}
-              type='submit'
-            >
-              {isPending && <Spinner aria-hidden='true' />}
-              {isPending ? 'Registrando…' : 'Registrar Misa'}
-            </Button>
+            <div className='flex justify-end'>
+              <Button
+                disabled={!evidence || isPending || isRemoving}
+                aria-busy={isPending}
+                type='submit'
+              >
+                {isPending && <Spinner aria-hidden='true' />}
+                {isPending ? 'Registrando…' : 'Registrar misa'}
+              </Button>
+            </div>
           </form>
         </Form>
       )}
