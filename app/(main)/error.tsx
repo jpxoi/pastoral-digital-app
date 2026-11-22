@@ -13,7 +13,7 @@ export default function Error({
   return (
     <>
       <header className='flex w-full items-center'>
-        <SidebarTrigger className='max-sm:size-9 sm:max-md:size-8 max-sm:[&_svg]:size-5!' />
+        <SidebarTrigger className='max-sm:size-9 sm:max-md:size-8 max-sm:[&_svg]:size-4.5!' />
       </header>
       <ErrorFallback error={error} reset={reset} />
     </>
