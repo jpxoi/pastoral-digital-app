@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react'
 import { backgroundArtwork } from '@/components/shared/background-artwork'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 export default function Background({
   className,

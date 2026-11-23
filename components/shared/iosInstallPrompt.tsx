@@ -24,7 +24,7 @@ import {
   isIosOtherBrowser,
   isRunningAsInstalledPwa,
 } from '@/lib/pwa-platform'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { IconCheck, IconCopy, IconX } from '@tabler/icons-react'
 import Image from 'next/image'
 import * as React from 'react'

@@ -3,7 +3,7 @@
 import { FetchMassesProps } from '@/types'
 import { ColumnDef } from '@tanstack/react-table'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { buttonVariants } from '../ui/button'
 import { IconPhoto } from '@tabler/icons-react'
 import { es } from 'date-fns/locale'

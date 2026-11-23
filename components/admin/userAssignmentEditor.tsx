@@ -14,7 +14,7 @@ import {
   IconPackageExport,
   IconUserStar,
 } from '@tabler/icons-react'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import {
   Select,

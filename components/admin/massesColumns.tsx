@@ -3,7 +3,7 @@
 import { buttonVariants } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import { ColumnDef } from '@tanstack/react-table'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { IconPhoto } from '@tabler/icons-react'
 import type { FetchMassesProps } from '@/types'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'

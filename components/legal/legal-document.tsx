@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { SiteFooter } from '@/components/marketing/site-footer'
 import { SiteHeader } from '@/components/marketing/site-header'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import '@/components/marketing/marketing.css'
 
 export function LegalDocument({

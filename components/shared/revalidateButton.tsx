@@ -6,7 +6,7 @@ import revalidate from '@/actions/revalidate'
 import { useTransition } from 'react'
 import type { RefreshResource } from '@/lib/cache'
 import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 export default function RevalidateButton({
   resource,

@@ -50,7 +50,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { IconCheck, IconSelector } from '@tabler/icons-react'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 type CatechistOption = {
   id: string

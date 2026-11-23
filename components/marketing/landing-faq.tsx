@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { IconChevronDown } from '@tabler/icons-react'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 const linkClass =
   'text-foreground underline decoration-border underline-offset-4 hover:decoration-current'

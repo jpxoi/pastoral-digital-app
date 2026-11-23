@@ -2,7 +2,7 @@
  * SF Symbols exported from Apple Native CoreSVG (user-provided).
  * `fill="currentColor"` sustituye al blanco semitransparente del export para tema claro.
  */
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import type { ReactNode } from 'react'
 
 /** Cuadrado de referencia: centra el SVG y fija el box para alinear chips / barras sin “magia” en cada sitio. */
