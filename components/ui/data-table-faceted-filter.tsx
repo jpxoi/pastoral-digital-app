@@ -2,7 +2,7 @@ import { ComponentType } from 'react'
 import { Column } from '@tanstack/react-table'
 import { IconCheck, IconCirclePlus } from '@tabler/icons-react'
 
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {

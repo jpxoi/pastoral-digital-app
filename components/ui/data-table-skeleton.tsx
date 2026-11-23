@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import type { ReactNode } from 'react'
 import PageActions from '@/components/shared/pageActions'
 import { ButtonGroup, ButtonGroupSeparator } from '@/components/ui/button-group'

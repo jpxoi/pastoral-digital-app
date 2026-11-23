@@ -2,7 +2,7 @@
 
 import { IconMail } from '@tabler/icons-react'
 import { InputGroup, InputGroupAddon, InputGroupInput } from './input-group'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 const EmailInput = ({ className, ...props }: React.ComponentProps<'input'>) => {
   return (
