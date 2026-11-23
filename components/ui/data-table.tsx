@@ -1,5 +1,9 @@
-/* eslint-disable react-hooks/incompatible-library */
 'use client'
+
+import {
+  features,
+  type DataTableFeatures,
+} from '@/components/ui/data-table-features'
 
 import { useState } from 'react'
 import type { ReactNode } from 'react'
@@ -7,17 +11,10 @@ import type { ReactNode } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
-  Column,
-  GlobalFilterTableState,
+  RowData,
   SortingState,
   flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table'
 
 import {
@@ -35,8 +32,8 @@ import {
   type DataTableFacetedFilterConfig,
 } from './data-table-toolbar'
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
+interface DataTableProps<TData extends RowData> {
+  columns: ColumnDef<DataTableFeatures, TData>[]
   data: TData[]
   autoResetPageIndex?: boolean
   getRowId?: (row: TData) => string
@@ -45,7 +42,7 @@ interface DataTableProps<TData, TValue> {
   children?: ReactNode
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData>({
   columns,
   data,
   autoResetPageIndex = true,
@@ -53,13 +50,14 @@ export function DataTable<TData, TValue>({
   globalFilterColumnId,
   facetedFilters,
   children,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = useState({})
-  const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
+  const [globalFilter, setGlobalFilter] = useState('')
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
     getRowId,
@@ -78,17 +76,11 @@ export function DataTable<TData, TValue>({
       setGlobalFilter(updater)
       table.resetPageIndex()
     },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     globalFilterFn: 'includesString',
     getColumnCanGlobalFilter: globalFilterColumnId
-      ? (column: Column<TData, unknown>) => column.id === globalFilterColumnId
-      : (column: Column<TData, unknown>) =>
+      ? (column) => column.id === globalFilterColumnId
+      : (column) =>
           'accessorFn' in column.columnDef || 'accessorKey' in column.columnDef,
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       sorting,
       rowSelection,

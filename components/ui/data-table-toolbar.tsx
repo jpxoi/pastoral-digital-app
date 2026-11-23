@@ -1,6 +1,7 @@
 'use client'
 
-import { Table } from '@tanstack/react-table'
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+import type { ReactTable, RowData } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -25,19 +26,19 @@ export interface DataTableFacetedFilterConfig {
   options: { label: string; value: string }[]
 }
 
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>
+interface DataTableToolbarProps<TData extends RowData> {
+  table: ReactTable<DataTableFeatures, TData>
   facetedFilters?: DataTableFacetedFilterConfig[]
   children?: ReactNode
 }
 
-export function DataTableToolbar<TData>({
+export function DataTableToolbar<TData extends RowData>({
   table,
   facetedFilters = [],
   children,
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
-  const globalFilter = String(table.getState().globalFilter ?? '')
+  const isFiltered = table.state.columnFilters.length > 0
+  const globalFilter = String(table.state.globalFilter ?? '')
 
   return (
     <div className='flex flex-col gap-2'>

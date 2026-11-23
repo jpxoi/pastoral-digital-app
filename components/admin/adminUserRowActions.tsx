@@ -1,5 +1,7 @@
 'use client'
 
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+
 import { Row } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
@@ -50,7 +52,7 @@ import { UserRoleFilterOptions } from '@/lib/filter'
 import { setUserRole, removeCatechist } from '@/actions/user'
 
 interface DataTableRowActionsProps {
-  row: Row<UserWithAssignments>
+  row: Row<DataTableFeatures, UserWithAssignments>
   canSetRole: boolean
   canDelete: boolean
   canEditAssignments: boolean

@@ -1,5 +1,6 @@
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
 import { ComponentType } from 'react'
-import { Column } from '@tanstack/react-table'
+import type { Column, RowData } from '@tanstack/react-table'
 import { IconCheck, IconCirclePlus } from '@tabler/icons-react'
 
 import { cn } from 'cn'
@@ -21,8 +22,8 @@ import {
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 
-interface DataTableFacetedFilterProps<TData, TValue> {
-  column?: Column<TData, TValue>
+interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
+  column?: Column<DataTableFeatures, TData, TValue>
   title?: string
   options: {
     label: string
@@ -31,7 +32,7 @@ interface DataTableFacetedFilterProps<TData, TValue> {
   }[]
 }
 
-export function DataTableFacetedFilter<TData, TValue>({
+export function DataTableFacetedFilter<TData extends RowData, TValue>({
   column,
   title,
   options,

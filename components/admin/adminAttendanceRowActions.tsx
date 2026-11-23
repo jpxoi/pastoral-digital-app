@@ -1,5 +1,7 @@
 'use client'
 
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+
 import { Row } from '@tanstack/react-table'
 import { useState } from 'react'
 
@@ -38,8 +40,8 @@ import {
 import { AttendanceStatusFilterOptions } from '@/lib/filter'
 import { SelectAttendance } from '@/db/schema'
 
-interface DataTableRowActionsProps {
-  row: Row<FetchAttendanceProps>
+interface DataTableRowActionsProps<TData extends FetchAttendanceProps> {
+  row: Row<DataTableFeatures, TData>
   canUpdate: boolean
   canDelete: boolean
 }
@@ -85,11 +87,11 @@ const handleDeleteAttendanceRecord = async (
   })
 }
 
-export function AdminAttendanceRowActions({
+export function AdminAttendanceRowActions<TData extends FetchAttendanceProps>({
   row,
   canUpdate,
   canDelete,
-}: DataTableRowActionsProps) {
+}: DataTableRowActionsProps<TData>) {
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   return (
     <>

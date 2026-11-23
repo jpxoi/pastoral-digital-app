@@ -1,4 +1,5 @@
-import { Table } from '@tanstack/react-table'
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+import type { ReactTable, RowData } from '@tanstack/react-table'
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -10,14 +11,14 @@ import { Button } from '@/components/ui/button'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { Separator } from '@/components/ui/separator'
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>
+interface DataTablePaginationProps<TData extends RowData> {
+  table: ReactTable<DataTableFeatures, TData>
 }
 
-export function DataTablePagination<TData>({
+export function DataTablePagination<TData extends RowData>({
   table,
 }: DataTablePaginationProps<TData>) {
-  const { pageIndex, pageSize } = table.getState().pagination
+  const { pageIndex, pageSize } = table.state.pagination
   const rowCount = table.getRowCount()
   const pageCount = Math.max(table.getPageCount(), 1)
   const firstRow = rowCount === 0 ? 0 : pageIndex * pageSize + 1

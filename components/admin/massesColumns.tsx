@@ -1,8 +1,10 @@
 'use client'
 
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+
 import { buttonVariants } from '@/components/ui/button'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
-import { ColumnDef } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 import { cn } from 'cn'
 import { IconPhoto } from '@tabler/icons-react'
 import type { FetchMassesProps } from '@/types'
@@ -12,36 +14,34 @@ import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
 import { format, parseISO } from 'date-fns'
 
-export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
-  {
+const columnHelper = createColumnHelper<DataTableFeatures, FetchMassesProps>()
+
+export const MassesColumns = columnHelper.columns([
+  columnHelper.accessor((row) => `${row.user.firstName} ${row.user.lastName}`, {
     id: 'nombreCompleto',
-    accessorFn: (row) => `${row.user.firstName} ${row.user.lastName}`,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Nombre Completo' />
     ),
     cell: ({ row }) => (
       <span className='text-nowrap'>{row.getValue('nombreCompleto')}</span>
     ),
-  },
-  {
+  }),
+  columnHelper.accessor('user.category', {
     id: 'category',
-    accessorKey: 'user.category',
     header: () => <span className='text-nowrap'>Categoría</span>,
     cell: ({ row }) => (
       <UserCategoryLabel category={row.original.user.category} />
     ),
-  },
-  {
+  }),
+  columnHelper.accessor('parish', {
     id: 'parroquia',
-    accessorKey: 'parish',
     header: () => <span className='text-nowrap'>Parroquia</span>,
     cell: ({ row }) => (
       <div className='max-w-60 truncate lg:max-w-72'>{row.original.parish}</div>
     ),
-  },
-  {
+  }),
+  columnHelper.accessor('evidenceFileKey', {
     id: 'evidencia',
-    accessorKey: 'evidenceFileKey',
     header: () => <span className='text-nowrap'>Evidencia</span>,
     cell: ({ row }) => (
       <div className='flex gap-2'>
@@ -56,9 +56,8 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
         </a>
       </div>
     ),
-  },
-  {
-    accessorKey: 'sundayDate',
+  }),
+  columnHelper.accessor('sundayDate', {
     filterFn: (row, columnId, values: string[]) =>
       values.includes(row.getValue(columnId)),
     header: ({ column }) => (
@@ -69,10 +68,9 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
         {format(parseISO(row.original.sundayDate), 'PP', { locale: es })}
       </time>
     ),
-  },
-  {
+  }),
+  columnHelper.accessor('createdAt', {
     id: 'fechaYHora',
-    accessorKey: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Fecha de registro' />
     ),
@@ -92,10 +90,9 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
         </time>
       )
     },
-  },
-  {
+  }),
+  columnHelper.accessor('status', {
     id: 'massStatus',
-    accessorKey: 'status',
     filterFn: (row, columnId, values: string[]) =>
       values.includes(row.getValue(columnId)),
     header: () => <span className='text-nowrap'>Estado</span>,
@@ -105,5 +102,5 @@ export const MassesColumns: ColumnDef<FetchMassesProps>[] = [
         verifier={row.original.verifier}
       />
     ),
-  },
-]
+  }),
+])

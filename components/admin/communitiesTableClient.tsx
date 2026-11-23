@@ -1,8 +1,10 @@
 'use client'
 
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+
 import { useState } from 'react'
 import { IconPlus } from '@tabler/icons-react'
-import type { ColumnDef } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 import type { AssignmentCatalog } from '@/types/assignments'
 import CommunityDialog from '@/components/admin/communityDialog'
 import CommunityRowActions from '@/components/admin/communityRowActions'
@@ -12,40 +14,46 @@ import { DataTable } from '@/components/ui/data-table'
 import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
 import PageActions from '@/components/shared/pageActions'
 
+const columnHelper = createColumnHelper<
+  DataTableFeatures,
+  AssignmentCatalog['communities'][number]
+>()
+
 export default function CommunitiesTableClient({
   catalog,
 }: {
   catalog: AssignmentCatalog
 }) {
   const [creating, setCreating] = useState(false)
-  const columns: ColumnDef<AssignmentCatalog['communities'][number]>[] = [
-    {
-      accessorKey: 'name',
+  const columns = columnHelper.columns([
+    columnHelper.accessor('name', {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Comunidad' />
       ),
       cell: ({ row }) => (
         <span className='font-medium'>{row.original.name}</span>
       ),
-    },
-    {
-      id: 'program',
-      accessorFn: (community) =>
+    }),
+    columnHelper.accessor(
+      (community) =>
         catalog.programs.find((program) => program.id === community.programId)
           ?.name ?? '',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title='Programa' />
-      ),
-      filterFn: (row, columnId, values: string[]) =>
-        values.includes(row.getValue<string>(columnId)),
-    },
-    {
+      {
+        id: 'program',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title='Programa' />
+        ),
+        filterFn: (row, columnId, values: string[]) =>
+          values.includes(row.getValue<string>(columnId)),
+      }
+    ),
+    columnHelper.display({
       id: 'actions',
       cell: ({ row }) => (
         <CommunityRowActions community={row.original} catalog={catalog} />
       ),
-    },
-  ]
+    }),
+  ])
 
   return (
     <>

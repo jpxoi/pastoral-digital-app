@@ -1,7 +1,9 @@
 'use client'
 
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+
 import { FetchMassesProps } from '@/types'
-import { ColumnDef } from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 import SundayMassStatusLabel from '../shared/sundayMassStatusLabel'
 import { cn } from 'cn'
 import { buttonVariants } from '../ui/button'
@@ -10,9 +12,10 @@ import { es } from 'date-fns/locale'
 import { tz } from '@date-fns/tz'
 import { format } from 'date-fns'
 
-export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
-  {
-    accessorKey: 'parish',
+const columnHelper = createColumnHelper<DataTableFeatures, FetchMassesProps>()
+
+export const SundayMassColumns = columnHelper.columns([
+  columnHelper.accessor('parish', {
     header: 'Parroquia',
     cell: ({ row }) => {
       const createdAt = new Date(row.original.createdAt)
@@ -33,9 +36,9 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
         </div>
       )
     },
-  },
-  {
-    accessorKey: 'evidenceUrl',
+  }),
+  columnHelper.display({
+    id: 'evidenceUrl',
     header: 'Evidencia',
     cell: ({ row }) => {
       return (
@@ -52,9 +55,8 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
         </div>
       )
     },
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: () => (
       <div className='w-full text-right'>
         <span>Estado</span>
@@ -71,5 +73,5 @@ export const SundayMassColumns: ColumnDef<FetchMassesProps>[] = [
         </div>
       )
     },
-  },
-]
+  }),
+])

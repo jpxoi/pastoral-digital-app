@@ -1,4 +1,5 @@
-import { Column } from '@tanstack/react-table'
+import type { DataTableFeatures } from '@/components/ui/data-table-features'
+import type { Column, RowData } from '@tanstack/react-table'
 import {
   IconArrowDown,
   IconArrowUp,
@@ -17,14 +18,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 interface DataTableColumnHeaderProps<
-  TData,
+  TData extends RowData,
   TValue,
 > extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>
+  column: Column<DataTableFeatures, TData, TValue>
   title: string
 }
 
-export function DataTableColumnHeader<TData, TValue>({
+export function DataTableColumnHeader<TData extends RowData, TValue>({
   column,
   title,
   className,
