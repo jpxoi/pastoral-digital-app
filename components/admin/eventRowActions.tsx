@@ -11,11 +11,10 @@ import { toast } from 'sonner'
 import { IconDots, IconPencil } from '@tabler/icons-react'
 import { tz } from '@date-fns/tz'
 import { format } from 'date-fns'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { UpdateEventFormSchema } from '@/schema'
-import { Form } from '@/components/ui/form'
 import EventFormFields from '@/components/admin/eventFormFields'
 import { updateEventDetails } from '@/actions/event'
 import type { FetchEventProps } from '@/types'
@@ -96,7 +95,7 @@ export default function EventRowActions({ event }: { event: FetchEventProps }) {
         <DialogHeader className='min-w-0 text-left'>
           <DialogTitle>Editar evento</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
+        <FormProvider {...form}>
           <form
             onSubmit={form.handleSubmit(async (values) => {
               form.clearErrors()
@@ -146,7 +145,7 @@ export default function EventRowActions({ event }: { event: FetchEventProps }) {
               </Button>
             </DialogFooter>
           </form>
-        </Form>
+        </FormProvider>
       </DialogContent>
     </Dialog>
   )

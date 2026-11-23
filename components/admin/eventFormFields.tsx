@@ -1,17 +1,12 @@
 'use client'
 
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
+import { useId } from 'react'
 import { format, parseISO } from 'date-fns'
 import { IconInfoCircle } from '@tabler/icons-react'
 import { z } from 'zod'
 import { UpdateEventFormSchema } from '@/schema'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { DatePicker } from '@/components/ui/date-picker'
 import { TimePicker } from '@/components/ui/time-picker'
 import { Input } from '@/components/ui/input'
@@ -32,27 +27,42 @@ export default function EventFormFields({
   maxDate?: Date
   minuteStep?: number
 }) {
+  const formId = useId()
   const form = useFormContext<EventFieldsValues>()
   return (
     <>
-      <FormField
+      <Controller
         control={form.control}
         name='name'
-        render={({ field }) => (
-          <FormItem className='min-w-0 text-left'>
-            <FormLabel className='block w-full text-left'>
+        render={({ field, fieldState }) => (
+          <Field
+            data-invalid={fieldState.invalid}
+            className='min-w-0 gap-2 text-left'
+          >
+            <FieldLabel
+              htmlFor={`${formId}-${field.name}`}
+              className='block w-full text-left'
+            >
               Nombre del evento
-            </FormLabel>
-            <FormControl>
-              <Input
-                disabled={form.formState.isSubmitting}
-                placeholder='Ej. Encuentro de catequesis'
-                autoFocus
-                {...field}
+            </FieldLabel>
+            <Input
+              id={`${formId}-${field.name}`}
+              aria-invalid={fieldState.invalid}
+              aria-describedby={
+                fieldState.invalid ? `${formId}-${field.name}-error` : undefined
+              }
+              disabled={form.formState.isSubmitting}
+              placeholder='Ej. Encuentro de catequesis'
+              autoFocus
+              {...field}
+            />
+            {fieldState.invalid && (
+              <FieldError
+                id={`${formId}-${field.name}-error`}
+                errors={[fieldState.error]}
               />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+            )}
+          </Field>
         )}
       />
 
@@ -65,48 +75,80 @@ export default function EventFormFields({
             </span>
           </div>
           <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,7rem)] gap-3'>
-            <FormField
+            <Controller
               control={form.control}
               name='firstTurnDate'
-              render={({ field }) => (
-                <FormItem className='min-w-0 text-left'>
-                  <FormLabel className='sr-only'>
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className='min-w-0 gap-2 text-left'
+                >
+                  <FieldLabel
+                    htmlFor={`${formId}-${field.name}`}
+                    className='sr-only'
+                  >
                     Fecha del primer turno
-                  </FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                      value={field.value ? parseISO(field.value) : undefined}
-                      onChange={(date) =>
-                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
-                      }
-                      placeholder='Elegir fecha'
-                      minDate={minDate}
-                      maxDate={maxDate}
+                  </FieldLabel>
+                  <DatePicker
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    value={field.value ? parseISO(field.value) : undefined}
+                    onChange={(date) =>
+                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
+                    }
+                    placeholder='Elegir fecha'
+                    minDate={minDate}
+                    maxDate={maxDate}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  )}
+                </Field>
               )}
             />
-            <FormField
+            <Controller
               control={form.control}
               name='firstTurnTime'
-              render={({ field }) => (
-                <FormItem className='min-w-0 text-left'>
-                  <FormLabel className='sr-only'>
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className='min-w-0 gap-2 text-left'
+                >
+                  <FieldLabel
+                    htmlFor={`${formId}-${field.name}`}
+                    className='sr-only'
+                  >
                     Hora del primer turno
-                  </FormLabel>
-                  <FormControl>
-                    <TimePicker
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                      minuteStep={minuteStep}
+                  </FieldLabel>
+                  <TimePicker
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    minuteStep={minuteStep}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  )}
+                </Field>
               )}
             />
           </div>
@@ -137,48 +179,80 @@ export default function EventFormFields({
             </span>
           </div>
           <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,7rem)] gap-3'>
-            <FormField
+            <Controller
               control={form.control}
               name='secondTurnDate'
-              render={({ field }) => (
-                <FormItem className='min-w-0 text-left'>
-                  <FormLabel className='sr-only'>
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className='min-w-0 gap-2 text-left'
+                >
+                  <FieldLabel
+                    htmlFor={`${formId}-${field.name}`}
+                    className='sr-only'
+                  >
                     Fecha del segundo turno
-                  </FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                      value={field.value ? parseISO(field.value) : undefined}
-                      onChange={(date) =>
-                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
-                      }
-                      placeholder='Elegir fecha'
-                      minDate={minDate}
-                      maxDate={maxDate}
+                  </FieldLabel>
+                  <DatePicker
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    value={field.value ? parseISO(field.value) : undefined}
+                    onChange={(date) =>
+                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
+                    }
+                    placeholder='Elegir fecha'
+                    minDate={minDate}
+                    maxDate={maxDate}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  )}
+                </Field>
               )}
             />
-            <FormField
+            <Controller
               control={form.control}
               name='secondTurnTime'
-              render={({ field }) => (
-                <FormItem className='min-w-0 text-left'>
-                  <FormLabel className='sr-only'>
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className='min-w-0 gap-2 text-left'
+                >
+                  <FieldLabel
+                    htmlFor={`${formId}-${field.name}`}
+                    className='sr-only'
+                  >
                     Hora del segundo turno
-                  </FormLabel>
-                  <FormControl>
-                    <TimePicker
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                      minuteStep={minuteStep}
+                  </FieldLabel>
+                  <TimePicker
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    minuteStep={minuteStep}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  )}
+                </Field>
               )}
             />
           </div>
@@ -187,48 +261,80 @@ export default function EventFormFields({
         <section className='flex min-w-0 flex-col gap-3'>
           <h3 className='text-sm font-semibold'>Fin del evento</h3>
           <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(0,7rem)] gap-3'>
-            <FormField
+            <Controller
               control={form.control}
               name='endDate'
-              render={({ field }) => (
-                <FormItem className='min-w-0 text-left'>
-                  <FormLabel className='sr-only'>
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className='min-w-0 gap-2 text-left'
+                >
+                  <FieldLabel
+                    htmlFor={`${formId}-${field.name}`}
+                    className='sr-only'
+                  >
                     Fecha de fin del evento
-                  </FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                      value={field.value ? parseISO(field.value) : undefined}
-                      onChange={(date) =>
-                        field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
-                      }
-                      placeholder='Elegir fecha'
-                      minDate={minDate}
-                      maxDate={maxDate}
+                  </FieldLabel>
+                  <DatePicker
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    value={field.value ? parseISO(field.value) : undefined}
+                    onChange={(date) =>
+                      field.onChange(date ? format(date, 'yyyy-MM-dd') : '')
+                    }
+                    placeholder='Elegir fecha'
+                    minDate={minDate}
+                    maxDate={maxDate}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  )}
+                </Field>
               )}
             />
-            <FormField
+            <Controller
               control={form.control}
               name='endTime'
-              render={({ field }) => (
-                <FormItem className='min-w-0 text-left'>
-                  <FormLabel className='sr-only'>
+              render={({ field, fieldState }) => (
+                <Field
+                  data-invalid={fieldState.invalid}
+                  className='min-w-0 gap-2 text-left'
+                >
+                  <FieldLabel
+                    htmlFor={`${formId}-${field.name}`}
+                    className='sr-only'
+                  >
                     Hora de fin del evento
-                  </FormLabel>
-                  <FormControl>
-                    <TimePicker
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                      minuteStep={minuteStep}
+                  </FieldLabel>
+                  <TimePicker
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    disabled={form.formState.isSubmitting}
+                    {...field}
+                    minuteStep={minuteStep}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                  )}
+                </Field>
               )}
             />
           </div>

@@ -14,14 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { addDays, startOfDay, subDays } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import {
@@ -37,8 +30,8 @@ import { SelectLocation } from '@/db/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconPlus } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useId, useState } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -49,6 +42,7 @@ export default function EventCreateDialogButton({
 }: {
   locations: SelectLocation[]
 }) {
+  const formId = useId()
   const [open, setOpen] = useState(false)
   const router = useRouter()
   const today = startOfDay(new Date())
@@ -129,31 +123,47 @@ export default function EventCreateDialogButton({
             No hay ubicaciones registradas en la base de datos.
           </p>
         ) : (
-          <Form {...form}>
+          <FormProvider {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className='flex min-w-0 flex-col gap-5'
             >
               <EventFormFields minDate={minEventDate} maxDate={maxEventDate} />
 
-              <FormField
+              <Controller
                 control={form.control}
                 name='locationId'
-                render={({ field }) => (
-                  <FormItem className='min-w-0 text-left'>
-                    <FormLabel className='block w-full text-left'>
+                render={({ field, fieldState }) => (
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    className='min-w-0 gap-2 text-left'
+                  >
+                    <FieldLabel
+                      htmlFor={`${formId}-${field.name}`}
+                      className='block w-full text-left'
+                    >
                       Ubicación
-                    </FormLabel>
+                    </FieldLabel>
                     <Select
+                      name={field.name}
                       disabled={form.formState.isSubmitting}
                       value={field.value}
                       onValueChange={field.onChange}
                     >
-                      <FormControl>
-                        <SelectTrigger className='w-full min-w-0 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left'>
-                          <SelectValue placeholder='Selecciona una ubicación' />
-                        </SelectTrigger>
-                      </FormControl>
+                      <SelectTrigger
+                        id={`${formId}-${field.name}`}
+                        aria-invalid={fieldState.invalid}
+                        aria-describedby={
+                          fieldState.invalid
+                            ? `${formId}-${field.name}-error`
+                            : undefined
+                        }
+                        ref={field.ref}
+                        onBlur={field.onBlur}
+                        className='w-full min-w-0 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left'
+                      >
+                        <SelectValue placeholder='Selecciona una ubicación' />
+                      </SelectTrigger>
                       <SelectContent
                         position='popper'
                         className='w-(--radix-select-trigger-width) max-w-(--radix-select-content-available-width)'
@@ -169,8 +179,13 @@ export default function EventCreateDialogButton({
                         ))}
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
+                    {fieldState.invalid && (
+                      <FieldError
+                        id={`${formId}-${field.name}-error`}
+                        errors={[fieldState.error]}
+                      />
+                    )}
+                  </Field>
                 )}
               />
 
@@ -198,7 +213,7 @@ export default function EventCreateDialogButton({
                 </Button>
               </DialogFooter>
             </form>
-          </Form>
+          </FormProvider>
         )}
       </DialogContent>
     </Dialog>

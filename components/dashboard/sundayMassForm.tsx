@@ -8,24 +8,17 @@ import { FormServerError } from '@/components/shared/form-server-error'
 import imageCompression from 'browser-image-compression'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UploadDropzone } from '@/lib/uploadthing'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useId, useState, useTransition } from 'react'
 import {
   getMassRegistrationWindow,
   MASS_REGISTRATION_CLOSED_MESSAGE,
 } from '@/lib/mass-registration'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { NewSundayMassFormSchema } from '@/schema'
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -58,6 +51,7 @@ export default function SundayMassForm({
   closesAt: number
   onSuccess: () => void
 }) {
+  const formId = useId()
   const [isRegistrationClosed, setIsRegistrationClosed] = useState(false)
 
   useEffect(() => {
@@ -362,38 +356,60 @@ export default function SundayMassForm({
           {success}
         </div>
       ) : (
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='space-y-4 text-left'
-          >
-            <FormField
-              control={form.control}
-              name='parish'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Parroquia</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Nombre de la parroquia'
-                      {...field}
-                      minLength={3}
-                      maxLength={45}
-                      required
-                      disabled={isPending || isRemoving}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='space-y-4 text-left'
+        >
+          <Controller
+            control={form.control}
+            name='parish'
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-2'>
+                <FieldLabel htmlFor={`${formId}-${field.name}`}>
+                  Parroquia
+                </FieldLabel>
+                <Input
+                  id={`${formId}-${field.name}`}
+                  aria-invalid={fieldState.invalid}
+                  aria-describedby={
+                    fieldState.invalid
+                      ? `${formId}-${field.name}-error`
+                      : undefined
+                  }
+                  placeholder='Nombre de la parroquia'
+                  {...field}
+                  minLength={3}
+                  maxLength={45}
+                  required
+                  disabled={isPending || isRemoving}
+                />
+                {fieldState.invalid && (
+                  <FieldError
+                    id={`${formId}-${field.name}-error`}
+                    errors={[fieldState.error]}
+                  />
+                )}
+              </Field>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name='evidenceFileKey'
-              render={() => (
-                <FormItem>
-                  <FormLabel>Evidencia</FormLabel>
+          <Controller
+            control={form.control}
+            name='evidenceFileKey'
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='gap-2'>
+                <FieldLabel id={`${formId}-${field.name}-label`}>
+                  Evidencia
+                </FieldLabel>
+                <div
+                  role='group'
+                  aria-labelledby={`${formId}-${field.name}-label`}
+                  aria-describedby={
+                    fieldState.invalid
+                      ? `${formId}-${field.name}-error`
+                      : undefined
+                  }
+                >
                   {evidence ? (
                     <div className='border-border flex items-center justify-between gap-4 rounded-lg border p-1 pr-2'>
                       <div className='flex max-w-60 min-w-0 items-center gap-2 sm:max-w-96'>
@@ -472,26 +488,31 @@ export default function SundayMassForm({
                       }}
                     />
                   )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                </div>
+                {fieldState.invalid && (
+                  <FieldError
+                    id={`${formId}-${field.name}-error`}
+                    errors={[fieldState.error]}
+                  />
+                )}
+              </Field>
+            )}
+          />
 
-            <FormServerError
-              message={form.formState.errors.root?.serverError?.message}
-            />
-            <div className='flex justify-end'>
-              <Button
-                disabled={!evidence || isPending || isRemoving}
-                aria-busy={isPending}
-                type='submit'
-              >
-                {isPending && <Spinner aria-hidden='true' />}
-                {isPending ? 'Registrando…' : 'Registrar misa'}
-              </Button>
-            </div>
-          </form>
-        </Form>
+          <FormServerError
+            message={form.formState.errors.root?.serverError?.message}
+          />
+          <div className='flex justify-end'>
+            <Button
+              disabled={!evidence || isPending || isRemoving}
+              aria-busy={isPending}
+              type='submit'
+            >
+              {isPending && <Spinner aria-hidden='true' />}
+              {isPending ? 'Registrando…' : 'Registrar misa'}
+            </Button>
+          </div>
+        </form>
       )}
     </>
   )

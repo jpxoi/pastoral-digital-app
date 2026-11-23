@@ -10,7 +10,7 @@ import { NewAttendanceRecordFormSchema } from '@/schema'
 
 import { registerAttendanceRecord } from '@/actions/attendance'
 import { Button } from '@/components/ui/button'
-import { useState, useTransition } from 'react'
+import { useId, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import {
   Dialog,
@@ -22,16 +22,9 @@ import {
   DialogTrigger,
 } from '../ui/dialog'
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Field, FieldLabel, FieldError } from '@/components/ui/field'
 
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Select,
@@ -73,6 +66,7 @@ export default function EventAddRecordButton({
   eventId: string
   catechists: CatechistOption[]
 }) {
+  const formId = useId()
   const [isPending, startTransition] = useTransition()
   const [isCatechistPickerOpen, setIsCatechistPickerOpen] = useState(false)
   const [catechistSearch, setCatechistSearch] = useState('')
@@ -135,153 +129,181 @@ export default function EventAddRecordButton({
             Agrega un nuevo registro de asistencia para este evento.
           </DialogDescription>
         </DialogHeader>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='grid gap-5 py-4'
+        >
+          <Controller
+            control={form.control}
+            name='userId'
+            render={({ field, fieldState }) => {
+              const selectedCatechist = catechists.find(
+                (catechist) => catechist.id === field.value
+              )
 
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className='grid gap-5 py-4'
-          >
-            <FormField
-              control={form.control}
-              name='userId'
-              render={({ field }) => {
-                const selectedCatechist = catechists.find(
-                  (catechist) => catechist.id === field.value
-                )
-
-                return (
-                  <FormItem className='grid gap-2'>
-                    <FormLabel>Catequista</FormLabel>
-                    <Popover
-                      open={isCatechistPickerOpen}
-                      modal
-                      onOpenChange={(open) => {
-                        setIsCatechistPickerOpen(open)
-                        if (open) setCatechistSearch('')
-                      }}
-                    >
-                      <FormControl>
-                        <PopoverTrigger asChild>
-                          <Button
-                            type='button'
-                            variant='outline'
-                            role='combobox'
-                            disabled={isPending || !isLoaded}
-                            aria-expanded={isCatechistPickerOpen}
-                            className='w-full justify-between font-normal'
-                          >
-                            <span className='truncate'>
-                              {selectedCatechist
-                                ? `${selectedCatechist.firstName} ${selectedCatechist.lastName}${selectedCatechist.studentCode ? ` · ${selectedCatechist.studentCode}` : ''}`
-                                : 'Seleccionar catequista'}
-                            </span>
-                            <IconSelector className='ml-2 size-4 shrink-0 opacity-50' />
-                          </Button>
-                        </PopoverTrigger>
-                      </FormControl>
-                      <PopoverContent
-                        align='start'
-                        className='w-(--radix-popover-trigger-width) p-0'
-                      >
-                        <Command>
-                          <CommandInput
-                            disabled={isPending}
-                            value={catechistSearch}
-                            onValueChange={setCatechistSearch}
-                            placeholder='Buscar catequista...'
-                          />
-                          <CommandList>
-                            <CommandEmpty>
-                              No se encontraron catequistas.
-                            </CommandEmpty>
-                            <CommandGroup>
-                              {catechists.map((catechist) => {
-                                const name = `${catechist.firstName} ${catechist.lastName}`
-                                const searchValue = `${name} ${catechist.studentCode ?? ''}`
-
-                                return (
-                                  <CommandItem
-                                    key={catechist.id}
-                                    disabled={isPending}
-                                    value={searchValue}
-                                    onSelect={() => {
-                                      field.onChange(catechist.id)
-                                      setIsCatechistPickerOpen(false)
-                                    }}
-                                  >
-                                    <IconCheck
-                                      className={cn(
-                                        'mr-2 size-4',
-                                        field.value === catechist.id
-                                          ? 'opacity-100'
-                                          : 'opacity-0'
-                                      )}
-                                    />
-                                    <span className='min-w-0 flex-1 truncate'>
-                                      {name}
-                                    </span>
-                                    {catechist.studentCode && (
-                                      <span className='text-muted-foreground ml-2 text-xs'>
-                                        {catechist.studentCode}
-                                      </span>
-                                    )}
-                                  </CommandItem>
-                                )
-                              })}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )
-              }}
-            />
-            <FormField
-              control={form.control}
-              name='status'
-              render={({ field }) => (
-                <FormItem className='grid gap-2'>
-                  <FormLabel>Estado</FormLabel>
-                  <Select
-                    disabled={isPending}
-                    onValueChange={field.onChange}
-                    value={field.value}
+              return (
+                <Field data-invalid={fieldState.invalid} className='grid gap-2'>
+                  <FieldLabel htmlFor={`${formId}-${field.name}`}>
+                    Catequista
+                  </FieldLabel>
+                  <Popover
+                    open={isCatechistPickerOpen}
+                    modal
+                    onOpenChange={(open) => {
+                      setIsCatechistPickerOpen(open)
+                      if (open) setCatechistSearch('')
+                    }}
                   >
-                    <FormControl>
-                      <SelectTrigger className='w-full'>
-                        <SelectValue placeholder='Seleccione el estado' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {AttendanceStatusFilterOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormServerError
-              message={form.formState.errors.root?.serverError?.message}
-            />
-            <DialogFooter>
-              <Button
-                type='submit'
-                size='sm'
-                disabled={isPending || !isLoaded}
-                aria-busy={isPending}
-              >
-                {isPending && <Spinner aria-hidden='true' />}
-                {isPending ? 'Registrando…' : 'Registrar'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id={`${formId}-${field.name}`}
+                        aria-invalid={fieldState.invalid}
+                        aria-describedby={
+                          fieldState.invalid
+                            ? `${formId}-${field.name}-error`
+                            : undefined
+                        }
+                        ref={field.ref}
+                        onBlur={field.onBlur}
+                        type='button'
+                        variant='outline'
+                        role='combobox'
+                        disabled={isPending || !isLoaded}
+                        aria-expanded={isCatechistPickerOpen}
+                        className='w-full justify-between font-normal'
+                      >
+                        <span className='truncate'>
+                          {selectedCatechist
+                            ? `${selectedCatechist.firstName} ${selectedCatechist.lastName}${selectedCatechist.studentCode ? ` · ${selectedCatechist.studentCode}` : ''}`
+                            : 'Seleccionar catequista'}
+                        </span>
+                        <IconSelector className='ml-2 size-4 shrink-0 opacity-50' />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      align='start'
+                      className='w-(--radix-popover-trigger-width) p-0'
+                    >
+                      <Command>
+                        <CommandInput
+                          disabled={isPending}
+                          value={catechistSearch}
+                          onValueChange={setCatechistSearch}
+                          placeholder='Buscar catequista...'
+                        />
+                        <CommandList>
+                          <CommandEmpty>
+                            No se encontraron catequistas.
+                          </CommandEmpty>
+                          <CommandGroup>
+                            {catechists.map((catechist) => {
+                              const name = `${catechist.firstName} ${catechist.lastName}`
+                              const searchValue = `${name} ${catechist.studentCode ?? ''}`
+
+                              return (
+                                <CommandItem
+                                  key={catechist.id}
+                                  disabled={isPending}
+                                  value={searchValue}
+                                  onSelect={() => {
+                                    field.onChange(catechist.id)
+                                    setIsCatechistPickerOpen(false)
+                                  }}
+                                >
+                                  <IconCheck
+                                    className={cn(
+                                      'mr-2 size-4',
+                                      field.value === catechist.id
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )}
+                                  />
+                                  <span className='min-w-0 flex-1 truncate'>
+                                    {name}
+                                  </span>
+                                  {catechist.studentCode && (
+                                    <span className='text-muted-foreground ml-2 text-xs'>
+                                      {catechist.studentCode}
+                                    </span>
+                                  )}
+                                </CommandItem>
+                              )
+                            })}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  {fieldState.invalid && (
+                    <FieldError
+                      id={`${formId}-${field.name}-error`}
+                      errors={[fieldState.error]}
+                    />
+                  )}
+                </Field>
+              )
+            }}
+          />
+          <Controller
+            control={form.control}
+            name='status'
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid} className='grid gap-2'>
+                <FieldLabel htmlFor={`${formId}-${field.name}`}>
+                  Estado
+                </FieldLabel>
+                <Select
+                  name={field.name}
+                  disabled={isPending}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
+                  <SelectTrigger
+                    id={`${formId}-${field.name}`}
+                    aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? `${formId}-${field.name}-error`
+                        : undefined
+                    }
+                    ref={field.ref}
+                    onBlur={field.onBlur}
+                    className='w-full'
+                  >
+                    <SelectValue placeholder='Seleccione el estado' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {AttendanceStatusFilterOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError
+                    id={`${formId}-${field.name}-error`}
+                    errors={[fieldState.error]}
+                  />
+                )}
+              </Field>
+            )}
+          />
+          <FormServerError
+            message={form.formState.errors.root?.serverError?.message}
+          />
+          <DialogFooter>
+            <Button
+              type='submit'
+              size='sm'
+              disabled={isPending || !isLoaded}
+              aria-busy={isPending}
+            >
+              {isPending && <Spinner aria-hidden='true' />}
+              {isPending ? 'Registrando…' : 'Registrar'}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   )
