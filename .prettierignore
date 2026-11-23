@@ -1,19 +1,12 @@
 # config files
 /.github/
-.eslintrc.json
 .prettierrc
 next.config.ts
 package.json
 pnpm-lock.yaml
 pnpm-workspace.yaml
 postcss.config.mjs
-tailwind.config.ts
 tsconfig.json
 
-# Service Worker
-/public/sw.js
-/public/fallback-development.js
-/public/workbox-a5d17aea.js
-
 # Migration files
-/migrations/*
+/drizzle/

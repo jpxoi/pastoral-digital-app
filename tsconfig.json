@@ -35,7 +35,6 @@
     "**/*.d.ts",
     ".next/types/**/*.ts",
     "app/manifest.ts",
-    "app/api/auth/[auth0]/route.js",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
