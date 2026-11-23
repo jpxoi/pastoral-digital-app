@@ -16,7 +16,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { WheelPicker, WheelPickerWrapper } from '@/components/wheel-picker'
+import { WheelPicker, WheelPickerWrapper } from '@/components/ui/wheel-picker'
 
 type BirthDateInputProps = Pick<
   React.ComponentProps<'input'>,
