@@ -15,8 +15,9 @@ export type AttendanceCalendarPdfPerson = {
   attendance: Record<string, string | null>
 }
 
-const PAGE_WIDTH = 841.89
-const PAGE_HEIGHT = 595.28
+const A4_SHORT_SIDE = 595.28
+const A4_LONG_SIDE = 841.89
+const MAX_PORTRAIT_DATES = 8
 const MARGIN = 28
 const HEADER_HEIGHT = 50
 const TABLE_HEADER_HEIGHT = 20
@@ -27,7 +28,6 @@ const SUMMARY_HEIGHT = 48
 const SUMMARY_GAP = 14
 const MAX_DATES_PER_PAGE = 30
 const GROUP_GAP = 12
-const TABLE_BOTTOM = PAGE_HEIGHT - MARGIN - 12
 
 function drawTableBackground(
   page: PDFPage,
@@ -37,7 +37,7 @@ function drawTableBackground(
   roundTop = false,
   roundBottom = false
 ) {
-  const width = PAGE_WIDTH - MARGIN * 2
+  const width = page.getWidth() - MARGIN * 2
   const upper = roundTop ? 3 : 0
   const lower = roundBottom ? 3 : 0
   const curve = 0.5522847498
@@ -50,7 +50,7 @@ function drawTableBackground(
      C ${lower * (1 - curve)} ${height} 0 ${height - lower * (1 - curve)} 0 ${height - lower}
      V ${upper}
      C 0 ${upper * (1 - curve)} ${upper * (1 - curve)} 0 ${upper} 0 Z`,
-    { x: MARGIN, y: PAGE_HEIGHT - top, color }
+    { x: MARGIN, y: page.getHeight() - top, color }
   )
 }
 
@@ -67,7 +67,7 @@ function drawText(
 ) {
   page.drawText(printable(text), {
     x,
-    y: PAGE_HEIGHT - top - options.size,
+    y: page.getHeight() - top - options.size,
     font: options.font,
     size: options.size,
     color: options.color ?? rgb(0.12, 0.16, 0.14),
@@ -165,7 +165,7 @@ function drawPageHeader(
     color: rgb(0.03, 0.19, 0.61),
   })
   const labelWidth = bold.widthOfTextAtSize(printable(generatedAt), 6.5)
-  drawText(page, generatedAt, PAGE_WIDTH - MARGIN - labelWidth, 24, {
+  drawText(page, generatedAt, page.getWidth() - MARGIN - labelWidth, 24, {
     font: bold,
     size: 6.5,
     color: rgb(0.35, 0.39, 0.37),
@@ -180,7 +180,7 @@ function drawSummary(
 ) {
   const gap = 8
   const width =
-    (PAGE_WIDTH - MARGIN * 2 - gap * (items.length - 1)) / items.length
+    (page.getWidth() - MARGIN * 2 - gap * (items.length - 1)) / items.length
   items.forEach((item, index) => {
     const x = MARGIN + index * (width + gap)
     const height = SUMMARY_HEIGHT
@@ -197,7 +197,7 @@ function drawSummary(
        C 0 ${control} ${control} 0 ${radius} 0 Z`,
       {
         x,
-        y: PAGE_HEIGHT - HEADER_HEIGHT,
+        y: page.getHeight() - HEADER_HEIGHT,
         color: rgb(0.97, 0.97, 0.97),
         borderColor: rgb(0.87, 0.87, 0.87),
         borderWidth: 0.5,
@@ -222,6 +222,10 @@ export async function generateAttendanceCalendarPdf(
   generatedAt: string,
   reportTitle = 'REPORTE ASISTENCIA CATEQUESIS'
 ) {
+  const portrait = dateKeys.length <= MAX_PORTRAIT_DATES
+  const pageWidth = portrait ? A4_SHORT_SIDE : A4_LONG_SIDE
+  const pageHeight = portrait ? A4_LONG_SIDE : A4_SHORT_SIDE
+  const tableBottom = pageHeight - MARGIN - 12
   const pdf = await PDFDocument.create()
   pdf.setTitle(reportTitle)
   pdf.setAuthor('Pastoral Mariana')
@@ -261,7 +265,7 @@ export async function generateAttendanceCalendarPdf(
           ? FIXED_WIDTHS
           : [FIXED_WIDTHS[0], FIXED_WIDTHS[1] + FIXED_WIDTHS[2]]
       const fixedWidth = widths.reduce((sum, width) => sum + width, 0)
-      const totalTableWidth = PAGE_WIDTH - MARGIN * 2
+      const totalTableWidth = pageWidth - MARGIN * 2
       const dateWidth = dates.length
         ? (totalTableWidth - fixedWidth) / dates.length
         : 0
@@ -273,9 +277,9 @@ export async function generateAttendanceCalendarPdf(
         if (
           !page ||
           tableTop + GROUP_HEADER_HEIGHT + TABLE_HEADER_HEIGHT + ROW_HEIGHT >
-            TABLE_BOTTOM
+            tableBottom
         ) {
-          page = pdf.addPage([PAGE_WIDTH, PAGE_HEIGHT])
+          page = pdf.addPage([pageWidth, pageHeight])
           drawPageHeader(page, generatedAt, reportTitle, bold)
           tableTop = HEADER_HEIGHT
           if (pdf.getPageCount() === 1) {
@@ -329,7 +333,7 @@ export async function generateAttendanceCalendarPdf(
         tableTop += GROUP_HEADER_HEIGHT
         page.drawRectangle({
           x: MARGIN,
-          y: PAGE_HEIGHT - tableTop - TABLE_HEADER_HEIGHT,
+          y: page.getHeight() - tableTop - TABLE_HEADER_HEIGHT,
           width: totalTableWidth,
           height: TABLE_HEADER_HEIGHT,
           color: rgb(0.03, 0.19, 0.61),
@@ -368,7 +372,7 @@ export async function generateAttendanceCalendarPdf(
         })
         tableTop += TABLE_HEADER_HEIGHT
 
-        const capacity = Math.floor((TABLE_BOTTOM - tableTop) / ROW_HEIGHT)
+        const capacity = Math.floor((tableBottom - tableTop) / ROW_HEIGHT)
         const rows = group.people.slice(offset, offset + capacity)
         rows.forEach((person, rowIndex) => {
           const top = tableTop + rowIndex * ROW_HEIGHT
@@ -439,7 +443,7 @@ export async function generateAttendanceCalendarPdf(
     const label = `Página ${index + 1} de ${pages.length}`
     const size = 7
     page.drawText(label, {
-      x: PAGE_WIDTH - MARGIN - regular.widthOfTextAtSize(label, size),
+      x: page.getWidth() - MARGIN - regular.widthOfTextAtSize(label, size),
       y: 18,
       font: regular,
       size,
