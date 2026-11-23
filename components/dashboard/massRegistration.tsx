@@ -45,6 +45,9 @@ export default async function MassRegistration({
     )
     .limit(1)
 
+  // Status and closed notices only answer an explicit attempt to register.
+  if (register !== '1' && (record || !window.isOpen)) return null
+
   if (record) {
     return (
       <RegistrationNotice
