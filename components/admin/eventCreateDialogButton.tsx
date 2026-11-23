@@ -150,11 +150,14 @@ export default function EventCreateDialogButton({
                       onValueChange={field.onChange}
                     >
                       <FormControl>
-                        <SelectTrigger className='min-w-0 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left'>
+                        <SelectTrigger className='w-full min-w-0 [&>span]:min-w-0 [&>span]:truncate [&>span]:text-left'>
                           <SelectValue placeholder='Selecciona una ubicación' />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent className='w-(--radix-select-trigger-width) max-w-(--radix-select-content-available-width)'>
+                      <SelectContent
+                        position='popper'
+                        className='w-(--radix-select-trigger-width) max-w-(--radix-select-content-available-width)'
+                      >
                         {locations.map((location) => (
                           <SelectItem
                             key={location.id}

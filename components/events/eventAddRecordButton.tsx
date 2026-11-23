@@ -250,7 +250,7 @@ export default function EventAddRecordButton({
                     value={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className='w-full'>
                         <SelectValue placeholder='Seleccione el estado' />
                       </SelectTrigger>
                     </FormControl>

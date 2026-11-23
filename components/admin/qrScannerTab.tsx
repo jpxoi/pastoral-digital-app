@@ -265,7 +265,7 @@ export default function QrScannerTab() {
                 setSelectedEventId(value)
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className='w-full'>
                 <SelectValue placeholder='Selecciona un evento' />
               </SelectTrigger>
               <SelectContent>
